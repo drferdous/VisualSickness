@@ -9,7 +9,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['insert_study'])) {
 
 if (isset($insert_study)) {
   echo $insert_study;
-  header( "refresh:2; url=view_study.php"); //wait for 2 seconds before redirecting
 }
 
 

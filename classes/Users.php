@@ -121,6 +121,7 @@ class Users{
     $short_name = $data['short_name'];
     $IRB = $data['IRB'];
     $created_by = Session::get('id');
+    $last_edited_by = Session::get('id');    
 
      if ($full_name == "" || $short_name == "" || $IRB == "") {
       $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
@@ -128,21 +129,26 @@ class Users{
 <strong>Error!</strong> Study registration fields must not be empty!</div>'; 
         return $msg; // if any field is empty
      } else {
-        $sql = "INSERT INTO Study (full_name, short_name, IRB, created_by)
-              VALUES ('$full_name', '$short_name', '$IRB', '$created_by')";
+        $sql = "INSERT INTO Study (full_name, short_name, IRB, created_by, last_edited_by)
+              VALUES ('$full_name', '$short_name', '$IRB', '$created_by', '$last_edited_by')";
         $stmt = $this->db->pdo->prepare($sql);
         $stmt->bindValue('full_name', $full_name);
         $stmt->bindValue('short_name', $short_name);
         $stmt->bindValue('IRB', $IRB);
         $stmt->bindValue('created_by', $created_by);
+        $stmt->bindValue('last_edited_by', $created_by);        
         $result = $stmt->execute();        
      }
      
     if ($result) {
-        $msg = '<div class="alert alert-success alert-dismissible mt-3" id="flash-msg">
+        /* $msg = '<div class="alert alert-success alert-dismissible mt-3" id="flash-msg">
       <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
       <strong>Success!</strong> You have created a study!</div>';
-        return $msg;
+        return $msg; */
+        echo '<div class="alert alert-success alert-dismissible mt-3" id="flash-msg">
+      <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+      <strong>Success!</strong> You have created a study!</div>';
+        echo "<script>setTimeout(\"location.href = 'view_study.php';\",1500);</script>";
     } else {
         $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
       <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
@@ -162,10 +168,11 @@ class Users{
         $stmt->bindValue(':study_ID', $study_ID);
         $result = $stmt->execute(); 
     
-        if ($result) { $msg = '<div class="alert alert-success alert-dismissible mt-3" id="flash-msg">
+        if ($result) { 
+            $msg = '<div class="alert alert-success alert-dismissible mt-3" id="flash-msg">
             <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
             <strong>Success!</strong> You have added a researcher!</div>';
-            return $msg;
+            return $msg; 
         } else {
              $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
              <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
