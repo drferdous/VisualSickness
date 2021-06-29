@@ -80,7 +80,6 @@
             <h2>Study Options</h2>
             <p><a href="create_study.php">Create a Study</a></p>
             <p><a href="view_study.php">Manage Studies</a></p>
-            <p><a href="add_researcher.php">Add Researchers</a> / <a href="remove_researcher.php">Remove Researchers</a></p>     
             <p><a href="create_session.php">Create a Session</a></p            
             </div>
         <?php  } ?>          
