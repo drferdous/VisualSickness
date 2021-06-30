@@ -58,7 +58,7 @@ class Users{
     } elseif (filter_var($mobile,FILTER_SANITIZE_NUMBER_INT) == FALSE) {
       $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
 <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-<strong>Error!</strong> Enter only number characters for this field!</div>';
+<strong>Error!</strong> Enter only number characters for the phone number field!</div>';
         return $msg; // if phone number contains chars         
     } elseif(strlen($password) < 5) {
       $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
@@ -160,12 +160,14 @@ class Users{
  // Add researcher to study 
   public function addResearcher($data){
     $researcher_ID = $data['researcher_ID'];          
-    $study_ID = $data['study_ID'];     
+    $study_ID = $data['study_ID']; 
+    $study_role = $data['study_role'];    
       
-        $sql = "INSERT INTO Researcher_Study (researcher_ID, study_ID) VALUES (:researcher_ID, :study_ID)";
+        $sql = "INSERT INTO Researcher_Study (researcher_ID, study_ID, study_role) VALUES (:researcher_ID, :study_ID, :study_role)";
         $stmt = $this->db->pdo->prepare($sql);
         $stmt->bindValue(':researcher_ID', $researcher_ID);
         $stmt->bindValue(':study_ID', $study_ID);
+        $stmt->bindValue(':study_role', $study_role);     
         $result = $stmt->execute(); 
     
         if ($result) { 
@@ -487,6 +489,30 @@ class Users{
                 return $msg;
             }
           }
+    }
+    
+    // Deactivates study based on the given study_ID.
+    public function deactivateStudy($study_ID){
+        $sql = "UPDATE Study
+                SET is_active = 1
+                WHERE study_ID = :study_ID;";
+        
+        $stmt = $this->db->pdo->prepare($sql);
+        $stmt->bindValue(':study_ID', $study_ID);
+        $result = $stmt->execute();
+        
+        if ($result){
+             $msg = '<div class="alert alert-success alert-dismissible mt-3" id="flash-msg">
+              <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+              <strong>Success!</strong> You deactivated this study!</div>';
+        }
+        else{
+            $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
+              <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+              <strong>Error!</strong> Something went wrong, try deactivating again!</div>';
+        }
+        
+        return $msg;
     }
 
     // Delete User by Id Method

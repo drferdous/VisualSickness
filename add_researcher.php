@@ -53,6 +53,16 @@ if(!$conn){
                       }
                       ?>
                     </select>
+                    <br>
+                    <label for="study_role">Select Study Role</label>
+                    <select class="form-control" name="study_role" id="study_role">
+                      <?php 
+                      $sql = mysqli_query($conn, "SELECT id, role FROM tbl_roles WHERE id > 1");
+                      while ($row = $sql->fetch_assoc()){
+                      echo '<option value="'.$row['id'].'">' . $row['role'] . "</option>";
+                      }
+                      ?>       
+                    </select> 
                 </div>
             </div>
             <div class="form-group">
@@ -73,4 +83,3 @@ if(!$conn){
   include 'inc/footer.php';
 
   ?>
-
