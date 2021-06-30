@@ -12,7 +12,17 @@ if (isset($insert_study)) {
 
 <div class="card ">
     <div class="card-header">
-        <h3>Manage Studies <span class="float-right"> <a href="add_researcher.php" class="btn btn-primary">Add A Researcher</a> <a href="remove_researcher.php" class="btn btn-primary">Remove A Researcher</a> </h3> 
+        <?php if (Session::get('roleid') == '1' || Session::get('roleid') == '2') { ?>
+            <h3>Manage Studies <span class="float-right">        
+            <a href="add_researcher.php" class="btn btn-primary">Add A Researcher</a> 
+            <a href="remove_researcher.php" class="btn btn-primary">Remove A Researcher</a> 
+        <?php  } ?> 
+        
+        <?php if (Session::get('roleid') == '3' || Session::get('roleid') == '4') { ?>
+            <h3>View Studies <span class="float-right">        
+        <?php  } ?>         
+        </div>
+  </h3> 
         </strong></span></h3>
     </div>
         
