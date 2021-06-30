@@ -84,7 +84,7 @@
             </div>
         <?php  } ?>          
         
-        <?php if (Session::get('roleid') == '3') { ?>
+        <?php if (Session::get('roleid') == '3' || Session::get('roleid') == '4') { ?>
             <p><a href="view_study.php">View Studies</a></p>
             </div>
         <?php  } ?>         
