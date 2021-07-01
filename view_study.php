@@ -29,14 +29,26 @@ if (isset($insert_study)) {
     <div class="card-body pr-2 pl-2">
     <?php
         if (Session::get('roleid') === '1'){
-            $sql = "SELECT study_ID, full_name FROM Study;";
+            $sql = "SELECT study_ID, full_name 
+                    FROM Study
+                    WHERE is_active = 0;";
         }
-        else if (Session::get('roleid') === '2'){
-            $sql = "SELECT study_ID, full_name FROM Study WHERE created_by = " . Session::get('id') . ";";
+        else if (Session::get('roleid') === '2' || Session::get('roleid') === '3' || Session::get('roleid') === '4'){
+            $sql = "SELECT study_ID
+                    FROM Researcher_Study
+                    WHERE researcher_ID = " . Session::get('id');
+            $studyIDList = mysqli_query($conn, $sql);
+            
+            $sql = "SELECT study_ID, full_name
+                    FROM Study
+                    WHERE ("; 
+            while ($studyIDRow = mysqli_fetch_assoc($studyIDList)){
+                $sql = $sql . "study_ID = " . $studyIDRow['study_ID'] . " OR ";
+            }
+            $sql = $sql . " FALSE)
+                   AND (is_active = 0);";
         }
-        else{
-            $sql = "SELECT study_ID, full_name FROM Study WHERE created_by = " . Session::get('id') . ";";
-        }
+        
         $result = mysqli_query($conn, $sql);
             
         if (mysqli_num_rows($result) > 0){
