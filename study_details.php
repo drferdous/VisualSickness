@@ -4,42 +4,11 @@ include_once 'database.php';
 
 Session::CheckSession();
 
-$logMsg = Session::get('logMsg');
-if (isset($logMsg)) {
-  echo $logMsg;
-}
-$msg = Session::get('msg');
-if (isset($msg)) {
-  echo $msg;
-}
-Session::set("msg", NULL);
-Session::set("logMsg", NULL);
-
-if (isset($_GET['remove'])) {
-  $remove = preg_replace('/[^a-zA-Z0-9-]/', '', (int)$_GET['remove']);
-  $removeUser = $users->deleteUserById($remove);
-}
-
-if (isset($removeUser)) {
-  echo $removeUser;
-}
-
-
-if (isset($_GET['deactive'])) {
-  $deactive = preg_replace('/[^a-zA-Z0-9-]/', '', (int)$_GET['deactive']);
-  $deactiveId = $users->userDeactiveByAdmin($deactive);
-}
-
-if (isset($deactiveId)) {
-  echo $deactiveId;
-}
-if (isset($_GET['active'])) {
-  $active = preg_replace('/[^a-zA-Z0-9-]/', '', (int)$_GET['active']);
-  $activeId = $users->userActiveByAdmin($active);
-}
-
-if (isset($activeId)) {
-  echo $activeId;
+if (isset($_POST['deactivate-btn'])){
+    $studyDeactivatedMessage = $users->deactivateStudy($_GET["id"]);
+    if (isset($studyDeactivatedMessage)){
+        echo $studyDeactivatedMessage;
+    }
 }
 ?>
 
@@ -84,10 +53,10 @@ if (isset($activeId)) {
                     echo "<td>" . $row_study['IRB']            . "</td>";
                     
                     if (isset($row_study['created_by'])){
-                        $sql_users = "SELECT username FROM tbl_users WHERE id = " . $row_study['created_by'] . " LIMIT 1;";
+                        $sql_users = "SELECT name FROM tbl_users WHERE id = " . $row_study['created_by'] . " LIMIT 1;";
                         $result_users = mysqli_query($conn, $sql_users);
                         $row_users = mysqli_fetch_assoc($result_users);
-                        echo "<td>" . $row_users['username'] . "</td>";
+                        echo "<td>" . $row_users['name'] . "</td>";
                     }
                     else{
                         echo "<td>-</td>";
@@ -97,10 +66,10 @@ if (isset($activeId)) {
                     echo "<td>" . $row_study['last_edited_at'] . "</td>";
                     
                     if (isset($row_study['last_edited_by'])){
-                        $sql_users = "SELECT username FROM tbl_users WHERE id = " . $row_study['last_edited_by'] . " LIMIT 1;";
+                        $sql_users = "SELECT name FROM tbl_users WHERE id = " . $row_study['last_edited_by'] . " LIMIT 1;";
                         $result_users = mysqli_query($conn, $sql_users);
                         $row_users = mysqli_fetch_assoc($result_users);
-                        echo "<td>" . $row_users['username'] . "</td>";
+                        echo "<td>" . $row_users['name'] . "</td>";
                     }
                     else{
                         echo "<td>-</td>";
@@ -109,7 +78,13 @@ if (isset($activeId)) {
                     echo "<td>";
                     if (Session::get('roleid') === '1' || Session::get('roleid') === '2'){
                         echo "<ul>";
-                        echo "<li><a href=\"delete_study.php?id=". $row_study['study_ID'] . "\">Deactivate</a></li>";
+                        
+                        echo "<li>";
+                        echo "<form method=\"post\">";
+                        echo "<input type=\"submit\" name=\"deactivate-btn\" value=\"Deactivate\" />";
+                        echo "</form>";
+                        echo "</li>";
+                        
                         echo "<li><a href=\"edit_study.php?id=". $row_study['study_ID'] ."\">Edit</a></li>";
                         echo "</ul>";
                     }
