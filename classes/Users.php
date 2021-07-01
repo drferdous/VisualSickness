@@ -502,7 +502,7 @@ class Users{
         $result = $stmt->execute();
         
         if ($result){
-             $msg = '<div class="alert alert-success alert-dismissible mt-3" id="flash-msg">
+            $msg = '<div class="alert alert-success alert-dismissible mt-3" id="flash-msg">
               <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
               <strong>Success!</strong> You deactivated this study!</div>';
         }
@@ -512,6 +512,30 @@ class Users{
               <strong>Error!</strong> Something went wrong, try deactivating again!</div>';
         }
         
+        return $msg;
+    }
+    
+    // leaves the current study
+    public function leaveStudy($study_ID){
+        $sql = "DELETE FROM Researcher_Study
+                WHERE researcher_ID = :researcher_ID
+                AND study_ID = :study_ID
+                LIMIT 1;";
+        $stmt = $this->db->pdo->prepare($sql);
+        $stmt->bindValue(':researcher_ID', Session::get('id'));
+        $stmt->bindValue(':study_ID', $study_ID);
+        
+        $result = $stmt->execute();
+        if ($result){
+            $msg = '<div class="alert alert-success alert-dismissible mt-3" id="flash-msg">
+              <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+              <strong>Success!</strong> You left this study!</div>';
+        }
+        else{
+            $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
+              <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+              <strong>Error!</strong> Something went wrong, try leaving again!</div>';
+        }
         return $msg;
     }
 
