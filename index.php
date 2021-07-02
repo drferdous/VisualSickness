@@ -81,7 +81,6 @@
             <p><a href="create_study.php">Create a Study</a></p>
             <p><a href="view_study.php">Manage Studies</a></p>
             <p><a href="create_session.php">Create a Session</a></p>
-            <p><a href="session_list.php">View Sessions</a></p>            
             </div>
         <?php  } ?>          
         
