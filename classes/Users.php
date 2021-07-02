@@ -538,6 +538,27 @@ class Users{
         }
         return $msg;
     }
+    
+    public function initializeNewSession($study_ID){
+        $sql = "INSERT INTO Session (study_ID, start_time, end_time)
+                VALUES (:study_ID, NULL, NULL);";
+        $stmt = $this->db->pdo->prepare($sql);
+        $stmt->bindValue(':study_ID', $study_ID);
+        
+        $result = $stmt->execute();
+        if ($result){
+            $msg = '<div class="alert alert-success alert-dismissible mt-3" id="flash-msg">
+              <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+              <strong>Success!</strong> You created a session!</div>';
+        }
+        else{
+            $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
+              <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+              <strong>Error!</strong> Something went wrong, try created a session again!</div>';
+        }
+        
+        return $msg;
+    }
 
     // Delete User by Id Method
     public function deleteUserById($remove){

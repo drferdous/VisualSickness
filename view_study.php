@@ -66,8 +66,13 @@ if (isset($insert_study)) {
                 <?php
                     while ($row = mysqli_fetch_assoc($result)) { 
                         echo "<tr>";
+                        
                         echo "<td>" . $row['full_name'] ."</td>";
-                        echo "<td class='text-center'><a class='btn-success btn-sm' href=\"study_details.php?id=" . $row['study_ID'] . "\">Study Details</a></td>";
+                        
+                        echo "<td>";
+                        echo "<a class='btn-success btn-sm' href=\"study_details.php?study_ID=" . $row['study_ID'] . "\">Study Details</a>";
+                        echo "</td>";
+                        
                         echo "</tr>";
                     }
                 ?>
