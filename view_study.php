@@ -71,6 +71,12 @@ if (isset($insert_study)) {
                         
                         echo "<td>";
                         echo "<a class='btn-success btn-sm' href=\"study_details.php?study_ID=" . $row['study_ID'] . "\">Study Details</a>";
+                        echo "<br>";
+                        echo "<br>";
+                        echo "<a class='btn-success btn-sm' href=\"create_session.php?study_ID=" . $row['study_ID'] . "\">Create Session</a>";
+                        echo "<br>";
+                        echo "<br>";
+                        echo "<a class='btn-success btn-sm' href=\"session_list.php?study_ID=" . $row['study_ID'] . "\">Session List</a>";                        
                         echo "</td>";
                         
                         echo "</tr>";

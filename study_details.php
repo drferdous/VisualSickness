@@ -11,23 +11,6 @@ if (isset($_POST['deactivate-btn'])){
     }
 }
 
-if (isset($_POST['initialize-session-btn'])){
-    $successMessage = '<div class="alert alert-success alert-dismissible mt-3" id="flash-msg">
-              <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-              <strong>Success!</strong> You created a session!</div>';
-    
-    $sessionInitializedMessage = $users->initializeNewSession($_GET["study_ID"]);
-    if (isset($sessionInitializedMessage)){
-        if ($sessionInitializedMessage === $successMessage){
-            echo $sessionInitializedMessage;
-            header("Location: ./create_session.php");
-        }
-        else{
-            echo $sessionInitializedMessage;
-        }
-    }
-}
-
 if (isset($_POST['leave-btn'])){
     $successMessage = '<div class="alert alert-success alert-dismissible mt-3" id="flash-msg">
               <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
@@ -116,12 +99,6 @@ if (isset($_POST['leave-btn'])){
                     echo "<li>";
                     echo "<form method=\"post\">";
                     echo "<input type=\"submit\" name=\"deactivate-btn\" value=\"Deactivate\" />";
-                    echo "</form>";
-                    echo "</li>";
-                    
-                    echo "<li>";
-                    echo "<form method=\"post\">";
-                    echo "<input type=\"submit\" name=\"initialize-session-btn\" value=\"Create Session\" />";
                     echo "</form>";
                     echo "</li>";
                         

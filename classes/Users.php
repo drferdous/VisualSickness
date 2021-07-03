@@ -539,25 +539,39 @@ class Users{
         return $msg;
     }
     
-    public function initializeNewSession($study_ID){
-        $sql = "INSERT INTO Session (study_ID, start_time, end_time)
-                VALUES (:study_ID, NULL, NULL);";
+    public function insert_session($study_ID, $data){
+        if (empty($data["participant_ID"])){
+            $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <strong>Error !</strong> Please select a participant!</div>';
+            return $msg;
+        }
+        
+        if (empty($data["comment"])){
+            $data["comment"] = NULL;
+        }
+        
+        $sql = "INSERT INTO Session (study_ID, participant_ID, comment)
+                VALUES (:study_ID, :participant_ID, :comment);";
         $stmt = $this->db->pdo->prepare($sql);
+        
         $stmt->bindValue(':study_ID', $study_ID);
+        $stmt->bindValue(':participant_ID', $data["participant_ID"]);
+        $stmt->bindValue(':comment', $data["comment"]);
         
         $result = $stmt->execute();
         if ($result){
             $msg = '<div class="alert alert-success alert-dismissible mt-3" id="flash-msg">
-              <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-              <strong>Success!</strong> You created a session!</div>';
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <strong>Success !</strong> You created a session!</div>';
+            return $msg;
         }
         else{
             $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
-              <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-              <strong>Error!</strong> Something went wrong, try created a session again!</div>';
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <strong>Error !</strong> Something went wrong, try again!</div>';
+            return $msg;
         }
-        
-        return $msg;
     }
 
     // Delete User by Id Method
@@ -698,16 +712,5 @@ class Users{
           }
 
          }
-
-
-
     }
-
-
-
-
-
-
-
-
 }
