@@ -80,7 +80,7 @@
         <?php if (Session::get('roleid') == '1' || Session::get('roleid') == '2') { ?>
             <p><a href="create_study.php">Create a Study</a></p>
             <p><a href="view_study.php">Manage Studies</a></p>
-            <p><a href="create_session.php">Create a Session</a></p            
+            <p><a href="create_session.php">Create a Session</a></p>
             </div>
         <?php  } ?>          
         
