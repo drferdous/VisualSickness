@@ -225,51 +225,62 @@ class Users{
 
     $checkEmail = $this->checkExistEmail($email);
     
+    if (empty($anonymous_name)){
+        $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong>Error !</strong> Name of participant must not be empty!</div>';
+        return $msg;
+    }
+    if (empty($dob)){
+        $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong>Error !</strong> Date of birth field must not be empty!</div>';
+        return $msg;
+    }
+    if (filter_var($email, FILTER_VALIDATE_EMAIL === FALSE)) {
+        $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong>Error !</strong> Invalid email address !</div>';
+        return $msg;
+    }
+    if ($checkEmail == TRUE) {
+        $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong>Error !</strong> Email already Exists, please try another Email... !</div>';
+        return $msg;
+    }
+    
     if (empty($weight)){
         $weight = NULL;
     }
     
-    if ($dob == ""){ 
-      $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
-<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-<strong>Error !</strong> Date of birth field must not be empty!</div>';
-        return $msg;
-    }elseif (filter_var($email, FILTER_VALIDATE_EMAIL === FALSE)) {
-      $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
-<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-<strong>Error !</strong> Invalid email address !</div>';
-        return $msg;
-    }elseif ($checkEmail == TRUE) {
-      $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
-<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-<strong>Error !</strong> Email already Exists, please try another Email... !</div>';
-        return $msg;
-    } else {
-        $sql = "INSERT INTO Participant(anonymous_name, dob, weight, gender, ethnicity, occupation, education, phone_no, email, additional_info, comments) VALUES(:anonymous_name, :dob, :weight, :gender, :ethnicity, :occupation, :education, :phone_no, :email, :additional_info, :comments)";
-        $stmt = $this->db->pdo->prepare($sql);
-        $stmt->bindValue(':anonymous_name', $anonymous_name);
-        $stmt->bindValue(':dob', $dob);
-        $stmt->bindValue(':weight', $weight);
-        $stmt->bindValue(':gender', $gender);
-        $stmt->bindValue(':ethnicity', $ethnicity);
-        $stmt->bindValue(':occupation', $occupation);
-        $stmt->bindValue(':education', $education);
-        $stmt->bindValue(':phone_no', $phone_no);
-        $stmt->bindValue(':email', $email);
-        $stmt->bindValue(':additional_info', $additional_info);
-        $stmt->bindValue(':comments', $comments);
-        $result = $stmt->execute();
+    $sql = "INSERT INTO Participant (anonymous_name, dob, weight, gender, ethnicity, occupation, education, phone_no, email, additional_info, comments) VALUES(:anonymous_name, :dob, :weight, :gender, :ethnicity, :occupation, :education, :phone_no, :email, :additional_info, :comments)";
+    $stmt = $this->db->pdo->prepare($sql);
+    
+    $stmt->bindValue(':anonymous_name', $anonymous_name);
+    $stmt->bindValue(':dob', $dob);
+    $stmt->bindValue(':weight', $weight);
+    $stmt->bindValue(':gender', $gender);
+    $stmt->bindValue(':ethnicity', $ethnicity);
+    $stmt->bindValue(':occupation', $occupation);
+    $stmt->bindValue(':education', $education);
+    $stmt->bindValue(':phone_no', $phone_no);
+    $stmt->bindValue(':email', $email);
+    $stmt->bindValue(':additional_info', $additional_info);
+    $stmt->bindValue(':comments', $comments);
         
-        if ($result) {$msg = '<div class="alert alert-success alert-dismissible mt-3" id="flash-msg">
-  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-  <strong>Success !</strong> Wow, you have Registered Successfully !</div>';
+    $result = $stmt->execute();
+    if ($result) {
+        $msg = '<div class="alert alert-success alert-dismissible mt-3" id    ="flash-msg">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong>Success!</strong> You registered a participant!</div>';
         return $msg;
-      } else {
+    } 
+    else{
         $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
-  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-  <strong>Error !</strong> Something went Wrong !</div>';
-          return $msg;
-      }
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong>Error !</strong> Something went Wrong !</div>';
+        return $msg;
     }
   }  
 
