@@ -71,6 +71,8 @@ if (isset($addResearcher)) {
 
       </div>
       
+      <!--
+      
  <script type="text/javascript">
       // Researcher ID dependent ajax
       $("#researcher_ID").on("change",function(){
@@ -86,10 +88,21 @@ if (isset($addResearcher)) {
         });			
  </script> 
  
+ -->
+ 
  <script type="text/javascript">
      $(document).ready(function() {
          $('#researcher_ID').change(function() {
-             alert($(this).val());
+             var researcher_ID = $(this).val();
+            $.ajax({
+              url :"researcherrole.php",
+              type:"POST",
+              cache:false,
+              data:{researcher_ID:researcher_ID},
+              success:function(data){
+                  $("#study_role").html(data);
+              }
+            });	
          });
      });
  </script>

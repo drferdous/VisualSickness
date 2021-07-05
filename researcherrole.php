@@ -5,7 +5,6 @@ if (isset($_POST['researcher_ID']) && !empty($_POST['researcher_ID'])) {
 
 	// Fetch user role choices after researcher id is selected
 	$sql = "SELECT id, role FROM tbl_roles WHERE id >= ( SELECT roleid from tbl_users where id = ".$_POST['researcher_ID'].")";
-	echo "<script>alert('$sql');</script>";
 	$result = $conn->query($sql);
 	
 	//mysqli_query($conn, 
