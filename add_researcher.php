@@ -1,5 +1,6 @@
 <?php
 include 'inc/header.php';
+include 'database.php';
 Session::CheckSession();
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['addResearcher'])) {
@@ -12,17 +13,7 @@ if (isset($addResearcher)) {
 
 
  ?>
- 
- <?php
-$servername='localhost';
-$username='id16175630_admin';
-$password='_TYp9G@HXf+U=OrW';
-$dbname = "id16175630_visualsickness";
-$conn=mysqli_connect($servername,$username,$password,"$dbname");
-if(!$conn){
-   die('Could not Connect My Sql:' .mysql_error());
-}
-?>
+
 
       <div class="card ">
         <div class="card-header">
@@ -46,6 +37,7 @@ if(!$conn){
                     <br>
                   <label for="researcher_ID">Add A Member:</label>
                       <select class="form-control" name="researcher_ID" id="researcher_ID">
+                          <option value = "">Member Name</option>
                       <?php 
                       $sql = mysqli_query($conn, "SELECT id, username FROM tbl_users");
                       while ($row = $sql->fetch_assoc()){
@@ -54,13 +46,15 @@ if(!$conn){
                       ?>
                     </select>
                     <br>
-                    <label for="study_role">Select Study Role</label>
+                    <label for="study_role">Select Study Role:</label>
                     <select class="form-control" name="study_role" id="study_role">
+                        <option value="">Study Role</option>
                       <?php 
-                      $sql = mysqli_query($conn, "SELECT id, role FROM tbl_roles WHERE id > 1");
-                      while ($row = $sql->fetch_assoc()){
-                      echo '<option value="'.$row['id'].'">' . $row['role'] . "</option>";
-                      }
+                      // $sql = mysqli_query($conn, "SELECT id, role FROM tbl_roles WHERE id > 1");
+                      // while ($row = $sql->fetch_assoc()){
+                          
+                      // echo '<option value="'.$row['id'].'">' . $row['role'] . "</option>";
+                      // }
                       ?>       
                     </select> 
                 </div>
@@ -76,8 +70,29 @@ if(!$conn){
 
 
       </div>
-
-
+      
+ <script type="text/javascript">
+      // Researcher ID dependent ajax
+      $("#researcher_ID").on("change",function(){
+        var researcher_ID = $(this).val();
+        $.ajax({
+          url :"researcherrole.php",
+          type:"POST",
+          cache:false,
+          data:{researcher_ID:researcher_ID},
+          success:function(data){
+              $("#study_role").html(data);
+          }
+        });			
+ </script> 
+ 
+ <script type="text/javascript">
+     $(document).ready(function() {
+         $('#researcher_ID').change(function() {
+             alert($(this).val());
+         });
+     });
+ </script>
 
   <?php
   include 'inc/footer.php';

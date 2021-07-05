@@ -27,6 +27,7 @@ $users = new Users();
     <link href="https://use.fontawesome.com/releases/v5.0.4/css/all.css" rel="stylesheet">
     <link rel="stylesheet" href="assets/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" href="assets/style.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   </head>
   <body>
 
