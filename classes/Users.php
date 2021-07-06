@@ -159,6 +159,20 @@ class Users{
 
  // Add researcher to study 
   public function addResearcher($data){
+    if (empty($data['researcher_ID'])){
+        $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong>Error! Please select a researcher!</strong> </div>';
+        return $msg;
+    }
+    
+    if (empty($data['study_role'])){
+        $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong>Error! Please select a role!</strong> </div>';
+        return $msg;
+    }
+    
     $researcher_ID = $data['researcher_ID'];          
     $study_ID = $data['study_ID']; 
     $study_role = $data['study_role'];    

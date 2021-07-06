@@ -25,7 +25,7 @@ if (isset($addResearcher)) {
            <form class="" action="" method="post">
             <div class="form-group">
                 <div class="form-group">
-                  <label for="study_id">Choose a Study:</label>
+                  <label for="study_ID">Choose a Study:</label>
                       <select class="form-control" name="study_ID" id="study_ID">
                       <?php 
                       $sql = mysqli_query($conn, "SELECT study_ID, full_name, created_by FROM Study WHERE created_by = " . Session::get('id'));
@@ -37,7 +37,7 @@ if (isset($addResearcher)) {
                     <br>
                   <label for="researcher_ID">Add A Member:</label>
                       <select class="form-control" name="researcher_ID" id="researcher_ID">
-                          <option value = "">Member Name</option>
+                          <option value = "" selected hidden disabled>Member Name</option>
                       <?php 
                       $sql = mysqli_query($conn, "SELECT id, username FROM tbl_users");
                       while ($row = $sql->fetch_assoc()){
@@ -48,14 +48,7 @@ if (isset($addResearcher)) {
                     <br>
                     <label for="study_role">Select Study Role:</label>
                     <select class="form-control" name="study_role" id="study_role">
-                        <option value="">Study Role</option>
-                      <?php 
-                      // $sql = mysqli_query($conn, "SELECT id, role FROM tbl_roles WHERE id > 1");
-                      // while ($row = $sql->fetch_assoc()){
-                          
-                      // echo '<option value="'.$row['id'].'">' . $row['role'] . "</option>";
-                      // }
-                      ?>       
+                        <option value="" selected hidden disabled>Study Role</option>
                     </select> 
                 </div>
             </div>
@@ -71,24 +64,6 @@ if (isset($addResearcher)) {
 
       </div>
       
-      <!--
-      
- <script type="text/javascript">
-      // Researcher ID dependent ajax
-      $("#researcher_ID").on("change",function(){
-        var researcher_ID = $(this).val();
-        $.ajax({
-          url :"researcherrole.php",
-          type:"POST",
-          cache:false,
-          data:{researcher_ID:researcher_ID},
-          success:function(data){
-              $("#study_role").html(data);
-          }
-        });			
- </script> 
- 
- -->
  
  <script type="text/javascript">
      $(document).ready(function() {

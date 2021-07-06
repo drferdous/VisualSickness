@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['insert_session'])){
             <div class="form-group">
                 <label for="participant_name">Add a Participant</label>
                 <select class="form-control" name="participant_ID" id="participant_name">
-                    <option value="" selected hidden>Please Choose...</option>
+                    <option value="" selected hidden disabled>Please Choose...</option>
                     <?php
                     $sql = "SELECT participant_id, anonymous_name FROM Participant;";
                     $result = mysqli_query($conn, $sql);
