@@ -28,7 +28,7 @@ if (isset($addResearcher)) {
                   <label for="study_ID">Choose a Study:</label>
                       <select class="form-control" name="study_ID" id="study_ID">
                       <?php 
-                      $sql = mysqli_query($conn, "SELECT study_ID, full_name, created_by FROM Study WHERE created_by = " . Session::get('id'));
+                      $sql = mysqli_query($conn, "SELECT study_ID, full_name, created_by FROM Study WHERE is_active = 0 AND created_by = " . Session::get('id'));
                       while ($row = $sql->fetch_assoc()){
                      echo '<option value="'.$row['study_ID'].'">' . $row['full_name'] . "</option>";
                       }
@@ -39,9 +39,9 @@ if (isset($addResearcher)) {
                       <select class="form-control" name="researcher_ID" id="researcher_ID">
                           <option value = "" selected hidden disabled>Member Name</option>
                       <?php 
-                      $sql = mysqli_query($conn, "SELECT id, username FROM tbl_users");
+                      $sql = mysqli_query($conn, "SELECT id, name FROM tbl_users");
                       while ($row = $sql->fetch_assoc()){
-                     echo '<option value="'.$row['id'].'">' . $row['username'] . "</option>";
+                     echo '<option value="'.$row['id'].'">' . $row['name'] . "</option>";
                       }
                       ?>
                     </select>
