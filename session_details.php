@@ -3,6 +3,13 @@ include 'inc/header.php';
 include_once 'database.php';
 
 Session::CheckSession();
+
+if (isset($_POST['end-session-btn'])){
+    $endSessionMessage = $users->endSession($_GET['session_ID']);
+    if (isset($endSessionMessage)){
+        echo $endSessionMessage;
+    }
+}
 ?>
 
 <div class="card">
@@ -19,6 +26,7 @@ Session::CheckSession();
                     <th>Start Time</th>
                     <th>End Time</th>
                     <th>Comment</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             
@@ -33,7 +41,12 @@ Session::CheckSession();
                 echo "<td>" . $row_session['start_time']     . "</td>";
                 echo "<td>" . $row_session['end_time'] . "</td>";
                 echo "<td>" . $row_session['comment'] . "</td>";
-                    
+                
+                echo "<td>";
+                echo "<form method=\"post\">";
+                echo "<input type=\"submit\" name=\"end-session-btn\" value=\"End Session\" />";
+                echo "</form>";
+                echo "</td>";
                 ?> 
                 </tr>
             </tbody>
