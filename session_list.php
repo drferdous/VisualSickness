@@ -41,7 +41,8 @@ Session::CheckSession();
                         echo "<td>" . $row['session_ID'] ."</td>";
                         
                         echo "<td>";
-                        echo "<a class='btn-success btn-sm' href=\"session_details.php?session_ID=" . $row['session_ID'] . "\">Session Details</a>";                        
+                        echo "<a class='btn-success btn-sm' href=\"session_details.php?session_ID=" . $row['session_ID'] . "\">Session Details</a>";
+                        
                         echo "</td>";
                         
                         echo "</tr>";
