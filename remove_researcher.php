@@ -11,7 +11,6 @@ if (isset($addResearcher)) {
   echo $removeResearcher;
 }
 
-
  ?>
  
  <?php
@@ -32,6 +31,7 @@ if(!$conn){
         <h3>Remove A Researcher <span class="float-right"> <a href="add_researcher.php" class="btn btn-primary">Add A Researcher</a> </h3> 
         </div>
         <div class="card-body pr-2 pl-2">
+            
            <form class="" action="" method="post">
             <div class="form-group">
                 <div class="form-group">
@@ -45,14 +45,10 @@ if(!$conn){
                       ?>
                     </select>
                     <br>
+                    
                   <label for="researcher_ID">Remove A Member:</label>
                       <select class="form-control" name="researcher_ID" id="researcher_ID">
-                      <?php 
-                      $sql = mysqli_query($conn, "SELECT id, username FROM tbl_users");
-                      while ($row = $sql->fetch_assoc()){
-                     echo '<option value="'.$row['id'].'">' . $row['username'] . "</option>";
-                      }
-                      ?>
+                        <option value="" selected hidden disabled>Member Name</option>
                     </select>
                 </div>
             </div>
@@ -67,6 +63,31 @@ if(!$conn){
 
 
       </div>
+      
+ <script type="text/javascript">
+     $(document).ready(function() {
+         $('#study_ID').change(function() {
+             var study_ID = $(this).val();
+            $.ajax({
+              url :"researcherremoval.php",
+              type:"POST",
+              cache:false,
+              data:{study_ID:study_ID},
+              success:funsction(data){
+                  $("#researcher_ID").html(data);
+              }
+            });	
+         });
+     });
+ </script>      
+ 
+ <script type="text/javascript">
+     $(document).ready(function() {
+         $('#study_ID').change(function() {
+             alert($(this).val());
+         });
+     });
+ </script> 
 
 
 
@@ -74,4 +95,3 @@ if(!$conn){
   include 'inc/footer.php';
 
   ?>
-
