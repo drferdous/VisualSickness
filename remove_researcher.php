@@ -1,5 +1,6 @@
 <?php
 include 'inc/header.php';
+include 'database.php';
 Session::CheckSession();
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['removeResearcher'])) {
@@ -13,17 +14,6 @@ if (isset($addResearcher)) {
 
  ?>
  
- <?php
-$servername='localhost';
-$username='id16175630_admin';
-$password='_TYp9G@HXf+U=OrW';
-$dbname = "id16175630_visualsickness";
-$conn=mysqli_connect($servername,$username,$password,"$dbname");
-if(!$conn){
-   die('Could not Connect My Sql:' .mysql_error());
-}
-?>
-
       <div class="card ">
         <div class="card-header">
    
@@ -73,7 +63,7 @@ if(!$conn){
               type:"POST",
               cache:false,
               data:{study_ID:study_ID},
-              success:funsction(data){
+              success:function(data){
                   $("#researcher_ID").html(data);
               }
             });	
