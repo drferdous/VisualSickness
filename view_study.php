@@ -32,14 +32,35 @@ if (isset($insert_study)) {
             $sql = "SELECT study_ID, full_name 
                     FROM Study
                     WHERE is_active = 0;";
+                    
+            $result = mysqli_query($conn, $sql);
         }
-        else if (Session::get('roleid') === '2' || Session::get('roleid') === '3' || Session::get('roleid') === '4'){
-            $sql = "SELECT study_ID
+        else{
+            
+            $sql = "CREATE TABLE `#StudiesAndRoles`(
+                        study_ID INT(11) NOT NULL,
+                        study_role TINYINT(4) DEFAULT NULL
+                    );";
+            mysqli_query($conn, $sql);
+            
+            $sql =  "CREATE TABLE `#StudiesAndNames`(
+                        study_ID INT(11) NOT NULL,
+                        full_name TEXT NOT NULL
+                    );";
+            mysqli_query($conn, $sql);
+        
+            $sql = "INSERT INTO `#StudiesAndRoles` (study_ID, study_role)
+                    SELECT study_ID, study_role
                     FROM Researcher_Study
-                    WHERE researcher_ID = " . Session::get('id');
+                    WHERE Researcher_ID = " . Session::get('id') . ";";
+            mysqli_query($conn, $sql);
+            
+            $sql = "SELECT * 
+                    FROM `#StudiesAndRoles`;";
             $studyIDList = mysqli_query($conn, $sql);
             
-            $sql = "SELECT study_ID, full_name
+            $sql = "INSERT INTO `#StudiesAndNames` (study_ID, full_name)
+                    SELECT study_ID, full_name
                     FROM Study
                     WHERE ("; 
             while ($studyIDRow = mysqli_fetch_assoc($studyIDList)){
@@ -47,10 +68,19 @@ if (isset($insert_study)) {
             }
             $sql = $sql . " FALSE)
                    AND (is_active = 0);";
+            mysqli_query($conn, $sql);
+            
+            $sql = "SELECT `#StudiesAndNames`.study_ID, `#StudiesAndNames`.full_name, `#StudiesAndRoles`.study_role       FROM `#StudiesAndNames` 
+                    INNER JOIN `#StudiesAndRoles` 
+                    ON `#StudiesAndNames`.study_ID = `#StudiesAndRoles`.study_ID;";
+            $result = mysqli_query($conn, $sql);
+            
+            $sql = "DROP TABLE IF EXISTS `#StudiesAndRoles`;";
+            mysqli_query($conn, $sql);
+            $sql = "DROP TABLE IF EXISTS `#StudiesAndNames`;";
+            mysqli_query($conn, $sql);
         }
         
-        $result = mysqli_query($conn, $sql);
-            
         if (mysqli_num_rows($result) > 0){
     ?>
         <br />
@@ -71,9 +101,13 @@ if (isset($insert_study)) {
                         
                         echo "<td>";
                         echo "<a class='btn-success btn-sm' href=\"study_details.php?study_ID=" . $row['study_ID'] . "\">Study Details</a>";
-                        echo "<br>";
-                        echo "<br>";
-                        echo "<a class='btn-success btn-sm' href=\"create_session.php?study_ID=" . $row['study_ID'] . "\">Create Session</a>";
+                        
+                        if (Session::get('roleid') === '1' || (isset($row['study_role']) && ($row['study_role'] === '2' || $row['study_role'] === '3'))){
+                            echo "<br>";
+                            echo "<br>";
+                            echo "<a class='btn-success btn-sm' href=\"create_session.php?study_ID=" . $row['study_ID'] . "\">Create Session</a>";
+                        }
+                
                         echo "<br>";
                         echo "<br>";
                         echo "<a class='btn-success btn-sm' href=\"session_list.php?study_ID=" . $row['study_ID'] . "\">Session List</a>";                        
