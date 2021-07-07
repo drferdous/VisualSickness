@@ -92,11 +92,8 @@ if (isset($_POST['end-session-btn'])){
                     <th>Start Time</th>
                     <th>End Time</th>
                     <th>Comment</th>
-<<<<<<< HEAD
                     <th>Created By</th>
                     <th>Last Edited By</th>    
-=======
->>>>>>> 39fddeac0b531362b001cdb37d092485727c6170
                     <th>Action</th>
                 </tr>
             </thead>
@@ -113,11 +110,8 @@ if (isset($_POST['end-session-btn'])){
                 echo "<td>" . $row_session['start_time']     . "</td>";
                 echo "<td>" . $row_session['end_time'] . "</td>";
                 echo "<td>" . $row_session['comment'] . "</td>";
-<<<<<<< HEAD
                 echo "<td>" . $row_session['created_by'] . "</td>";
                 echo "<td>" . $row_session['last_edited_by'] . "</td>";                
-=======
->>>>>>> 39fddeac0b531362b001cdb37d092485727c6170
                 
                 echo "<td>";
                 echo "<form method=\"post\">";
