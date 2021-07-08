@@ -31,7 +31,7 @@ if (isset($insert_study)) {
         if (Session::get('roleid') === '1'){
             $sql = "SELECT study_ID, full_name 
                     FROM Study
-                    WHERE is_active = 0;";
+                    WHERE is_active = 1;";
                     
             $result = mysqli_query($conn, $sql);
         }
@@ -67,7 +67,7 @@ if (isset($insert_study)) {
                 $sql = $sql . "study_ID = " . $studyIDRow['study_ID'] . " OR ";
             }
             $sql = $sql . " FALSE)
-                   AND (is_active = 0);";
+                   AND (is_active = 1);";
             mysqli_query($conn, $sql);
             
             $sql = "SELECT `#StudiesAndNames`.study_ID, `#StudiesAndNames`.full_name, `#StudiesAndRoles`.study_role       FROM `#StudiesAndNames` 

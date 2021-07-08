@@ -356,9 +356,9 @@ class Users{
 
 
         $logResult = $this->userLoginAutho($email, $password);
-        $chkActive = $this->CheckActiveUser($email);
+        $isUserActive = $this->CheckActiveUser($email);
 
-        if ($chkActive == TRUE) {
+        if (! ($isUserActive == TRUE)) {
           $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
     <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
     <strong>Error !</strong> Sorry, Your account is Deactivated, Contact with Admin !</div>';
