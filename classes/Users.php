@@ -115,48 +115,6 @@ class Users{
     }
   }
 
- // Insert user's study in Study table
- public function insert_study($data) {
-    $full_name = $data['full_name'];
-    $short_name = $data['short_name'];
-    $IRB = $data['IRB'];
-    $created_by = Session::get('id');
-    $last_edited_by = Session::get('id');    
-
-     if ($full_name == "" || $short_name == "" || $IRB == "") {
-      $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
-<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-<strong>Error!</strong> Study registration fields must not be empty!</div>'; 
-        return $msg; // if any field is empty
-     } else {
-        $sql = "INSERT INTO Study (full_name, short_name, IRB, created_by, last_edited_by)
-              VALUES ('$full_name', '$short_name', '$IRB', '$created_by', '$last_edited_by')";
-        $stmt = $this->db->pdo->prepare($sql);
-        $stmt->bindValue('full_name', $full_name);
-        $stmt->bindValue('short_name', $short_name);
-        $stmt->bindValue('IRB', $IRB);
-        $stmt->bindValue('created_by', $created_by);
-        $stmt->bindValue('last_edited_by', $created_by);        
-        $result = $stmt->execute();        
-     }
-     
-    if ($result) {
-        /* $msg = '<div class="alert alert-success alert-dismissible mt-3" id="flash-msg">
-      <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-      <strong>Success!</strong> You have created a study!</div>';
-        return $msg; */
-        echo '<div class="alert alert-success alert-dismissible mt-3" id="flash-msg">
-      <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-      <strong>Success!</strong> You have created a study!</div>';
-        echo "<script>setTimeout(\"location.href = 'view_study.php';\",1500);</script>";
-    } else {
-        $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
-      <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-      <strong>Error!</strong> Something went wrong, try again!</div>';
-        return $msg;
-    }
-}
-
  // Add researcher to study 
   public function addResearcher($data){
     if (empty($data['researcher_ID'])){
@@ -481,6 +439,44 @@ class Users{
       }
     }
     
+ // Insert user's study in Study table
+ public function insert_study($data) {
+  $full_name = $data['full_name'];
+  $short_name = $data['short_name'];
+  $IRB = $data['IRB'];
+  $created_by = Session::get('id');
+  $last_edited_by = Session::get('id');    
+
+   if ($full_name == "" || $short_name == "" || $IRB == "") {
+    $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
+<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+<strong>Error!</strong> Study registration fields must not be empty!</div>'; 
+      return $msg; // if any field is empty
+   } else {
+      $sql = "INSERT INTO Study (full_name, short_name, IRB, created_by, last_edited_by)
+            VALUES ('$full_name', '$short_name', '$IRB', '$created_by', '$last_edited_by')";
+      $stmt = $this->db->pdo->prepare($sql);
+      $stmt->bindValue('full_name', $full_name);
+      $stmt->bindValue('short_name', $short_name);
+      $stmt->bindValue('IRB', $IRB);
+      $stmt->bindValue('created_by', $created_by);
+      $stmt->bindValue('last_edited_by', $created_by);        
+      $result = $stmt->execute();        
+   }
+   
+  if ($result) {
+      echo '<div class="alert alert-success alert-dismissible mt-3" id="flash-msg">
+    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+    <strong>Success!</strong> You have created a study!</div>';
+      echo "<script>setTimeout(\"location.href = 'view_study.php';\",1500);</script>";
+  } else {
+      $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
+    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+    <strong>Error!</strong> Something went wrong, try again!</div>';
+      return $msg;
+  }
+} 
+
     // Edit a user's study
     public function updateStudy($study_ID, $data){
         $full_name = $data['full_name'];
@@ -564,7 +560,11 @@ class Users{
         return $msg;
     }
     
+    // inserts a session of a  study into DB
     public function insert_session($study_ID, $data){
+        $created_by = Session::get('id');
+        $last_edited_by = Session::get('id');    
+        
         if (empty($data["participant_ID"])){
             $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
                     <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
@@ -576,13 +576,14 @@ class Users{
             $data["comment"] = NULL;
         }
         
-        $sql = "INSERT INTO Session (study_ID, participant_ID, comment)
-                VALUES (:study_ID, :participant_ID, :comment);";
+        $sql = "INSERT INTO Session (study_ID, participant_ID, comment, created_by, last_edited_by)
+                VALUES (:study_ID, :participant_ID, :comment, :created_by, :last_edited_by);";
         $stmt = $this->db->pdo->prepare($sql);
-        
         $stmt->bindValue(':study_ID', $study_ID);
         $stmt->bindValue(':participant_ID', $data["participant_ID"]);
         $stmt->bindValue(':comment', $data["comment"]);
+        $stmt->bindValue('created_by', $created_by);
+        $stmt->bindValue('last_edited_by', $created_by);          
         
         $result = $stmt->execute();
         if ($result){
