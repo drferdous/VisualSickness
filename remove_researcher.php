@@ -70,15 +70,6 @@ if (isset($addResearcher)) {
          });
      });
  </script>      
- 
- <script type="text/javascript">
-     $(document).ready(function() {
-         $('#study_ID').change(function() {
-             alert($(this).val());
-         });
-     });
- </script> 
-
 
 
   <?php
