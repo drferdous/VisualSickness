@@ -23,7 +23,8 @@ if (isset($_POST['end-session-btn'])){
                 <tr>
                     <th>Session ID</th>
                     <th>Study ID</th>
-                    <th>Participant ID</th>                    
+                    <th>Participant</th>           
+                    <th># of Quizzes Taken</th>                       
                     <th>Start Time</th>
                     <th>End Time</th>
                     <th>Comment</th>
@@ -53,7 +54,8 @@ if (isset($_POST['end-session-btn'])){
                 else{
                     echo "<td>-</td>";
                 }                
-             
+
+                echo "<td>" .  $row_session['quizzes_taken']     . "</td>";
                 echo "<td>" .  $row_session['start_time']     . "</td>";
                 echo "<td>" .  $row_session['end_time'] . "</td>";
                 echo "<td>" .  $row_session['comment'] . "</td>";
