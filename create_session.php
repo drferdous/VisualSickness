@@ -44,9 +44,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['insert_session'])){
             </div>
             </form>
             
-            <a href="VisualQuiz.php?code=randomCode">New Visual SSQ</a>
-            <br>
-            <a href="TextQuiz.php?code=randomCode">New Text SSQ</a>
         </div>
     </div>
 </div>
