@@ -2,21 +2,26 @@
 
 if(isset($_GET['code']) == "") {
   header('Location: index.php');
-  exit;
+  exit();
 } 
 
 include 'inc/header.php';
+?>
 
-
- ?>
-      <div class="card ">
-        <div class="card-header">
-          <h3><span class="float-right">Welcome! <strong>
-            <span class="badge badge-lg badge-secondary text-white">
-</span>
-
-          </strong></span></h3>
-        </div>
+<div class="card ">
+    <div class="card-header">
+        <h3><span class="float-right">Welcome! 
+            <strong><span class="badge badge-lg badge-secondary text-white">
+                <?php
+                    $username = Session::get('username');
+                    if (isset($username)){
+                        echo $username;
+                    }
+                ?>
+            </span></strong>
+        </span></h3>
+    </div>
+    
         <div class="card-body pr-2 pl-2">
 
 <style type="text/css">
@@ -827,6 +832,7 @@ include 'inc/header.php';
 
     <input type="hidden" id="pre_post" name="pre_post" value="0">
     <input type="hidden" id="session_ID" name="session_ID" value="0">
+    <input type="hidden" id="code" name="code" value=" <?php echo $_GET['code'] ?>">
     <input type="submit" name="Submit" value="Submit">
 </div>
 
