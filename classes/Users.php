@@ -330,6 +330,7 @@ class Users{
           Session::set('name', $logResult->name);
           Session::set('email', $logResult->email);
           Session::set('username', $logResult->username);
+          Session::set('session_ID', -1);
           Session::set('logMsg', '<div class="alert alert-success alert-dismissible mt-3" id="flash-msg">
     <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
     <strong>Success !</strong> You are Logged In Successfully !</div>');
