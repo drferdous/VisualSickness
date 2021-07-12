@@ -84,7 +84,7 @@ if(isset($_POST['Submit']))
 
     $age = $_POST['age'];
     $gender = $_POST['gender'];
-    $code = $_POST['code'];
+    $code = $_POST['code'];  // Note: Code can have a maximum of 8 characters.
     $race = $_POST['race'];
     $education = $_POST['education'];
     $quiz = '1';
@@ -119,7 +119,11 @@ if(isset($_POST['Submit']))
         echo "<br>";
         echo "SSQ Score: ";
         echo $SSQ_Score;
-     } 
+     }
+     else{
+         echo "Error: " . $sql;
+         echo mysqli_error($conn);
+     }
      
      $sql2 = "INSERT INTO Demographics (Code, Age, Race_Ethnicity, Gender, Education, Quiz)
           VALUES ('$code', '$age', '$race', '$gender', '$education', '$quiz')";
