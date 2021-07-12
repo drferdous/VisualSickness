@@ -42,7 +42,9 @@ Session::CheckSession();
                         
                         echo "<td>";
                         echo "<a class='btn-success btn-sm' href=\"session_details.php?session_ID=" . $row['session_ID'] . "\">Session Details</a>";
-                        echo "<a class='btn-success btn-sm' href=\"chooseQuiz.php?session_ID=" . $row['session_ID'] . "\">Take Quiz</a>";
+                        echo "<br>"; 
+                        echo "<br>";                        
+                        echo "<a class='btn-success btn-sm' href=\"chooseQuiz.php?session_ID=" . $row['session_ID'] . "\">New SSQ</a>";
                         
                         echo "</td>";
                         
