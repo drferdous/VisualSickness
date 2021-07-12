@@ -833,7 +833,7 @@ include 'inc/header.php';
     <input type="hidden" id="pre_post" name="pre_post" value="0">
     <input type="hidden" id="session_ID" name="session_ID" value="0">
     <input type="hidden" id="code" name="code" value=" <?php echo $_GET['code'] ?>">
-    <input type="submit" name="Submit" value="Submit">
+    <input type="submit" class="btn btn-success" name="Submit" value="Submit">
 </div>
 
 </div>
