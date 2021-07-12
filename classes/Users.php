@@ -590,7 +590,8 @@ class Users{
         if ($result){
             $msg = '<div class="alert alert-success alert-dismissible mt-3" id="flash-msg">
                     <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                    <strong>Success !</strong> You created a session!</div>';
+                    <strong>Success!</strong> You created a new session! You will now be redirected to the Session List page for this study.</div>';
+            echo "<script>setTimeout(\"location.href = 'session_list.php?study_ID=$study_ID';\",1500);</script>";    
             return $msg;
         }
         else{
