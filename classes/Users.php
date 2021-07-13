@@ -333,7 +333,7 @@ class Users{
           Session::set('session_ID', -1);
           Session::set('logMsg', '<div class="alert alert-success alert-dismissible mt-3" id="flash-msg">
     <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-    <strong>Success !</strong> You are Logged In Successfully !</div>');
+    <strong>Success!</strong> You logged in!</div>');
           echo "<script>location.href='index.php';</script>";
 
         }else{

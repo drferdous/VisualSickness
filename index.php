@@ -50,10 +50,22 @@
     }
 </script>
 
-    <?php
+<?php
     include 'inc/header.php';
-
-    ?>
+    
+    // Displays banner that a user logged in successfully.
+    $logMsg = Session::get('logMsg');
+    $msg = Session::get('msg');    
+    
+    if ($logMsg !== FALSE) {
+        echo $logMsg;
+        Session::set("logMsg", NULL);
+    }
+    if ($msg !== FALSE){
+        echo $msg;
+        Session::set("msg", NULL);
+    }
+?>
     
       <div class="card ">
         <div class="card-header">
