@@ -1,11 +1,11 @@
 <?php
+include 'inc/header.php';
 
-if(isset($_GET['code']) == "") {
+if(isset($_GET['code']) == "" && Session::get('login') === FALSE) {
   header('Location: index.php');
   exit();
 } 
 
-include 'inc/header.php';
 ?>
 
 <div class="card ">
@@ -830,9 +830,16 @@ include 'inc/header.php';
         </label>
     </div>
 
-    <input type="hidden" id="pre_post" name="pre_post" value="0">
-    <input type="hidden" id="session_ID" name="session_ID" value="0">
-    <input type="hidden" id="code" name="code" value=" <?php echo $_GET['code'] ?>">
+    <input type="hidden" id="pre_post" name="pre_post" value="<?php echo $_GET['pre_post'] ?>">
+    <input type="hidden" id="session_ID" name="session_ID" value="<?php echo $_GET['session_ID'] ?>">
+    
+    <?php
+    if (isset($_GET['code'])){?>
+        <input type="hidden" id="code" name="code" value=" <?php echo $_GET['code'] ?>">
+    <?php }
+    else{ ?>
+        <input type="hidden" id="code" name="code" value="">
+    <?php } ?>
     <input type="submit" class="btn btn-success" name="Submit" value="Submit">
 </div>
 

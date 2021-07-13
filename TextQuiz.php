@@ -1,10 +1,10 @@
 <?php
-if(isset($_GET['code']) == "") {
-  header('Location: index.php');
-  exit;
-} 
-
 include 'inc/header.php';
+
+if(isset($_GET['code']) == "" && Session::get('login') === FALSE) {
+  header('Location: index.php');
+  exit();
+} 
 ?>
       
 <div class="card ">
@@ -33,8 +33,8 @@ include 'inc/header.php';
 </div>
 </center>
 
-<center>
 <form action="insert_quiz.php" method="post">
+    <center>
     <div class="symptoms">
         <h1>Please Enter Your Demographic Data</h1>
             <label>
@@ -89,9 +89,12 @@ include 'inc/header.php';
             <label for="other">Prefer Not To Answer</label>
             <br/>
     </div>
+    </center>
   <hr>
   <h1>Cybersickness Online Questionnaire</h1>
   <p>Please pick your current discomfort level on the categories mentioned below. If you do not understand the meaning of the symptom, pick "Do not Understand".</p>
+
+<center>
 <div class="symptoms">
   <h2>General Discomfort</h2>
   <hr>
@@ -492,15 +495,22 @@ include 'inc/header.php';
             <input type="radio" id="burp3" name="burping" value="3"> Severe
         </label>
     </div>
-    <input type="hidden" id="pre_post" name="pre_post" value="0">
-    <input type="hidden" id="session_ID" name="session_ID" value="0">
-
-    <input type="hidden" name="code" value="<?php echo $_GET['code']; ?>">
-
-    <input type="submit" name="Submit" value="Submit">
-</div>
-</form>
 </center>
+</div>
+
+    <input type="hidden" id="pre_post" name="pre_post" value="<?php echo $_GET['pre_post'] ?>">
+    <input type="hidden" id="session_ID" name="session_ID" value="<?php echo $_GET['session_ID'] ?>">
+    
+    <?php
+    if (isset($_GET['code'])){?>
+        <input type="hidden" id="code" name="code" value=" <?php echo $_GET['code'] ?>">
+    <?php }
+    else{ ?>
+        <input type="hidden" id="code" name="code" value="">
+    <?php } ?>
+    
+    <input type="submit" class="btn btn-success" name="Submit" value="Submit">
+</form>
 
 
 </body>

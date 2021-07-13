@@ -136,6 +136,9 @@ if(isset($_POST['Submit']))
      }
      mysqli_close($conn);
 }
+
+
+// header('Location: session_list.php?study_ID=' . $study_ID);
 ?>
 
 
