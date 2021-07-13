@@ -22,8 +22,8 @@ if (isset($_POST['end-session-btn'])){
             <thead class="text-center">
                 <tr>
                     <th>Session ID</th>
-                    <th>Study ID</th>
-                    <th>Participant</th>           
+                    <th>Study Name</th>
+                    <th>Participant Name</th>           
                     <th># of Quizzes Taken</th>                       
                     <th>Start Time</th>
                     <th>End Time</th>
@@ -41,7 +41,18 @@ if (isset($_POST['end-session-btn'])){
                 $mysqli_result = mysqli_query($conn, $sql_session);
                 $row_session = mysqli_fetch_assoc($mysqli_result);
                 echo "<td>" .  $row_session['session_ID']  . "</td>";
-                echo "<td>" .  $row_session['study_ID'] . "</td>";
+                
+                // show name for participant_ID, not id         
+                if (isset($row_session['study_ID'])){
+                    $sql_users = "SELECT full_name FROM Study WHERE study_id = " . $row_session['study_ID'] . " LIMIT 1;";
+                    $result_users = mysqli_query($conn, $sql_users);
+                    $row_users = mysqli_fetch_assoc($result_users);
+                        
+                    echo "<td>" . $row_users['full_name'] . "</td>";
+                }
+                else{
+                    echo "<td>-</td>";
+                }                    
                 
                 // show name for participant_ID, not id         
                 if (isset($row_session['participant_ID'])){
