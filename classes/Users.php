@@ -588,17 +588,15 @@ class Users{
         
         $result = $stmt->execute();
         if ($result){
-            $msg = '<div class="alert alert-success alert-dismissible mt-3" id="flash-msg">
-                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                    <strong>Success!</strong> You created a new session! You will now be redirected to the Session List page for this study.</div>';
-            
             $sql = "SELECT LAST_INSERT_ID();";
             $stmt = $this->db->pdo->prepare($sql);
             $stmt->execute();
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
             Session::set('session_ID', intval($result['LAST_INSERT_ID()']));
-            
-            echo "<script>setTimeout(\"location.href = 'session_list.php?study_ID=$study_ID';\",1500);</script>";    
+    
+            $msg = '<div class="alert alert-success alert-dismissible mt-3" id="flash-msg">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <strong>Success!</strong> You created a new session! You will now be redirected to the Session Details page for this study.</div>';
             return $msg;
         }
         else{

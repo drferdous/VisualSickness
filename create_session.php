@@ -8,12 +8,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['insert_session'])){
     if (isset($insertSessionMessage)){
         echo $insertSessionMessage;
     }
-}
+
+    //Redirect user to the corresponding session details page.
 ?>
+    <script>
+        setTimeout(function(){
+            let currSessionID = <?php echo Session::get('session_ID');?>; 
+            location.href = "session_details.php?session_ID=" + currSessionID;
+        }, 2000);
+    </script>";
+<?php }?>
     
  <div class="card ">
     <div class="card-header">
-          <h3 class='text-center'>Manage a Session</h3>
+          <h3 class='text-center'>Create a Session</h3>
     </div>
     <div class="cad-body">
         <div class="card-body">
@@ -23,11 +31,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['insert_session'])){
                 <select class="form-control" name="participant_ID" id="participant_name">
                     <option value="" selected hidden disabled>Please Choose...</option>
                     <?php
-                    $sql = "SELECT participant_id, anonymous_name FROM Participant;";
+                    $sql = "SELECT participant_id, anonymous_name, dob FROM Participant;";
                     $result = mysqli_query($conn, $sql);
                     while ($row = mysqli_fetch_assoc($result)){
-                        echo "<option value=\"" . $row['participant_id'] . "\" >";
-                        echo $row['anonymous_name'];
+                        echo "<option value=\"" . $row['participant_id'] . "\">";
+                        echo $row['anonymous_name'] . " - " . $row['dob'];
                         echo "</option>";
                     }
                     ?>
