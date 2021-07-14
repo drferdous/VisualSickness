@@ -608,16 +608,19 @@ class Users{
     }
     
     // restarts the current session within a study by removing the end time of a session.
-    public function restart_session($session_ID){
+    public function restart_session($session_ID) {
+        $last_edited_by = Session::get('id');        
+        
         $sql = "UPDATE Session
-                SET end_time = NULL
+                SET end_time = NULL, last_edited_by = :last_edited_by
                 WHERE session_ID = :session_ID
                 LIMIT 1;";
                 
         $stmt = $this->db->pdo->prepare($sql);
         $stmt->bindValue(':session_ID', $session_ID);
-        
+        $stmt->bindValue('last_edited_by', $last_edited_by);
         $result = $stmt->execute();
+        
         if ($result){
             Session::set('session_ID', intval($session_ID));
             $msg = '<div class="alert alert-success alert-dismissible mt-3" id="flash-msg">
