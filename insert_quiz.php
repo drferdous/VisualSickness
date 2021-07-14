@@ -1,48 +1,9 @@
 <?php
 include 'inc/header.php';
+include 'database.php';
 
 Session::CheckSession();
-
-$logMsg = Session::get('logMsg');
-if (isset($logMsg)) {
-  echo $logMsg;
-}
-$msg = Session::get('msg');
-if (isset($msg)) {
-  echo $msg;
-}
-Session::set("msg", NULL);
-Session::set("logMsg", NULL);
 ?>
-<?php
-
-if (isset($_GET['remove'])) {
-  $remove = preg_replace('/[^a-zA-Z0-9-]/', '', (int)$_GET['remove']);
-  $removeUser = $users->deleteUserById($remove);
-}
-
-if (isset($removeUser)) {
-  echo $removeUser;
-}
-if (isset($_GET['deactive'])) {
-  $deactive = preg_replace('/[^a-zA-Z0-9-]/', '', (int)$_GET['deactive']);
-  $deactiveId = $users->userDeactiveByAdmin($deactive);
-}
-
-if (isset($deactiveId)) {
-  echo $deactiveId;
-}
-if (isset($_GET['active'])) {
-  $active = preg_replace('/[^a-zA-Z0-9-]/', '', (int)$_GET['active']);
-  $activeId = $users->userActiveByAdmin($active);
-}
-
-if (isset($activeId)) {
-  echo $activeId;
-}
-
-
- ?>
       <div class="card ">
         <div class="card-header">
           <h3><span class="float-right">Welcome! <strong>
@@ -59,7 +20,6 @@ if (isset($username)) {
         <div class="card-body pr-2 pl-2">
 
           <?php
-include_once 'database.php';
 if(isset($_POST['Submit']))
 {    
     $ssq_ID = $_POST['ssq_ID'];
@@ -103,9 +63,9 @@ if(isset($_POST['Submit']))
     $SSQ_Score = $SSQ_Sum * 3.74; 
 
 
-     $sql = "INSERT INTO SSQ (ssq_ID, general_discomfort, fatigue, headache, difficulty_focusing, eye_strain, increased_salivation, sweating, nausea, difficulty_concentrating, fullness_of_head, blurred_vision, dizziness_with_eyes_open, dizziness_with_eyes_closed, vertigo, stomach_awareness, burping, pre_post, session_ID, code)
-          VALUES ('$ssq_ID', '$general_discomfort', '$fatigue', '$headache', '$difficulty_focusing', '$eye_strain', '$increased_salivation', '$sweating', '$nausea', '$difficulty_concentrating', '$fullness_of_head', '$blurred_vision', '$dizziness_with_eyes_open', '$dizziness_with_eyes_closed', '$vertigo', '$stomach_awareness', '$burping', '$pre_post', '$session_ID', '$code')";
-     if (mysqli_query($conn, $sql)) {
+    $sql = "INSERT INTO SSQ (ssq_ID, general_discomfort, fatigue, headache, difficulty_focusing, eye_strain,              increased_salivation, sweating, nausea, difficulty_concentrating, fullness_of_head, blurred_vision,           dizziness_with_eyes_open, dizziness_with_eyes_closed, vertigo, stomach_awareness, burping, pre_post,          session_ID, code)
+            VALUES ('$ssq_ID', '$general_discomfort', '$fatigue', '$headache', '$difficulty_focusing', '$eye_strain', '$increased_salivation', '$sweating', '$nausea', '$difficulty_concentrating', '$fullness_of_head', '$blurred_vision', '$dizziness_with_eyes_open', '$dizziness_with_eyes_closed', '$vertigo', '$stomach_awareness', '$burping', '$pre_post', '$session_ID', '$code')";
+    if (mysqli_query($conn, $sql)) {
         echo "New record created successfully!";
         echo "<br>";
         echo "Nausea Score: ";
@@ -119,26 +79,30 @@ if(isset($_POST['Submit']))
         echo "<br>";
         echo "SSQ Score: ";
         echo $SSQ_Score;
-     }
-     else{
-         echo "Error: " . $sql;
-         echo mysqli_error($conn);
-     }
+    }
+    else{
+        echo "Error: " . $sql;
+        echo mysqli_error($conn);
+    }
      
-     $sql2 = "INSERT INTO Demographics (Code, Age, Race_Ethnicity, Gender, Education, Quiz)
-          VALUES ('$code', '$age', '$race', '$gender', '$education', '$quiz')";
-     if (mysqli_query($conn, $sql2)) {
-         echo "Inserted";
-     }
-     else {
-        echo "Error: " . $sql . "
-" . mysqli_error($conn);
-     }
-     mysqli_close($conn);
+    $sql2 = "INSERT INTO Demographics (Code, Age, Race_Ethnicity, Gender, Education, Quiz)
+            VALUES ('$code', '$age', '$race', '$gender', '$education', '$quiz')";
+    if (mysqli_query($conn, $sql2)) {
+        echo "Inserted";
+    }
+    else {
+        echo "Error: " . $sql;
+        echo mysqli_error($conn);
+    }
 }
 
-
-// header('Location: session_list.php?study_ID=' . $study_ID);
+    $sql = "SELECT study_ID
+            FROM Session
+            WHERE session_ID = " . $_POST['session_ID'] . 
+            " LIMIT 1;";
+    $result = mysqli_query($conn, $sql);
+    $row = mysqli_fetch_assoc($result);
+    header("Location: session_list.php?study_ID=" . $row['study_ID']);
 ?>
 
 
