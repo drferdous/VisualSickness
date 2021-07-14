@@ -602,6 +602,31 @@ class Users{
         }
     }
     
+    // restarts the current session within a study by removing the end time of a session.
+    public function restart_session($session_ID){
+        $sql = "UPDATE Session
+                SET end_time = NULL
+                WHERE session_ID = :session_ID
+                LIMIT 1;";
+                
+        $stmt = $this->db->pdo->prepare($sql);
+        $stmt->bindValue(':session_ID', $session_ID);
+        
+        $result = $stmt->execute();
+        if ($result){
+            $msg = '<div class="alert alert-success alert-dismissible mt-3" id="flash-msg">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <strong>Success !</strong> Session restarted!</div>';
+            return $msg;
+        }
+        else{
+            $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <strong>Error !</strong> Something went wrong, try restarting again!</div>';
+            return $msg;
+        }
+    }
+    
     // ends the current session within a study.
     public function endSession($session_ID){
         $currentDate = new DateTime();

@@ -4,6 +4,13 @@ include_once 'database.php';
 
 Session::CheckSession();
 
+if (isset($_POST['restart-session-btn'])){
+    $startSessionMessage = $users->restart_session($_GET['session_ID']);
+    if (isset($startSessionMessage)){
+        echo $startSessionMessage;
+    }
+}
+
 if (isset($_POST['end-session-btn'])){
     $endSessionMessage = $users->endSession($_GET['session_ID']);
     if (isset($endSessionMessage)){
@@ -14,7 +21,19 @@ if (isset($_POST['end-session-btn'])){
 
 <div class="card">
     <div class="card-header">
-        <h3>Session Details</h3>
+        <h3>Session Details
+            <?php
+            $sql = "SELECT end_time
+                    FROM Session
+                    WHERE session_ID = " . $_GET['session_ID'] . "
+                    LIMIT 1;";
+            $result = mysqli_query($conn, $sql);
+            $row = mysqli_fetch_assoc($result);
+            
+            if (!isset($row['end_time'])){?>
+                <a href="chooseQuiz.php?session_ID=<?php echo $_GET['session_ID']; ?>" class="btn btn-primary float-right">New SSQ</a>    
+            <?php }?>
+        </h3>
     </div>
 
     <div class="card-body pr-2 pl-2">
@@ -94,11 +113,14 @@ if (isset($_POST['end-session-btn'])){
                 
                 
                 echo "<td>";
-                if (!isset($row_session['end_time'])){
-                    echo "<form method=\"post\">";
-                    echo "<input type=\"submit\" name=\"end-session-btn\" value=\"End Session\" />";
-                    echo "</form>";
+                echo "<form method=\"post\">";
+                if (isset($row_session['end_time'])){
+                    echo "<input type=\"submit\" name=\"restart-session-btn\" value=\"Restart Session\">";
                 }
+                else{
+                    echo "<input type=\"submit\" name=\"end-session-btn\"   value=\"End Session\">";
+                }
+                echo "</form>";
                 echo "</td>";
                 ?> 
                 </tr>
