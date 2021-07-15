@@ -4,24 +4,25 @@ include 'database.php';
 
 Session::CheckSession();
 ?>
-      <div class="card ">
-        <div class="card-header">
-          <h3><span class="float-right">Welcome! <strong>
-            <span class="badge badge-lg badge-secondary text-white">
+
+<div class="card ">
+    <div class="card-header">
+        <h3><span class="float-right">Welcome! 
+            <strong><span class="badge badge-lg badge-secondary text-white">
+            <?php
+                $username = Session::get('username');
+                if (isset($username)) {
+                    echo $username;
+                }
+            ?>
+            </span></strong>
+        </span></h3>
+    </div>
+        
+<div class="card-body pr-2 pl-2">
+
 <?php
-$username = Session::get('username');
-if (isset($username)) {
-  echo $username;
-}
- ?></span>
-
-          </strong></span></h3>
-        </div>
-        <div class="card-body pr-2 pl-2">
-
-          <?php
-if(isset($_POST['Submit']))
-{    
+if(isset($_POST['Submit'])){    
     $ssq_ID = $_POST['ssq_ID'];
     $general_discomfort = $_POST['general_discomfort'];
     $fatigue = $_POST['fatigue'];
@@ -87,15 +88,11 @@ if(isset($_POST['Submit']))
      
     $sql2 = "INSERT INTO Demographics (Code, Age, Race_Ethnicity, Gender, Education, Quiz)
             VALUES ('$code', '$age', '$race', '$gender', '$education', '$quiz')";
-    if (mysqli_query($conn, $sql2)) {
-        echo "Inserted";
-    }
-    else {
-        echo "Error: " . $sql;
-        echo mysqli_error($conn);
-    }
+    mysqli_query($conn, $sql2);
 }
-
+    /*
+    This code redirects the user to the appropriate study list page.
+    
     $sql = "SELECT study_ID
             FROM Session
             WHERE session_ID = " . $_POST['session_ID'] . 
@@ -103,15 +100,16 @@ if(isset($_POST['Submit']))
     $result = mysqli_query($conn, $sql);
     $row = mysqli_fetch_assoc($result);
     header("Location: session_list.php?study_ID=" . $row['study_ID']);
+    */
 ?>
 
+<form action="session_details.php?session_ID=<?php echo Session::get('session_ID'); ?>" method="post">
+        <button type="Submit" name="ok-btn" class="btn btn-success form-group">OK</button>
+</form>
 
-        </div>
-      </div>
+</div>
+</div>
 
-
-
-  <?php
-  include 'inc/footer.php';
-
-  ?>
+<?php
+    include 'inc/footer.php';
+?>

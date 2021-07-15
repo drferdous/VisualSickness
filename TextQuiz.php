@@ -33,7 +33,7 @@ if(isset($_GET['code']) == "" && Session::get('login') === FALSE) {
 </div>
 </center>
 
-<form action="insert_quiz.php" method="post">
+<form action="insert_quiz.php?session_ID=<?php echo Session::get('session_ID'); ?>" method="post">
     <center>
     <div class="symptoms">
         <h1>Please Enter Your Demographic Data</h1>

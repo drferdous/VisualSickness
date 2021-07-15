@@ -6,7 +6,7 @@
     
     if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['take-ssq-btn'])) {
         if (isset($_POST['quiz_type']) && isset($_POST['pre_post'])){
-            header("Location: " . $_POST['quiz_type'] . ".php?session_ID=" . $_GET['session_ID'] . "&pre_post=" . $_POST['pre_post']);
+            header("Location: " . $_POST['quiz_type'] . ".php?session_ID=" . Session::get('session_ID') . "&pre_post=" . $_POST['pre_post']);
         }
         else{
             $errorMessage = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
@@ -33,7 +33,7 @@
     
     <div class="card-body pr-2 pl-2">
         <h2 class="text-center">Quiz Settings</h2>
-        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) . "?session_ID=" . $_GET['session_ID']; ?>" method="post">
+        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) . "?session_ID=" . Session::get('session_ID'); ?>" method="post">
             <div class="form-group pt-3">
                 <label for="quiz_type">Quiz Type</label>
                 <select class="form-control" name="quiz_type" id="quiz_type">

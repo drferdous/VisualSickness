@@ -3,6 +3,7 @@ include 'inc/header.php';
 include_once 'database.php';
 
 Session::CheckSession();
+Session::set('session_ID', intval($_GET['session_ID']));
 
 if (isset($_POST['restart-session-btn'])){
     $startSessionMessage = $users->restart_session($_GET['session_ID']);
@@ -25,13 +26,13 @@ if (isset($_POST['end-session-btn'])){
             <?php
             $sql = "SELECT end_time
                     FROM Session
-                    WHERE session_ID = " . $_GET['session_ID'] . "
+                    WHERE session_ID = " . Session::get('session_ID') . "
                     LIMIT 1;";
             $result = mysqli_query($conn, $sql);
             $row = mysqli_fetch_assoc($result);
             
             if (!isset($row['end_time'])){?>
-                <a href="chooseQuiz.php?session_ID=<?php echo $_GET['session_ID']; ?>" class="btn btn-primary float-right">New SSQ</a>    
+                <a href="chooseQuiz.php?session_ID=<?php echo Session::get('session_ID'); ?>" class="btn btn-primary float-right">New SSQ</a>    
             <?php }?>
         </h3>
     </div>
@@ -42,7 +43,7 @@ if (isset($_POST['end-session-btn'])){
                 <tr>
                     <th>Session ID</th>
                         <?php
-                        $sql_session = "SELECT * FROM Session WHERE session_ID = " . $_GET["session_ID"];
+                        $sql_session = "SELECT * FROM Session WHERE session_ID = " . Session::get('session_ID');
                         $mysqli_result = mysqli_query($conn, $sql_session);
                         $row_session = mysqli_fetch_assoc($mysqli_result);
                         echo "<td>" .  $row_session['session_ID']  . "</td>";     
