@@ -608,7 +608,6 @@ class Users{
             $msg = '<div class="alert alert-success alert-dismissible mt-3" id="flash-msg">
                     <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
                     <strong>Success!</strong> You created a new session! You will now be redirected to the Session Details page for this study.</div>';
-            return $msg;
         }
         catch (PDOException $excptn){
             $this->db->pdo->rollBack();
@@ -616,8 +615,10 @@ class Users{
             $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
                     <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
                     <strong>Error !</strong> Something went wrong, try creating a session again!</div>';
-            return $msg;
             // die($excptn->getMessage());
+        }
+        finally{
+            return $msg;
         }
     }
     
