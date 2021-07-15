@@ -577,33 +577,47 @@ class Users{
             $data["comment"] = NULL;
         }
         
-        $sql = "INSERT INTO Session (study_ID, participant_ID, comment, created_by, last_edited_by)
-                VALUES (:study_ID, :participant_ID, :comment, :created_by, :last_edited_by);";
-        $stmt = $this->db->pdo->prepare($sql);
-        $stmt->bindValue(':study_ID', $study_ID);
-        $stmt->bindValue(':participant_ID', $data["participant_ID"]);
-        $stmt->bindValue(':comment', $data["comment"]);
-        $stmt->bindValue('created_by', $created_by);
-        $stmt->bindValue('last_edited_by', $created_by);          
-        
-        $result = $stmt->execute();
-        if ($result){
+        $this->db->pdo->beginTransaction();
+        try{
+            $sql = "INSERT INTO Session (study_ID, participant_ID, comment, created_by, last_edited_by)
+                    VALUES (:study_ID, :participant_ID, :comment, :created_by, :last_edited_by);";
+            $stmt = $this->db->pdo->prepare($sql);
+            
+            $stmt->bindValue(':study_ID', $study_ID);
+            $stmt->bindValue(':participant_ID', $data["participant_ID"]);
+            $stmt->bindValue(':comment', $data["comment"]);
+            $stmt->bindValue(':created_by', $created_by);
+            $stmt->bindValue(':last_edited_by', $created_by);  
+            
+            $result = $stmt->execute();
+            if (!$result){
+                throw new Exception($stmt->error);
+            }
+            
             $sql = "SELECT LAST_INSERT_ID();";
             $stmt = $this->db->pdo->prepare($sql);
-            $stmt->execute();
+            $result = $stmt->execute();
+            if (!$result){
+                throw new Exception($stmt->error);
+            }
+            
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
             Session::set('session_ID', intval($result['LAST_INSERT_ID()']));
-    
+            
+            $this->db->pdo->commit();
             $msg = '<div class="alert alert-success alert-dismissible mt-3" id="flash-msg">
                     <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
                     <strong>Success!</strong> You created a new session! You will now be redirected to the Session Details page for this study.</div>';
             return $msg;
         }
-        else{
+        catch (PDOException $excptn){
+            $this->db->pdo->rollBack();
+            
             $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
                     <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                    <strong>Error !</strong> Something went wrong, try again!</div>';
+                    <strong>Error !</strong> Something went wrong, try creating a session again!</div>';
             return $msg;
+            // die($excptn->getMessage());
         }
     }
     
@@ -612,7 +626,8 @@ class Users{
         $last_edited_by = Session::get('id');        
         
         $sql = "UPDATE Session
-                SET end_time = NULL, last_edited_by = :last_edited_by
+                SET end_time = NULL, 
+                    last_edited_by = :last_edited_by
                 WHERE session_ID = :session_ID
                 LIMIT 1;";
                 
