@@ -90,17 +90,6 @@ if(isset($_POST['Submit'])){
             VALUES ('$code', '$age', '$race', '$gender', '$education', '$quiz')";
     mysqli_query($conn, $sql2);
 }
-    /*
-    This code redirects the user to the appropriate study list page.
-    
-    $sql = "SELECT study_ID
-            FROM Session
-            WHERE session_ID = " . $_POST['session_ID'] . 
-            " LIMIT 1;";
-    $result = mysqli_query($conn, $sql);
-    $row = mysqli_fetch_assoc($result);
-    header("Location: session_list.php?study_ID=" . $row['study_ID']);
-    */
 ?>
 
 <form action="session_details.php?session_ID=<?php echo Session::get('session_ID'); ?>" method="post">
