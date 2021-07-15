@@ -21,13 +21,16 @@ if (isset($_POST['end-session-btn'])){
 
 <div class="card">
     <div class="card-header">
-        <h3>Session Details
+        <h3>Session Details <span class="float-right"> <a href="#" onclick="history.go(-1)" style="transform: translateX(-10px)" class="btn btn-primary">Back</a>
+
             <?php
             $sql = "SELECT end_time
                     FROM Session
                     WHERE session_ID = " . $_GET['session_ID'] . "
                     LIMIT 1;";
-            $result = mysqli_query($conn, $sql); 
+            $result = mysqli_query($conn, $sql);
+            
+            
             $row = mysqli_fetch_assoc($result);
             
             if (!isset($row['end_time'])){?>
