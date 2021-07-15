@@ -89,6 +89,11 @@ if(isset($_POST['Submit'])){
     $sql2 = "INSERT INTO Demographics (Code, Age, Race_Ethnicity, Gender, Education, Quiz)
             VALUES ('$code', '$age', '$race', '$gender', '$education', '$quiz')";
     mysqli_query($conn, $sql2);
+    
+    $sql3 = "UPDATE Session 
+    SET quizzes_taken = quizzes_taken + 1 
+    WHERE session_ID = $session_ID";
+    mysqli_query($conn, $sql3);    
 }
 ?>
 
