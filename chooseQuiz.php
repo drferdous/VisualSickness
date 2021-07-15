@@ -3,6 +3,7 @@
     include 'database.php';
     
     Session::CheckSession();
+    Session::set('session_ID', intval($_GET['session_ID']));
     
     if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['take-ssq-btn'])) {
         if (isset($_POST['quiz_type']) && isset($_POST['pre_post'])){
@@ -11,7 +12,7 @@
         else{
             $errorMessage = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
                             <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                            <strong>Error! Please select a quiz type and quiz time!</strong> </div>';
+                            <strong>Error!</strong> Please select a quiz type and quiz time!</div>';
             echo $errorMessage;
         }
     }
