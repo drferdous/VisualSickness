@@ -8,9 +8,7 @@ Session::CheckSession();
 
 <div class="card ">
     <div class="card-header">
-        <?php if (Session::get('roleid') == '1' || Session::get('roleid') == '2') { ?>
-            <h3>Manage Sessions <span class="float-right">        
-        <?php  } ?> 
+            <h3>Session List <span class="float-right"> <span class="float-right"> <a href="#" onclick="history.go(-1)" class="btn btn-primary">Back</a>       
         </div>
   </h3> 
         </strong></span></h3>
