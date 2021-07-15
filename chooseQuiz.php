@@ -1,5 +1,6 @@
 <?php
     include 'inc/header.php';
+    include 'database.php';
     
     Session::CheckSession();
     
@@ -45,8 +46,15 @@
                 <label for="pre_post">Quiz Time</label>
                 <select class="form-control" name="pre_post" id="pre_post">
                     <option value="" disabled selected hidden>Select Quiz Time...</option>
-                    <option value="0">Pre</option>
-                    <option value="1">Post</option>
+                    <?php
+                        $sql = "SELECT id, name FROM SSQ_times;";
+                        $result = mysqli_query($conn, $sql);
+                        while ($row = mysqli_fetch_assoc($result)){
+                            echo "<option value=\"" . $row['id'] . "\">";
+                            echo $row['name'];
+                            echo "</option>";
+                        }
+                    ?>
                 </select>
             </div>
             <div class="form-group">
