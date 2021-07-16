@@ -50,8 +50,17 @@ if (isset($userAdd)) {
                   </select>
                 </div>
                 <div class="form-group">
-                  <label for="ethnicity">Ethnicity (optional)</label>
-                  <input type="text" name="ethnicity" class="form-control" id="ethnicity">
+                  <label for="ethnicity">Race/Ethnicity (optional)</label>
+                  <select class=form-control name="ethnicity" id="ethnicity"> 
+                     <option selected value=""> </option>    
+                      <option value="aian">American Indian or Alaska Native</option>
+                      <option value="asian">Asian</option>
+                      <option value="black">Black or African American</option>
+                      <option value="nhopi">Native Hawaiian or Other Pacific Islander</option>
+                      <option value="white">White</option>
+                      <option value="other">Other</option>
+                      <option value="Prefer Not To Answer">Prefer Not To Answer</option> 
+                </select>      
                 </div>
                 <div class="form-group">
                   <label for="occupation">Occupation (optional)</label>
@@ -59,7 +68,15 @@ if (isset($userAdd)) {
                 </div>
                 <div class="form-group">
                   <label for="education">Education (optional)</label>
-                  <input type="text" name="education" class="form-control" id="education">
+                  <select class=form-control name="education" id="education"> 
+                     <option selected value=""> </option>    
+                      <option value="elementary">Elementary School</option>
+                      <option value="middle">Middle School</option>
+                      <option value="high">High School</option>
+                      <option value="twoYear">2 Year College</option>
+                      <option value="fourYear">4 Year College</option>
+                      <option value="Prefer Not To Answer">Prefer Not To Answer</option> 
+                </select>
                 </div>
                 <div class="form-group">
                   <label for="phone_no">Phone Number (optional)</label>
