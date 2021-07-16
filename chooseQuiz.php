@@ -6,8 +6,8 @@
     Session::set('session_ID', intval($_GET['session_ID']));
     
     if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['take-ssq-btn'])) {
-        if (isset($_POST['quiz_type']) && isset($_POST['pre_post'])){
-            header("Location: " . $_POST['quiz_type'] . ".php?session_ID=" . Session::get('session_ID') . "&pre_post=" . $_POST['pre_post']);
+        if (isset($_POST['quiz_type']) && isset($_POST['ssq_time'])){
+            header("Location: " . $_POST['quiz_type'] . ".php?session_ID=" . Session::get('session_ID') . "&ssq_time=" . $_POST['ssq_time']);
         }
         else{
             $errorMessage = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
@@ -44,8 +44,8 @@
                 </select>
             </div>
             <div class="form-group">
-                <label for="pre_post">Quiz Time</label>
-                <select class="form-control" name="pre_post" id="pre_post">
+                <label for="ssq_time">Quiz Time</label>
+                <select class="form-control" name="ssq_time" id="ssq_time">
                     <option value="" disabled selected hidden>Select Quiz Time...</option>
                     <?php
                         $sql = "SELECT id, name FROM SSQ_times;";
