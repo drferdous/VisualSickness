@@ -40,7 +40,8 @@ if(isset($_POST['Submit'])){
     $vertigo = $_POST['vertigo'];
     $stomach_awareness = $_POST['stomach_awareness'];
     $burping = $_POST['burping'];
-    $pre_post = $_POST['pre_post'];
+    $ssq_time = $_POST['ssq_time'];
+    $ssq_type = $_POST['ssq_type'];
     $session_ID = $_POST['session_ID'];
 
     $age = $_POST['age'];
@@ -64,8 +65,8 @@ if(isset($_POST['Submit'])){
     $SSQ_Score = $SSQ_Sum * 3.74; 
 
 
-    $sql = "INSERT INTO SSQ (ssq_ID, general_discomfort, fatigue, headache, difficulty_focusing, eye_strain,              increased_salivation, sweating, nausea, difficulty_concentrating, fullness_of_head, blurred_vision,           dizziness_with_eyes_open, dizziness_with_eyes_closed, vertigo, stomach_awareness, burping, pre_post,          session_ID, code)
-            VALUES ('$ssq_ID', '$general_discomfort', '$fatigue', '$headache', '$difficulty_focusing', '$eye_strain', '$increased_salivation', '$sweating', '$nausea', '$difficulty_concentrating', '$fullness_of_head', '$blurred_vision', '$dizziness_with_eyes_open', '$dizziness_with_eyes_closed', '$vertigo', '$stomach_awareness', '$burping', '$pre_post', '$session_ID', '$code')";
+    $sql = "INSERT INTO SSQ (ssq_ID, general_discomfort, fatigue, headache, difficulty_focusing, eye_strain,              increased_salivation, sweating, nausea, difficulty_concentrating, fullness_of_head, blurred_vision,           dizziness_with_eyes_open, dizziness_with_eyes_closed, vertigo, stomach_awareness, burping, ssq_time,          ssq_type, session_ID, code)
+            VALUES ('$ssq_ID', '$general_discomfort', '$fatigue', '$headache', '$difficulty_focusing', '$eye_strain', '$increased_salivation', '$sweating', '$nausea', '$difficulty_concentrating', '$fullness_of_head', '$blurred_vision', '$dizziness_with_eyes_open', '$dizziness_with_eyes_closed', '$vertigo', '$stomach_awareness', '$burping', '$ssq_time', '$ssq_type', '$session_ID', '$code')";
     if (mysqli_query($conn, $sql)) {
         echo "New record created successfully!";
         echo "<br>";

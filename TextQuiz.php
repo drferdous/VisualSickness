@@ -498,9 +498,9 @@ if(isset($_GET['code']) == "" && Session::get('login') === FALSE) {
 </center>
 </div>
 
-    <input type="hidden" id="pre_post" name="pre_post" value="<?php echo $_GET['pre_post'] ?>">
+    <input type="hidden" id="ssq_time" name="ssq_time" value="<?php echo $_GET['ssq_time'] ?>">
+    <input type="hidden" id="ssq_type" name="ssq_type" value="0">
     <input type="hidden" id="session_ID" name="session_ID" value="<?php echo $_GET['session_ID'] ?>">
-    
     <?php
     if (isset($_GET['code'])){?>
         <input type="hidden" id="code" name="code" value=" <?php echo $_GET['code'] ?>">
