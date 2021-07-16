@@ -39,8 +39,15 @@
                 <label for="quiz_type">Quiz Type</label>
                 <select class="form-control" name="quiz_type" id="quiz_type">
                     <option value="" disabled selected hidden>Choose Quiz Type...</option>
-                    <option value="TextQuiz">Textual Quiz</option>
-                    <option value="VisualQuiz">Visual Quiz</option>
+                    <?php
+                        $sql = "SELECT id, type FROM SSQ_type;";
+                        $result = mysqli_query($conn, $sql);
+                        while ($row = mysqli_fetch_assoc($result)){
+                            echo "<option value=\"" . $row['id'] . "\">";
+                            echo $row['type'];
+                            echo "</option>";
+                        }
+                    ?>
                 </select>
             </div>
             <div class="form-group">
