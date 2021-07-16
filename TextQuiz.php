@@ -36,60 +36,63 @@ if(isset($_GET['code']) == "" && Session::get('login') === FALSE) {
 <form action="insert_quiz.php?session_ID=<?php echo Session::get('session_ID'); ?>" method="post">
     <center>
     <div class="symptoms">
-        <h1>Please Enter Your Demographic Data</h1>
-            <label>
-                <h2>Age</h2>
-                <input type="text" id="age" name="age" required />
-            </label><br>
-            
-            <br/>
-
-            <h2>Gender</h2>
-            <input type="radio" id="male" name="gender" value="Male" required>
-            <label for="male">Male</label><br>
-            <input type="radio" id="female" name="gender" value="Female">
-            <label for="female">Female</label><br>
-            <input type="radio" id="other" name="gender" value="Other">
-            <label for="other">Other</label><br>
-            <input type="radio" id="no" name="gender" value="Prefer Not To Answer">
-            <label for="other">Prefer Not To Answer</label>
-
-            <br/>
-            
-            <h2>Education</h2>
-            <input type="radio" id="elementary" name="education" value="Elementary School" required> 
-            <label for="elementary">Elementary School</label><br>
-            <input type="radio" id="middle" name="education" value="Middle School">
-            <label for="middle">Middle School</label><br>
-            <input type="radio" id="high" name="education" value="High School">
-            <label for="high">High School</label><br>
-            <input type="radio" id="twoYear" name="education" value="2 Year College">
-            <label for="twoYear">2 Year College</label><br>
-            <input type="radio" id="fourYear" name="education" value="4 Year College">
-            <label for="fourYear">4 Year College</label><br>
-            <input type="radio" id="no" name="education" value="Prefer Not To Answer">
-            <label for="other">Prefer Not To Answer</label>
-
-            <br/>
-
-            <h2>Race/Ethnicity</h2>
-            <input type="radio" id="aian" name="race" value="American Indian or Alaska Native" required>
-            <label for="aian">American Indian or Alaska Native</label><br>
-            <input type="radio" id="asian" name="race" value="Asian">
-            <label for="asian">Asian</label><br>
-            <input type="radio" id="black" name="race" value="Black or African American">
-            <label for="black">Black or African American</label><br>
-            <input type="radio" id="nhopi" name="race" value="Native Hawaiian or Other Pacific Islander">
-            <label for="nhopi">Native Hawaiian or Other Pacific Islander</label><br>
-            <input type="radio" id="white" name="race" value="White">
-            <label for="white">White</label><br>
-            <input type="radio" id="other" name="race" value="Other">
-            <label for="other">Other</label><br>
-            <input type="radio" id="no" name="race" value="Prefer Not To Answer">
-            <label for="other">Prefer Not To Answer</label>
-            <br/>
+        <?php if (Session::get('login') === FALSE) { ?>
+            <h1>Please Enter Your Demographic Data</h1>
+                <label>
+                    <h2>Age</h2>
+                    <input type="text" id="age" name="age" required />
+                </label><br>
+                
+                <br/>
+    
+                <h2>Gender</h2>
+                <input type="radio" id="male" name="gender" value="Male" required>
+                <label for="male">Male</label><br>
+                <input type="radio" id="female" name="gender" value="Female">
+                <label for="female">Female</label><br>
+                <input type="radio" id="other" name="gender" value="Other">
+                <label for="other">Other</label><br>
+                <input type="radio" id="no" name="gender" value="Prefer Not To Answer">
+                <label for="other">Prefer Not To Answer</label>
+    
+                <br/>
+                
+                <h2>Education</h2>
+                <input type="radio" id="elementary" name="education" value="Elementary School" required> 
+                <label for="elementary">Elementary School</label><br>
+                <input type="radio" id="middle" name="education" value="Middle School">
+                <label for="middle">Middle School</label><br>
+                <input type="radio" id="high" name="education" value="High School">
+                <label for="high">High School</label><br>
+                <input type="radio" id="twoYear" name="education" value="2 Year College">
+                <label for="twoYear">2 Year College</label><br>
+                <input type="radio" id="fourYear" name="education" value="4 Year College">
+                <label for="fourYear">4 Year College</label><br>
+                <input type="radio" id="no" name="education" value="Prefer Not To Answer">
+                <label for="other">Prefer Not To Answer</label>
+    
+                <br/>
+    
+                <h2>Race/Ethnicity</h2>
+                <input type="radio" id="aian" name="race" value="American Indian or Alaska Native" required>
+                <label for="aian">American Indian or Alaska Native</label><br>
+                <input type="radio" id="asian" name="race" value="Asian">
+                <label for="asian">Asian</label><br>
+                <input type="radio" id="black" name="race" value="Black or African American">
+                <label for="black">Black or African American</label><br>
+                <input type="radio" id="nhopi" name="race" value="Native Hawaiian or Other Pacific Islander">
+                <label for="nhopi">Native Hawaiian or Other Pacific Islander</label><br>
+                <input type="radio" id="white" name="race" value="White">
+                <label for="white">White</label><br>
+                <input type="radio" id="other" name="race" value="Other">
+                <label for="other">Other</label><br>
+                <input type="radio" id="no" name="race" value="Prefer Not To Answer">
+                <label for="other">Prefer Not To Answer</label>
+                <br/>
     </div>
     </center>
+    <?php  } ?>          
+
   <hr>
   <h1>Cybersickness Online Questionnaire</h1>
   <p>Please pick your current discomfort level on the categories mentioned below. If you do not understand the meaning of the symptom, pick "Do not Understand".</p>

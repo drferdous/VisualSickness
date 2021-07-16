@@ -79,6 +79,8 @@ if(isset($_GET['code']) == "" && Session::get('login') === FALSE) {
 
 <form action="insert_quiz.php?session_ID=<?php echo Session::get('session_ID'); ?>" method="post">
     <div class="symptoms">
+        
+        <?php if (Session::get('login') === FALSE) { ?>
         <h1>Please Enter Your Demographic Data</h1>
             <label>
                 <h2>Age</h2>
@@ -132,12 +134,14 @@ if(isset($_GET['code']) == "" && Session::get('login') === FALSE) {
             <label for="other">Prefer Not To Answer</label>
             <br/>
     </div>
+    <?php  } ?>     
+    
   <hr>
+  
   <h1>Cybersickness Online Questionnaire</h1>
   <p>Please pick your current discomfort level on the categories mentioned below. If you do not understand the meaning of the symptom, pick "Do not Understand".</p>
     <input type="hidden" id="ssq_ID" name="ssq_ID" value="0">
     <div class = "pictures">
-      <div class="symptoms">
         <h2>General Discomfort</h2>
         <hr>
         <label>
@@ -177,7 +181,6 @@ if(isset($_GET['code']) == "" && Session::get('login') === FALSE) {
         </label>
     </div>
 
-<div class="symptoms">
   <h2>Fatigue</h2>
   <hr>
 
@@ -218,9 +221,8 @@ if(isset($_GET['code']) == "" && Session::get('login') === FALSE) {
             </center>
         </label>
     </div>
-</div>
 
-<div class="symptoms">
+
   <h2>Headache</h2>
   <hr>
 
@@ -261,9 +263,7 @@ if(isset($_GET['code']) == "" && Session::get('login') === FALSE) {
             </center>
         </label>
     </div>
-</div>
 
-<div class="symptoms">
   <h2>Eye Strain</h2>
   <hr>
 
@@ -304,9 +304,7 @@ if(isset($_GET['code']) == "" && Session::get('login') === FALSE) {
             </center>
         </label>
     </div>
-</div>
 
-<div class="symptoms">
   <h2>Difficulty Focusing</h2>
   <hr>
 
@@ -347,9 +345,7 @@ if(isset($_GET['code']) == "" && Session::get('login') === FALSE) {
             </center>
         </label>
     </div>
-</div>
 
-<div class="symptoms">
   <h2>Increased Salivation</h2>
   <hr>
 
@@ -390,9 +386,7 @@ if(isset($_GET['code']) == "" && Session::get('login') === FALSE) {
             </center>
         </label>
     </div>
-</div>
 
-<div class="symptoms">
   <h2>Sweating</h2>
   <hr>
 
@@ -433,9 +427,7 @@ if(isset($_GET['code']) == "" && Session::get('login') === FALSE) {
             </center>
         </label>
     </div>
-</div>
 
-<div class="symptoms">
   <h2>Nausea</h2>
   <hr>
 
@@ -476,9 +468,7 @@ if(isset($_GET['code']) == "" && Session::get('login') === FALSE) {
             </center>
         </label>
     </div>
-</div>
 
-<div class="symptoms">
   <h2>Difficulty Concentrating</h2>
   <hr>
 
@@ -518,12 +508,8 @@ if(isset($_GET['code']) == "" && Session::get('login') === FALSE) {
               <p>Severe</p>
             </center>
         </label>
-
-            
     </div>
-</div>
 
-<div class="symptoms">
   <h2>Fullness of the Head</h2>
   <hr>
 
@@ -564,9 +550,7 @@ if(isset($_GET['code']) == "" && Session::get('login') === FALSE) {
             </center>
         </label>
     </div>
-</div>
 
-<div class="symptoms">
   <h2>Blurred Vision</h2>
   <hr>
 
@@ -607,9 +591,7 @@ if(isset($_GET['code']) == "" && Session::get('login') === FALSE) {
             </center>
         </label>
     </div>
-</div>
 
-<div class="symptoms">
   <h2>Dizziness with Eyes Open</h2>
   <hr>
 
@@ -650,10 +632,8 @@ if(isset($_GET['code']) == "" && Session::get('login') === FALSE) {
             </center>
         </label>
     </div>
-</div>
 
 
-<div class="symptoms">
   <h2>Dizziness with Eyes Closed</h2>
   <hr>
 
@@ -694,11 +674,8 @@ if(isset($_GET['code']) == "" && Session::get('login') === FALSE) {
             </center>
         </label>
     </div>
-</div>
 
 
-
-<div class="symptoms">
   <h2>Vertigo</h2>
   <hr>
 
@@ -739,11 +716,8 @@ if(isset($_GET['code']) == "" && Session::get('login') === FALSE) {
             </center>
         </label>
     </div>
-</div>
 
 
-
-<div class="symptoms">
   <h2>Stomach Awareness</h2>
   <hr>
 
@@ -784,11 +758,8 @@ if(isset($_GET['code']) == "" && Session::get('login') === FALSE) {
             </center>
         </label>
     </div>
-</div>
 
 
-
-<div class="symptoms">
   <h2>Burping</h2>
   <hr>
 
