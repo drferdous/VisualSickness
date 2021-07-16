@@ -7,7 +7,18 @@
     
     if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['take-ssq-btn'])) {
         if (isset($_POST['quiz_type']) && isset($_POST['ssq_time'])){
-            header("Location: " . $_POST['quiz_type'] . ".php?session_ID=" . Session::get('session_ID') . "&ssq_time=" . $_POST['ssq_time']);
+            if ($_POST['quiz_type'] === '0'){  // 0 represents textual quiz
+                header("Location: TextQuiz.php?session_ID=" . Session::get('session_ID') . "&ssq_time=" . $_POST['ssq_time']);
+            }
+            else if ($_POST['quiz_type'] === '1'){ // 1 represents visual quiz
+                header("Location: VisualQuiz.php?session_ID=" . Session::get('session_ID') . "&ssq_time=" . $_POST['ssq_time']);
+            }
+            else{
+                $errorMessage = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
+                                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                <strong>Error!</strong> Invalid quiz type!</div>';
+                echo $errorMessage;
+            }
         }
         else{
             $errorMessage = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
