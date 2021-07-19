@@ -29,8 +29,6 @@ if (isset($_POST['end-session-btn'])){
                     WHERE session_ID = " . $_GET['session_ID'] . "
                     LIMIT 1;";
             $result = mysqli_query($conn, $sql);
-            
-            
             $row = mysqli_fetch_assoc($result);
             
             if (!isset($row['end_time'])){?>
@@ -87,9 +85,28 @@ if (isset($_POST['end-session-btn'])){
                     </tr>
                     
                 <tr>  
-                    <th># of Quizzes Taken</th>   
+                    <th>Quizzes Taken</th>   
                     <?php
-                    echo "<td>" .  $row_session['quizzes_taken']     . "</td>";
+                        $sql_pre_quiz = "SELECT ssq_ID
+                                        FROM SSQ
+                                        WHERE session_ID = " . $_GET['session_ID'] . "
+                                        AND ssq_time = 0
+                                        LIMIT 1;";
+                        $result_pre_quiz = mysqli_query($conn, $sql_pre_quiz);
+                        
+                        $sql_post_quiz = "SELECT ssq_ID
+                                         FROM SSQ
+                                         WHERE session_ID = " . $_GET['session_ID'] . "
+                                         AND ssq_time = 1
+                                         LIMIT 1;";
+                        $result_post_quiz = mysqli_query($conn, $sql_post_quiz);
+                        
+                        if (mysqli_num_rows($result_pre_quiz) > 0){
+                            echo "<td><a href=\"pre_quiz_results.php?session_ID=" . $_GET['session_ID'] . "\" class=\"btn-sm btn-success\">Pre-Quiz Results</a>";
+                        }
+                        if (mysqli_num_rows($result_post_quiz) > 0){
+                            echo "<a href=\"post_quiz_results.php?session_ID=" . $_GET['session_ID'] . "\" class=\"btn-sm btn-success\">Post-Quiz Results</a></td>";
+                        }
                     ?>
                 </tr> 
                 
