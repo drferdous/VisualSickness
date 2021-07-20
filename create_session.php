@@ -4,24 +4,30 @@ include_once 'database.php';
 Session::CheckSession();
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['insert_session'])){
+    $successMessage = '<div class="alert alert-success alert-dismissible mt-3" id="flash-msg">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <strong>Success!</strong> You created a new session! You will now be redirected to the Session Details page for this study.</div>';
+    
     $insertSessionMessage = $users->insert_session($_GET["study_ID"], $_POST); 
     if (isset($insertSessionMessage)){
         echo $insertSessionMessage;
+        if ($insertSessionMessage === $successMessage){?>
+            <script type="text/javascript">
+                setTimeout(function(){
+                    let currSessionID = <?php echo Session::get('session_ID');?>; 
+                    location.href = "session_details.php?session_ID=" + currSessionID;
+                }, 2000);
+            </script>
+  <?php }
     }
-
-    //Redirect user to the corresponding session details page.
-?>
-    <script>
-        setTimeout(function(){
-            let currSessionID = <?php echo Session::get('session_ID');?>; 
-            location.href = "session_details.php?session_ID=" + currSessionID;
-        }, 2000);
-    </script>";
-<?php }?>
+}?>
     
  <div class="card ">
     <div class="card-header">
-          <h3 class='text-center'>Create a Session</h3>
+        <h3 class="text-center">
+            Create a Session
+            <a class="float-right btn btn-primary" href="view_study.php">Back</a>
+        </h3>
     </div>
     <div class="cad-body">
         <div class="card-body">

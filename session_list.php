@@ -8,7 +8,7 @@ Session::CheckSession();
 
 <div class="card ">
     <div class="card-header">
-            <h3>Session List <span class="float-right"> <span class="float-right"> <a href="#" onclick="history.go(-1)" class="btn btn-primary">Back</a>       
+            <h3>Session List <span class="float-right"> <span class="float-right"> <a href="view_study.php" class="btn btn-primary">Back</a>       
         </div>
   </h3> 
         </strong></span></h3>

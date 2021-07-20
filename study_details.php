@@ -31,7 +31,7 @@ if (isset($_POST['leave-btn'])){
 
 <div class="card">
     <div class="card-header">
-        <h3>Study Details <span class="float-right"> <a href="#" onclick="history.go(-1)" class="btn btn-primary">Back</a></span></h3>
+        <h3>Study Details <span class="float-right"> <a href="view_study.php" class="btn btn-primary">Back</a></span></h3>
     </div>
 
     <div class="card-body pr-2 pl-2">
