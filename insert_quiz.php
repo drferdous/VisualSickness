@@ -43,13 +43,14 @@ if(isset($_POST['Submit'])){
     $ssq_time = $_POST['ssq_time'];
     $ssq_type = $_POST['ssq_type'];
     $session_ID = $_POST['session_ID'];
+    $code = $_POST['code'];    
 
-    $age = $_POST['age'];
-    $gender = $_POST['gender'];
-    $code = $_POST['code'];  // Note: Code can have a maximum of 8 characters.
-    $race = $_POST['race'];
-    $education = $_POST['education'];
-    $quiz = '1';
+    if (Session::get('login') === FALSE) { 
+        $age = $_POST['age'];
+        $gender = $_POST['gender'];
+        $race = $_POST['race'];
+        $education = $_POST['education'];
+    }
 
     // Calculate scores
     $nausea_sum = $general_discomfort + $increased_salivation + $sweating + $nausea + $difficulty_concentrating + $stomach_awareness + $burping;
@@ -65,7 +66,7 @@ if(isset($_POST['Submit'])){
     $SSQ_Score = $SSQ_Sum * 3.74; 
 
 
-    $sql = "INSERT INTO SSQ (ssq_ID, general_discomfort, fatigue, headache, difficulty_focusing, eye_strain,              increased_salivation, sweating, nausea, difficulty_concentrating, fullness_of_head, blurred_vision,           dizziness_with_eyes_open, dizziness_with_eyes_closed, vertigo, stomach_awareness, burping, ssq_time,          ssq_type, session_ID, code)
+    $sql = "INSERT INTO SSQ (ssq_ID, general_discomfort, fatigue, headache, difficulty_focusing, eye_strain,              increased_salivation, sweating, nausea, difficulty_concentrating, fullness_of_head, blurred_vision, dizziness_with_eyes_open, dizziness_with_eyes_closed, vertigo, stomach_awareness, burping, ssq_time, ssq_type, session_ID, code)
             VALUES ('$ssq_ID', '$general_discomfort', '$fatigue', '$headache', '$difficulty_focusing', '$eye_strain', '$increased_salivation', '$sweating', '$nausea', '$difficulty_concentrating', '$fullness_of_head', '$blurred_vision', '$dizziness_with_eyes_open', '$dizziness_with_eyes_closed', '$vertigo', '$stomach_awareness', '$burping', '$ssq_time', '$ssq_type', '$session_ID', '$code')";
     if (mysqli_query($conn, $sql)) {
         echo "New record created successfully!";
@@ -87,15 +88,13 @@ if(isset($_POST['Submit'])){
         echo mysqli_error($conn);
     }
      
-    $sql2 = "INSERT INTO Demographics (Code, Age, Race_Ethnicity, Gender, Education, Quiz)
-            VALUES ('$code', '$age', '$race', '$gender', '$education', '$quiz')";
-    mysqli_query($conn, $sql2);
-    
-    $sql3 = "UPDATE Session 
-    SET quizzes_taken = quizzes_taken + 1 
-    WHERE session_ID = $session_ID";
-    mysqli_query($conn, $sql3);    
+    if (Session::get('login') === FALSE) {     
+        $sql2 = "INSERT INTO Demographics (Age, Race_Ethnicity, Gender, Education, Quiz)
+                VALUES ('$age', '$race', '$gender', '$education')";
+        mysqli_query($conn, $sql2);
+    }
 }
+
 ?>
 
 <form action="session_details.php?session_ID=<?php echo Session::get('session_ID'); ?>" method="post">

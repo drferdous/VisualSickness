@@ -181,38 +181,39 @@ class Users{
     echo $msg;
   }
 
-  // Add participant to study
+  // Add participant to Session table and Demographics table
   public function addNewParticipant($data){
     $anonymous_name = $data['anonymous_name'];
     $dob = $data['dob'];
+    $age = $data['age'];    
     $weight = $data['weight'];
     $gender = $data['gender'];
-    $ethnicity = $data['ethnicity'];
+    $race_ethnicity = $data['ethnicity'];
     $occupation = $data['occupation'];
     $education = $data['education'];
     $phone_no = $data['phone_no'];
     $email = $data['email'];
     $additional_info = $data['additional_info'];
     $comments = $data['comments'];
-
-    $checkEmail = $this->checkExistEmail($email);
     
+    $checkEmail = $this->checkExistEmail($email);
+
     if (empty($anonymous_name)){
         $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
                 <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                <strong>Error !</strong> Name of participant must not be empty!</div>';
+                <strong>Error!</strong> Name of participant must not be empty!</div>';
         return $msg;
     }
     if (empty($dob)){
         $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
                 <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                <strong>Error !</strong> Date of birth field must not be empty!</div>';
+                <strong>Error!</strong> Date of birth field must not be empty!</div>';
         return $msg;
     }
     if (filter_var($email, FILTER_VALIDATE_EMAIL === FALSE)) {
         $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
                 <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                <strong>Error !</strong> Invalid email address !</div>';
+                <strong>Error!</strong> Invalid email address !</div>';
         return $msg;
     }
     if ($checkEmail == TRUE) {
@@ -221,40 +222,76 @@ class Users{
                 <strong>Error !</strong> Email already Exists, please try another Email... !</div>';
         return $msg;
     }
-    
+        
     if (empty($weight)){
         $weight = NULL;
     }
-    
-    $sql = "INSERT INTO Participant (anonymous_name, dob, weight, gender, ethnicity, occupation, education, phone_no, email, additional_info, comments) VALUES(:anonymous_name, :dob, :weight, :gender, :ethnicity, :occupation, :education, :phone_no, :email, :additional_info, :comments)";
-    $stmt = $this->db->pdo->prepare($sql);
-    
-    $stmt->bindValue(':anonymous_name', $anonymous_name);
-    $stmt->bindValue(':dob', $dob);
-    $stmt->bindValue(':weight', $weight);
-    $stmt->bindValue(':gender', $gender);
-    $stmt->bindValue(':ethnicity', $ethnicity);
-    $stmt->bindValue(':occupation', $occupation);
-    $stmt->bindValue(':education', $education);
-    $stmt->bindValue(':phone_no', $phone_no);
-    $stmt->bindValue(':email', $email);
-    $stmt->bindValue(':additional_info', $additional_info);
-    $stmt->bindValue(':comments', $comments);
         
-    $result = $stmt->execute();
-    if ($result) {
+    $this->db->pdo->beginTransaction();
+    try {
+        $sql = "INSERT INTO Demographics (age, gender, education, race_ethnicity) 
+        VALUES(:age, :gender, :education, :race_ethnicity);";  
+        $stmt = $this->db->pdo->prepare($sql);
+
+        $stmt->bindValue(':age', $age);
+        $stmt->bindValue(':gender', $gender);
+        $stmt->bindValue(':education', $education);    
+        $stmt->bindValue(':race_ethnicity', $race_ethnicity);
+        
+        $result = $stmt->execute(); 
+        if (!$result){
+            throw new Exception($stmt->error);
+        }
+        
+        $last_id = "SELECT LAST_INSERT_ID();"; //help
+        $last_id_statement = $this->db->pdo->prepare($last_id);
+        $result_id = $last_id_statement->execute();
+        if (!$result_id){
+            throw new Exception($last_id_statement->error);
+        }
+        
+        $result_id = $last_id_statement->fetch(PDO::FETCH_ASSOC);
+        $result_id = intval($result_id['LAST_INSERT_ID()']);
+        
+        
+        $sql2 = "INSERT INTO Participant (demographics_id, anonymous_name, dob, weight, occupation, phone_no, email, additional_info, comments) 
+        VALUES(:demographics_id, :anonymous_name, :dob, :weight, :occupation, :phone_no, :email, :additional_info, :comments);";
+        
+        $stmt2 = $this->db->pdo->prepare($sql2);
+        $stmt2->bindValue(':demographics_id', $result_id);        
+        $stmt2->bindValue(':anonymous_name', $anonymous_name);
+        $stmt2->bindValue(':dob', $dob);
+        $stmt2->bindValue(':weight', $weight);
+        $stmt2->bindValue(':occupation', $occupation);
+        $stmt2->bindValue(':phone_no', $phone_no);
+        $stmt2->bindValue(':email', $email);
+        $stmt2->bindValue(':additional_info', $additional_info);
+        $stmt2->bindValue(':comments', $comments);        
+        
+        $result2 = $stmt2->execute();   
+        
+        if (!$result2){
+            throw new Exception($stmt->error);
+        }
+        
+        $this->db->pdo->commit();
+    }
+    catch (PDOException $excptn){
+        $this->db->pdo->rollBack();        
+    }
+        
+    if ($result2) {
         $msg = '<div class="alert alert-success alert-dismissible mt-3" id    ="flash-msg">
                 <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
                 <strong>Success!</strong> You registered a participant!</div>';
         return $msg;
-    } 
-    else{
+    } else {
         $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
                 <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
                 <strong>Error !</strong> Something went Wrong !</div>';
         return $msg;
     }
-  }  
+  }
 
   // Select All User Method
   public function selectAllUserData(){
@@ -615,7 +652,6 @@ class Users{
             $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
                     <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
                     <strong>Error !</strong> Something went wrong, try creating a session again!</div>';
-            // die($excptn->getMessage());
         }
         finally{
             return $msg;
