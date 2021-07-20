@@ -4,21 +4,20 @@ include_once 'database.php';
 Session::CheckSession();
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['insert_session'])){
-    $successMessage = '<div class="alert alert-success alert-dismissible mt-3" id="flash-msg">
-                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                    <strong>Success!</strong> You created a new session! You will now be redirected to the Session Details page for this study.</div>';
-    
     $insertSessionMessage = $users->insert_session($_GET["study_ID"], $_POST); 
     if (isset($insertSessionMessage)){
-        echo $insertSessionMessage;
-        if ($insertSessionMessage === $successMessage){?>
-            <script type="text/javascript">
+        echo $insertSessionMessage; ?>
+        
+        <script type="text/javascript">
+            const divMsg = document.querySelector("#flash-msg");
+            if (divMsg.classList.contains("alert-success")){
                 setTimeout(function(){
                     let currSessionID = <?php echo Session::get('session_ID');?>; 
                     location.href = "session_details.php?session_ID=" + currSessionID;
                 }, 2000);
-            </script>
-  <?php }
+            }
+        </script>
+<?php
     }
 }?>
     
