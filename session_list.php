@@ -16,7 +16,7 @@ Session::CheckSession();
         
     <div class="card-body pr-2 pl-2">
     <?php
-        $sql = "SELECT session_ID, start_time, participant_ID FROM Session WHERE study_ID = " . $_GET["study_ID"];
+        $sql = "SELECT session_ID, start_time, participant_ID FROM Session WHERE study_ID = " . $_POST["study_ID"];
         $result = mysqli_query($conn, $sql);
             
         if (mysqli_num_rows($result) > 0){
@@ -53,7 +53,7 @@ Session::CheckSession();
                         echo "<td>" .  $row['start_time']     . "</td>";                           
                     
                         echo "<td>";
-                        echo "<a class='btn-success btn-sm' href=\"session_details.php?session_ID=" . $row['session_ID'] . "\">Session Details</a>";
+                        echo "<a class='btn-success btn-sm' href=\"session_details.php\" data-session_ID=\"" . $row['session_ID'] . "\">Session Details</a>";
                         
                         echo "</td>";
                         
@@ -69,6 +69,31 @@ Session::CheckSession();
     ?>
     </div>
 </div>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        $(document).on("click", "a.btn-success", redirectUser);
+        
+        function redirectUser(){
+            let form = document.createElement("form");
+            let hiddenInput = document.createElement("input");
+            
+            form.setAttribute("method", "POST");
+            form.setAttribute("action", $(this).attr("href"));
+            form.setAttribute("style", "display: none");
+            
+            hiddenInput.setAttribute("type", "hidden");
+            hiddenInput.setAttribute("name", "session_ID");
+            hiddenInput.setAttribute("value", $(this).attr("data-session_ID"));
+            
+            form.appendChild(hiddenInput);
+            document.body.appendChild(form);
+            form.submit();
+            
+            return false;
+        };
+    });
+</script>
 
 <?php
   include 'inc/footer.php';
