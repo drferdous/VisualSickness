@@ -554,7 +554,7 @@ class Users{
     // Deactivates study based on the given study_ID.
     public function deactivateStudy($study_ID){
         $sql = "UPDATE Study
-                SET is_active = 1
+                SET is_active = 0
                 WHERE study_ID = :study_ID;";
         
         $stmt = $this->db->pdo->prepare($sql);
