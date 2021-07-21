@@ -27,7 +27,7 @@ $users = new Users();
     <link href="https://use.fontawesome.com/releases/v5.0.4/css/all.css" rel="stylesheet">
     <link rel="stylesheet" href="assets/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" href="assets/style.css">
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   </head>
   <body>
 
@@ -36,9 +36,6 @@ $users = new Users();
 
 
 if (isset($_GET['action']) && $_GET['action'] == 'logout') {
-  // Session::set('logout', '<div class="alert alert-success alert-dismissible mt-3" id="flash-msg">
-  // <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-  // <strong>Success !</strong> You are Logged Out Successfully !</div>');
   Session::destroy();
 }
 
@@ -103,7 +100,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'logout') {
 
             ">
 
-              <a class="nav-link" href="profile.php?id=<?php echo Session::get("id"); ?>"><i class="fab fa-500px mr-2"></i>Profile <span class="sr-only">(current)</span></a>
+              <a class="nav-link" href="profile.php"><i class="fab fa-500px mr-2"></i>Profile <span class="sr-only">(current)</span></a>
             </li>
 
             <li class="nav-item">
