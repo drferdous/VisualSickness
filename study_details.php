@@ -5,7 +5,7 @@ include_once 'database.php';
 Session::CheckSession();
 
 if (isset($_POST['deactivate-btn'])){
-    $studyDeactivatedMessage = $users->deactivateStudy($_GET["study_ID"]);
+    $studyDeactivatedMessage = $users->deactivateStudy($_POST["study_ID"]);
     if (isset($studyDeactivatedMessage)){
         echo $studyDeactivatedMessage;
     }
@@ -15,7 +15,7 @@ if (isset($_POST['leave-btn'])){
     $successMessage = '<div class="alert alert-success alert-dismissible mt-3" id="flash-msg">
               <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
               <strong>Success!</strong> You left this study!</div>';
-    $leaveStudyMessage = $users->leaveStudy($_GET["study_ID"]);
+    $leaveStudyMessage = $users->leaveStudy($_POST["study_ID"]);
     
     if (isset($leaveStudyMessage)){
         if ($leaveStudyMessage === $successMessage){
@@ -38,7 +38,7 @@ if (isset($_POST['leave-btn'])){
         <table class="table table-striped table-bordered">
             <thead class="text-center">
                 <?php
-                    $sql_study = "SELECT * FROM Study WHERE study_ID = " . $_GET["study_ID"] . " LIMIT 1;";
+                    $sql_study = "SELECT * FROM Study WHERE study_ID = " . $_POST["study_ID"] . " LIMIT 1;";
                     $result_study = mysqli_query($conn, $sql_study);
                     $row_study = mysqli_fetch_assoc($result_study);
                 ?>

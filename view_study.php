@@ -12,15 +12,11 @@ if (isset($insert_study)) {
 
 <div class="card ">
     <div class="card-header">
+        <h3>Study List <span class="float-right">         
         <?php if (Session::get('roleid') == '1' || Session::get('roleid') == '2') { ?>
-            <h3>Manage Studies <span class="float-right">        
             <a href="add_researcher.php" class="btn btn-primary">Add A Researcher</a> 
             <a href="remove_researcher.php" class="btn btn-primary">Remove A Researcher</a> 
         <?php  } ?> 
-        
-        <?php if (Session::get('roleid') == '3' || Session::get('roleid') == '4') { ?>
-            <h3>View Studies <span class="float-right">        
-        <?php  } ?>         
         </div>
   </h3> 
         </strong></span></h3>
@@ -100,12 +96,12 @@ if (isset($insert_study)) {
                         echo "<td>" . $row['full_name'] ."</td>";
                         
                         echo "<td>";
-                        echo "<a class='btn-success btn-sm' href=\"study_details.php?study_ID=" . $row['study_ID'] . "\">Study Details</a>";
+                        echo "<a class='btn-success btn-sm' href=\"study_details.php\" data-study_ID=\"" . $row['study_ID'] . "\">Study Details</a>";
                         
                         if (Session::get('roleid') === '1' || (isset($row['study_role']) && ($row['study_role'] === '2' || $row['study_role'] === '3'))){
                             echo "<br>";
                             echo "<br>";
-                            echo "<a class='btn-success btn-sm' href=\"create_session.php?study_ID=" . $row['study_ID'] . "\">Create Session</a>";
+                            echo "<a class='btn-success btn-sm' href=\"create_session.php\" data-study_ID=\"" . $row['study_ID'] . "\">Create Session</a>";
                         }
                 
                         echo "<br>";
@@ -125,6 +121,31 @@ if (isset($insert_study)) {
     ?>
     </div>
 </div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $(document).on("click", "a", redirectUser);
+    });
+        
+    function redirectUser(){
+        let form = document.createElement("form");
+        let hiddenInput = document.createElement("input");
+            
+        form.setAttribute("method", "POST");
+        form.setAttribute("action", $(this).attr("href"));
+        form.setAttribute("style", "display: none");
+            
+        hiddenInput.setAttribute("type", "hidden");
+        hiddenInput.setAttribute("name", "study_ID");
+        hiddenInput.setAttribute("value", $(this).attr("data-study_ID"));
+            
+        form.appendChild(hiddenInput);
+        document.body.appendChild(form);
+        form.submit();
+            
+        return false;
+    };
+</script>
 
 <?php
   include 'inc/footer.php';
