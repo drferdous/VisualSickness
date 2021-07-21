@@ -5,14 +5,14 @@ include_once 'database.php';
 Session::CheckSession();
 
 if (isset($_POST['restart-session-btn'])){
-    $startSessionMessage = $users->restart_session($_GET['session_ID']);
+    $startSessionMessage = $users->restart_session($_POST['session_ID']);
     if (isset($startSessionMessage)){
         echo $startSessionMessage;
     }
 }
 
 if (isset($_POST['end-session-btn'])){
-    $endSessionMessage = $users->endSession($_GET['session_ID']);
+    $endSessionMessage = $users->endSession($_POST['session_ID']);
     if (isset($endSessionMessage)){
         echo $endSessionMessage;
     }
@@ -21,19 +21,30 @@ if (isset($_POST['end-session-btn'])){
 
 <div class="card">
     <div class="card-header">
-        <h3>Session Details <span class="float-right"> <a href="#" onclick="history.go(-1)" style="transform: translateX(-10px)" class="btn btn-primary">Back</a>
+        <h3>Session Details 
+            <span class="float-right"> 
+                <?php
+                    $sql = "SELECT study_ID
+                            FROM Session
+                            WHERE session_ID = " . $_POST['session_ID'] . "
+                            LIMIT 1;";
+                    $result = mysqli_query($conn, $sql);
+                    $row = mysqli_fetch_assoc($result);
+                ?>
+                <a href="session_list.php" style="transform: translateX(-10px)" class="btn btn-primary" data-study_ID="<?php echo $row['study_ID']; ?>" data-session_ID="-1">Back</a>
 
-            <?php
-            $sql = "SELECT end_time
-                    FROM Session
-                    WHERE session_ID = " . $_GET['session_ID'] . "
-                    LIMIT 1;";
-            $result = mysqli_query($conn, $sql);
-            $row = mysqli_fetch_assoc($result);
+                <?php
+                    $sql = "SELECT end_time
+                            FROM Session
+                            WHERE session_ID = " . $_POST['session_ID'] . "
+                            LIMIT 1;";
+                    $result = mysqli_query($conn, $sql);
+                    $row = mysqli_fetch_assoc($result);
             
-            if (!isset($row['end_time'])){?>
-                <a href="chooseQuiz.php?session_ID=<?php echo $_GET['session_ID']; ?>" class="btn btn-primary float-right">New SSQ</a>    
-            <?php }?>
+                    if (!isset($row['end_time'])){?>
+                        <a href="chooseQuiz.php" class="btn btn-primary" data-study_ID="-1" data-session_ID="<?php echo $_POST['session_ID']; ?>">New SSQ</a>    
+              <?php }?>
+            </span>
         </h3>
     </div>
 
@@ -43,7 +54,7 @@ if (isset($_POST['end-session-btn'])){
                 <tr>
                     <th>Session ID</th>
                         <?php
-                        $sql_session = "SELECT * FROM Session WHERE session_ID = " . $_GET['session_ID'];
+                        $sql_session = "SELECT * FROM Session WHERE session_ID = " . $_POST['session_ID'];
                         $mysqli_result = mysqli_query($conn, $sql_session);
                         $row_session = mysqli_fetch_assoc($mysqli_result);
                         echo "<td>" .  $row_session['session_ID']  . "</td>";     
@@ -89,23 +100,23 @@ if (isset($_POST['end-session-btn'])){
                     <?php
                         $sql_pre_quiz = "SELECT ssq_ID
                                         FROM SSQ
-                                        WHERE session_ID = " . $_GET['session_ID'] . "
+                                        WHERE session_ID = " . $_POST['session_ID'] . "
                                         AND ssq_time = 0
                                         LIMIT 1;";
                         $result_pre_quiz = mysqli_query($conn, $sql_pre_quiz);
                         
                         $sql_post_quiz = "SELECT ssq_ID
                                          FROM SSQ
-                                         WHERE session_ID = " . $_GET['session_ID'] . "
+                                         WHERE session_ID = " . $_POST['session_ID'] . "
                                          AND ssq_time = 1
                                          LIMIT 1;";
                         $result_post_quiz = mysqli_query($conn, $sql_post_quiz);
                         
                         if (mysqli_num_rows($result_pre_quiz) > 0){
-                            echo "<td><a href=\"pre_quiz_results.php?session_ID=" . $_GET['session_ID'] . "\" class=\"btn-sm btn-success\">Pre-Quiz Results</a>";
+                            echo "<td><a href=\"pre_quiz_results.php?session_ID=" . $_POST['session_ID'] . "\" class=\"btn-sm btn-success\">Pre-Quiz Results</a>";
                         }
                         if (mysqli_num_rows($result_post_quiz) > 0){
-                            echo "<a href=\"post_quiz_results.php?session_ID=" . $_GET['session_ID'] . "\" class=\"btn-sm btn-success\">Post-Quiz Results</a></td>";
+                            echo "<a href=\"post_quiz_results.php?session_ID=" . $_POST['session_ID'] . "\" class=\"btn-sm btn-success\">Post-Quiz Results</a></td>";
                         }
                     ?>
                 </tr> 
@@ -182,7 +193,37 @@ if (isset($_POST['end-session-btn'])){
         </table>
     </div>
 </div>
-
+<script type="text/javascript">
+    $(document).ready(function(){
+        $(document).on("click", "a", redirectUser);
+    });
+    
+    function redirectUser(){
+        let form = document.createElement("form");
+        let hiddenInput;
+        
+        form.setAttribute("method", "POST");
+        form.setAttribute("action", $(this).attr("href"));
+        form.setAttribute("style", "display: none");
+        
+        hiddenInput = document.createElement("input");
+        hiddenInput.setAttribute("type", "hidden");
+        hiddenInput.setAttribute("name", "study_ID");
+        hiddenInput.setAttribute("value", $(this).attr("data-study_ID"));
+        form.appendChild(hiddenInput);
+        
+        hiddenInput = document.createElement("input");
+        hiddenInput.setAttribute("type", "hidden");
+        hiddenInput.setAttribute("name", "session_ID");
+        hiddenInput.setAttribute("value", $(this).attr("data-session_ID"));
+        form.appendChild(hiddenInput);
+        
+        document.body.appendChild(form);
+        form.submit();
+        
+        return false;
+    }
+</script>
 <?php
   include 'inc/footer.php';
 ?>

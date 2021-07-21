@@ -138,8 +138,8 @@ if (isset($insert_study)) {
         hiddenInput.setAttribute("type", "hidden");
         hiddenInput.setAttribute("name", "study_ID");
         hiddenInput.setAttribute("value", $(this).attr("data-study_ID"));
-            
         form.appendChild(hiddenInput);
+        
         document.body.appendChild(form);
         form.submit();
             
