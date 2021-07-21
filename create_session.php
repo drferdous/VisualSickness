@@ -11,11 +11,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['insert_session'])){
         <script type="text/javascript">
             const divMsg = document.getElementById("flash-msg");
             if (divMsg.classList.contains("alert-success")){
-                setTimeout(function(){
-                    let currSessionID = <?php echo Session::get('session_ID');?>; 
-                    location.href = "session_details.php?session_ID=" + currSessionID;
-                }, 2000);
+                setTimeout(redirectUser, 2000);
             }
+            
+            function redirectUser(){
+                let form = document.createElement("form");
+                let hiddenInput = document.createElement("input");
+                
+                form.setAttribute("method", "POST");
+                form.setAttribute("action", "session_details.php");
+                form.setAttribute("style", "display: none");
+                
+                hiddenInput.setAttribute("type", "hidden");
+                hiddenInput.setAttribute("name", "session_ID");
+                hiddenInput.setAttribute("value", "" + <?php echo Session::get('session_ID'); ?>);
+                
+                form.appendChild(hiddenInput);
+                document.body.appendChild(form);
+                form.submit();
+                
+                return;
+            };
         </script>
 <?php
     }
