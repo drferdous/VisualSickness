@@ -106,7 +106,7 @@ if (isset($username)) {
 
                         <td><span class="badge badge-lg badge-secondary text-white"><?php echo $value->mobile; ?></span></td>
                         <td>
-                          <?php if ($value->isActive == '0') { ?>
+                          <?php if ($value->isActive == '1') { ?>
                           <span class="badge badge-lg badge-info text-white">Active</span>
                         <?php }else{ ?>
                     <span class="badge badge-lg badge-danger text-white">Deactive</span>
