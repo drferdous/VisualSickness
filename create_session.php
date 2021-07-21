@@ -4,12 +4,12 @@ include_once 'database.php';
 Session::CheckSession();
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['insert_session'])){
-    $insertSessionMessage = $users->insert_session($_GET["study_ID"], $_POST); 
+    $insertSessionMessage = $users->insert_session($_POST); 
     if (isset($insertSessionMessage)){
         echo $insertSessionMessage; ?>
         
         <script type="text/javascript">
-            const divMsg = document.querySelector("#flash-msg");
+            const divMsg = document.getElementById("flash-msg");
             if (divMsg.classList.contains("alert-success")){
                 setTimeout(function(){
                     let currSessionID = <?php echo Session::get('session_ID');?>; 
@@ -52,6 +52,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['insert_session'])){
                 <input type="text" class="form-control" id="comment" name="comment">
             </div>
             
+            <div>
+                <input type="hidden" class="form-control" name="study_ID" value="<?php echo $_POST['study_ID']; ?>">
+            </div>
             <div class="form-group">
                  <button type="submit" name="insert_session" class="btn btn-success">Start Session</button>
             </div>

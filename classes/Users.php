@@ -599,7 +599,7 @@ class Users{
     }
     
     // inserts a session of a  study into DB
-    public function insert_session($study_ID, $data){
+    public function insert_session($data){
         $created_by = Session::get('id');
         $last_edited_by = Session::get('id');    
         
@@ -620,7 +620,7 @@ class Users{
                     VALUES (:study_ID, :participant_ID, :comment, :created_by, :last_edited_by);";
             $stmt = $this->db->pdo->prepare($sql);
             
-            $stmt->bindValue(':study_ID', $study_ID);
+            $stmt->bindValue(':study_ID', $data["study_ID"]);
             $stmt->bindValue(':participant_ID', $data["participant_ID"]);
             $stmt->bindValue(':comment', $data["comment"]);
             $stmt->bindValue(':created_by', $created_by);
