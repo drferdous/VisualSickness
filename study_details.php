@@ -7,8 +7,17 @@ Session::CheckSession();
 if (isset($_POST['deactivate-btn'])){
     $studyDeactivatedMessage = $users->deactivateStudy($_POST["study_ID"]);
     if (isset($studyDeactivatedMessage)){
-        echo $studyDeactivatedMessage;
-    }
+        echo $studyDeactivatedMessage; ?>
+        
+        <script type="text/javascript">
+            const divMsg = document.getElementById("flash-msg");
+            if (divMsg.classList.contains("alert-success")){
+                setTimeout(function() {
+                    location.href = "view_study.php";
+                }, 2000);
+            }
+        </script>
+<?php }
 }
 
 if (isset($_POST['leave-btn'])){
@@ -118,15 +127,20 @@ if (isset($_POST['leave-btn'])){
  
                             echo "<td>";                             
                             echo "<form method=\"post\">";
+                            echo "<input type=\"hidden\" name=\"study_ID\" value=\"" . $_POST['study_ID'] . "\">";
                             echo "<input type=\"submit\" name=\"deactivate-btn\" value=\"Deactivate\" />";
                             echo "</form>";
                                 
-                            echo "<a href=\"edit_study.php?id=". $row_study['study_ID'] ."\">Edit</a>";
+                            echo "<a href=\"edit_study.php\"  class=\"btn btn-success\" data-study_ID=\"" . $row_study['study_ID'] . "\">Edit</a>";
+                            echo "</td>";
                         
                         } else if (Session::get('roleid') === '3' || Session::get('roleid') === '4') {
+                            echo "<td>";
                             echo "<form method=\"post\">";
+                            echo "<input type=\"hidden\" name=\"study_ID\" value=\"" . $_POST['study_ID'] . "\">";
                             echo "<input type=\"submit\" name=\"leave-btn\" value=\"Leave\" />";
                             echo "</form>";
+                            echo "</td>";
                         }
                     ?>                    
                 </tr>
@@ -134,6 +148,31 @@ if (isset($_POST['leave-btn'])){
         </table>
     </div>
 </div>
+
+<script type="text/javascript">
+$(document).ready(function() {
+   $(document).on("click", "a.btn-success", redirectUser); 
+});
+
+function redirectUser(){
+    let form = document.createElement("form");
+    let hiddenInput = document.createElement("input");
+    
+    form.setAttribute("method", "POST");
+    form.setAttribute("action", $(this).attr("href"));
+    form.setAttribute("style", "display: none");
+    
+    hiddenInput.setAttribute("type", "hidden");
+    hiddenInput.setAttribute("name", "study_ID");
+    hiddenInput.setAttribute("value", $(this).attr("data-study_ID"));
+    
+    form.appendChild(hiddenInput);
+    document.body.appendChild(form);
+    form.submit();
+    
+    return false;
+}
+</script>
 
 <?php
   include 'inc/footer.php';
