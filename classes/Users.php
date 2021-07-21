@@ -516,11 +516,12 @@ class Users{
 } 
 
     // Edit a user's study
-    public function updateStudy($study_ID, $data){
+    public function updateStudy($data){
         $full_name = $data['full_name'];
         $short_name = $data['short_name'];
         $IRB = $data['IRB'];
         $last_edited_by = Session::get('id');
+        $study_ID = $data['study_ID'];
         
           if ($full_name == "" || $short_name == ""|| $IRB == "") {
           $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
