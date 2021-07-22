@@ -97,7 +97,8 @@ if(isset($_POST['Submit'])){
 
 ?>
 
-<form action="session_details.php?session_ID=<?php echo Session::get('session_ID'); ?>" method="post">
+<form action="session_details.php" method="post">
+        <input type="hidden" name="session_ID" value="<?php echo Session::get('session_ID'); ?>">
         <button type="Submit" name="ok-btn" class="btn btn-success form-group">OK</button>
 </form>
 
