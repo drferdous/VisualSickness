@@ -2,7 +2,7 @@
 include 'inc/header.php';
 Session::CheckSession();
 
-$userid = Session::get('id');
+$userid = $_POST['user_ID'];
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update'])) {
   $updateUser = $users->updateUserByIdInfo($userid, $_POST);
