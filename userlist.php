@@ -1,48 +1,8 @@
 <?php
-include 'inc/header.php';
+    include 'inc/header.php';
 
-Session::CheckSession();
-
-$logMsg = Session::get('logMsg');
-if (isset($logMsg)) {
-  echo $logMsg;
-}
-$msg = Session::get('msg');
-if (isset($msg)) {
-  echo $msg;
-}
-Session::set("msg", NULL);
-Session::set("logMsg", NULL);
+    Session::CheckSession();
 ?>
-<?php
-
-if (isset($_GET['remove'])) {
-  $remove = preg_replace('/[^a-zA-Z0-9-]/', '', (int)$_GET['remove']);
-  $removeUser = $users->deleteUserById($remove);
-}
-
-if (isset($removeUser)) {
-  echo $removeUser;
-}
-if (isset($_GET['deactive'])) {
-  $deactive = preg_replace('/[^a-zA-Z0-9-]/', '', (int)$_GET['deactive']);
-  $deactiveId = $users->userDeactiveByAdmin($deactive);
-}
-
-if (isset($deactiveId)) {
-  echo $deactiveId;
-}
-if (isset($_GET['active'])) {
-  $active = preg_replace('/[^a-zA-Z0-9-]/', '', (int)$_GET['active']);
-  $activeId = $users->userActiveByAdmin($active);
-}
-
-if (isset($activeId)) {
-  echo $activeId;
-}
-
-
- ?>
       <div class="card ">
         <div class="card-header">
           <h3><i class="fas fa-users mr-2"></i>User list <span class="float-right">Welcome! <strong>
@@ -117,27 +77,34 @@ if (isset($username)) {
 
                         <td>
                           <?php if ( Session::get("roleid") == '1') {?>
-                            <a class="btn btn-success btn-sm
-                            " href="profile.php?id=<?php echo $value->id;?>">View</a>
-                            <a class="btn btn-info btn-sm " href="profile.php?id=<?php echo $value->id;?>">Edit</a>
+                            <a class="btn btn-success btn-sm" 
+                               href="profile.php"
+                               data-user_ID="<?php echo $value->id; ?>">
+                               View
+                            </a>
+                            <a class="btn btn-info btn-sm" 
+                               href="profile.php"
+                               data-user_ID="<?php echo $value->id; ?>">
+                               Edit
+                            </a>
                             <a onclick="return confirm('Are you sure To Delete ?')" class="btn btn-danger
                     <?php if (Session::get("id") == $value->id) {
                       echo "disabled";
                     } ?>
                              btn-sm " href="?remove=<?php echo $value->id;?>">Remove</a>
 
-                             <?php if ($value->isActive == '0') {  ?>
+                             <?php if ($value->isActive == '1') {  ?>
                                <a onclick="return confirm('Are you sure To Deactive ?')" class="btn btn-warning
                        <?php if (Session::get("id") == $value->id) {
                          echo "disabled";
                        } ?>
-                                btn-sm " href="?deactive=<?php echo $value->id;?>">Disable</a>
-                             <?php } elseif($value->isActive == '1'){?>
+                                btn-sm " href="?deactive=<?php echo $value->id;?>">Deactivate</a>
+                             <?php } elseif($value->isActive == '0'){?>
                                <a onclick="return confirm('Are you sure To Active ?')" class="btn btn-secondary
                        <?php if (Session::get("id") == $value->id) {
                          echo "disabled";
                        } ?>
-                                btn-sm " href="?active=<?php echo $value->id;?>">Active</a>
+                                btn-sm " href="?active=<?php echo $value->id;?>">Activate</a>
                              <?php } ?>
 
 
@@ -193,7 +160,30 @@ if (isset($username)) {
       </div>
 
 
-
+<script type="text/javascript">
+    $(document).ready(function() {
+       $("#example a[data-user_ID]").on("click", goToProfilePage);
+    });
+    
+    function goToProfilePage(){
+        let form = document.createElement("form");
+        let hiddenInput = document.createElement("input");
+        
+        form.setAttribute("method", "POST");
+        form.setAttribute("action", $(this).attr("href"));
+        form.setAttribute("style", "display: none");
+        
+        hiddenInput.setAttribute("type", "hidden");
+        hiddenInput.setAttribute("name", "user_ID");
+        hiddenInput.setAttribute("value", $(this).attr("data-user_ID"));
+        
+        form.appendChild(hiddenInput);
+        document.body.appendChild(form);
+        form.submit(); 
+        
+        return false;
+    };
+</script>
   <?php
   include 'inc/footer.php';
 
