@@ -1,6 +1,15 @@
-
 # HTID:16663231: DO NOT REMOVE OR MODIFY THIS LINE AND THE LINES BELOW
+
+RewriteEngine on
+
+RewriteRule ^(.+)\.php$ /$1 [R,L]
+RewriteCond %{REQUEST_FILENAME}.php -f
+RewriteRule ^(.*?)/?$ /$1.php [NC,END]
+
 php_value display_errors 1
 
 php_flag output_buffering on
+
+ErrorDocument 404 /404.php
+
 # DO NOT REMOVE OR MODIFY THIS LINE AND THE LINES ABOVE HTID:16663231:
