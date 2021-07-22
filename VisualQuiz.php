@@ -77,7 +77,7 @@ if(isset($_GET['code']) == "" && Session::get('login') === FALSE) {
 
 <!-- <div class="Header"> -->
 
-<form action="insert_quiz.php?session_ID=<?php echo Session::get('session_ID'); ?>" method="post">
+<form action="insert_quiz.php" method="post">
     <div class="symptoms">
         
         <?php if (Session::get('login') === FALSE) { ?>
@@ -801,11 +801,12 @@ if(isset($_GET['code']) == "" && Session::get('login') === FALSE) {
         </label>
     </div>
 
-    <input type="hidden" id="ssq_time" name="ssq_time" value="<?php echo $_GET['ssq_time'] ?>">
+    <input type="hidden" id="ssq_time" name="ssq_time" value="<?php echo $_POST['ssq_time']; ?>">
     <input type="hidden" id="ssq_type" name="ssq_type" value="1">
-    <input type="hidden" id="session_ID" name="session_ID" value="<?php echo $_GET['session_ID'] ?>">
+    <input type="hidden" id="session_ID" name="session_ID" value="<?php echo Session::get('session_ID'); ?>">
     
     <?php
+    // Ask professor how to deal with code in URL.
     if (isset($_GET['code'])){?>
         <input type="hidden" id="code" name="code" value=" <?php echo $_GET['code'] ?>">
     <?php }
