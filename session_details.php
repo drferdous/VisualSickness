@@ -32,7 +32,7 @@ if (isset($_POST['end-session-btn'])){
                     $result = mysqli_query($conn, $sql);
                     $row = mysqli_fetch_assoc($result);
                 ?>
-                <a href="session_list.php" style="transform: translateX(-10px)" class="btn btn-primary" data-study_ID="<?php echo $row['study_ID']; ?>" data-session_ID="-1">Back</a>
+                <a href="session_list" style="transform: translateX(-10px)" class="btn btn-primary" data-study_ID="<?php echo $row['study_ID']; ?>" data-session_ID="-1">Back</a>
 
                 <?php
                     $sql = "SELECT end_time
@@ -43,7 +43,7 @@ if (isset($_POST['end-session-btn'])){
                     $row = mysqli_fetch_assoc($result);
             
                     if (!isset($row['end_time'])){?>
-                        <a href="chooseQuiz.php" class="btn btn-primary" data-study_ID="-1" data-session_ID="<?php echo $_POST['session_ID']; ?>">New SSQ</a>    
+                        <a href="chooseQuiz" class="btn btn-primary" data-study_ID="-1" data-session_ID="<?php echo $_POST['session_ID']; ?>">New SSQ</a>    
               <?php }?>
             </span>
         </h3>
@@ -133,7 +133,7 @@ if (isset($_POST['end-session-btn'])){
                             $row_type = mysqli_fetch_assoc($result_type);
                         ?>
                             <a  class="btn-sm btn-success" 
-                                href="<?php echo strtolower($row_times['name']); ?>_quiz_results.php" 
+                                href="<?php echo strtolower($row_times['name']); ?>_quiz_results" 
                                 data-ssq_time="<?php echo $row_times['id']; ?>" 
                                 data-ssq_type="<?php echo $row_ssq['ssq_type']; ?>">
                                 <?php echo $row_times['name'] . " (" . $row_type['type'] . ")"; ?>

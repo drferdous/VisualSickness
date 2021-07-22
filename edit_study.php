@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['updateStudy'])) {
             const divMsg = document.getElementById("flash-msg");
             if (divMsg.classList.contains("alert-success")){
                 setTimeout(function(){
-                    location.href = "view_study.php";
+                    location.href = "view_study";
                 }, 2000);
             }
         </script>
@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['updateStudy'])) {
 <div class="card ">
     <div class="card-header">
         <h3 class="text-center">Edit a Study
-            <a href="study_details.php" class="btn btn-primary float-right" data-study_ID="<?php echo $_POST['study_ID']; ?>">Back</a>
+            <a href="study_details" class="btn btn-primary float-right" data-study_ID="<?php echo $_POST['study_ID']; ?>">Back</a>
         </h3>
     </div>
     
@@ -38,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['updateStudy'])) {
         }
     ?>
     <div class="card-body pr-2 pl-2">
-        <form class="" action="edit_study.php" method="POST">
+        <form class="" action="edit_study" method="POST">
             <input type="hidden" name="study_ID" value=<?php echo $study_ID; ?>>
             <div class="form-group">
                 <label for="full_name">Full Name </label>

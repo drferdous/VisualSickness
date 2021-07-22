@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['insert_session'])){
                 let hiddenInput = document.createElement("input");
                 
                 form.setAttribute("method", "POST");
-                form.setAttribute("action", "session_details.php");
+                form.setAttribute("action", "session_details");
                 form.setAttribute("style", "display: none");
                 
                 hiddenInput.setAttribute("type", "hidden");
@@ -41,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['insert_session'])){
     <div class="card-header">
         <h3 class="text-center">
             Create a Session
-            <a class="float-right btn btn-primary" href="view_study.php">Back</a>
+            <a class="float-right btn btn-primary" href="view_study">Back</a>
         </h3>
     </div>
     <div class="cad-body">

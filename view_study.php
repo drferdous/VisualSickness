@@ -96,17 +96,17 @@ if (isset($insert_study)) {
                         echo "<td>" . $row['full_name'] ."</td>";
                         
                         echo "<td>";
-                        echo "<a class='btn-success btn-sm' href=\"study_details.php\" data-study_ID=\"" . $row['study_ID'] . "\">Study Details</a>";
+                        echo "<a class='btn-success btn-sm' href=\"study_details\" data-study_ID=\"" . $row['study_ID'] . "\">Study Details</a>";
                         
                         if (Session::get('roleid') === '1' || (isset($row['study_role']) && ($row['study_role'] === '2' || $row['study_role'] === '3'))){
                             echo "<br>";
                             echo "<br>";
-                            echo "<a class='btn-success btn-sm' href=\"create_session.php\" data-study_ID=\"" . $row['study_ID'] . "\">Create Session</a>";
+                            echo "<a class='btn-success btn-sm' href=\"create_session\" data-study_ID=\"" . $row['study_ID'] . "\">Create Session</a>";
                         }
                 
                         echo "<br>";
                         echo "<br>";
-                        echo "<a class='btn-success btn-sm' href=\"session_list.php\" data-study_ID=\"" . $row['study_ID'] . "\">Session List</a>";                        
+                        echo "<a class='btn-success btn-sm' href=\"session_list\" data-study_ID=\"" . $row['study_ID'] . "\">Session List</a>";                        
                         echo "</td>";
                         
                         echo "</tr>";

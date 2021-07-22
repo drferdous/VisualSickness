@@ -13,7 +13,7 @@ if (isset($_POST['deactivate-btn'])){
             const divMsg = document.getElementById("flash-msg");
             if (divMsg.classList.contains("alert-success")){
                 setTimeout(function() {
-                    location.href = "view_study.php";
+                    location.href = "view_study";
                 }, 2000);
             }
         </script>
@@ -29,7 +29,7 @@ if (isset($_POST['leave-btn'])){
     if (isset($leaveStudyMessage)){
         if ($leaveStudyMessage === $successMessage){
             echo $leaveStudyMessage;
-            header("Location: ./view_study.php");
+            header("Location: ./view_study");
         }
         else{
             echo $leaveStudyMessage;
@@ -40,7 +40,7 @@ if (isset($_POST['leave-btn'])){
 
 <div class="card">
     <div class="card-header">
-        <h3>Study Details <span class="float-right"> <a href="view_study.php" class="btn btn-primary">Back</a></span></h3>
+        <h3>Study Details <span class="float-right"> <a href="view_study" class="btn btn-primary">Back</a></span></h3>
     </div>
 
     <div class="card-body pr-2 pl-2">
@@ -131,7 +131,7 @@ if (isset($_POST['leave-btn'])){
                             echo "<input type=\"submit\" name=\"deactivate-btn\" value=\"Deactivate\" />";
                             echo "</form>";
                                 
-                            echo "<a href=\"edit_study.php\"  class=\"btn btn-success\" data-study_ID=\"" . $row_study['study_ID'] . "\">Edit</a>";
+                            echo "<a href=\"edit_study\"  class=\"btn btn-success\" data-study_ID=\"" . $row_study['study_ID'] . "\">Edit</a>";
                             echo "</td>";
                         
                         } else if (Session::get('roleid') === '3' || Session::get('roleid') === '4') {

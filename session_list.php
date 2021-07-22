@@ -8,7 +8,7 @@ Session::CheckSession();
 
 <div class="card ">
     <div class="card-header">
-            <h3>Session List <span class="float-right"> <span class="float-right"> <a href="view_study.php" class="btn btn-primary">Back</a>       
+            <h3>Session List <span class="float-right"> <span class="float-right"> <a href="view_study" class="btn btn-primary">Back</a>       
         </div>
   </h3> 
         </strong></span></h3>
@@ -53,7 +53,7 @@ Session::CheckSession();
                         echo "<td>" .  $row['start_time']     . "</td>";                           
                     
                         echo "<td>";
-                        echo "<a class='btn-success btn-sm' href=\"session_details.php\" data-session_ID=\"" . $row['session_ID'] . "\">Session Details</a>";
+                        echo "<a class='btn-success btn-sm' href=\"session_details\" data-session_ID=\"" . $row['session_ID'] . "\">Session Details</a>";
                         
                         echo "</td>";
                         

@@ -70,7 +70,7 @@ if (isset($addResearcher)) {
          $('#researcher_ID').change(function() {
              var researcher_ID = $(this).val();
             $.ajax({
-              url :"researcherrole.php",
+              url :"researcherrole",
               type:"POST",
               cache:false,
               data:{researcher_ID:researcher_ID},
