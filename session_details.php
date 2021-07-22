@@ -3,6 +3,7 @@ include 'inc/header.php';
 include_once 'database.php';
 
 Session::CheckSession();
+Session::set('session_ID', intval($_POST['session_ID']));
 
 if (isset($_POST['restart-session-btn'])){
     $startSessionMessage = $users->restart_session($_POST['session_ID']);

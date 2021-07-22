@@ -42,7 +42,7 @@ if(isset($_POST['Submit'])){
     $burping = $_POST['burping'];
     $ssq_time = $_POST['ssq_time'];
     $ssq_type = $_POST['ssq_type'];
-    $session_ID = $_POST['session_ID'];
+    $session_ID = Session::get('session_ID');
     $code = $_POST['code'];    
 
     if (Session::get('login') === FALSE) { 

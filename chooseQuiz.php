@@ -102,7 +102,7 @@
                 </select>
             </div>
             <div>
-                <input type="hidden" name="session_ID" value="<?php Session::get('session_ID'); ?>">
+                <input type="hidden" name="session_ID", value="<?php echo Session::get('session_ID'); ?>">
             </div>
             <div class="form-group">
                 <button type="submit" name="take-ssq-btn" class="btn btn-success">Take SSQ</button>
