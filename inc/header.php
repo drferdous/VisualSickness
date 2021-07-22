@@ -100,7 +100,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'logout') {
 
             ">
 
-              <a class="nav-link" href="profile.php"><i class="fab fa-500px mr-2"></i>Profile <span class="sr-only">(current)</span></a>
+              <a class="nav-link" href="profile.php" data-user_ID="<?php echo Session::get('id'); ?>" onclick="redirectUser"><i class="fab fa-500px mr-2"></i>Profile <span class="sr-only">(current)</span></a>
             </li>
 
             <li class="nav-item">
@@ -134,10 +134,38 @@ if (isset($_GET['action']) && $_GET['action'] == 'logout') {
                 <a class="nav-link" href="login.php"><i class="fas fa-sign-in-alt mr-2"></i>Login</a>
               </li>
 
-          <?php } ?>
+        <?php } 
+        ?>
 
 
           </ul>
 
         </div>
       </nav>
+      
+<script type="text/javascript">
+    $(document).ready(function() {
+       $("nav a").on('click', redirectUser); 
+    });
+    
+    function redirectUser(){
+        if (this.hasAttribute("data-user_ID")){
+            let form = document.createElement("form");
+            let hiddenInput = document.createElement("input");
+            
+            form.setAttribute("method", "POST");
+            form.setAttribute("action", $(this).attr("href"));
+            form.setAttribute("style", "display: none");
+            
+            hiddenInput.setAttribute("type", "hidden");
+            hiddenInput.setAttribute("name", "user_ID");
+            hiddenInput.setAttribute("value", $(this).attr("data-user_ID"));
+            
+            form.appendChild(hiddenInput);
+            document.body.appendChild(form);
+            form.submit();
+            
+            return false;
+        }
+    }
+</script>
