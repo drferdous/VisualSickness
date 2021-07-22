@@ -97,29 +97,54 @@ if (isset($_POST['end-session-btn'])){
                     </tr>
                     
                 <tr>  
-                    <th>Quizzes Taken</th>   
+                    <th>Quizzes Taken</th>
+                    <td>
                     <?php
-                        $sql_pre_quiz = "SELECT ssq_ID
-                                        FROM SSQ
-                                        WHERE session_ID = " . $_POST['session_ID'] . "
-                                        AND ssq_time = 0
+                    $sql_ssq_info = "CREATE TABLE `#SSQ_info` (
+                                    ssq_time TINYINT(4) NOT NULL,
+                                    ssq_type TINYINT(4) NOT NULL,
+                                    session_ID INT(11) NOT NULL
+                                );";
+                    mysqli_query($conn, $sql_ssq_info);
+                    
+                    $sql_ssq_info = "INSERT INTO `#SSQ_info`
+                                    SELECT ssq_time, ssq_type, session_ID
+                                    FROM SSQ
+                                    WHERE session_ID = " . Session::get('session_ID') . ";";
+                    mysqli_query($conn, $sql_ssq_info);
+                    
+                    $sql_times = "SELECT id, name FROM SSQ_times;";
+                    $result_times = mysqli_query($conn, $sql_times);
+                    while ($row_times = mysqli_fetch_assoc($result_times)){
+                        $sql_ssq = "SELECT *
+                                   FROM `#SSQ_info`
+                                   WHERE ssq_time = " . $row_times['id'] . "
+                                   LIMIT 1;";
+                        $result_ssq = mysqli_query($conn, $sql_ssq);
+                        
+                        if (mysqli_num_rows($result_ssq) > 0){
+                            $row_ssq = mysqli_fetch_assoc($result_ssq);
+                            
+                            $sql_type = "SELECT type
+                                        FROM SSQ_type
+                                        WHERE id = " . $row_ssq['ssq_type'] . "
                                         LIMIT 1;";
-                        $result_pre_quiz = mysqli_query($conn, $sql_pre_quiz);
-                        
-                        $sql_post_quiz = "SELECT ssq_ID
-                                         FROM SSQ
-                                         WHERE session_ID = " . $_POST['session_ID'] . "
-                                         AND ssq_time = 1
-                                         LIMIT 1;";
-                        $result_post_quiz = mysqli_query($conn, $sql_post_quiz);
-                        
-                        if (mysqli_num_rows($result_pre_quiz) > 0){
-                            echo "<td><a href=\"pre_quiz_results.php?session_ID=" . $_POST['session_ID'] . "\" class=\"btn-sm btn-success\">Pre-Quiz Results</a>";
-                        }
-                        if (mysqli_num_rows($result_post_quiz) > 0){
-                            echo "<a href=\"post_quiz_results.php?session_ID=" . $_POST['session_ID'] . "\" class=\"btn-sm btn-success\">Post-Quiz Results</a></td>";
-                        }
+                            $result_type = mysqli_query($conn, $sql_type);
+                            $row_type = mysqli_fetch_assoc($result_type);
+                        ?>
+                            <a  class="btn-sm btn-success" 
+                                href="<?php echo strtolower($row_times['name']); ?>_quiz_results.php" 
+                                data-ssq_time="<?php echo $row_times['id']; ?>" 
+                                data-ssq_type="<?php echo $row_ssq['ssq_type']; ?>">
+                                <?php echo $row_times['name'] . " (" . $row_type['type'] . ")"; ?>
+                            </a>    
+                    <?php }
+                    }
+                    
+                        $sql_ssq_info = "DROP TABLE IF EXISTS `#SSQ_info`;";
+                        mysqli_query($conn, $sql_ssq_info);
                     ?>
+                    </td>
                 </tr> 
                 
                 <tr>
