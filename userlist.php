@@ -82,11 +82,19 @@ if (isset($username)) {
                                data-user_ID="<?php echo $value->id; ?>">
                                View
                             </a>
-                            <a class="btn btn-info btn-sm" 
-                               href="profile.php"
-                               data-user_ID="<?php echo $value->id; ?>">
-                               Edit
-                            </a>
+                        <?php if ($value->roleid === '1' && $value->id !== Session::get('id')){ ?>
+                                <a class="btn btn-info btn-sm disabled" 
+                                   href="javascript:void(0);">
+                                   Edit
+                                </a>   
+                        <?php }
+                              else{ ?>
+                                <a class="btn btn-info btn-sm" 
+                                   href="profile.php"
+                                   data-user_ID="<?php echo $value->id; ?>">
+                                   Edit
+                                </a>
+                        <?php } ?>
                             <a onclick="return confirm('Are you sure To Delete ?')" class="btn btn-danger
                     <?php if (Session::get("id") == $value->id) {
                       echo "disabled";
