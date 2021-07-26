@@ -47,7 +47,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'logout') {
     <div class="container">
 
       <nav class="navbar navbar-expand-md navbar-dark bg-dark card-header">
-        <a class="navbar-brand" href="index.php"><i class="fas fa-home mr-2"></i>Dashboard</a>
+        <a class="navbar-brand" href="index"><i class="fas fa-home mr-2"></i>Dashboard</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -58,16 +58,16 @@ if (isset($_GET['action']) && $_GET['action'] == 'logout') {
         <?php if (Session::get('id') == TRUE) { ?>
               <li class="nav-item">
 
-                  <a class="nav-link" href="VisualQuiz.php"><i class="fas fa-users mr-2"></i>Visual Quiz </span></a>
+                  <a class="nav-link" href="VisualQuiz"><i class="fas fa-users mr-2"></i>Visual Quiz </span></a>
               </li>
               <li class="nav-item">
 
-                  <a class="nav-link" href="TextQuiz.php"><i class="fas fa-users mr-2"></i>Text Quiz </span></a>
+                  <a class="nav-link" href="TextQuiz"><i class="fas fa-users mr-2"></i>Text Quiz </span></a>
               </li>            
             <?php if (Session::get('roleid') == '1') { ?>
                   <li class="nav-item">
 
-                      <a class="nav-link" href="userlist.php"><i class="fas fa-users mr-2"></i>User lists </span></a>
+                      <a class="nav-link" href="userlist"><i class="fas fa-users mr-2"></i>User lists </span></a>
                   </li>
         <?php  } ?>
               
@@ -84,7 +84,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'logout') {
 
                          ?>">
 
-                <a class="nav-link" href="addParticipant.php"><i class="fas fa-user-plus mr-2"></i>Add Participant </span></a>
+                <a class="nav-link" href="addParticipant"><i class="fas fa-user-plus mr-2"></i>Add Participant </span></a>
               </li>
             <?php  } ?>
             <li class="nav-item
@@ -100,11 +100,11 @@ if (isset($_GET['action']) && $_GET['action'] == 'logout') {
 
             ">
 
-              <a class="nav-link" href="profile.php" data-user_ID="<?php echo Session::get('id'); ?>" onclick="redirectUser"><i class="fab fa-500px mr-2"></i>Profile <span class="sr-only">(current)</span></a>
+              <a class="nav-link" href="profile" data-user_ID="<?php echo Session::get('id'); ?>" onclick="redirectUser"><i class="fab fa-500px mr-2"></i>Profile <span class="sr-only">(current)</span></a>
             </li>
 
             <li class="nav-item">
-              <a class="nav-link" href="logout.php"><i class="fas fa-sign-out-alt mr-2"></i>Logout</a>
+              <a class="nav-link" href="logout"><i class="fas fa-sign-out-alt mr-2"></i>Logout</a>
             </li>
           <?php }else{ ?>
 
@@ -119,7 +119,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'logout') {
                           }
 
                          ?>">
-                <a class="nav-link" href="register.php"><i class="fas fa-user-plus mr-2"></i>Register</a>
+                <a class="nav-link" href="register"><i class="fas fa-user-plus mr-2"></i>Register</a>
               </li>
               <li class="nav-item
                 <?php
@@ -131,7 +131,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'logout') {
                     				}
 
                     			 ?>">
-                <a class="nav-link" href="login.php"><i class="fas fa-sign-in-alt mr-2"></i>Login</a>
+                <a class="nav-link" href="login"><i class="fas fa-sign-in-alt mr-2"></i>Login</a>
               </li>
 
         <?php } 
@@ -145,27 +145,30 @@ if (isset($_GET['action']) && $_GET['action'] == 'logout') {
       
 <script type="text/javascript">
     $(document).ready(function() {
-       $("nav a").on('click', redirectUser); 
-    });
-    
-    function redirectUser(){
-        if (this.hasAttribute("data-user_ID")){
+       $("nav a[data-user_ID]").on('click', function() {
             let form = document.createElement("form");
-            let hiddenInput = document.createElement("input");
+            let hiddenInput;
             
             form.setAttribute("method", "POST");
             form.setAttribute("action", $(this).attr("href"));
             form.setAttribute("style", "display: none");
             
+            hiddenInput = document.createElement("input");
             hiddenInput.setAttribute("type", "hidden");
             hiddenInput.setAttribute("name", "user_ID");
             hiddenInput.setAttribute("value", $(this).attr("data-user_ID"));
-            
             form.appendChild(hiddenInput);
+            
+            hiddenInput = document.createElement("input");
+            hiddenInput.setAttribute("type", "hidden");
+            hiddenInput.setAttribute("name", "purpose");
+            hiddenInput.setAttribute("value", "edit");
+            form.appendChild(hiddenInput);
+            
             document.body.appendChild(form);
             form.submit();
             
             return false;
-        }
-    }
+       }); 
+    });
 </script>

@@ -78,8 +78,9 @@ if (isset($username)) {
                         <td>
                           <?php if ( Session::get("roleid") == '1') {?>
                             <a class="btn btn-success btn-sm" 
-                               href="profile.php"
-                               data-user_ID="<?php echo $value->id; ?>">
+                               href="profile"
+                               data-user_ID="<?php echo $value->id; ?>"
+                               data-purpose="view">
                                View
                             </a>
                         <?php if ($value->roleid === '1' && $value->id !== Session::get('id')){ ?>
@@ -90,63 +91,49 @@ if (isset($username)) {
                         <?php }
                               else{ ?>
                                 <a class="btn btn-info btn-sm" 
-                                   href="profile.php"
-                                   data-user_ID="<?php echo $value->id; ?>">
+                                   href="profile"
+                                   data-user_ID="<?php echo $value->id;?>"
+                                   data-purpose="edit">
                                    Edit
                                 </a>
-                        <?php } ?>
-                            <a onclick="return confirm('Are you sure To Delete ?')" class="btn btn-danger
-                    <?php if (Session::get("id") == $value->id) {
-                      echo "disabled";
-                    } ?>
-                             btn-sm " href="?remove=<?php echo $value->id;?>">Remove</a>
-
-                             <?php if ($value->isActive == '1') {  ?>
+                        <?php } 
+                              if ($value->roleid === '1' || Session::get("id") == $value->id){ ?>
+                                <a class="btn btn-danger btn-sm disabled"
+                                   href="javascript:void(0);">
+                                Remove
+                                </a>
+                        <?php }
+                              else{ ?>
+                                <a class="btn btn-danger btn-sm"
+                                   href="userlist"
+                                   onclick="return confirm('Are you sure To Deactive ?')"
+                                   data-user_ID="<?php echo $value->id; ?>">
+                                Remove    
+                                </a>
+                        <?php }
+                              if ($value->isActive == '1'){ ?> 
                                <a onclick="return confirm('Are you sure To Deactive ?')" class="btn btn-warning
-                       <?php if (Session::get("id") == $value->id) {
+                       <?php if ($value->roleid ==='1' || Session::get("id") == $value->id) {
                          echo "disabled";
                        } ?>
-                                btn-sm " href="?deactive=<?php echo $value->id;?>">Deactivate</a>
+                                btn-sm " href="userlist" data-user_ID="<?php echo $value->id; ?>">Deactivate</a>
                              <?php } elseif($value->isActive == '0'){?>
                                <a onclick="return confirm('Are you sure To Active ?')" class="btn btn-secondary
-                       <?php if (Session::get("id") == $value->id) {
+                       <?php if ($value->roleid === '1' || Session::get("id") == $value->id) {
                          echo "disabled";
                        } ?>
-                                btn-sm " href="?active=<?php echo $value->id;?>">Activate</a>
+                                btn-sm " href="userlist" data-user_ID="<?php echo $value->id; ?>">Activate</a>
                              <?php } ?>
 
 
 
 
-                        <?php  }elseif(Session::get("id") == $value->id  && Session::get("roleid") == '2'){ ?>
-                          <a class="btn btn-success btn-sm " href="profile.php?id=<?php echo $value->id;?>">View</a>
-                          <a class="btn btn-info btn-sm " href="profile.php?id=<?php echo $value->id;?>">Edit</a>
-                        <?php  }elseif( Session::get("roleid") == '2'){ ?>
-                          <a class="btn btn-success btn-sm
-                          <?php if ($value->roleid == '1') {
-                            echo "disabled";
-                          } ?>
-                          " href="profile.php?id=<?php echo $value->id;?>">View</a>
-                          <a class="btn btn-info btn-sm
-                          <?php if ($value->roleid == '1') {
-                            echo "disabled";
-                          } ?>
-                          " href="profile.php?id=<?php echo $value->id;?>">Edit</a>
-                        <?php }elseif(Session::get("id") == $value->id  && Session::get("roleid") == '3'){ ?>
-                          <a class="btn btn-success btn-sm " href="profile.php?id=<?php echo $value->id;?>">View</a>
-                          <a class="btn btn-info btn-sm " href="profile.php?id=<?php echo $value->id;?>">Edit</a>
-                        <?php }else{ ?>
-                          <a class="btn btn-success btn-sm
-                          <?php if ($value->roleid == '1') {
-                            echo "disabled";
-                          } ?>
-                          " href="profile.php?id=<?php echo $value->id;?>">View</a>
-
+                        <?php  } ?>
                         <?php } ?>
 
                         </td>
                       </tr>
-                    <?php }}else{ ?>
+                    <?php }else{ ?>
                       <tr class="text-center">
                       <td>No user available now!</td>
                     </tr>
@@ -175,17 +162,26 @@ if (isset($username)) {
     
     function goToProfilePage(){
         let form = document.createElement("form");
-        let hiddenInput = document.createElement("input");
+        let hiddenInput;
         
         form.setAttribute("method", "POST");
         form.setAttribute("action", $(this).attr("href"));
         form.setAttribute("style", "display: none");
         
+        hiddenInput = document.createElement("input");
         hiddenInput.setAttribute("type", "hidden");
         hiddenInput.setAttribute("name", "user_ID");
         hiddenInput.setAttribute("value", $(this).attr("data-user_ID"));
-        
         form.appendChild(hiddenInput);
+        
+        if ($(this).get(0).hasAttribute("data-purpose")){
+            hiddenInput = document.createElement("input");
+            hiddenInput.setAttribute("type", "hidden");
+            hiddenInput.setAttribute("name", "purpose");
+            hiddenInput.setAttribute("value", $(this).attr("data-purpose"));
+            form.appendChild(hiddenInput);
+        }
+             
         document.body.appendChild(form);
         form.submit(); 
         

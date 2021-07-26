@@ -3,6 +3,7 @@ include 'inc/header.php';
 Session::CheckSession();
 
 $userid = $_POST['user_ID'];
+$purpose = $_POST['purpose'];
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update'])) {
   $updateUser = $users->updateUserByIdInfo($userid, $_POST);
@@ -19,7 +20,7 @@ if (isset($updateUser)) {
 
  <div class="card ">
    <div class="card-header">
-          <h3>User Profile <span class="float-right"> <a href="index.php" class="btn btn-primary">Back</a> </h3>
+          <h3>User Profile <span class="float-right"> <a href="index" class="btn btn-primary" data-user_ID="0">Back</a> </h3>
         </div>
         <div class="card-body">
 
@@ -49,7 +50,7 @@ if (isset($updateUser)) {
                 <input type="text" id="mobile" name="mobile" value="<?php echo $getUinfo->mobile; ?>" class="form-control">
               </div>
 
-              <?php if (Session::get("roleid") == '1') { ?>
+              <?php if (Session::get("roleid") == '1' && $purpose === "edit") { ?>
 
               <div class="form-group
               <?php if (Session::get("roleid") == '1' && Session::get("id") == $getUinfo->id) {
@@ -93,21 +94,21 @@ if (isset($updateUser)) {
             <input type="hidden" name="roleid" value="<?php echo $getUinfo->roleid; ?>">
           <?php } ?>
 
-              <?php if (Session::get("id") == $getUinfo->id) {?>
+              <?php if (Session::get("id") == $getUinfo->id && $purpose === "edit") {?>
 
 
               <div class="form-group">
                 <button type="submit" name="update" class="btn btn-success">Update</button>
-                <a class="btn btn-primary" href="changepass.php?id=<?php echo $getUinfo->id;?>">Password change</a>
+                <a class="btn btn-primary" href="changepass" data-user_ID="<?php echo $getUinfo->id; ?>">Password change</a>
               </div>
-            <?php } elseif(Session::get("roleid") == '1') {?>
+            <?php } elseif(Session::get("roleid") == '1' && $purpose === "edit") {?>
 
 
               <div class="form-group">
                 <button type="submit" name="update" class="btn btn-success">Update</button>
-                <a class="btn btn-primary" href="changepass.php?id=<?php echo $getUinfo->id;?>">Password change</a>
+                <a class="btn btn-primary" href="changepass" data-user-ID="<?php echo $getUinfo->id; ?>">Password change</a>
               </div>
-            <?php } elseif(Session::get("roleid") == '2') {?>
+            <?php } elseif(Session::get("roleid") == '2' && $purpose === "edit") {?>
 
 
               <div class="form-group">
@@ -115,27 +116,44 @@ if (isset($updateUser)) {
 
               </div>
 
-              <?php   }else{ ?>
-                  <div class="form-group">
-
-                    <a class="btn btn-primary" href="index.php">Ok</a>
-                  </div>
-                <?php } ?>
-
-
+              <?php } ?>
           </form>
         </div>
 
       <?php }else{
 
-        header('Location:profile.php');
+        header('Location: index');
       } ?>
 
 
 
       </div>
     </div>
-
+    
+<script type="text/javascript">
+    $(document).ready(function() {
+        $(".card").on("click", "a", redirectUser);
+    });
+    
+    function redirectUser(){
+        let form = document.createElement("form");
+        let hiddenInput = document.createElement("input");
+        
+        form.setAttribute("method", "POST");
+        form.setAttribute("action", $(this).attr("href"));
+        form.setAttribute("style", "display: none");
+        
+        hiddenInput.setAttribute("type", "hidden");
+        hiddenInput.setAttribute("name", "user_ID");
+        hiddenInput.setAttribute("value", $(this).attr("data-user_ID"));
+        
+        form.appendChild(hiddenInput);
+        document.body.appendChild(form);
+        form.submit();
+        
+        return false;
+    };
+</script>
 
   <?php
   include 'inc/footer.php';
