@@ -821,10 +821,6 @@ $isFirstTime = ($_POST['is_first_time'] === "true");
           else{ ?>
         <input type="submit" class="btn btn-success" name="Update" value="Update">
     <?php } ?>
-
-</div>
-</div>
-</div>
 </form>
 
 <form action="session_details" method="POST">

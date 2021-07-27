@@ -18,6 +18,13 @@ if (isset($_POST['end-session-btn'])){
         echo $endSessionMessage;
     }
 }
+
+if (isset($_POST['delete-ssq-btn'])){
+    $deleteSSQmessage = $users->deleteSSQ($_POST['session_ID']);
+    if (isset($deleteSSQmessage)){
+        echo $deleteSSQmessage ;
+    }
+}
 ?>
 
 <div class="card">
@@ -133,7 +140,7 @@ if (isset($_POST['end-session-btn'])){
                             $row_type = mysqli_fetch_assoc($result_type);
                         ?>
                             <a  class="btn-sm btn-success" 
-                                href="<?php echo strtolower($row_times['name']); ?>_quiz_results" 
+                                href="<?php echo $row_type['type']; ?>Quiz" 
                                 data-ssq_time="<?php echo $row_times['id']; ?>" 
                                 data-ssq_type="<?php echo $row_ssq['ssq_type']; ?>">
                                 <?php echo $row_times['name'] . " (" . $row_type['type'] . ")"; ?>
@@ -204,6 +211,8 @@ if (isset($_POST['end-session-btn'])){
                     <?php
                     echo "<td>";
                     echo "<form method=\"post\">";
+                    echo "<input type=\"submit\" name=\"delete-ssq-btn\" value=\"Delete SSQs\">";
+                    echo "<br>";           
                     echo "<input type=\"hidden\" name=\"session_ID\" value=\"" . $_POST['session_ID'] ."\">";
                     if (isset($row_session['end_time'])){
                         echo "<input type=\"submit\" name=\"restart-session-btn\" value=\"Restart Session\">";
@@ -233,21 +242,46 @@ if (isset($_POST['end-session-btn'])){
         form.setAttribute("action", $(this).attr("href"));
         form.setAttribute("style", "display: none");
         
+        if ($(this).get(0).hasAttribute("data-study_ID")){
+            hiddenInput = document.createElement("input");
+            hiddenInput.setAttribute("type", "hidden");
+            hiddenInput.setAttribute("name", "study_ID");
+            hiddenInput.setAttribute("value", $(this).attr("data-study_ID"));
+            form.appendChild(hiddenInput);
+        }
+
+        if ($(this).get(0).hasAttribute("data-session_ID")){
+            hiddenInput = document.createElement("input");
+            hiddenInput.setAttribute("type", "hidden");
+            hiddenInput.setAttribute("name", "session_ID");
+            hiddenInput.setAttribute("value", $(this).attr("data-session_ID"));
+            form.appendChild(hiddenInput);    
+        }
+
+        if ($(this).get(0).hasAttribute("data-ssq_time")){
+            hiddenInput = document.createElement("input");
+            hiddenInput.setAttribute("type", "hidden");
+            hiddenInput.setAttribute("name", "ssq_time");
+            hiddenInput.setAttribute("value", $(this).attr("data-ssq_time"));
+            form.appendChild(hiddenInput);
+        }
+
+        if ($(this).get(0).hasAttribute("data-ssq_type")){
+            hiddenInput = document.createElement("input");
+            hiddenInput.setAttribute("type", "hidden");
+            hiddenInput.setAttribute("name", "ssq_type");
+            hiddenInput.setAttribute("value", $(this).attr("data-ssq_type"));
+            form.appendChild(hiddenInput);
+        }
+
         hiddenInput = document.createElement("input");
         hiddenInput.setAttribute("type", "hidden");
-        hiddenInput.setAttribute("name", "study_ID");
-        hiddenInput.setAttribute("value", $(this).attr("data-study_ID"));
-        form.appendChild(hiddenInput);
-        
-        hiddenInput = document.createElement("input");
-        hiddenInput.setAttribute("type", "hidden");
-        hiddenInput.setAttribute("name", "session_ID");
-        hiddenInput.setAttribute("value", $(this).attr("data-session_ID"));
+        hiddenInput.setAttribute("name", "is_first_time");
+        hiddenInput.setAttribute("value", "false");
         form.appendChild(hiddenInput);
         
         document.body.appendChild(form);
-        form.submit();
-        
+        form.submit();      
         return false;
     }
 </script>
