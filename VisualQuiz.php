@@ -24,7 +24,7 @@ $isFirstTime = ($_POST['is_first_time'] === "true");
         </span></h3>
     </div>
     
-        <div class="card-body pr-2 pl-2">
+    <div class="card-body pr-2 pl-2">
 
 <style type="text/css">
   /* HIDE RADIO */
@@ -79,10 +79,9 @@ $isFirstTime = ($_POST['is_first_time'] === "true");
 
 <!-- <div class="Header"> -->
 
-<form action="insert_quiz" method="post">
-    <div class="symptoms">
-        
-        <?php if (Session::get('login') === FALSE) { ?>
+<form action="insert_quiz" method="post">    
+    <?php if (Session::get('login') === FALSE) { ?>
+        <div class="symptoms">
         <h1>Please Enter Your Demographic Data</h1>
             <label>
                 <h2>Age</h2>
@@ -134,8 +133,8 @@ $isFirstTime = ($_POST['is_first_time'] === "true");
             <label for="other">Other</label><br>
             <input type="radio" id="no" name="race" value="Prefer Not To Answer">
             <label for="other">Prefer Not To Answer</label>
-            <br/>
-    </div>
+            <br />
+        </div>
     <?php  } ?>     
     
   <hr>
@@ -823,13 +822,15 @@ $isFirstTime = ($_POST['is_first_time'] === "true");
         <input type="submit" class="btn btn-success" name="Update" value="Update">
     <?php } ?>
 
-    <input type="submit" class="btn btn-success" name="Cancel" value="Cancel">
 </div>
-
 </div>
 </div>
 </form>
 
+<form action="session_details" method="POST">
+    <input type="hidden" name="session_ID" value="<?php echo Session::get('session_ID'); ?>">
+    <input type="submit" class="btn btn-danger" name="Cancel" value="Cancel">
+</form>
 </body>
 </html>
 
