@@ -8,41 +8,45 @@
     if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['take-ssq-btn'])) {
         if (isset($_POST['quiz_type']) && isset($_POST['ssq_time'])){ ?>
             <script type="text/javascript">
-                let form = document.createElement("form");
-                let hiddenInput;
-                let sessionID = <?php echo Session::get('session_ID'); ?>;
-                let quizType = <?php echo $_POST['quiz_type']; ?>;
-                let ssqTime = <?php echo $_POST['ssq_time']; ?>;
-                let targetURL;
+                $(document).ready(function() {
+                    let form = document.createElement("form");
+                    let hiddenInput;
+                    let sessionID = <?php echo Session::get('session_ID'); ?>;
+                    let quizType = <?php echo $_POST['quiz_type']; ?>;
+                    let ssqTime = <?php echo $_POST['ssq_time']; ?>;
+                    let targetURL;
+                    
+                    if (quizType === 0){ // 0 represents textual quiz
+                        targetURL = "TextQuiz";
+                    }
+                    else if (quizType === 1){ // 1 represents visual quiz
+                        targetURL = "VisualQuiz";
+                    }
+                    else{
+                        targetURL = "404";
+                    }
                 
-                if (quizType === 0){ // 0 represents textual quiz
-                    targetURL = "TextQuiz";
-                }
-                else if (quizType === 1){ // 1 represents visual quiz
-                    targetURL = "VisualQuiz";
-                }
-                else{
-                    targetURL = "404";
-                }
-            
-                form.setAttribute("method", "POST");
-                form.setAttribute("action", targetURL);
-                form.setAttribute("style", "display: none");
-                
-                hiddenInput = document.createElement("input");
-                hiddenInput.setAttribute("type", "hidden");
-                hiddenInput.setAttribute("name", "session_ID");
-                hiddenInput.setAttribute("value", sessionID);
-                form.appendChild(hiddenInput);
-                
-                hiddenInput = document.createElement("input");
-                hiddenInput.setAttribute("type", "hidden");
-                hiddenInput.setAttribute("name", "ssq_time");
-                hiddenInput.setAttribute("value", ssqTime);
-                form.appendChild(hiddenInput);
-                
-                document.body.appendChild(form);
-                form.submit();
+                    form.setAttribute("method", "POST");
+                    form.setAttribute("action", targetURL);
+                    form.setAttribute("style", "display: none");
+                    
+                    hiddenInput = document.createElement("input");
+                    hiddenInput.setAttribute("type", "hidden");
+                    hiddenInput.setAttribute("name", "session_ID");
+                    hiddenInput.setAttribute("value", sessionID);
+                    form.appendChild(hiddenInput);
+                    
+                    hiddenInput = document.createElement("input");
+                    hiddenInput.setAttribute("type", "hidden");
+                    hiddenInput.setAttribute("name", "ssq_time");
+                    hiddenInput.setAttribute("value", ssqTime);
+                    form.appendChild(hiddenInput);
+                    
+                    document.body.appendChild(form);
+                    form.submit();
+
+                    return false;
+                });
             </script>
     <?php }
         else{
