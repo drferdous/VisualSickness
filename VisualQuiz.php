@@ -4,7 +4,9 @@ include 'inc/header.php';
 if(isset($_GET['code']) == "" && Session::get('login') === FALSE) {
   header('Location: index.php');
   exit();
-} 
+}
+
+$isFirstTime = ($_POST['is_first_time'] === "true");
 
 ?>
 
@@ -813,7 +815,15 @@ if(isset($_GET['code']) == "" && Session::get('login') === FALSE) {
     else{ ?>
         <input type="hidden" id="code" name="code" value="">
     <?php } ?>
-    <input type="submit" class="btn btn-success" name="Submit" value="Submit">
+
+    <?php if ($isFirstTime){?>
+        <input type="submit" class="btn btn-success" name="Submit" value="Submit">
+    <?php } 
+          else{ ?>
+        <input type="submit" class="btn btn-success" name="Update" value="Update">
+    <?php } ?>
+
+    <input type="submit" class="btn btn-success" name="Cancel" value="Cancel">
 </div>
 
 </div>
