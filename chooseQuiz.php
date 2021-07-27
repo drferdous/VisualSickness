@@ -11,20 +11,20 @@
                 let form = document.createElement("form");
                 let hiddenInput;
                 let sessionID = <?php echo Session::get('session_ID'); ?>;
-                let quizType = <?php echo $_POST['quiz_type']?>;
-                let ssqTime = <?php echo $_POST['ssq_time']?>;
+                let quizType = <?php echo $_POST['quiz_type']; ?>;
+                let ssqTime = <?php echo $_POST['ssq_time']; ?>;
                 let targetURL;
                 
                 if (quizType === 0){ // 0 represents textual quiz
-                    targetURL = "TextQuiz.php";
+                    targetURL = "TextQuiz";
                 }
                 else if (quizType === 1){ // 1 represents visual quiz
-                    targetURL = "VisualQuiz.php";
+                    targetURL = "VisualQuiz";
                 }
                 else{
-                    targetURL = "404.php";
+                    targetURL = "404";
                 }
-                
+            
                 form.setAttribute("method", "POST");
                 form.setAttribute("action", targetURL);
                 form.setAttribute("style", "display: none");
@@ -70,7 +70,7 @@
     
     <div class="card-body pr-2 pl-2">
         <h2 class="text-center">Quiz Settings</h2>
-        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+        <form action="<?php echo "chooseQuiz"; ?>" method="post">
             <div class="form-group pt-3">
                 <label for="quiz_type">Quiz Type</label>
                 <select class="form-control" name="quiz_type" id="quiz_type">
@@ -101,15 +101,14 @@
                     ?>
                 </select>
             </div>
-            <div>
-                <input type="hidden" name="session_ID", value="<?php echo Session::get('session_ID'); ?>">
-            </div>
+            <input type="hidden" name="session_ID", value="<?php echo Session::get('session_ID'); ?>">
             <div class="form-group">
                 <button type="submit" name="take-ssq-btn" class="btn btn-success">Take SSQ</button>
             </div>
         </form>
     </div>
 </div>
+
 
 <?php
     include 'inc/footer.php';
