@@ -2,7 +2,7 @@
 include 'inc/header.php';
 
 if(isset($_GET['code']) == "" && Session::get('login') === FALSE) {
-  header('Location: index.php');
+  header('Location: index');
   exit();
 }
 
@@ -79,7 +79,7 @@ $isFirstTime = ($_POST['is_first_time'] === "true");
 
 <!-- <div class="Header"> -->
 
-<form action="insert_quiz.php" method="post">
+<form action="insert_quiz" method="post">
     <div class="symptoms">
         
         <?php if (Session::get('login') === FALSE) { ?>
