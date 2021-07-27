@@ -65,7 +65,6 @@ if(isset($_POST['Submit'])){
     $SSQ_Sum = $nausea_sum + $oculomotor_sum + $disorient_sum;
     $SSQ_Score = $SSQ_Sum * 3.74; 
 
-
     $sql = "INSERT INTO SSQ (ssq_ID, general_discomfort, fatigue, headache, difficulty_focusing, eye_strain,              increased_salivation, sweating, nausea, difficulty_concentrating, fullness_of_head, blurred_vision, dizziness_with_eyes_open, dizziness_with_eyes_closed, vertigo, stomach_awareness, burping, ssq_time, ssq_type, session_ID, code)
             VALUES ('$ssq_ID', '$general_discomfort', '$fatigue', '$headache', '$difficulty_focusing', '$eye_strain', '$increased_salivation', '$sweating', '$nausea', '$difficulty_concentrating', '$fullness_of_head', '$blurred_vision', '$dizziness_with_eyes_open', '$dizziness_with_eyes_closed', '$vertigo', '$stomach_awareness', '$burping', '$ssq_time', '$ssq_type', '$session_ID', '$code')";
     if (mysqli_query($conn, $sql)) {
@@ -97,7 +96,7 @@ if(isset($_POST['Submit'])){
 
 ?>
 
-<form action="session_details.php" method="post">
+<form action="session_details" method="post">
         <input type="hidden" name="session_ID" value="<?php echo Session::get('session_ID'); ?>">
         <button type="Submit" name="ok-btn" class="btn btn-success form-group">OK</button>
 </form>
