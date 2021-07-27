@@ -41,6 +41,12 @@
                     hiddenInput.setAttribute("name", "ssq_time");
                     hiddenInput.setAttribute("value", ssqTime);
                     form.appendChild(hiddenInput);
+
+                    hiddenInput = document.createElement("input");
+                    hiddenInput.setAttribute("type", "hidden");
+                    hiddenInput.setAttribute("name", "is_first_time");
+                    hiddenInput.setAttribute("value", "true");
+                    form.appendChild(hiddenInput);
                     
                     document.body.appendChild(form);
                     form.submit();
