@@ -23,7 +23,7 @@ Session::CheckSession();
 
 <?php
 if(isset($_POST['Submit'])){    
-    $ssq_ID = $_POST['ssq_ID'];
+    $ssq_ID = intval($_POST['ssq_ID']);
     $general_discomfort = $_POST['general_discomfort'];
     $fatigue = $_POST['fatigue'];
     $headache = $_POST['headache'];
@@ -63,10 +63,34 @@ if(isset($_POST['Submit'])){
     $disorient_score = $disorient_sum * 13.92;
 
     $SSQ_Sum = $nausea_sum + $oculomotor_sum + $disorient_sum;
-    $SSQ_Score = $SSQ_Sum * 3.74; 
-
-    $sql = "INSERT INTO SSQ (ssq_ID, general_discomfort, fatigue, headache, difficulty_focusing, eye_strain,              increased_salivation, sweating, nausea, difficulty_concentrating, fullness_of_head, blurred_vision, dizziness_with_eyes_open, dizziness_with_eyes_closed, vertigo, stomach_awareness, burping, ssq_time, ssq_type, session_ID, code)
+    $SSQ_Score = $SSQ_Sum * 3.74;
+    
+    if ($ssq_ID > 0){
+        $sql = "UPDATE SSQ
+                SET general_discomfort = " . $general_discomfort . ",
+                    fatigue = " . $fatigue . ",
+                    headache = " . $headache . ",
+                    difficulty_focusing = " . $difficulty_focusing . ",
+                    eye_strain = " . $eye_strain . ",
+                    increased_salivation = " . $increased_salivation . ",
+                    sweating = " . $sweating . ",
+                    nausea = " . $nausea . ",
+                    difficulty_concentrating = " . $difficulty_concentrating . ",
+                    fullness_of_head = " . $fullness_of_head . ",
+                    blurred_vision = " . $blurred_vision . ",
+                    dizziness_with_eyes_open = " . $dizziness_with_eyes_open . ",
+                    dizziness_with_eyes_closed = " . $dizziness_with_eyes_closed . ",
+                    vertigo = " . $vertigo . ",
+                    stomach_awareness = " . $stomach_awareness . ",
+                    burping = " . $burping . "
+                WHERE ssq_ID = " . $ssq_ID . "
+                LIMIT 1;";
+    }
+    else{
+        $sql = "INSERT INTO SSQ (ssq_ID, general_discomfort, fatigue, headache, difficulty_focusing, eye_strain,              increased_salivation, sweating, nausea, difficulty_concentrating, fullness_of_head, blurred_vision, dizziness_with_eyes_open, dizziness_with_eyes_closed, vertigo, stomach_awareness, burping, ssq_time, ssq_type, session_ID, code)
             VALUES ('$ssq_ID', '$general_discomfort', '$fatigue', '$headache', '$difficulty_focusing', '$eye_strain', '$increased_salivation', '$sweating', '$nausea', '$difficulty_concentrating', '$fullness_of_head', '$blurred_vision', '$dizziness_with_eyes_open', '$dizziness_with_eyes_closed', '$vertigo', '$stomach_awareness', '$burping', '$ssq_time', '$ssq_type', '$session_ID', '$code')";
+    }
+    
     if (mysqli_query($conn, $sql)) {
         echo "New record created successfully!";
         echo "<br>";
