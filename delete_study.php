@@ -13,5 +13,5 @@ $id = $_GET['id']; // $id is now defined
 
 mysqli_query($conn,"DELETE FROM Study WHERE study_id='".$id."'");
 mysqli_close($conn);
-header("Location: index.php");
+header("Location: index");
 ?> 

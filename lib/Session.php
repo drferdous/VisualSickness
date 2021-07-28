@@ -3,8 +3,7 @@
 // Class Name: Session
 
 class Session{
-
-
+  
   // Session Start Method
   public static function init(){
 
@@ -25,8 +24,6 @@ class Session{
     $_SESSION[$key] = $val;
   }
 
-
-
   // Session Get Method
   public static function get($key){
     if (isset($_SESSION[$key])) {
@@ -35,19 +32,20 @@ class Session{
       return false;
     }
   }
-
+  
+  
   // User logout Method
   public static function destroy(){
     session_destroy();
     session_unset();
-    header('Location:login.php');
+    header('Location:login');
   }
 
 
   // Check Session Method
   public static function CheckSession(){
     if (self::get('login') == FALSE) {
-      header('Location:login.php');
+      header('Location:login');
     }
   }
 
@@ -55,16 +53,9 @@ class Session{
   // Check Login Method
   public static function CheckLogin(){
     if (self::get("login") == TRUE) {
-        header('Location:index.php');
+        header('Location:index');
     }
   }
-
-
-
-
-
-
-
 }
 
 ?>

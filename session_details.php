@@ -281,7 +281,8 @@ if (isset($_POST['delete-ssq-btn'])){
         form.appendChild(hiddenInput);
         
         document.body.appendChild(form);
-        form.submit();      
+        form.submit();
+
         return false;
     }
 </script>

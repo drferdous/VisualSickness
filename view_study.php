@@ -14,8 +14,8 @@ if (isset($insert_study)) {
     <div class="card-header">
         <h3>Study List <span class="float-right">         
         <?php if (Session::get('roleid') == '1' || Session::get('roleid') == '2') { ?>
-            <a href="add_researcher.php" class="btn btn-primary">Add A Researcher</a> 
-            <a href="remove_researcher.php" class="btn btn-primary">Remove A Researcher</a> 
+            <a href="add_researcher" class="btn btn-primary">Add A Researcher</a> 
+            <a href="remove_researcher" class="btn btn-primary">Remove A Researcher</a> 
         <?php  } ?> 
         </div>
   </h3> 

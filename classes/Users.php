@@ -254,7 +254,7 @@ class Users{
         $result_id = intval($result_id['LAST_INSERT_ID()']);
         
         
-        $sql2 = "INSERT INTO Participant (demographics_id, anonymous_name, dob, weight, occupation, phone_no, email, additional_info, comments) 
+        $sql2 = "INSERT INTO Participants (demographics_id, anonymous_name, dob, weight, occupation, phone_no, email, additional_info, comments) 
         VALUES(:demographics_id, :anonymous_name, :dob, :weight, :occupation, :phone_no, :email, :additional_info, :comments);";
         
         $stmt2 = $this->db->pdo->prepare($sql2);
@@ -295,7 +295,7 @@ class Users{
 
   // Select All User Method
   public function selectAllUserData(){
-    $sql = "SELECT * FROM tbl_users ORDER BY id DESC";
+    $sql = "SELECT * FROM tbl_users ORDER BY id ASC";
     $stmt = $this->db->pdo->prepare($sql);
     $stmt->execute();
     return $stmt->fetchAll(PDO::FETCH_OBJ);
@@ -371,7 +371,7 @@ class Users{
           Session::set('logMsg', '<div class="alert alert-success alert-dismissible mt-3" id="flash-msg">
     <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
     <strong>Success!</strong> You logged in!</div>');
-          echo "<script>location.href='index.php';</script>";
+          echo "<script>location.href='index';</script>";
 
         }else{
           $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
@@ -506,7 +506,7 @@ class Users{
       echo '<div class="alert alert-success alert-dismissible mt-3" id="flash-msg">
     <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
     <strong>Success!</strong> You have created a study!</div>';
-      echo "<script>setTimeout(\"location.href = 'view_study.php';\",1500);</script>";
+      echo "<script>setTimeout(\"location.href = 'view_study';\",1500);</script>";
   } else {
       $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
     <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
@@ -716,6 +716,34 @@ class Users{
             return $msg;
         }
     }
+    
+    // ends the current session within a study.
+    public function deleteSSQ($session_ID){
+        $currentDate = new DateTime();
+        $sql = "UPDATE Session
+                SET end_time = :end_time
+                WHERE session_ID = :session_ID
+                LIMIT 1;";
+        
+        $stmt = $this->db->pdo->prepare($sql);
+        $stmt->bindValue(':end_time', $currentDate->format('Y-m-d H:i:s'));
+        $stmt->bindValue(':session_ID', $session_ID);
+        
+        $result = $stmt->execute();
+        if ($result){
+            Session::set('session_ID', -1);
+            $msg = '<div class="alert alert-success alert-dismissible mt-3" id="flash-msg">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <strong>Success !</strong> Session ended!</div>';
+            return $msg;
+        }
+        else{
+            $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <strong>Error !</strong> Something went wrong, try ending again!</div>';
+            return $msg;
+        }
+    }    
 
     // Delete User by Id Method
     public function deleteUserById($remove){
@@ -748,13 +776,13 @@ class Users{
        $stmt->bindValue(':id', $deactive);
        $result =   $stmt->execute();
         if ($result) {
-          echo "<script>location.href='index.php';</script>";
+          echo "<script>location.href='index';</script>";
           Session::set('msg', '<div class="alert alert-success alert-dismissible mt-3" id="flash-msg">
           <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
           <strong>Success !</strong> User account Diactivated Successfully !</div>');
 
         }else{
-          echo "<script>location.href='index.php';</script>";
+          echo "<script>location.href='index';</script>";
           Session::set('msg', '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
     <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
     <strong>Error !</strong> Data not Diactivated !</div>');
@@ -775,12 +803,12 @@ class Users{
        $stmt->bindValue(':id', $active);
        $result =   $stmt->execute();
         if ($result) {
-          echo "<script>location.href='index.php';</script>";
+          echo "<script>location.href='index';</script>";
           Session::set('msg', '<div class="alert alert-success alert-dismissible mt-3" id="flash-msg">
           <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
           <strong>Success !</strong> User account activated Successfully !</div>');
         }else{
-          echo "<script>location.href='index.php';</script>";
+          echo "<script>location.href='index';</script>";
           Session::set('msg', '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
     <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
     <strong>Error !</strong> Data not activated !</div>');
@@ -842,7 +870,7 @@ class Users{
             $result =   $stmt->execute();
 
           if ($result) {
-            echo "<script>location.href='index.php';</script>";
+            echo "<script>location.href='index';</script>";
             Session::set('msg', '<div class="alert alert-success alert-dismissible mt-3" id="flash-msg">
             <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
             <strong>Success !</strong> Great news, Password Changed successfully !</div>');

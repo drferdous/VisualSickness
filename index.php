@@ -52,6 +52,8 @@
 
 <?php
     include 'inc/header.php';
+    include_once 'database.php';
+    
     
     // Displays banner that a user logged in successfully.
     $logMsg = Session::get('logMsg');
@@ -88,17 +90,37 @@
           <p>Not registered for the study? Click <a href="https://docs.google.com/forms/d/e/1FAIpQLScSCdtMj7uQILJpLQPhyVRZa6S5bLZlaPA1ruJ-OV_1gzb8Mw/viewform" target="_blank">here</a></p>
           <hr>
           
+        <?php
+        $mysqli = new mysqli("localhost", "id16175630_admin", "_TYp9G@HXf+U=OrW", "id16175630_visualsickness");
+        
+        /* check connection */
+        if ($mysqli->connect_errno) {
+            printf("Connect failed: %s\n", $mysqli->connect_error);
+            exit();
+        }
+        
+        /* check if server is alive */
+        if ($mysqli->ping()) {
+            printf ("Our connection is ok!\n");
+        } else {
+            printf ("Error: %s\n", $mysqli->error);
+        }
+        
+        /* close connection */
+        $mysqli->close();
+        ?>
+          
                  
         <?php if (Session::get('roleid') == '1' || Session::get('roleid') == '2') { ?>
         <h2>Study Options</h2>         
-            <p><a href="create_study.php">Create a Study</a></p>
-            <p><a href="view_study.php">Manage Studies</a></p>
+            <p><a href="create_study">Create a Study</a></p>
+            <p><a href="view_study">Manage Studies</a></p>
             </div>
         <?php  } ?>          
         
         <?php if (Session::get('roleid') == '3' || Session::get('roleid') == '4') { ?>
         <h2>Study Options</h2>         
-            <p><a href="view_study.php">View Studies</a></p>
+            <p><a href="view_study">View Studies</a></p>
             </div>
         <?php  } ?>         
       </div>

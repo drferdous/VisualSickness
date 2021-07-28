@@ -4,12 +4,7 @@ Session::CheckSession();
  ?>
  <?php
 
- if (isset($_GET['id'])) {
-   $userid = (int)$_GET['id'];
-
- }
-
-
+$userid = intval($_POST["user_ID"]);
 
  if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['changepass'])) {
     $changePass = $users->changePasswordBysingelUserId($userid, $_POST);
@@ -24,9 +19,11 @@ Session::CheckSession();
 
 
  <div class="card ">
-   <div class="card-header">
-          <h3>Change your password <span class="float-right"> <a href="profile.php?id=<?php  ?>" class="btn btn-primary">Back</a> </h3>
-        </div>
+    <div class="card-header">
+        <h3>Change your password 
+          <a href="profile" class="btn btn-primary float-right">Back</a> 
+        </h3>
+    </div>
         <div class="card-body">
 
 
@@ -42,7 +39,7 @@ Session::CheckSession();
                 <label for="new_password">New Password</label>
                 <input type="password" name="new_password"  class="form-control">
               </div>
-
+              <input type="hidden" name="user_ID" value="<?php echo $userid; ?>">    
 
               <div class="form-group">
                 <button type="submit" name="changepass" class="btn btn-success">Change password</button>
@@ -55,6 +52,38 @@ Session::CheckSession();
 
       </div>
     </div>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        $(".card a").on("click", redirectUser);
+    });
+    
+    function redirectUser(){
+        let form = document.createElement("form");
+        let hiddenInput;
+        
+        form.setAttribute("method", "POST");
+        form.setAttribute("action", $(this).attr("href"));
+        form.setAttribute("style", "display: none");
+        
+        hiddenInput = document.createElement("input");
+        hiddenInput.setAttribute("type", "hidden");
+        hiddenInput.setAttribute("name", "user_ID");
+        hiddenInput.setAttribute("value", "<?php echo $userid; ?>");
+        form.appendChild(hiddenInput);
+        
+        hiddenInput = document.createElement("input");
+        hiddenInput.setAttribute("type", "hidden");
+        hiddenInput.setAttribute("name", "purpose");
+        hiddenInput.setAttribute("value", "edit");
+        form.appendChild(hiddenInput);
+        
+        document.body.appendChild(form);
+        form.submit();
+        
+        return false;
+    }
+</script>
 
 
   <?php

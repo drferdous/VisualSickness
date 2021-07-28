@@ -19,7 +19,7 @@ if (isset($addResearcher)) {
         <div class="card-header">
    
  </span>
-        <h3>Add New Researcher <span class="float-right"> <a href="remove_researcher.php" class="btn btn-primary">Remove A Researcher</a> </h3> 
+        <h3>Add New Researcher <span class="float-right"> <a href="remove_researcher" class="btn btn-primary">Remove A Researcher</a> </h3> 
         </div>
         <div class="card-body pr-2 pl-2">
            <form class="" action="" method="post">
