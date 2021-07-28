@@ -41,8 +41,13 @@ Session::CheckSession();
                         echo "<td>" . $row['session_ID'] ."</td>";
                         
                         if (isset($row['participant_ID'])){
-                            $sql_users = "SELECT anonymous_name FROM Participant WHERE participant_id = " . $row['participant_ID'] . " LIMIT 1;";
+                            $sql_users = "SELECT anonymous_name FROM Participants WHERE participant_id = " . $row['participant_ID'] . " LIMIT 1;";
                             $result_users = mysqli_query($conn, $sql_users);
+                            
+                            if (!$result_users){
+                                echo mysqli_error($conn);
+                            }
+                            
                             $row_users = mysqli_fetch_assoc($result_users);
 
                             echo "<td>" . $row_users['anonymous_name'] . "</td>";
