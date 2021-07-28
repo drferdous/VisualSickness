@@ -1,5 +1,6 @@
 <?php
 include 'inc/header.php';
+include 'database.php';
 
 if(isset($_GET['code']) == "" && Session::get('login') === FALSE) {
   header('Location: index');
@@ -7,6 +8,14 @@ if(isset($_GET['code']) == "" && Session::get('login') === FALSE) {
 }
 
 $isFirstTime = ($_POST['is_first_time'] === "true");
+$ssq_ID;
+
+if ($isFirstTime){
+    $ssq_ID = -1;
+}
+else{
+    $ssq_ID = intval($_POST['ssq_ID']);
+}
 
 ?>
 
@@ -142,11 +151,11 @@ $isFirstTime = ($_POST['is_first_time'] === "true");
   <h1>Cybersickness Online Questionnaire</h1>
   <p>Please pick your current discomfort level on the categories mentioned below. If you do not understand the meaning of the symptom, pick "Do not Understand".</p>
     <input type="hidden" id="ssq_ID" name="ssq_ID" value="0">
-    <div class = "pictures">
         <h2>General Discomfort</h2>
         <hr>
+        <div class = "pictures">
         <label>
-            <input type="radio" id="discomfort4" name="general_discomfort" value="-1" checked>
+            <input type="radio" id="discomfort4" name="general_discomfort" value="-1" >
             <img src="images/question.png" alt="Basic">
             <center>
               <p>Don't Understand</p>
@@ -187,7 +196,7 @@ $isFirstTime = ($_POST['is_first_time'] === "true");
 
     <div class = "pictures">
       <label>
-            <input type="radio" id="fatigue4" name="fatigue" value="-1" checked>
+            <input type="radio" id="fatigue4" name="fatigue" value="-1" >
             <img src="images/question.png" alt="Basic">
             <center>
               <p>Don't Understand</p>
@@ -229,7 +238,7 @@ $isFirstTime = ($_POST['is_first_time'] === "true");
 
     <div class = "pictures">
       <label>
-            <input type="radio" id="headache4" name="headache" value="-1" checked>
+            <input type="radio" id="headache4" name="headache" value="-1" >
             <img src="images/question.png" alt="Basic">
             <center>
               <p>Don't Understand</p>
@@ -270,7 +279,7 @@ $isFirstTime = ($_POST['is_first_time'] === "true");
 
     <div class = "pictures">
       <label>
-            <input type="radio" id="eyestrain4" name="eye_strain" value="-1" checked>
+            <input type="radio" id="eyestrain4" name="eye_strain" value="-1" >
             <img src="images/question.png" alt="Basic">
             <center>
               <p>Don't Understand</p>
@@ -311,7 +320,7 @@ $isFirstTime = ($_POST['is_first_time'] === "true");
 
     <div class = "pictures">
       <label>
-            <input type="radio" id="difficulty_focusing4" name="difficulty_focusing" value="-1" checked>
+            <input type="radio" id="difficulty_focusing4" name="difficulty_focusing" value="-1" >
             <img src="images/question.png" alt="Basic">
             <center>
               <p>Don't Understand</p>
@@ -352,7 +361,7 @@ $isFirstTime = ($_POST['is_first_time'] === "true");
 
     <div class = "pictures">
       <label>
-            <input type="radio" id="saliva4" name="increased_salivation" value="-1" checked>
+            <input type="radio" id="saliva4" name="increased_salivation" value="-1" >
             <img src="images/question.png" alt="Basic">
             <center>
               <p>Don't Understand</p>
@@ -393,7 +402,7 @@ $isFirstTime = ($_POST['is_first_time'] === "true");
 
     <div class = "pictures">
       <label>
-            <input type="radio" id="sweating4" name="sweating" value="-1" checked>
+            <input type="radio" id="sweating4" name="sweating" value="-1" >
             <img src="images/question.png" alt="Basic">
             <center>
               <p>Don't Understand</p>
@@ -434,7 +443,7 @@ $isFirstTime = ($_POST['is_first_time'] === "true");
 
     <div class = "pictures">
       <label>
-            <input type="radio" id="nausea4" name="nausea" value="-1" checked>
+            <input type="radio" id="nausea4" name="nausea" value="-1" >
             <img src="images/question.png" alt="Basic">
             <center>
               <p>Don't Understand</p>
@@ -475,7 +484,7 @@ $isFirstTime = ($_POST['is_first_time'] === "true");
 
     <div class = "pictures">
       <label>
-            <input type="radio" id="difficulty_concentrating4" name="difficulty_concentrating" value="-1" checked>
+            <input type="radio" id="difficulty_concentrating4" name="difficulty_concentrating" value="-1" >
             <img src="images/question.png" alt="Basic">
             <center>
               <p>Don't Understand</p>
@@ -516,7 +525,7 @@ $isFirstTime = ($_POST['is_first_time'] === "true");
 
     <div class = "pictures">
       <label>
-            <input type="radio" id="fullness_of_head4" name="fullness_of_head" value="-1" checked>
+            <input type="radio" id="fullness_of_head4" name="fullness_of_head" value="-1" >
             <img src="images/question.png" alt="Basic">
             <center>
               <p>Don't Understand</p>
@@ -557,7 +566,7 @@ $isFirstTime = ($_POST['is_first_time'] === "true");
 
     <div class = "pictures">
       <label>
-            <input type="radio" id="blurred_vision4" name="blurred_vision" value="-1" checked>
+            <input type="radio" id="blurred_vision4" name="blurred_vision" value="-1" >
             <img src="images/question.png" alt="Basic">
             <center>
               <p>Don't Understand</p>
@@ -598,7 +607,7 @@ $isFirstTime = ($_POST['is_first_time'] === "true");
 
     <div class = "pictures">
       <label>
-            <input type="radio" id="dizzinessEyes4" name="dizziness_with_eyes_open" value="-1" checked>
+            <input type="radio" id="dizzinessEyes4" name="dizziness_with_eyes_open" value="-1" >
             <img src="images/question.png" alt="Basic">
             <center>
               <p>Don't Understand</p>
@@ -640,7 +649,7 @@ $isFirstTime = ($_POST['is_first_time'] === "true");
 
     <div class = "pictures">
       <label>
-            <input type="radio" id="dizzyclose4" name="dizziness_with_eyes_closed" value="-1" checked>
+            <input type="radio" id="dizzyclose4" name="dizziness_with_eyes_closed" value="-1" >
             <img src="images/question.png" alt="Basic">
             <center>
               <p>Don't Understand</p>
@@ -682,7 +691,7 @@ $isFirstTime = ($_POST['is_first_time'] === "true");
 
     <div class = "pictures">
       <label>
-            <input type="radio" id="vertigo4" name="vertigo" value="-1" checked>
+            <input type="radio" id="vertigo4" name="vertigo" value="-1" >
             <img src="images/question.png" alt="Basic">
             <center>
               <p>Don't Understand</p>
@@ -724,7 +733,7 @@ $isFirstTime = ($_POST['is_first_time'] === "true");
 
     <div class = "pictures">
       <label>
-            <input type="radio" id="stomach4" name="stomach_awareness" value="-1" checked>
+            <input type="radio" id="stomach4" name="stomach_awareness" value="-1">
             <img src="images/question.png" alt="Basic">
             <center>
               <p>Don't Understand</p>
@@ -766,7 +775,7 @@ $isFirstTime = ($_POST['is_first_time'] === "true");
 
     <div class = "pictures">
       <label>
-            <input type="radio" id="burp4" name="burping" value="-1" checked>
+            <input type="radio" id="burp4" name="burping" value="-1">
             <img src="images/question.png" alt="Basic">
             <center>
               <p>Don't Understand</p>
@@ -827,6 +836,38 @@ $isFirstTime = ($_POST['is_first_time'] === "true");
     <input type="hidden" name="session_ID" value="<?php echo Session::get('session_ID'); ?>">
     <input type="submit" class="btn btn-danger" name="Cancel" value="Cancel">
 </form>
+
+<?php
+    $sql = "SELECT general_discomfort, fatigue, headache, eye_strain, difficulty_focusing, increased_salivation, sweating, nausea, difficulty_concentrating, fullness_of_head, blurred_vision, dizziness_with_eyes_open, dizziness_with_eyes_closed, vertigo, stomach_awareness, burping
+        FROM SSQ 
+        WHERE ssq_ID = " . $ssq_ID . "
+        LIMIT 1;";
+            
+    $result = mysqli_query($conn, $sql);
+    $row = mysqli_fetch_array($result, MYSQLI_NUM);
+    
+    if (mysqli_num_rows($result) === 0){
+        $row = array();
+        
+        for ($i = 0; $i < mysqli_num_fields($result); ++$i){
+            array_push($row, -1);
+        }
+    } ?>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            let answerChoices = document.body.getElementsByClassName("pictures");
+            let pictures;
+            <?php for ($colNum = 0; $colNum < count($row); ++$colNum){ ?>
+                pictures = answerChoices[<?php echo $colNum; ?>].querySelectorAll("label > input");
+                for (let i = 0; i < pictures.length; ++i){
+                    if (parseInt(pictures[i].getAttribute("value"), 10) === <?php echo $row[$colNum]; ?>){
+                        pictures[i].setAttribute("checked", "checked");
+                    }
+                }
+            <?php } ?>
+        });
+    </script>
+
 </body>
 </html>
 
