@@ -91,7 +91,7 @@ if (isset($_POST['delete-ssq-btn'])){
                         <?php
                         // show name for participant_ID, not id         
                         if (isset($row_session['participant_ID'])){
-                            $sql_users = "SELECT anonymous_name FROM Participant WHERE participant_id = " . $row_session['participant_ID'] . " LIMIT 1;";
+                            $sql_users = "SELECT anonymous_name FROM Participants WHERE participant_id = " . $row_session['participant_ID'] . " LIMIT 1;";
                             $result_users = mysqli_query($conn, $sql_users);
                             $row_users = mysqli_fetch_assoc($result_users);
                                 
@@ -108,6 +108,7 @@ if (isset($_POST['delete-ssq-btn'])){
                     <td>
                     <?php
                     $sql_ssq_info = "CREATE TABLE `#SSQ_info` (
+                                    ssq_ID INT(11) NOT NULL,
                                     ssq_time TINYINT(4) NOT NULL,
                                     ssq_type TINYINT(4) NOT NULL,
                                     session_ID INT(11) NOT NULL
@@ -115,7 +116,7 @@ if (isset($_POST['delete-ssq-btn'])){
                     mysqli_query($conn, $sql_ssq_info);
                     
                     $sql_ssq_info = "INSERT INTO `#SSQ_info`
-                                    SELECT ssq_time, ssq_type, session_ID
+                                    SELECT ssq_ID, ssq_time, ssq_type, session_ID
                                     FROM SSQ
                                     WHERE session_ID = " . Session::get('session_ID') . ";";
                     mysqli_query($conn, $sql_ssq_info);
@@ -140,7 +141,8 @@ if (isset($_POST['delete-ssq-btn'])){
                             $row_type = mysqli_fetch_assoc($result_type);
                         ?>
                             <a  class="btn-sm btn-success" 
-                                href="<?php echo $row_type['type']; ?>Quiz" 
+                                href="<?php echo $row_type['type']; ?>Quiz"
+                                data-ssq_ID="<?php echo $row_ssq['ssq_ID']; ?>"
                                 data-ssq_time="<?php echo $row_times['id']; ?>" 
                                 data-ssq_type="<?php echo $row_ssq['ssq_type']; ?>">
                                 <?php echo $row_times['name'] . " (" . $row_type['type'] . ")"; ?>
@@ -257,6 +259,14 @@ if (isset($_POST['delete-ssq-btn'])){
             hiddenInput.setAttribute("value", $(this).attr("data-session_ID"));
             form.appendChild(hiddenInput);    
         }
+        
+        if ($(this).get(0).hasAttribute("data-ssq_ID")){
+            hiddenInput = document.createElement("input");
+            hiddenInput.setAttribute("type", "hidden");
+            hiddenInput.setAttribute("name", "ssq_ID");
+            hiddenInput.setAttribute("value", $(this).attr("data-ssq_ID"));
+            form.appendChild(hiddenInput);
+        }
 
         if ($(this).get(0).hasAttribute("data-ssq_time")){
             hiddenInput = document.createElement("input");
@@ -281,8 +291,8 @@ if (isset($_POST['delete-ssq-btn'])){
         form.appendChild(hiddenInput);
         
         document.body.appendChild(form);
-        form.submit();
-
+        form.submit();      
+        
         return false;
     }
 </script>
