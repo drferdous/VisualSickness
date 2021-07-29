@@ -8,8 +8,6 @@ if(isset($_GET['code']) == "" && Session::get('login') === FALSE) {
 }
 
 $isFirstTime = ($_POST['is_first_time'] === "true");
-$ssq_ID;
-
 if ($isFirstTime){
     $ssq_ID = -1;
 }
@@ -150,7 +148,7 @@ else{
   
   <h1>Cybersickness Online Questionnaire</h1>
   <p>Please pick your current discomfort level on the categories mentioned below. If you do not understand the meaning of the symptom, pick "Do not Understand".</p>
-    <input type="hidden" id="ssq_ID" name="ssq_ID" value="0">
+
         <h2>General Discomfort</h2>
         <hr>
         <div class = "pictures">
@@ -810,7 +808,8 @@ else{
             </center>
         </label>
     </div>
-
+    
+    <input type="hidden" id="ssq_ID" name="ssq_ID" value="<?php echo $ssq_ID; ?>">
     <input type="hidden" id="ssq_time" name="ssq_time" value="<?php echo $_POST['ssq_time']; ?>">
     <input type="hidden" id="ssq_type" name="ssq_type" value="1">
     <input type="hidden" id="session_ID" name="session_ID" value="<?php echo Session::get('session_ID'); ?>">
@@ -828,7 +827,7 @@ else{
         <input type="submit" class="btn btn-success" name="Submit" value="Submit">
     <?php } 
           else{ ?>
-        <input type="submit" class="btn btn-success" name="Update" value="Update">
+        <input type="submit" class="btn btn-success" name="Submit" value="Update">
     <?php } ?>
 </form>
 
