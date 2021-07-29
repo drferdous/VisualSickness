@@ -6,63 +6,73 @@
     Session::set('session_ID', intval($_POST['session_ID']));
     
     if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['take-ssq-btn'])) {
-        if (isset($_POST['quiz_type']) && isset($_POST['ssq_time'])){ ?>
+        $takeSSQMessage = $users->takeSSQ($_POST);
+        if (isset($takeSSQMessage)){
+            echo $takeSSQMessage; ?>
+            
             <script type="text/javascript">
-                $(document).ready(function() {
-                    let form = document.createElement("form");
-                    let hiddenInput;
-                    let sessionID = <?php echo Session::get('session_ID'); ?>;
-                    let quizType = <?php echo $_POST['quiz_type']; ?>;
-                    let ssqTime = <?php echo $_POST['ssq_time']; ?>;
-                    let targetURL;
-                    
-                    if (quizType === 0){ // 0 represents textual quiz
-                        targetURL = "TextQuiz";
-                    }
-                    else if (quizType === 1){ // 1 represents visual quiz
-                        targetURL = "VisualQuiz";
-                    }
-                    else{
-                        targetURL = "404";
+                $(document).ready(function(){
+                    const divMsg = document.getElementById("flash-msg");
+                    if (divMsg.classList.contains("alert-success")){
+                        setTimeout(redirectUser, 2000);
                     }
                 
-                    form.setAttribute("method", "POST");
-                    form.setAttribute("action", targetURL);
-                    form.setAttribute("style", "display: none");
-                    
-                    hiddenInput = document.createElement("input");
-                    hiddenInput.setAttribute("type", "hidden");
-                    hiddenInput.setAttribute("name", "session_ID");
-                    hiddenInput.setAttribute("value", sessionID);
-                    form.appendChild(hiddenInput);
-                    
-                    hiddenInput = document.createElement("input");
-                    hiddenInput.setAttribute("type", "hidden");
-                    hiddenInput.setAttribute("name", "ssq_time");
-                    hiddenInput.setAttribute("value", ssqTime);
-                    form.appendChild(hiddenInput);
+                    function redirectUser(){
+                        let form = document.createElement("form");
+                        let hiddenInput;
 
-                    hiddenInput = document.createElement("input");
-                    hiddenInput.setAttribute("type", "hidden");
-                    hiddenInput.setAttribute("name", "is_first_time");
-                    hiddenInput.setAttribute("value", "true");
-                    form.appendChild(hiddenInput);
+                        let sessionID = <?php echo Session::get('session_ID'); ?>;
+                        let quizType = <?php echo $_POST['quiz_type']; ?>;
+                        let ssqTime = <?php echo $_POST['ssq_time']; ?>;
+                        let targetURL;
                     
-                    document.body.appendChild(form);
-                    form.submit();
-
-                    return false;
+                        if (quizType === 0){ // 0 represents textual quiz
+                            targetURL = "TextQuiz";
+                        }
+                        else if (quizType === 1){ // 1 represents visual quiz
+                            targetURL = "VisualQuiz";
+                        }
+                        else{
+                            targetURL = "404";
+                        }
+                    
+                        form.setAttribute("method", "POST");
+                        form.setAttribute("action", targetURL);
+                        form.setAttribute("style", "display: none");
+                        
+                        hiddenInput = document.createElement("input");
+                        hiddenInput.setAttribute("type", "hidden");
+                        hiddenInput.setAttribute("name", "session_ID");
+                        hiddenInput.setAttribute("value", sessionID);
+                        form.appendChild(hiddenInput);
+                        
+                        hiddenInput = document.createElement("input");
+                        hiddenInput.setAttribute("type", "hidden");
+                        hiddenInput.setAttribute("name", "quiz_type");
+                        hiddenInput.setAttribute("value", quizType);
+                        form.appendChild(hiddenInput);
+                        
+                        hiddenInput = document.createElement("input");
+                        hiddenInput.setAttribute("type", "hidden");
+                        hiddenInput.setAttribute("name", "ssq_time");
+                        hiddenInput.setAttribute("value", ssqTime);
+                        form.appendChild(hiddenInput);
+                        
+                        hiddenInput = document.createElement("input");
+                        hiddenInput.setAttribute("type", "hidden");
+                        hiddenInput.setAttribute("name", "is_first_time");
+                        hiddenInput.setAttribute("value", "true");
+                        form.appendChild(hiddenInput);
+                        
+                        document.body.appendChild(form);
+                        form.submit();
+                        
+                        return false;
+                    };
                 });
             </script>
-    <?php }
-        else{
-            $errorMessage = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
-                            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                            <strong>Error!</strong> Please select a quiz type and quiz time!</div>';
-            echo $errorMessage;
-        }
-    }
-?>
+<?php   }
+    } ?>
 
 <div class="card ">
     <div class="card-header">

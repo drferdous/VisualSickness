@@ -180,6 +180,84 @@ class Users{
     
     echo $msg;
   }
+  
+  // take SSQ quiz from Session
+public function takeSSQ($data){
+    if (!(isset($data['quiz_type']) && isset($data['ssq_time']))){
+        $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong>Error! Please select a quiz type and quiz time!</strong> </div>';
+        return $msg;
+    }
+    
+    if (!(isset($data['session_ID']))){
+        $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong>Error! User does not have a valid session ID!</strong> </div>';
+        return $msg;
+    }
+    
+    $quiz_type = $data['quiz_type'];
+    $ssq_time = $data['ssq_time'];
+    $session_ID = $data['session_ID'];
+    
+    $sql = "SELECT *
+            FROM SSQ
+            WHERE session_ID = :session_ID
+            AND ssq_time = :ssq_time
+            AND ssq_type = :quiz_type
+            LIMIT 1;";
+    
+    $stmt = $this->db->pdo->prepare($sql);
+    $stmt->bindValue(":session_ID", $session_ID);
+    $stmt->bindValue(":ssq_time", $ssq_time);
+    $stmt->bindValue(":quiz_type", $quiz_type);
+    $result = $stmt->execute();
+    
+    if (!$result){
+        $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong>Error! Something went wrong, try again!</strong> </div>';
+        return $msg;
+    }
+    
+    if ($stmt->rowCount() === 0){
+        $msg = '<div class="alert alert-success alert-dismissible mt-3" id="flash-msg">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        <strong>Success!</strong> You will take the quiz momentarily!</div>';
+        return $msg;
+    }
+    else{
+        $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong>Error! You have already taken a quiz with the same type and time!</strong> </div>';
+        return $msg;
+    }
+}
+  
+  // remove SSQ quiz from Session
+  public function deleteQuiz($data){
+    $ssq_ID = $data['$ssq_ID'];          
+      
+    $sql = "DELETE FROM SSQ WHERE ssq_ID = :ssq_ID";
+    $stmt = $this->db->pdo->prepare($sql);
+    $stmt->bindValue(':ssq_ID', $ssq_ID);
+    $result = $stmt->execute(); 
+    
+    if ($result) { 
+        $msg = '<div class="alert alert-success alert-dismissible mt-3" id="flash-msg">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        <strong>Success!</strong> You have deleted this quiz!</div>';
+        return $msg;
+    } else {
+        $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        <strong>Error! Something went wrong, try deleting again!</strong> </div>';
+        return $msg;
+    }
+    
+    echo $msg;
+  }  
 
   // Add participant to Session table and Demographics table
   public function addNewParticipant($data){
