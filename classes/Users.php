@@ -237,7 +237,7 @@ public function takeSSQ($data){
   
   // remove SSQ quiz from Session
   public function deleteQuiz($data){
-    $ssq_ID = $data['$ssq_ID'];          
+    $ssq_ID = intval($_POST['ssq_ID']);          
       
     $sql = "DELETE FROM SSQ WHERE ssq_ID = :ssq_ID";
     $stmt = $this->db->pdo->prepare($sql);

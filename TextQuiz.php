@@ -17,20 +17,13 @@ else{
     $ssq_ID = intval($_POST['ssq_ID']);
 }
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['deleteQuiz'])) {
-  $deleteQuiz = $users->deleteQuiz($_POST);
-}
-
-if (isset($deleteQuiz)) {
-  echo $deleteQuiz;
-}
-
 ?>
       
 <div class="card ">
     <div class="card-header">
         <h3><span class="float-right">
-            <form action="" method="post">
+            <form action="delete_quiz" method="post">
+                <input type="hidden" id="ssq_ID" name="ssq_ID" value="<?php echo $ssq_ID; ?>">    
                 <button type="submit" name="deleteQuiz" class="btn btn-danger">Delete SSQ</button>      
             </form>
             </span></strong>
