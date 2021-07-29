@@ -15,19 +15,21 @@ else{
     $ssq_ID = intval($_POST['ssq_ID']);
 }
 
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['deleteQuiz'])) {
+  $deleteQuiz = $users->deleteQuiz($_POST);
+}
+
+if (isset($deleteQuiz)) {
+  echo $deleteQuiz;
+}
 ?>
 
 <div class="card ">
     <div class="card-header">
-        <h3><span class="float-right">Welcome! 
-            <strong><span class="badge badge-lg badge-secondary text-white">
-                <?php
-                    $username = Session::get('username');
-                    if (isset($username)){
-                        echo $username;
-                    }
-                ?>
-            </span></strong>
+        <h3><span class="float-right">
+            <form action="" method="post">
+                <button type="submit" name="deleteQuiz" class="btn btn-danger">Delete SSQ</button>      
+            </form>
         </span></h3>
     </div>
     

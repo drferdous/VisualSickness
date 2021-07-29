@@ -8,21 +8,34 @@ if(isset($_GET['code']) == "" && Session::get('login') === FALSE) {
 }
 
 $isFirstTime = ($_POST['is_first_time'] === "true");
+$ssq_ID;
+        
+if ($isFirstTime){
+    $ssq_ID = -1;
+}
+else{
+    $ssq_ID = intval($_POST['ssq_ID']);
+}
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['deleteQuiz'])) {
+  $deleteQuiz = $users->deleteQuiz($_POST);
+}
+
+if (isset($deleteQuiz)) {
+  echo $deleteQuiz;
+}
 
 ?>
       
 <div class="card ">
     <div class="card-header">
-        <h3><span class="float-right">Welcome! 
-            <strong><span class="badge badge-lg badge-secondary text-white">
-                <?php
-                    $username = Session::get('username');
-                    if (isset($username)){
-                        echo $username;
-                    }
-                ?>
+        <h3><span class="float-right">
+            <form action="" method="post">
+                <button type="submit" name="deleteQuiz" class="btn btn-danger">Delete SSQ</button>      
+            </form>
             </span></strong>
         </span></h3>
+        
     </div>
         
     <div class="card-body pr-2 pl-2">
@@ -105,8 +118,6 @@ $isFirstTime = ($_POST['is_first_time'] === "true");
 <div class="symptoms">
   <h2>General Discomfort</h2>
   <hr>
-
-    <input type="hidden" id="ssq_ID" name="ssq_ID" value="0">
     <div class = "pictures">
         <label>
             <input type="radio" id="discomfort4" name="general_discomfort" value="-1"> Do Not Understand
@@ -504,7 +515,8 @@ $isFirstTime = ($_POST['is_first_time'] === "true");
     </div>
 </div>
 </center>
-
+    
+    <input type="hidden" id="ssq_ID" name="ssq_ID" value="<?php echo $ssq_ID; ?>">
     <input type="hidden" id="ssq_time" name="ssq_time" value="<?php echo $_POST['ssq_time']; ?>">
     <input type="hidden" id="ssq_type" name="ssq_type" value="0">
     <input type="hidden" id="session_ID" name="session_ID" value="<?php echo Session::get('session_ID'); ?>">
@@ -521,25 +533,17 @@ $isFirstTime = ($_POST['is_first_time'] === "true");
         <input type="submit" class="btn btn-success" name="Submit" value="Submit">
     <?php }
           else{ ?>
-        <input type="submit" class="btn btn-success" name="Update" value="Update">
+        <input type="submit" class="btn btn-success" name="Submit" value="Update">
     <?php } ?>
 </form>
 
+<br>
 <form action="session_details" method="POST">
     <input type="hidden" name="session_ID" value="<?php echo Session::get('session_ID'); ?>">
     <input type="submit" class="btn btn-danger" name="Cancel" value="Cancel">
 </form>
 
 <?php
-    $ssq_ID;
-        
-    if ($isFirstTime){
-        $ssq_ID = -1;
-    }
-    else{
-        $ssq_ID = intval($_POST['ssq_ID']);
-    }
-            
     $sql = "SELECT general_discomfort, fatigue, headache, eye_strain, difficulty_focusing, increased_salivation, sweating, nausea, difficulty_concentrating, fullness_of_head, blurred_vision, dizziness_with_eyes_open, dizziness_with_eyes_closed, vertigo, stomach_awareness, burping
         FROM SSQ 
         WHERE ssq_ID = " . $ssq_ID . "
