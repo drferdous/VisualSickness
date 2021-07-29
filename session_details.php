@@ -212,9 +212,7 @@ if (isset($_POST['delete-ssq-btn'])){
                     <th>Action</th>
                     <?php
                     echo "<td>";
-                    echo "<form method=\"post\">";
-                    echo "<input type=\"submit\" name=\"delete-ssq-btn\" value=\"Delete SSQs\">";
-                    echo "<br>";           
+                    echo "<form action=\"session_details\" method=\"POST\">";
                     echo "<input type=\"hidden\" name=\"session_ID\" value=\"" . $_POST['session_ID'] ."\">";
                     if (isset($row_session['end_time'])){
                         echo "<input type=\"submit\" name=\"restart-session-btn\" value=\"Restart Session\">";
