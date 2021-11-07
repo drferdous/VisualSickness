@@ -54,6 +54,10 @@
     include 'inc/header.php';
     include_once 'database.php';
     
+    if (Session::get('login') === FALSE){
+        header('Location:login');
+        exit();
+    }
     
     // Displays banner that a user logged in successfully.
     $logMsg = Session::get('logMsg');
@@ -89,7 +93,7 @@
           </form>
           <p>Not registered for the study? Click <a href="https://docs.google.com/forms/d/e/1FAIpQLScSCdtMj7uQILJpLQPhyVRZa6S5bLZlaPA1ruJ-OV_1gzb8Mw/viewform" target="_blank">here</a></p>
           <hr>
-            
+          
         <?php if (Session::get('roleid') == '1' || Session::get('roleid') == '2') { ?>
         <h2>Study Options</h2>         
             <p><a href="create_study">Create a Study</a></p>

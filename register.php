@@ -1,28 +1,10 @@
 <?php
 include 'inc/header.php';
-Session::CheckLogin();
+include_once 'database.php';
 
-
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register'])) {
-
-  $register = $users->userRegistration($_POST);
-}
-
-if (isset($register)) {
-  echo $register;
-}
-
-
- ?>  
-
-<?php
-$servername='localhost';
-$username='id16175630_admin';
-$password='_TYp9G@HXf+U=OrW';
-$dbname = "id16175630_visualsickness";
-$conn=mysqli_connect($servername,$username,$password,"$dbname");
-if(!$conn){
-   die('Could not Connect My Sql:' .mysql_error());
+if (Session::get('login') === FALSE){
+    header('Location:login');
+    exit();
 }
 ?>
 
