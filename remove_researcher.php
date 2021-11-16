@@ -18,7 +18,7 @@ if (isset($addResearcher)) {
         <div class="card-header">
    
  </span>
-        <h3>Remove A Researcher <span class="float-right"> <a href="add_researcher" class="btn btn-primary">Add A Researcher</a> </h3> 
+        <h3>Remove A Researcher </h3> 
         </div>
         <div class="card-body pr-2 pl-2">
             
@@ -55,9 +55,31 @@ if (isset($addResearcher)) {
       </div>
       
  <script type="text/javascript">
-     $(document).ready(function() {
-         $('#study_ID').change(function() {
-             var study_ID = $(this).val();
+    $(document).on("click", "a", redirectUser);
+    
+    function redirectUser(){
+        let form = document.createElement("form");
+        let hiddenInput = document.createElement("input");
+        
+        form.setAttribute("method", "POST");
+        form.setAttribute("action", $(this).attr("href"));
+        form.setAttribute("style", "display: none");
+        
+        hiddenInput.setAttribute("type", "hidden");
+        hiddenInput.setAttribute("name", "study_ID");
+        hiddenInput.setAttribute("value", $(this).attr("data-study_ID"));
+        
+        form.append(hiddenInput);
+        document.body.append(form);
+        
+        form.submit();
+        
+        return false;
+    }
+    
+    $(document).ready(function() {
+        $('#study_ID').change(function() {
+            var study_ID = $(this).val();
             $.ajax({
               url :"researcherremoval",
               type:"POST",
@@ -67,8 +89,8 @@ if (isset($addResearcher)) {
                   $("#researcher_ID").html(data);
               }
             });	
-         });
-     });
+        });
+    });
  </script>      
 
 
