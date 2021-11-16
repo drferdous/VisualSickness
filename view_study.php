@@ -12,20 +12,12 @@ if (isset($insert_study)) {
 
 <div class="card ">
     <div class="card-header">
-        <h3>Study List <span class="float-right">         
-        <?php if (Session::get('roleid') == '1' || Session::get('roleid') == '2') { ?>
-            <a href="add_researcher" class="btn btn-primary">Add A Researcher</a> 
-            <a href="remove_researcher" class="btn btn-primary">Remove A Researcher</a> 
-        <?php  } ?> 
-        </div>
-  </h3> 
-        </strong></span></h3>
+        <h3>Study List</h3>         
     </div>
-        
     <div class="card-body pr-2 pl-2">
     <?php
         if (Session::get('roleid') === '1'){
-            $sql = "SELECT study_ID, full_name 
+            $sql = "SELECT study_ID, full_name, created_at
                     FROM Study
                     WHERE is_active = 1;";
                     
@@ -84,6 +76,7 @@ if (isset($insert_study)) {
                 <thead class="text-center">
                     <tr>
                         <th>Study Name</th>
+                        <th>Created At</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -94,6 +87,7 @@ if (isset($insert_study)) {
                         echo "<tr>";
                         
                         echo "<td>" . $row['full_name'] ."</td>";
+                        echo "<td>" . $row['created_at'] ."</td>";
                         
                         echo "<td>";
                         echo "<a class='btn-success btn-sm' href=\"study_details\" data-study_ID=\"" . $row['study_ID'] . "\">Study Details</a>";
