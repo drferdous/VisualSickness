@@ -160,13 +160,13 @@ class Users{
     if (empty($data['researcher_ID'])){
         $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
         <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-        <strong>Error! Please select a researcher to remove!</strong> </div>';
+        <strong>Error!</strong> Please select a researcher to remove!</div>';
         return $msg;
     }
     if (empty($data['study_ID'])){
         $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
         <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-        <strong>Error! Please select a study!</strong> </div>';
+        <strong>Error!</strong> Please select a study!</div>';
         return $msg;
     }
     
