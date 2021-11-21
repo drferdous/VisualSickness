@@ -157,6 +157,19 @@ class Users{
       
 // Delete researcher to study 
   public function removeResearcher($data){
+    if (empty($data['researcher_ID'])){
+        $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        <strong>Error! Please select a researcher to remove!</strong> </div>';
+        return $msg;
+    }
+    if (empty($data['study_ID'])){
+        $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        <strong>Error! Please select a study!</strong> </div>';
+        return $msg;
+    }
+    
     $researcher_ID = $data['researcher_ID'];          
     $study_ID = $data['study_ID'];     
       
@@ -177,8 +190,6 @@ class Users{
         <strong>Error! Something went wrong, try removing again!</strong> </div>';
         return $msg;
     }
-    
-    echo $msg;
   }
   
   // take SSQ quiz from Session
