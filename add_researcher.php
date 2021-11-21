@@ -27,12 +27,16 @@ if (isset($addResearcher)) {
                     <label for="researcher_ID">Add A Member:</label>
                     <select class="form-control" name="researcher_ID" id="researcher_ID">
                         <option value = "" selected hidden disabled>Member Name</option>
-                        <?php 
-                            $sql = mysqli_query($conn, "SELECT id, name FROM tbl_users");
-                            while ($row = $sql->fetch_assoc()){
-                            echo '<option value="'.$row['id'].'">' . $row['name'] . "</option>";
-                            }
-                        ?>
+                        <?php
+                            $sql = "SELECT id, name
+                                    FROM tbl_users
+                                    WHERE NOT id IN (SELECT researcher_ID 
+                                                     FROM Researcher_Study
+                                                     WHERE study_ID = " . $_POST['study_ID'] . ");";
+                            $result = mysqli_query($conn, $sql);
+                            while ($row = $result->fetch_assoc()){ ?>
+                                <option value="<?php echo $row['id']; ?>"><?php echo $row['name']; ?></option>
+                        <?php } ?>
                     </select>
                     <br>
                     <label for="study_role">Select Study Role:</label>
