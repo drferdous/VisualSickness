@@ -7,52 +7,45 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['removeResearcher'])) {
     $removeResearcher = $users->removeResearcher($_POST);
     echo $removeResearcher;
 }
-
 if (isset($addResearcher)) {
   echo $removeResearcher;
 }
-
- ?>
+?>
  
-      <div class="card ">
-        <div class="card-header">
-   
- </span>
+<div class="card">
+    <div class="card-header">
         <h3>Remove A Researcher </h3> 
-        </div>
-        <div class="card-body pr-2 pl-2">
-            
-           <form class="" action="" method="post">
+    </div>
+    <div class="card-body pr-2 pl-2">
+        <form class="" action="" method="post">
             <div class="form-group">
                 <div class="form-group">
-                  <label for="study_id">Choose a Study:</label>
-                      <select class="form-control" name="study_ID" id="study_ID">
-                      <?php 
-                      $sql = mysqli_query($conn, "SELECT study_ID, full_name, created_by FROM Study WHERE created_by = " . Session::get('id'));
-                      while ($row = $sql->fetch_assoc()){
-                     echo '<option value="'.$row['study_ID'].'">' . $row['full_name'] . "</option>";
-                      }
-                      ?>
-                    </select>
-                    <br>
-                    
-                  <label for="researcher_ID">Remove A Member:</label>
-                      <select class="form-control" name="researcher_ID" id="researcher_ID">
+                    <label for="researcher_ID">Remove a Member:</label>
+                    <select class="form-control" name="researcher_ID" id="researcher_ID">
                         <option value="" selected hidden disabled>Member Name</option>
+                    <?php
+                        $sql = "SELECT id, name
+                                FROM tbl_users
+                                WHERE id IN (SELECT researcher_ID
+                                             FROM Researcher_Study
+                                             WHERE study_ID = " . $_POST['study_ID'] . "
+                                             AND NOT researcher_ID IN (SELECT created_by
+                                                                       FROM Study
+                                                                       WHERE study_ID = " . $_POST['study_ID'] . ")
+                                             AND NOT researcher_ID = " . Session::get('id') . ");";
+                        $result = mysqli_query($conn, $sql);
+                        while ($row = $result->fetch_assoc()){ ?>
+                            <option value="<?php echo $row['id']; ?>"><?php echo $row['name']; ?></option>
+                    <?php } ?>
                     </select>
                 </div>
             </div>
             <div class="form-group">
                  <button type="submit" name="removeResearcher" class="btn btn-success">Submit</button>
             </div>
-
-
-            </form>
-
-        </div>
-
-
-      </div>
+        </form>
+    </div>
+</div>
       
  <script type="text/javascript">
     $(document).on("click", "a", redirectUser);
@@ -94,7 +87,6 @@ if (isset($addResearcher)) {
  </script>      
 
 
-  <?php
+<?php
   include 'inc/footer.php';
-
-  ?>
+?>
