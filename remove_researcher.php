@@ -14,7 +14,7 @@ if (isset($addResearcher)) {
  
 <div class="card">
     <div class="card-header">
-        <h3>Remove A Researcher </h3> 
+        <h3>Remove A Researcher<span class="float-right"><a href="study_details" class="btn btn-primary" data-study_ID="<?php echo $_POST['study_ID']; ?>">Back</a></span></h3> 
     </div>
     <div class="card-body pr-2 pl-2">
         <form class="" action="" method="post">
@@ -22,7 +22,7 @@ if (isset($addResearcher)) {
                 <div class="form-group">
                     <label for="researcher_ID">Remove a Member:</label>
                     <select class="form-control" name="researcher_ID" id="researcher_ID">
-                        <option value="" selected hidden disabled>Member Name</option>
+                        <option value="" disabled hidden selected>Member Name</option>
                     <?php
                         $sql = "SELECT id, name
                                 FROM tbl_users
@@ -39,6 +39,7 @@ if (isset($addResearcher)) {
                     <?php } ?>
                     </select>
                 </div>
+                <input type="hidden" name="study_ID" value="<?php echo $_POST['study_ID']; ?>">
             </div>
             <div class="form-group">
                  <button type="submit" name="removeResearcher" class="btn btn-success">Submit</button>

@@ -14,9 +14,7 @@ if (isset($addResearcher)) {
 
 <div class="card ">
     <div class="card-header">
- </span>
- 
-        <h3>Add A Researcher <span class="float-right"></h3>  
+        <h3>Add A Researcher <span class="float-right"><a href="study_details" class="btn btn-primary" data-study_ID= "<?php echo $_POST['study_ID']; ?>">Back</a></span></h3>  
     </div>
     <div class="card-body pr-2 pl-2">
         <form class="" action="" method="post">
