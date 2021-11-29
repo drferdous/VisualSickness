@@ -23,6 +23,10 @@ $users = new Users();
   <head>
     <meta charset="utf-8">
     <title>Visual Sickness</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" 
+          rel="stylesheet" 
+          integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" 
+          crossorigin="anonymous">
     <link rel="stylesheet" href="assets/bootstrap.min.css">
     <link href="https://use.fontawesome.com/releases/v5.0.4/css/all.css" rel="stylesheet">
     <link rel="stylesheet" href="assets/dataTables.bootstrap4.min.css">
@@ -55,7 +59,38 @@ if (isset($_GET['action']) && $_GET['action'] == 'logout') {
         <div class="collapse navbar-collapse" id="navbarsExampleDefault">
           <ul class="navbar-nav ml-auto">
  
-        <?php if (Session::get('id') == TRUE) { ?>
+        <?php if (Session::get('login') === TRUE) { ?>
+            <li class="nav-item dropdown">
+                <a href="#"
+                   class="nav-link dropdown-toggle"
+                   id="study-dropdown"
+                   role="button"
+                   data-bs-toggle="dropdown"
+                   aria-expanded="false">
+                   <i class="fas fa-sticky-note mr-2"></i>Study
+                </a>
+                <ul class="dropdown-menu"
+                    aria-labelledby="study-dropdown">
+                    <li class="dropdown-item">Study List</li>
+                    <li class="dropdown-item">Add Study</li>
+                </ul>
+            </li>
+            <li class="nav-item dropdown">
+                <a href="#"
+                   class="nav-link dropdown-toggle"
+                   id="participant-dropdown"
+                   role="button"
+                   data-bs-toggle="dropdown"
+                   aria-expanded="false">
+                   <i class="fas fa-user mr-2"></i>Participant
+                </a>
+                <ul class="dropdown-menu"
+                    aria-labelledby="participant-dropdown">
+                    <li class="dropdown-item">Participant List</li>
+                    <li class="dropdown-item">Add Participant</li>
+                </ul>
+            </li>
+              <!-- This HTML is not supposed to show, so this can probably be deleted.
               <li class="nav-item">
 
                   <a class="nav-link" href="VisualQuiz"><i class="fas fa-users mr-2"></i>Visual Quiz </span></a>
@@ -63,7 +98,8 @@ if (isset($_GET['action']) && $_GET['action'] == 'logout') {
               <li class="nav-item">
 
                   <a class="nav-link" href="TextQuiz"><i class="fas fa-users mr-2"></i>Text Quiz </span></a>
-              </li>            
+              </li> 
+              -->
             <?php if (Session::get('roleid') == '1') { ?>
                   <li class="nav-item">
 
@@ -142,7 +178,10 @@ if (isset($_GET['action']) && $_GET['action'] == 'logout') {
 
         </div>
       </nav>
-      
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" 
+        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" 
+        crossorigin="anonymous">
+</script>      
 <script type="text/javascript">
     $(document).ready(function() {
        $("nav a[data-user_ID]").on('click', function() {
