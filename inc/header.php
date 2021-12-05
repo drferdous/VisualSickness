@@ -71,8 +71,8 @@ if (isset($_GET['action']) && $_GET['action'] == 'logout') {
                 </a>
                 <ul class="dropdown-menu"
                     aria-labelledby="study-dropdown">
-                    <li class="dropdown-item">Study List</li>
-                    <li class="dropdown-item">Add Study</li>
+                    <li class="dropdown-item"><a href="view_study">Study List</a></li>
+                    <li class="dropdown-item"><a href="create_study">Add Study</a></li>
                 </ul>
             </li>
             <li class="nav-item dropdown">
@@ -86,8 +86,8 @@ if (isset($_GET['action']) && $_GET['action'] == 'logout') {
                 </a>
                 <ul class="dropdown-menu"
                     aria-labelledby="participant-dropdown">
-                    <li class="dropdown-item">Participant List</li>
-                    <li class="dropdown-item">Add Participant</li>
+                    <li class="dropdown-item"><a href="#">Participant</a></li>
+                    <li class="dropdown-item"><a href="addParticipant">Add Participant</a></li>
                 </ul>
             </li>
               <!-- This HTML is not supposed to show, so this can probably be deleted.
