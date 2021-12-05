@@ -37,7 +37,8 @@ if (isset($insert_study)) {
             $sql =  "CREATE TABLE `#StudiesAndNames`(
                         study_ID INT(11) NOT NULL,
                         full_name TEXT NOT NULL,
-                        created_at TIMESTAMP NOT NULL
+                        created_at TIMESTAMP NOT NULL,
+                        is_active TINYINT(1) NOT NULL
                     );";
             $result = mysqli_query($conn, $sql);
             
@@ -63,25 +64,29 @@ if (isset($insert_study)) {
                 echo mysqli_error($conn);
             }
             
-            $sql = "INSERT INTO `#StudiesAndNames` (study_ID, full_name, created_at)
-                    SELECT study_ID, full_name, created_at
+            $sql = "INSERT INTO `#StudiesAndNames` (study_ID, full_name, created_at, is_active)
+                    SELECT study_ID, full_name, created_at, is_active
                     FROM Study
                     WHERE ("; 
             while ($studyIDRow = mysqli_fetch_assoc($studyIDList)){
                 $sql = $sql . "study_ID = " . $studyIDRow['study_ID'] . " OR ";
             }
-            $sql = $sql . " FALSE)
-                   AND (is_active = 1);";
+            $sql = $sql . " FALSE);";
             $result = mysqli_query($conn, $sql);
             
             if (!$result){
                 echo mysqli_error($conn);
             }
             
-            $sql = "SELECT `#StudiesAndNames`.study_ID, `#StudiesAndNames`.full_name, `#StudiesAndNames`.created_at, `#StudiesAndRoles`.study_role       FROM `#StudiesAndNames` 
+            $sql = "SELECT `#StudiesAndNames`.study_ID, `#StudiesAndNames`.full_name, `#StudiesAndNames`.created_at,             `#StudiesAndNames`.is_active, `#StudiesAndRoles`.study_role       
+                    FROM `#StudiesAndNames` 
                     INNER JOIN `#StudiesAndRoles` 
                     ON `#StudiesAndNames`.study_ID = `#StudiesAndRoles`.study_ID;";
             $result = mysqli_query($conn, $sql);
+            
+            if (!$result){
+                echo mysqli_error($conn);
+            }
             
             $sql = "DROP TABLE IF EXISTS `#StudiesAndRoles`;";
             mysqli_query($conn, $sql);
@@ -102,32 +107,41 @@ if (isset($insert_study)) {
                 </thead>
                     
                 <tbody>
-                <?php
-                    while ($row = mysqli_fetch_assoc($result)) { 
-                        echo "<tr>";
+                <?php while ($row = mysqli_fetch_assoc($result)){ ?>
+                    <?php if ($row["is_active"] === '1'){
+                            $classToSet = "active";
+                            $displayToSet = "";
+                          } 
+                          else{
+                            $classToSet = "inactive";
+                            $displayToSet = "none";
+                          } 
+                    ?>
+                        <tr class="<?php echo $classToSet; ?>" style="display: <?php echo $displayToSet; ?>;">
+                            <td><?php echo $row['full_name']; ?></td>
+                            <td><?php echo $row['created_at']; ?></td>
+                            <td>
+                                <a class="btn-success btn-sm" href="study_details" data-study_ID="<?php echo $row['study_ID']; ?>">Study Details</a>
                         
-                        echo "<td>" . $row['full_name'] ."</td>";
-                        echo "<td>" . $row['created_at'] ."</td>";
-                        
-                        echo "<td>";
-                        echo "<a class='btn-success btn-sm' href=\"study_details\" data-study_ID=\"" . $row['study_ID'] . "\">Study Details</a>";
-                        
-                        if (Session::get('roleid') === '1' || (isset($row['study_role']) && ($row['study_role'] === '2' || $row['study_role'] === '3'))){
-                            echo "<br>";
-                            echo "<br>";
-                            echo "<a class='btn-success btn-sm' href=\"create_session\" data-study_ID=\"" . $row['study_ID'] . "\">Create Session</a>";
-                        }
+                        <?php if ((Session::get('roleid') === '1' || (isset($row['study_role']) && ($row['study_role'] === '2' || $row['study_role'] === '3'))) && $row["is_active"] === '1'){ ?>
+                                <br>
+                                <br>
+                                <a class="btn-success btn-sm" href="create_session" data-study_ID="<?php echo $row['study_ID']; ?>" >Create Session</a>
+                        <?php } ?>
                 
-                        echo "<br>";
-                        echo "<br>";
-                        echo "<a class='btn-success btn-sm' href=\"session_list\" data-study_ID=\"" . $row['study_ID'] . "\">Session List</a>";                        
-                        echo "</td>";
-                        
-                        echo "</tr>";
-                    }
-                ?>
+                            <br>
+                            <br>
+                            <a class="btn-success btn-sm" href="session_list" data-study_ID="<?php echo $row['study_ID']; ?>">Session List</a>                       
+                            </td>
+                        </tr>
+                <?php } ?>
                 </tbody>
             </table>
+            <br>
+            <div class="form-check form-switch float-right">
+                <input class="form-check-input" type="checkbox" id="show-studies" checked>
+                <label class="form-check-label" for="show-studies">Show Active Studies Only</label>
+            </div>
     <?php } 
         else{
             echo "<p>You have no studies!</p>";
@@ -138,6 +152,7 @@ if (isset($insert_study)) {
 
 <script type="text/javascript">
     $(document).ready(function() {
+        $(document).on("click", "#show-studies", showCorrectStudies);
         $(document).on("click", "a[data-study_ID]", redirectUser);
     });
         
@@ -158,6 +173,17 @@ if (isset($insert_study)) {
         form.submit();
             
         return false;
+    };
+    
+    function showCorrectStudies(){
+        let inactiveStudies = document.querySelectorAll("tr + .inactive");
+        let displayToSet = "";
+        if (document.getElementById("show-studies").checked){
+            displayToSet = "none";
+        }
+        for (let i = 0; i < inactiveStudies.length; i++){
+            inactiveStudies[i].style.display = displayToSet;
+        }
     };
 </script>
 <?php
