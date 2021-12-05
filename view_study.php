@@ -24,31 +24,47 @@ if (isset($insert_study)) {
             $result = mysqli_query($conn, $sql);
         }
         else{
-            
             $sql = "CREATE TABLE `#StudiesAndRoles`(
                         study_ID INT(11) NOT NULL,
                         study_role TINYINT(4) DEFAULT NULL
                     );";
-            mysqli_query($conn, $sql);
+            $result = mysqli_query($conn, $sql);
+            
+            if (!$result){
+                echo mysqli_error($conn);
+            }
             
             $sql =  "CREATE TABLE `#StudiesAndNames`(
                         study_ID INT(11) NOT NULL,
-                        full_name TEXT NOT NULL
+                        full_name TEXT NOT NULL,
+                        created_at TIMESTAMP NOT NULL
                     );";
-            mysqli_query($conn, $sql);
+            $result = mysqli_query($conn, $sql);
+            
+            if (!$result){
+                echo mysqli_error($conn);
+            }
         
             $sql = "INSERT INTO `#StudiesAndRoles` (study_ID, study_role)
                     SELECT study_ID, study_role
                     FROM Researcher_Study
                     WHERE Researcher_ID = " . Session::get('id') . ";";
-            mysqli_query($conn, $sql);
+            $result = mysqli_query($conn, $sql);
+            
+            if (!$result){
+                echo mysqli_error($conn);
+            }
             
             $sql = "SELECT * 
                     FROM `#StudiesAndRoles`;";
             $studyIDList = mysqli_query($conn, $sql);
             
-            $sql = "INSERT INTO `#StudiesAndNames` (study_ID, full_name)
-                    SELECT study_ID, full_name
+            if (!$studyIDList){
+                echo mysqli_error($conn);
+            }
+            
+            $sql = "INSERT INTO `#StudiesAndNames` (study_ID, full_name, created_at)
+                    SELECT study_ID, full_name, created_at
                     FROM Study
                     WHERE ("; 
             while ($studyIDRow = mysqli_fetch_assoc($studyIDList)){
@@ -56,9 +72,13 @@ if (isset($insert_study)) {
             }
             $sql = $sql . " FALSE)
                    AND (is_active = 1);";
-            mysqli_query($conn, $sql);
+            $result = mysqli_query($conn, $sql);
             
-            $sql = "SELECT `#StudiesAndNames`.study_ID, `#StudiesAndNames`.full_name, `#StudiesAndRoles`.study_role       FROM `#StudiesAndNames` 
+            if (!$result){
+                echo mysqli_error($conn);
+            }
+            
+            $sql = "SELECT `#StudiesAndNames`.study_ID, `#StudiesAndNames`.full_name, `#StudiesAndNames`.created_at, `#StudiesAndRoles`.study_role       FROM `#StudiesAndNames` 
                     INNER JOIN `#StudiesAndRoles` 
                     ON `#StudiesAndNames`.study_ID = `#StudiesAndRoles`.study_ID;";
             $result = mysqli_query($conn, $sql);
@@ -118,7 +138,7 @@ if (isset($insert_study)) {
 
 <script type="text/javascript">
     $(document).ready(function() {
-        $(document).on("click", "a", redirectUser);
+        $(document).on("click", "a[data-study_ID]", redirectUser);
     });
         
     function redirectUser(){
@@ -140,7 +160,6 @@ if (isset($insert_study)) {
         return false;
     };
 </script>
-
 <?php
   include 'inc/footer.php';
 ?>
