@@ -17,9 +17,8 @@ if (isset($insert_study)) {
     <div class="card-body pr-2 pl-2">
     <?php
         if (Session::get('roleid') === '1'){
-            $sql = "SELECT study_ID, full_name, created_at
-                    FROM Study
-                    WHERE is_active = 1;";
+            $sql = "SELECT study_ID, full_name, created_at, is_active
+                    FROM Study;";
                     
             $result = mysqli_query($conn, $sql);
         }
