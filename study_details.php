@@ -54,9 +54,30 @@ if (isset($_POST['leave-btn'])){
                 
                 <tr>
                     <th>Full Name</th>
-                    <?php
-                        echo "<td>" . $row_study['full_name']  . "</td>";     
-                    ?>    
+                    <td><?php echo $row_study['full_name']; ?></td> 
+                    <td rowspan="<?php echo count($row_study) - 2; ?>" class="align-middle">
+                    <?php if (Session::get('roleid') === '1' || Session::get('roleid') === '2') {?>
+                            <form method="post">
+                                <input type="hidden" name="study_ID" value="<?php echo $_POST['study_ID']; ?>">
+                                <input type="submit" name="deactivate-btn" value="Deactivate">
+                            </form>
+                            <div>
+                                <a href="edit_study"  class="btn btn-success" data-study_ID="<?php echo $row_study['study_ID']; ?>">Edit</a>
+                            </div>
+                            <div>
+                                <a href="add_researcher" class="btn btn-primary btn-success" data-study_ID="<?php echo $_POST['study_ID']; ?>">Add A Researcher</a> 
+                            </div>
+                            <div>
+                                <a href="remove_researcher" class="btn btn-primary btn-success" data-study_ID="<?php echo $_POST['study_ID']; ?>">Remove A Researcher</a>
+                            </div>
+                    <?php } else if (Session::get('roleid') === '3' || Session::get('roleid') === '4'){ ?>
+                            <form method="POST">
+                                <input type="hidden" name="study_ID" value="<?php echo $_POST['study_ID']; ?>">
+                                <input type="submit" name="leave-btn" value="Leave">
+                            </form>
+                            <form method=\"post\">
+                    <?php } ?>
+                    </td>
                 </tr>    
                     
                 <tr>        
@@ -65,7 +86,12 @@ if (isset($_POST['leave-btn'])){
                         echo "<td>" . $row_study['short_name']  . "</td>";     
                     ?>                        
                 </tr> 
-                
+                <tr>
+                    <th>Description</th>
+                    <?php
+                        echo "<td>" . $row_study['description'] . "</td>";
+                    ?>
+                </tr>
                 <tr>    
                     <th>IRB</th>
                     <?php
@@ -119,36 +145,6 @@ if (isset($_POST['leave-btn'])){
                     }    
                     ?>
                 </tr>                     
-                    
-                <tr>
-                    <th>Action</th>
-                    <?php if (Session::get('roleid') === '1' || Session::get('roleid') === '2') {?>
-                            <td>                            
-                                <form method="post">
-                                    <input type="hidden" name="study_ID" value="<?php echo $_POST['study_ID']; ?>">
-                                    <input type="submit" name="deactivate-btn" value="Deactivate">
-                                </form>
-                                <div>
-                                    <a href="edit_study"  class="btn btn-success" data-study_ID="<?php echo $row_study['study_ID']; ?>">Edit</a>
-                                </div>
-                                <div>
-                                    <a href="add_researcher" class="btn btn-primary btn-success" data-study_ID="<?php echo $_POST['study_ID']; ?>">Add A Researcher</a> 
-                                </div>
-                                <div>
-                                    <a href="remove_researcher" class="btn btn-primary btn-success" data-study_ID="<?php echo $_POST['study_ID']; ?>">Remove A Researcher</a>
-                                </div>
-                            </td>
-                        
-                    <?php } else if (Session::get('roleid') === '3' || Session::get('roleid') === '4') {
-                            echo "<td>";
-                            echo "<form method=\"post\">";
-                            echo "<input type=\"hidden\" name=\"study_ID\" value=\"" . $_POST['study_ID'] . "\">";
-                            echo "<input type=\"submit\" name=\"leave-btn\" value=\"Leave\" />";
-                            echo "</form>";
-                            echo "</td>";
-                        }
-                    ?>                    
-                </tr>
             </thead>
         </table>
     </div>
