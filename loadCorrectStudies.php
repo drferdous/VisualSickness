@@ -1,6 +1,6 @@
 <?php
     if ($_SERVER["REQUEST_METHOD"] !== "POST" || empty($_POST)){
-        header("Location: index");
+        header("Location: 404");
         exit();
     }
     

@@ -2,9 +2,7 @@
 
 include "config/config.php";
 
-
 // Class Databse
-
 class  Database{
 
   public $pdo;
@@ -19,20 +17,10 @@ class  Database{
         $link->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $link->exec("SET CHARACTER SET utf8");
         $this->pdo  =  $link;
-      } catch (PDOException $e) {
+      } 
+      catch (PDOException $e) {
         die("Connection error...".$e->getMessage());
       }
-
     }
-
-
   }
-
-
-
-
-
-
-
-
 }

@@ -1,14 +1,5 @@
-<div class="well card-footer">
-
-</div>
-
-
-
-
-  </body>
-
-
-
+<div class="well card-footer"></div>
+</body>
 
   <!-- Jquery script -->
   <script src="assets/jquery.min.js"></script>

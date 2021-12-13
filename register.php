@@ -1,11 +1,6 @@
 <?php
 include 'inc/header.php';
 include_once 'database.php';
-
-if (Session::get('login') === FALSE){
-    header('Location:login');
-    exit();
-}
 ?>
 
 
