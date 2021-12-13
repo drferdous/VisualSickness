@@ -18,7 +18,8 @@ if (isset($insert_study)) {
     <?php
         if (Session::get('roleid') === '1'){
             $sql = "SELECT study_ID, full_name, created_at, is_active
-                    FROM Study;";
+                    FROM Study
+                    WHERE is_active = 1;";
                     
             $result = mysqli_query($conn, $sql);
         }
@@ -70,7 +71,8 @@ if (isset($insert_study)) {
             while ($studyIDRow = mysqli_fetch_assoc($studyIDList)){
                 $sql = $sql . "study_ID = " . $studyIDRow['study_ID'] . " OR ";
             }
-            $sql = $sql . " FALSE);";
+            $sql = $sql . " FALSE)
+            AND (is_active = 1);";
             $result = mysqli_query($conn, $sql);
             
             if (!$result){
@@ -105,18 +107,9 @@ if (isset($insert_study)) {
                     </tr>
                 </thead>
                     
-                <tbody>
+                <tbody id="study-contents">
                 <?php while ($row = mysqli_fetch_assoc($result)){ ?>
-                    <?php if ($row["is_active"] === '1'){
-                            $classToSet = "active";
-                            $displayToSet = "";
-                          } 
-                          else{
-                            $classToSet = "inactive";
-                            $displayToSet = "none";
-                          } 
-                    ?>
-                        <tr class="<?php echo $classToSet; ?>" style="display: <?php echo $displayToSet; ?>;">
+                        <tr>
                             <td><?php echo $row['full_name']; ?></td>
                             <td><?php echo $row['created_at']; ?></td>
                             <td>
@@ -151,7 +144,29 @@ if (isset($insert_study)) {
 
 <script type="text/javascript">
     $(document).ready(function() {
-        $(document).on("click", "#show-studies", showCorrectStudies);
+        $(document).on("click", "#show-studies", function() {
+            let idToSearch = <?php echo Session::get("id"); ?>;
+            console.log(idToSearch);
+            if ($(this).prop("checked")){
+                activeStatus = "active";
+            }
+            else{
+                activeStatus = "all";
+            }
+            
+            $.ajax({
+               url: "loadCorrectStudies",
+               method: "POST",
+               cache: false,
+               data:{
+                   activeStatus: activeStatus,
+                   idToSearch: idToSearch
+               },
+               success: function(data){
+                   $("#study-contents").html(data);
+               }
+            });
+        });
         $(document).on("click", "a[data-study_ID]", redirectUser);
     });
         
@@ -172,17 +187,6 @@ if (isset($insert_study)) {
         form.submit();
             
         return false;
-    };
-    
-    function showCorrectStudies(){
-        let inactiveStudies = document.querySelectorAll("tr + .inactive");
-        let displayToSet = "";
-        if (document.getElementById("show-studies").checked){
-            displayToSet = "none";
-        }
-        for (let i = 0; i < inactiveStudies.length; i++){
-            inactiveStudies[i].style.display = displayToSet;
-        }
     };
 </script>
 <?php
