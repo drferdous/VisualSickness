@@ -571,6 +571,7 @@ public function takeSSQ($data){
   $full_name = $data['full_name'];
   $short_name = $data['short_name'];
   $IRB = $data['IRB'];
+  $description = $data['description'];  
   $created_by = Session::get('id');
   $last_edited_by = Session::get('id');    
 
@@ -580,12 +581,13 @@ public function takeSSQ($data){
 <strong>Error!</strong> Study registration fields must not be empty!</div>'; 
       return $msg; // if any field is empty
    } else {
-      $sql = "INSERT INTO Study (full_name, short_name, IRB, created_by, last_edited_by)
-            VALUES ('$full_name', '$short_name', '$IRB', '$created_by', '$last_edited_by')";
+      $sql = "INSERT INTO Study (full_name, short_name, IRB, description, created_by, last_edited_by)
+            VALUES ('$full_name', '$short_name', '$IRB', '$description', '$created_by', '$last_edited_by')";
       $stmt = $this->db->pdo->prepare($sql);
       $stmt->bindValue('full_name', $full_name);
       $stmt->bindValue('short_name', $short_name);
       $stmt->bindValue('IRB', $IRB);
+      $stmt->bindValue('description', $description);      
       $stmt->bindValue('created_by', $created_by);
       $stmt->bindValue('last_edited_by', $created_by);        
       $result = $stmt->execute();        
@@ -609,6 +611,7 @@ public function takeSSQ($data){
         $full_name = $data['full_name'];
         $short_name = $data['short_name'];
         $IRB = $data['IRB'];
+        $description = $data['$description'];  
         $last_edited_by = Session::get('id');
         $study_ID = $data['study_ID'];
         
@@ -622,6 +625,7 @@ public function takeSSQ($data){
                 $stmt = $this->db->pdo->prepare($sql);
                 $stmt->bindValue(':full_name', $full_name);
                 $stmt->bindValue(':short_name', $short_name);
+                $stmt->bindValue(':description', $description);      
                 $stmt->bindValue(':IRB', $IRB);
                 $stmt->bindValue('last_edited_by', $last_edited_by);
                 $result = $stmt->execute();     
