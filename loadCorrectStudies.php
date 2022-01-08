@@ -7,9 +7,12 @@
     include "database.php";
     include "lib/Session.php";
     
+    Session::init();
+    
     $idToSearch = $_POST["idToSearch"];
     $activeStatus = $_POST["activeStatus"];
     $sqlActiveStatus;
+    $sql;
     
     if ($activeStatus === "active"){
         $sqlActiveStatus = " AND Study.is_active = 1;";
@@ -46,7 +49,10 @@
             <td>
                 <a class="btn-success btn-sm" href="study_details" data-study_ID="<?php echo $row['study_ID']; ?>">Study Details</a>
                         
-                <?php if (((isset($row["study_role"]) && ($row["study_role"] === '2' || $row["study_role"] === '3'))) && $row["is_active"] === '1'){ ?>
+                <?php if ($row["is_active"] === "1" &&
+                          Session::get("roleid") === "1" ||
+                         ((isset($row["study_role"]) &&
+                         ($row["study_role"] === "2" || $row["study_role"] === "3")))){ ?>
                         <br>
                         <br>
                         <a class="btn-success btn-sm" href="create_session" data-study_ID="<?php echo $row['study_ID']; ?>" >Create Session</a>

@@ -146,7 +146,6 @@ if (isset($insert_study)) {
     $(document).ready(function() {
         $(document).on("click", "#show-studies", function() {
             let idToSearch = <?php echo Session::get("id"); ?>;
-            console.log(idToSearch);
             if ($(this).prop("checked")){
                 activeStatus = "active";
             }

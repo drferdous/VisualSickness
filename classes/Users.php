@@ -135,7 +135,7 @@ class Users{
     $study_ID = $data['study_ID']; 
     $study_role = $data['study_role'];    
       
-        $sql = "INSERT INTO Researcher_Study (researcher_ID, study_ID, study_role) VALUES (:researcher_ID, :study_ID, :study_role)";
+    $sql = "INSERT INTO Researcher_Study (researcher_ID, study_ID, study_role) VALUES (:researcher_ID, :study_ID, :study_role)";
         $stmt = $this->db->pdo->prepare($sql);
         $stmt->bindValue(':researcher_ID', $researcher_ID);
         $stmt->bindValue(':study_ID', $study_ID);
@@ -644,11 +644,37 @@ public function takeSSQ($data){
           }
     }
     
+    // Activates study based on the given study_ID.
+    public function activateStudy($study_ID){
+        $sql = "UPDATE Study
+                SET is_active = 1
+                WHERE study_ID = :study_ID;
+                LIMIT 1;";
+                
+        $stmt = $this->db->pdo->prepare($sql);
+        $stmt->bindValue(":study_ID", $study_ID);
+        $result = $stmt->execute();
+        
+        if ($result){
+            $msg = '<div class="alert alert-success alert-dismissible mt-3" id="flash-msg">
+              <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+              <strong>Success!</strong> You activated this study!</div>';
+        }
+        else{
+            $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
+              <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+              <strong>Error!</strong> Something went wrong, try activating again!</div>';
+        }
+        
+        return $msg;
+    }
+    
     // Deactivates study based on the given study_ID.
     public function deactivateStudy($study_ID){
         $sql = "UPDATE Study
                 SET is_active = 0
-                WHERE study_ID = :study_ID;";
+                WHERE study_ID = :study_ID
+                LIMIT 1;";
         
         $stmt = $this->db->pdo->prepare($sql);
         $stmt->bindValue(':study_ID', $study_ID);
