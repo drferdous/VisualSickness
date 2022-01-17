@@ -75,6 +75,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'logout') {
                     <li class="dropdown-item"><a href="create_study">Add Study</a></li>
                 </ul>
             </li>
+            <!-- Note: This is not needed now, so I am commenting this dropdown menu out.
             <li class="nav-item dropdown">
                 <a href="#"
                    class="nav-link dropdown-toggle"
@@ -90,16 +91,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'logout') {
                     <li class="dropdown-item"><a href="addParticipant">Add Participant</a></li>
                 </ul>
             </li>
-              <!-- This HTML is not supposed to show, so this can probably be deleted.
-              <li class="nav-item">
-
-                  <a class="nav-link" href="VisualQuiz"><i class="fas fa-users mr-2"></i>Visual Quiz </span></a>
-              </li>
-              <li class="nav-item">
-
-                  <a class="nav-link" href="TextQuiz"><i class="fas fa-users mr-2"></i>Text Quiz </span></a>
-              </li> 
-              -->
+            -->
             <?php if (Session::get('roleid') == '1') { ?>
                   <li class="nav-item">
 
