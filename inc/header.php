@@ -75,7 +75,6 @@ if (isset($_GET['action']) && $_GET['action'] == 'logout') {
                     <li class="dropdown-item"><a href="create_study">Add Study</a></li>
                 </ul>
             </li>
-            <!-- Note: This is not needed now, so I am commenting this dropdown menu out.
             <li class="nav-item dropdown">
                 <a href="#"
                    class="nav-link dropdown-toggle"
@@ -87,18 +86,17 @@ if (isset($_GET['action']) && $_GET['action'] == 'logout') {
                 </a>
                 <ul class="dropdown-menu"
                     aria-labelledby="participant-dropdown">
-                    <li class="dropdown-item"><a href="#">Participant</a></li>
+                    <li class="dropdown-item"><a href="participantList">Participant List</a></li>
                     <li class="dropdown-item"><a href="addParticipant">Add Participant</a></li>
                 </ul>
             </li>
-            -->
             <?php if (Session::get('roleid') == '1') { ?>
                   <li class="nav-item">
 
                       <a class="nav-link" href="userlist"><i class="fas fa-users mr-2"></i>User lists </span></a>
                   </li>
         <?php  } ?>
-              
+            <!-- Anything between this comment can be deleted.
             <?php if (Session::get('roleid') == '1' || Session::get('roleid') == '2' || Session::get('roleid') == '3') { ?>
               <li class="nav-item
 
@@ -115,6 +113,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'logout') {
                 <a class="nav-link" href="addParticipant"><i class="fas fa-user-plus mr-2"></i>Add Participant </span></a>
               </li>
             <?php  } ?>
+            -->
             <li class="nav-item
             <?php
 
