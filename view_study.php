@@ -15,8 +15,7 @@ if (isset($insert_study)) {
         <h3>Study List</h3>         
     </div>
     <div class="card-body pr-2 pl-2">
-    <?php
-        if (Session::get('roleid') === '1'){
+    <?php if (Session::get('roleid') === '1'){
             $sql = "SELECT study_ID, full_name, created_at, is_active
                     FROM Study
                     WHERE is_active = 1;";
@@ -24,75 +23,16 @@ if (isset($insert_study)) {
             $result = mysqli_query($conn, $sql);
         }
         else{
-            $sql = "CREATE TABLE `#StudiesAndRoles`(
-                        study_ID INT(11) NOT NULL,
-                        study_role TINYINT(4) DEFAULT NULL
-                    );";
+            $sql = "SELECT Study.study_ID, Study.full_name, Study.created_at, Study.is_active, Researcher_Study.study_role
+                FROM Study, Researcher_Study
+                WHERE Study.study_ID IN (SELECT study_ID
+                                         FROM Researcher_Study
+                                         WHERE researcher_ID = " . Session::get("id") . ")
+                AND Study.study_ID = Researcher_Study.study_ID
+                AND Researcher_Study.researcher_ID = " . Session::get("id") . "
+                AND is_active = 1;";
+                    
             $result = mysqli_query($conn, $sql);
-            
-            if (!$result){
-                echo mysqli_error($conn);
-            }
-            
-            $sql =  "CREATE TABLE `#StudiesAndNames`(
-                        study_ID INT(11) NOT NULL,
-                        full_name TEXT NOT NULL,
-                        created_at TIMESTAMP NOT NULL,
-                        is_active TINYINT(1) NOT NULL
-                    );";
-            $result = mysqli_query($conn, $sql);
-            
-            if (!$result){
-                echo mysqli_error($conn);
-            }
-        
-            $sql = "INSERT INTO `#StudiesAndRoles` (study_ID, study_role)
-                    SELECT study_ID, study_role
-                    FROM Researcher_Study
-                    WHERE Researcher_ID = " . Session::get('id') . ";";
-            $result = mysqli_query($conn, $sql);
-            
-            if (!$result){
-                echo mysqli_error($conn);
-            }
-            
-            $sql = "SELECT * 
-                    FROM `#StudiesAndRoles`;";
-            $studyIDList = mysqli_query($conn, $sql);
-            
-            if (!$studyIDList){
-                echo mysqli_error($conn);
-            }
-            
-            $sql = "INSERT INTO `#StudiesAndNames` (study_ID, full_name, created_at, is_active)
-                    SELECT study_ID, full_name, created_at, is_active
-                    FROM Study
-                    WHERE ("; 
-            while ($studyIDRow = mysqli_fetch_assoc($studyIDList)){
-                $sql = $sql . "study_ID = " . $studyIDRow['study_ID'] . " OR ";
-            }
-            $sql = $sql . " FALSE)
-            AND (is_active = 1);";
-            $result = mysqli_query($conn, $sql);
-            
-            if (!$result){
-                echo mysqli_error($conn);
-            }
-            
-            $sql = "SELECT `#StudiesAndNames`.study_ID, `#StudiesAndNames`.full_name, `#StudiesAndNames`.created_at,             `#StudiesAndNames`.is_active, `#StudiesAndRoles`.study_role       
-                    FROM `#StudiesAndNames` 
-                    INNER JOIN `#StudiesAndRoles` 
-                    ON `#StudiesAndNames`.study_ID = `#StudiesAndRoles`.study_ID;";
-            $result = mysqli_query($conn, $sql);
-            
-            if (!$result){
-                echo mysqli_error($conn);
-            }
-            
-            $sql = "DROP TABLE IF EXISTS `#StudiesAndRoles`;";
-            mysqli_query($conn, $sql);
-            $sql = "DROP TABLE IF EXISTS `#StudiesAndNames`;";
-            mysqli_query($conn, $sql);
         }
         
         if (mysqli_num_rows($result) > 0){
@@ -143,7 +83,7 @@ if (isset($insert_study)) {
 </div>
 
 <script type="text/javascript">
-    $(document).ready(function() {
+    $(document).ready(function(){
         $(document).on("click", "#show-studies", function() {
             let idToSearch = <?php echo Session::get("id"); ?>;
             if ($(this).prop("checked")){
