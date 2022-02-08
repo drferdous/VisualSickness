@@ -7,7 +7,24 @@
     <div class="card-header">
         <h3>Participant List</h3>
     </div>
+    <?php
+        $sql = "SELECT Name
+                FROM Affiliation
+                WHERE id IN (SELECT affiliationid
+                             FROM tbl_users
+                             WHERE id = " . Session::get("id") . ")
+                LIMIT 1;";
+                
+        $result = mysqli_query($conn, $sql);
+        
+        if (!$result){
+            echo mysqli_error($conn);
+        }
+        
+        $row = mysqli_fetch_assoc($result);
+    ?>
     
+    <p>Affiliation: <?php echo $row["Name"]; ?></p>
     <?php
         $sql = "SELECT * FROM Participants;";
         $result = mysqli_query($conn, $sql);
@@ -39,3 +56,6 @@
         </table>
     </div>
 </div>
+<?php
+  include "inc/footer.php";
+?>
