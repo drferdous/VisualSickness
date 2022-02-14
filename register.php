@@ -1,6 +1,16 @@
 <?php
 include 'inc/header.php';
 include_once 'database.php';
+
+
+    if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['userRegistration'])) {
+    
+      $userRegistration = $users->userRegistration($_POST);
+    }
+
+    if (isset($userRegistration)) {
+      echo $userRegistration;
+    }
 ?>
 
 
@@ -26,6 +36,19 @@ include_once 'database.php';
                   <label for="email">Email address</label>
                   <input type="email" name="email"  class="form-control">
                 </div>
+                <div class="form-group">
+                  <div class="form-group">
+                    <label for="selAffil">Select Affiliation</label>
+                    <select class="form-control" name="affiliation" id="affiliation">
+                      <?php 
+                      $sql = mysqli_query($conn, "SELECT id, name FROM Affiliation WHERE id > 0");
+                      while ($row = $sql->fetch_assoc()){
+                      echo '<option value="'.$row['id'].'">' . $row['name'] . "</option>";
+                      }
+                      ?>
+                    </select>
+                  </div>
+                </div>            
                 <div class="form-group">
                   <label for="mobile">Phone Number</label>
                   <input type="tel" name="mobile" pattern="\d*" title="Only numbers allowed" class="form-control">

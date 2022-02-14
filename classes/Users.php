@@ -38,6 +38,7 @@ class Users{
     $name = $data['name'];
     $username = $data['username'];
     $email = $data['email'];
+    $affiliationid = $data['affiliationid'];    
     $mobile = $data['mobile'];
     $password = $data['password'];
     $confirm_password = $data['confirm_password'];
@@ -45,7 +46,7 @@ class Users{
 
     $checkEmail = $this->checkExistEmail($email);
 
-    if ($name == "" || $username == "" || $email == "" || $password == "" || $roleid == "") {
+    if ($name == "" || $username == "" || $email == "" || $password == "" || $roleid == ""  || $affiliationid == "") {
       $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
 <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
 <strong>Error!</strong> User registration fields must not be empty!</div>'; 
@@ -92,11 +93,12 @@ class Users{
         return $msg; // if email already used
     } else {
       // if everything is sucessful, insert into DB
-      $sql = "INSERT INTO tbl_users(name, username, email, mobile, password, roleid) VALUES(:name, :username, :email, :mobile, :password, :roleid)";
+      $sql = "INSERT INTO tbl_users(name, username, email, affiliationid, mobile, password, roleid) VALUES(:name, :username, :email, :affiliationid, :mobile, :password, :roleid)";
       $stmt = $this->db->pdo->prepare($sql);
       $stmt->bindValue(':name', $name);
       $stmt->bindValue(':username', $username);
       $stmt->bindValue(':email', $email);
+      $stmt->bindValue(':affiliationid)', $affiliationid);
       $stmt->bindValue(':mobile', $mobile);
       $stmt->bindValue(':password', SHA1($password)); //encrypt password
       $stmt->bindValue(':roleid', $roleid);
@@ -488,8 +490,6 @@ public function takeSSQ($data){
       }else{
         return false;
       }
-
-
     }
     
     // Get Study Information By Study Id
