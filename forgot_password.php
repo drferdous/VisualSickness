@@ -32,7 +32,7 @@ if (isset($logout)) {
 
             <div style="width:450px; margin:0px auto">
 
-            <form class="" action="inc/reset-request.inc.php" method="post">
+            <form class="" action="inc/reset-request.inc" method="post">
                 <div class="form-group">
                   <label for="email">Email address</label>
                   <input type="email" name="email"  class="form-control">

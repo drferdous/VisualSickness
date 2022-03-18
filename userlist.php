@@ -1,7 +1,11 @@
 <?php
     include 'inc/header.php';
-
     Session::CheckSession();
+    
+    if (strcmp(Session::get("roleid"), "1") !== 0){
+        header("Location: 404");
+        exit();
+    }
 ?>
       <div class="card ">
         <div class="card-header">
@@ -117,13 +121,21 @@ if (isset($username)) {
                          echo "disabled";
                        } ?>
                                 btn-sm " href="userlist" data-user_ID="<?php echo $value->id; ?>">Deactivate</a>
-                             <?php } elseif($value->isActive == '0'){?>
-                               <a onclick="return confirm('Are you sure To Active ?')" class="btn btn-secondary
+                        <?php }elseif ($value->isActive == '0'){?>
+                            <a onclick="return confirm('Are you sure To Active ?')" class="btn btn-secondary
                        <?php if ($value->roleid === '1' || Session::get("id") == $value->id) {
                          echo "disabled";
                        } ?>
                                 btn-sm " href="userlist" data-user_ID="<?php echo $value->id; ?>">Activate</a>
                              <?php } ?>
+                            
+                        <?php if (strcmp($value->reg_stat, "0") === 0){ ?>
+                            <a class="btn btn-sm btn-success"
+                               href="validateUser"
+                               data-user_ID="<?php echo $value->id; ?>">
+                                Validate
+                            </a>
+                        <?php } ?>
 
 
 

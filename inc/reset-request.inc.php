@@ -1,14 +1,14 @@
 <?php
-
-    if (isset($_POST["reset-request-submit"])) {
+    if (isset($_POST["reset-submit"])) {
         $selector = bin2hex(random_bytes(8));
         $token = random_bytes(32);
         
-        $url = "https://visualsickness.000webhostapp.com/forgot_password/create-new-password.php?selector=" . $selector . "&validator=" . bin2hex($token); 
+        $url = "https://visualsickness.000webhostapp.com/create-new-password.php?selector=" . $selector . "&validator=" . bin2hex($token); 
         
         $expires = date("U") + 1800; //1800 = 1 hour
         
-        require 'config/config.php';
+        include '../database.php';
+        include "../mailer.php";
         
         $userEmail = $_POST["email"];
         $sql = "DELETE FROM pwdReset WHERE pwdResetEmail=?;";
@@ -22,7 +22,7 @@
         }
         
                 
-        $sql = "INSERT INTO pwdReset (pwdResetEmail, pwdResetSeleector, pwdResetToken, pwdResetExpires) VALUES (?, ?, ?, ?);";
+        $sql = "INSERT INTO pwdReset (pwdResetEmail, pwdResetSelector, pwdResetToken, pwdResetExpires) VALUES (?, ?, ?, ?);";
         $stmt = mysqli_stmt_init($conn);
         if (!mysqli_stmt_prepare($stmt, $sql)) {
             echo "There was an error in resetting your password.";
@@ -34,7 +34,7 @@
         }
         
         mysqli_stmt_close($stmt);
-        mysqli_close();
+        // mysqli_close();
         
         $to = $userEmail;
         $subject = "Reset your Password | Visual Sickness";
@@ -42,8 +42,9 @@
         $message .= '<p>Here is your password reset link: </br>';
         $message .= '<a href="' . $url. '">' . $url . '</a></p>';
         
-        $headers = "From: Visual Sickness <"; // 47:13 https://www.youtube.com/watch?v=wUkKCMEYj9M
-
+        sendEmail($to, $subject, $message);
+        
+        header("Location: ../forgot_password.php?success=true");
     } else {
         header("Location: ../view_study.php");
     }

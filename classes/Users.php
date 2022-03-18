@@ -2,6 +2,7 @@
 
 include 'lib/Database.php';
 include_once 'lib/Session.php';  
+include 'mailer.php';
 
 class Users{
 
@@ -22,31 +23,46 @@ class Users{
 
   // Check Exist Email Address Method
   public function checkExistEmail($email){
-    $sql = "SELECT email from  tbl_users WHERE email = :email";
+    $sql = "SELECT email FROM tbl_users 
+            WHERE email = :email
+            LIMIT 1";
     $stmt = $this->db->pdo->prepare($sql);
     $stmt->bindValue(':email', $email);
-     $stmt->execute();
-    if ($stmt->rowCount()> 0) {
+    $stmt->execute();
+    if ($stmt->rowCount() > 0) {
       return true;
     }else{
       return false;
     }
+  }
+  
+  public function generateRandomPassword(){
+    $MIN_PASSWORD_LENGTH = 8;
+    $MAX_PASSWORD_LENGTH = 16;
+      
+    $availableChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+    $maxCharsIndex = strlen($availableChars) - 1;
+    $passwordLength = rand($MIN_PASSWORD_LENGTH, $MAX_PASSWORD_LENGTH);
+    $randomPassword = "";
+      
+    for ($i = 0; $i < $passwordLength; $i++){
+        $randomPassword = $randomPassword . $availableChars[rand(0, $maxCharsIndex)];       
+    }
+    // $randomPassword = SHA1($randomPassword);
+    return $randomPassword;
   }
 
   // User Registration Method
   public function userRegistration($data){
     $name = $data['name'];
     $username = $data['username'];
+    $password = $this->generateRandomPassword();
     $email = $data['email'];
     $affiliationid = $data['affiliationid'];    
     $mobile = $data['mobile'];
-    $password = $data['password'];
-    $confirm_password = $data['confirm_password'];
-    $roleid = $data['roleid'];
-
-    $checkEmail = $this->checkExistEmail($email);
-
-    if ($name == "" || $username == "" || $email == "" || $password == "" || $roleid == ""  || $affiliationid == "") {
+    $roleid = $data['roleid'];  
+      
+    if ($name == "" || $username == "" || $email == "" || $roleid == ""  || $affiliationid == "") {
       $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
 <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
 <strong>Error!</strong> User registration fields must not be empty!</div>'; 
@@ -61,54 +77,49 @@ class Users{
 <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
 <strong>Error!</strong> Enter only number characters for the phone number field!</div>';
         return $msg; // if phone number contains chars         
-    } elseif(strlen($password) < 5) {
-      $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
-<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-<strong>Error!</strong> Password must be at least 6 characters!</div>';
-        return $msg; // if password too short
-    } elseif ($password != $confirm_password) {
-      $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
-<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-<strong>Error!</strong> Your passwords must match!</div>'; 
-      return $msg; // if password doesn't verify
-    } elseif(!preg_match("#[0-9]+#",$password)) {
-      $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
-<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-<strong>Error!</strong> Your password must contain at least one number!</div>';
-        return $msg; // if no number in password
-    } elseif(!preg_match("#[a-z]+#",$password)) {
-      $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
-<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-<strong>Error!</strong> Your password must contain at least one number!</div>';
-        return $msg;  // if no number in password
-    } elseif (filter_var($email, FILTER_VALIDATE_EMAIL === FALSE)) {
+    } elseif (filter_var($email, FILTER_VALIDATE_EMAIL) === FALSE) {
       $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
 <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
 <strong>Error!</strong> Your email address must be valid!</div>';
         return $msg; // if email address invalid
-    } elseif ($checkEmail == TRUE) {
+    } elseif ($this->checkExistEmail($email) !== FALSE) {
       $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
 <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
 <strong>Error!</strong> Email already exists, please try another email!</div>';
         return $msg; // if email already used
     } else {
       // if everything is sucessful, insert into DB
-      $sql = "INSERT INTO tbl_users(name, username, email, affiliationid, mobile, password, roleid) VALUES(:name, :username, :email, :affiliationid, :mobile, :password, :roleid)";
+      /*
+      $name = $data['name'];
+      $username = $data['username'];
+      $email = $data['email'];
+      $affiliationid = $data['affiliationid'];    
+      $mobile = $data['mobile'];
+      $roleid = $data['roleid'];
+      $checkEmail = $this->checkExistEmail($email);
+      */
+      
+      $sql = "INSERT INTO tbl_users(name, username, email, affiliationid, password, mobile, roleid) 
+              VALUES(:name, :username, :email, :affiliationid, :password, :mobile, :roleid)";
+      
       $stmt = $this->db->pdo->prepare($sql);
       $stmt->bindValue(':name', $name);
       $stmt->bindValue(':username', $username);
       $stmt->bindValue(':email', $email);
-      $stmt->bindValue(':affiliationid)', $affiliationid);
+      $stmt->bindValue(':affiliationid', $affiliationid);
+      $stmt->bindValue(':password', SHA1($password));
       $stmt->bindValue(':mobile', $mobile);
-      $stmt->bindValue(':password', SHA1($password)); //encrypt password
       $stmt->bindValue(':roleid', $roleid);
+      
       $result = $stmt->execute();
       if ($result) {
+        $body = "<p>This email was recently used to sign up with the account $username. Below is a temporary password to use for your first login. If this is not your account, please ignore this email.<br><br>Temporary password: $password</p>";
+        sendEmail($email, "Temporary Password | Visual Sickness", $body);
         $msg = '<div class="alert alert-success alert-dismissible mt-3" id="flash-msg">
   <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-  <strong>Success!</strong> You have registered successfully!</div>';
+  <strong>Success!</strong> You have registered successfully! Please check your email for a temporary password to login with.</div>';
           return $msg;
-      }else{
+      } else {
         $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
   <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
   <strong>Error!</strong> Something went wrong, try registering again!</div>';
@@ -156,7 +167,7 @@ class Users{
             return $msg;
          }    
       }
-      
+    
 // Delete researcher to study 
   public function removeResearcher($data){
     if (empty($data['researcher_ID'])){

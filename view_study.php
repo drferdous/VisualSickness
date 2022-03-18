@@ -15,14 +15,16 @@ if (isset($insert_study)) {
         <h3>Study List</h3>         
     </div>
     <div class="card-body pr-2 pl-2">
-    <?php if (Session::get('roleid') === '1'){
+    
+    <?php
+        if (Session::get('roleid') === '1'){
             $sql = "SELECT study_ID, full_name, created_at, is_active
                     FROM Study
                     WHERE is_active = 1;";
                     
             $result = mysqli_query($conn, $sql);
         }
-        else{
+        else if (Session::get('roleid') != '5') {
             $sql = "SELECT Study.study_ID, Study.full_name, Study.created_at, Study.is_active, Researcher_Study.study_role
                 FROM Study, Researcher_Study
                 WHERE Study.study_ID IN (SELECT study_ID
@@ -33,9 +35,26 @@ if (isset($insert_study)) {
                 AND is_active = 1;";
                     
             $result = mysqli_query($conn, $sql);
+        } else {
+            $sql = "SELECT Study.study_ID, Study.full_name, Study.created_at, Study.is_active, Researcher_Study.study_role
+                FROM Study, Researcher_Study
+                WHERE Study.study_ID IN (SELECT study_ID
+                                         FROM Researcher_Study
+                                         WHERE researcher_ID = " . Session::get("id") . ")
+                AND Study.study_ID = Researcher_Study.study_ID
+                AND Researcher_Study.researcher_ID = " . Session::get("id") . "
+                AND is_active = 1;";            
+            $result = mysqli_query($conn, $sql);
+            
+            echo "<h3>Reset your password to gain full access to the site.</h3>";
+            echo "<span class='float-center'> <a href='resettemppassword' class='btn btn-primary'>Reset your password</a></span>";
+            
+            
         }
         
-        if (mysqli_num_rows($result) > 0){
+        
+        
+                if (mysqli_num_rows($result) > 0) {
     ?>
         <br />
             <table class="table table-striped table-bordered" id="example">
@@ -76,6 +95,8 @@ if (isset($insert_study)) {
             </div>
     <?php } 
         else{
+            echo "<br>"; 
+            echo "<br>";             
             echo "<p>You have no studies!</p>";
         }
     ?>

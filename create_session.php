@@ -52,7 +52,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['insert_session'])){
                 <select class="form-control" name="participant_ID" id="participant_name">
                     <option value="" selected hidden disabled>Please Choose...</option>
                     <?php
-                    $sql = "SELECT participant_id, anonymous_name, dob FROM Participants;";
+                    
+                    $sql = "SELECT participant_id, anonymous_name, dob 
+                            FROM Participants
+                            WHERE affiliation_id IN (SELECT affiliationid
+                                                     FROM tbl_users
+                                                     WHERE id = " . Session::get("id") . ");";
                     $result = mysqli_query($conn, $sql);
                     while ($row = mysqli_fetch_assoc($result)){
                         echo "<option value=\"" . $row['participant_id'] . "\">";

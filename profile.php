@@ -45,13 +45,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update'])) {
                               WHERE id = " . $getUinfo->affiliationid . "  
                               LIMIT 1;";
                       $result = mysqli_query($conn, $sql);
-                      $row = mysqli_fetch_assoc($result);
-                      if (!isset($row)){
-                          $row["Name"] = "-";
+                      if ($result){
+                          $row = mysqli_fetch_assoc($result);
+                      }
+                      else{
+                          $row = array("Name" => "-");
                       } ?>
                 <div class="form-group">
-                    <label for="affilation">Affilation Name</label>
-                    <input type="text" id="affiliation" name="affiliation" value="<?php echo $row["Name"]; ?>" class="form-control">
+                    <label for="affilation">Affilation Name: <?php echo $row["Name"]; ?></label>
                 </div>
 
               <?php if (Session::get("roleid") == '1' && $purpose === "edit") { ?>
