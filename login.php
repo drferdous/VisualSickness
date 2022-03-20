@@ -31,7 +31,7 @@ if (isset($logout)) {
                 <p class="d-flex justify-content-center"><i class="fas fa-sign-in-alt mr-2"></i>Login to Visual Sickness</p>
                 <div class="form-group">
                     <label for="email">Email address</label>
-                    <input type="email" name="email" id="email" placeholder="Enter email..." class="form-control">
+                    <input type="email" name="email" id="email" placeholder="Enter email..." class="form-control" autofocus>
                 </div>
                 <div class="form-group">
                     <label for="password">Password</label>
