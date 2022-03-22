@@ -62,69 +62,65 @@ class Users{
     $mobile = $data['mobile'];
     $roleid = $data['roleid'];  
       
-    if ($name == "" || $username == "" || $email == "" || $roleid == ""  || $affiliationid == "") {
-      $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
-<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-<strong>Error!</strong> User registration fields must not be empty!</div>'; 
-        return $msg; // if any field is empty
-    } elseif (strlen($username) < 3) {  
-      $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
-<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-<strong>Error!</strong> Your username is too short, make it at least 3 characters!</div>';
-        return $msg; // if username too short
-    } elseif (filter_var($mobile,FILTER_SANITIZE_NUMBER_INT) == FALSE) {
-      $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
-<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-<strong>Error!</strong> Enter only number characters for the phone number field!</div>';
-        return $msg; // if phone number contains chars         
-    } elseif (filter_var($email, FILTER_VALIDATE_EMAIL) === FALSE) {
-      $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
-<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-<strong>Error!</strong> Your email address must be valid!</div>';
-        return $msg; // if email address invalid
-    } elseif ($this->checkExistEmail($email) !== FALSE) {
-      $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
-<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-<strong>Error!</strong> Email already exists, please try another email!</div>';
-        return $msg; // if email already used
-    } else {
-      // if everything is sucessful, insert into DB
-      /*
-      $name = $data['name'];
-      $username = $data['username'];
-      $email = $data['email'];
-      $affiliationid = $data['affiliationid'];    
-      $mobile = $data['mobile'];
-      $roleid = $data['roleid'];
-      $checkEmail = $this->checkExistEmail($email);
-      */
-      
-      $sql = "INSERT INTO tbl_users(name, username, email, affiliationid, password, mobile, roleid) 
-              VALUES(:name, :username, :email, :affiliationid, :password, :mobile, :roleid)";
-      
-      $stmt = $this->db->pdo->prepare($sql);
-      $stmt->bindValue(':name', $name);
-      $stmt->bindValue(':username', $username);
-      $stmt->bindValue(':email', $email);
-      $stmt->bindValue(':affiliationid', $affiliationid);
-      $stmt->bindValue(':password', SHA1($password));
-      $stmt->bindValue(':mobile', $mobile);
-      $stmt->bindValue(':roleid', $roleid);
-      
-      $result = $stmt->execute();
-      if ($result) {
-        $body = "<p>This email was recently used to sign up with the account $username. Below is a temporary password to use for your first login. If this is not your account, please ignore this email.<br><br>Temporary password: $password</p>";
-        sendEmail($email, "Temporary Password | Visual Sickness", $body);
-        $msg = '<div class="alert alert-success alert-dismissible mt-3" id="flash-msg">
-  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-  <strong>Success!</strong> You have registered successfully! Please check your email for a temporary password to login with.</div>';
-          return $msg;
-      } else {
+    if (empty($name) || empty($username) || empty($email) || empty($roleid) || empty($affiliationid)){
         $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
-  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-  <strong>Error!</strong> Something went wrong, try registering again!</div>';
-          return $msg;
-      }
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong>Error!</strong> User registration fields must not be empty!</div>'; 
+        return $msg; // if any field is empty
+    }
+    elseif (strlen($username) < 3){  
+        $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong>Error!</strong> Your username is too short, make it at least 3 characters!</div>';
+        return $msg; // if username too short
+    }
+    elseif (filter_var($mobile,FILTER_SANITIZE_NUMBER_INT) == FALSE){
+        $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong>Error!</strong> Enter only number characters for the phone number field!</div>';
+        return $msg; // if phone number contains chars       
+    }
+    elseif (filter_var($email, FILTER_VALIDATE_EMAIL) === FALSE){
+        $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong>Error!</strong> Your email address must be valid!</div>';
+        return $msg; // if email address invalid
+    }
+    elseif ($this->checkExistEmail($email) !== FALSE) {
+        $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong>Error!</strong> Email already exists, please try another email!</div>';
+        return $msg; // if email already used
+    }
+    else{
+        // if everything is sucessful, insert into DB
+        $sql = "INSERT INTO tbl_users(name, username, email, affiliationid, password, mobile, roleid) 
+                VALUES(:name, :username, :email, :affiliationid, :password, :mobile, :roleid)";
+      
+        $stmt = $this->db->pdo->prepare($sql);
+        $stmt->bindValue(':name', $name);
+        $stmt->bindValue(':username', $username);
+        $stmt->bindValue(':email', $email);
+        $stmt->bindValue(':affiliationid', $affiliationid);
+        $stmt->bindValue(':password', SHA1($password));
+        $stmt->bindValue(':mobile', $mobile);
+        $stmt->bindValue(':roleid', $roleid);
+      
+        $result = $stmt->execute();
+        if ($result){
+            $body = "<p>This email was recently used to sign up with the account $username. Below is a temporary password to use for your first login. If this is not your account, please ignore this email.<br><br>Temporary password: $password</p>";
+            sendEmail($email, "Temporary Password | Visual Sickness", $body);
+            $msg = '<div class="alert alert-success alert-dismissible mt-3" id="flash-msg">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <strong>Success!</strong> You have registered successfully! Please check your email for a temporary password to login with.</div>';
+            return $msg;
+        } 
+        else{
+            $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <strong>Error!</strong> Something went wrong, try registering again!</div>';
+            return $msg;
+        }
     }
   }
 

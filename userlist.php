@@ -7,51 +7,48 @@
         exit();
     }
 ?>
-      <div class="card ">
-        <div class="card-header">
-          <h3><i class="fas fa-users mr-2"></i>User list <span class="float-right">Welcome! <strong>
+
+<div class="card ">
+    <div class="card-header">
+        <h3><i class="fas fa-users mr-2"></i>User list <span class="float-right">Welcome! <strong>
             <span class="badge badge-lg badge-secondary text-white">
-<?php
-$username = Session::get('username');
-if (isset($username)) {
-  echo $username;
-}
- ?></span>
-
-          </strong></span></h3>
-        </div>
-        <div class="card-body pr-2 pl-2">
-
-          <table id="example" class="table table-striped table-bordered" style="width:100%">
-                  <thead>
-                    <tr>
-                      <th  class="text-center">SL</th>
-                      <th  class="text-center">Name</th>
-                      <th  class="text-center">Username</th>
-                      <th  class="text-center">Email address</th>
-                      <th  class="text-center">Mobile</th>
-                      <th  class="text-center">Status</th>
-                      <th  class="text-center">Created</th>
-                      <th  width='25%' class="text-center">Action</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <?php
-
-                      $allUser = $users->selectAllUserData();
-
-                      if ($allUser) {
+            <?php
+                $username = Session::get('username');
+                if (isset($username)) {
+                    echo $username;
+                }
+            ?>
+            </span>
+        </strong></span></h3>
+    </div>
+    <div class="card-body pr-2 pl-2">
+        <table id="example" class="table table-striped table-bordered" style="width:100%">
+            <thead>
+                <tr class="text-center">
+                    <th>SL</th>
+                    <th>Name</th>
+                    <th>Username</th>
+                    <th>Email address</th>
+                    <th>Mobile</th>
+                    <th>Status</th>
+                    <th>Created</th>
+                    <th width="25%">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                    $allUser = $users->selectAllUserData();
+                    if ($allUser) {
                         $i = 0;
-                        foreach ($allUser as  $value) {
-                          $i++;
+                        foreach ($allUser as $value) {
+                            $i++;
 
-                     ?>
-
-                      <tr class="text-center"
-                      <?php if (Session::get("id") == $value->id) {
-                        echo "style='background:#d9edf7' ";
-                      } ?>
-                      >
+                ?>
+                            <tr class="text-center"
+                            <?php if (Session::get("id") == $value->id) { ?>
+                                style="background:#d9edf7"
+                            <?php } ?>
+                            >
 
                         <td><?php echo $i; ?></td>
                         <td><?php echo $value->name; ?></td>
@@ -131,9 +128,10 @@ if (isset($username)) {
                             
                         <?php if (strcmp($value->reg_stat, "0") === 0){ ?>
                             <a class="btn btn-sm btn-success"
+                               id="validateUser"
                                href="validateUser"
                                data-user_ID="<?php echo $value->id; ?>">
-                                Validate
+                               Validate
                             </a>
                         <?php } ?>
 
@@ -169,7 +167,8 @@ if (isset($username)) {
 
 <script type="text/javascript">
     $(document).ready(function() {
-       $("#example a[data-user_ID]").on("click", goToProfilePage);
+        // $("#example a[data-user_ID]").on("click", goToProfilePage);
+        $("#validateUser").on("click", validateUser);
     });
     
     function goToProfilePage(){
@@ -199,6 +198,26 @@ if (isset($username)) {
         
         return false;
     };
+    
+    function validateUser(){
+        let form = document.createElement("form");
+        let hiddenInput;
+        
+        form.setAttribute("method", "POST");
+        form.setAttribute("action", $(this).attr("href"));
+        form.setAttribute("style", "display: none");
+        
+        hiddenInput = document.createElement("input");
+        hiddenInput.setAttribute("type", "hidden");
+        hiddenInput.setAttribute("name", "user_ID");
+        hiddenInput.setAttribute("value", $(this).attr("data-user_ID"));
+        form.appendChild(hiddenInput);
+        
+        document.body.appendChild(form);
+        form.submit();
+        
+        return false;
+    }
 </script>
   <?php
   include 'inc/footer.php';
