@@ -17,6 +17,7 @@ if (isset($insert_study)) {
     <div class="card-body pr-2 pl-2">
     
     <?php
+        
         if (Session::get('roleid') === '1'){
             $sql = "SELECT study_ID, full_name, created_at, is_active
                     FROM Study
@@ -24,7 +25,7 @@ if (isset($insert_study)) {
                     
             $result = mysqli_query($conn, $sql);
         }
-        else if (Session::get('roleid') != '5') {
+        else if (Session::get('roleid') != '1') {
             $sql = "SELECT Study.study_ID, Study.full_name, Study.created_at, Study.is_active, Researcher_Study.study_role
                 FROM Study, Researcher_Study
                 WHERE Study.study_ID IN (SELECT study_ID
@@ -35,21 +36,6 @@ if (isset($insert_study)) {
                 AND is_active = 1;";
                     
             $result = mysqli_query($conn, $sql);
-        } else {
-            $sql = "SELECT Study.study_ID, Study.full_name, Study.created_at, Study.is_active, Researcher_Study.study_role
-                FROM Study, Researcher_Study
-                WHERE Study.study_ID IN (SELECT study_ID
-                                         FROM Researcher_Study
-                                         WHERE researcher_ID = " . Session::get("id") . ")
-                AND Study.study_ID = Researcher_Study.study_ID
-                AND Researcher_Study.researcher_ID = " . Session::get("id") . "
-                AND is_active = 1;";            
-            $result = mysqli_query($conn, $sql);
-            
-            echo "<h3>Reset your password to gain full access to the site.</h3>";
-            echo "<span class='float-center'> <a href='resettemppassword' class='btn btn-primary'>Reset your password</a></span>";
-            
-            
         }
         
         

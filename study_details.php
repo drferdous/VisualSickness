@@ -5,7 +5,7 @@ include_once 'database.php';
 Session::CheckSession();
 
 if (isset($_POST['deactivate-btn'])){
-    $studyDeactivatedMessage = $users->deactivateStudy($_POST["study_ID"]);
+    $studyDeactivatedMessage = $studies->deactivateStudy($_POST["study_ID"]);
     if (isset($studyDeactivatedMessage)){
         echo $studyDeactivatedMessage; ?>
         
@@ -21,7 +21,7 @@ if (isset($_POST['deactivate-btn'])){
 }
 
 if (isset($_POST["activate-btn"])){
-    $studyActivatedMessage = $users->activateStudy($_POST["study_ID"]);
+    $studyActivatedMessage = $studies->activateStudy($_POST["study_ID"]);
     if (isset($studyActivatedMessage)){
         echo $studyActivatedMessage;
     }
@@ -31,7 +31,7 @@ if (isset($_POST['leave-btn'])){
     $successMessage = '<div class="alert alert-success alert-dismissible mt-3" id="flash-msg">
               <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
               <strong>Success!</strong> You left this study!</div>';
-    $leaveStudyMessage = $users->leaveStudy($_POST["study_ID"]);
+    $leaveStudyMessage = $studies->leaveStudy($_POST["study_ID"]);
     
     if (isset($leaveStudyMessage)){
         if ($leaveStudyMessage === $successMessage){

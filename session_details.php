@@ -6,21 +6,21 @@ Session::CheckSession();
 Session::set('session_ID', intval($_POST['session_ID']));
 
 if (isset($_POST['restart-session-btn'])){
-    $startSessionMessage = $users->restart_session($_POST['session_ID']);
+    $startSessionMessage = $studies->restart_session($_POST['session_ID']);
     if (isset($startSessionMessage)){
         echo $startSessionMessage;
     }
 }
 
 if (isset($_POST['end-session-btn'])){
-    $endSessionMessage = $users->endSession($_POST['session_ID']);
+    $endSessionMessage = $studies->endSession($_POST['session_ID']);
     if (isset($endSessionMessage)){
         echo $endSessionMessage;
     }
 }
 
 if (isset($_POST['delete-ssq-btn'])){
-    $deleteSSQmessage = $users->deleteSSQ($_POST['session_ID']);
+    $deleteSSQmessage = $studies->deleteSSQ($_POST['session_ID']);
     if (isset($deleteSSQmessage)){
         echo $deleteSSQmessage ;
     }

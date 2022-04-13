@@ -6,7 +6,7 @@
     Session::set('session_ID', intval($_POST['session_ID']));
     
     if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['take-ssq-btn'])) {
-        $takeSSQMessage = $users->takeSSQ($_POST);
+        $takeSSQMessage = $studies->takeSSQ($_POST);
         if (isset($takeSSQMessage)){
             echo $takeSSQMessage; ?>
             

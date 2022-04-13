@@ -5,7 +5,7 @@ Session::CheckSession();
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['insert_study'])) {
 
-  $insert_study = $users->insert_study($_POST);
+  $insert_study = $studies->insert_study($_POST);
 }
 
 if (isset($insert_study)) {

@@ -1,28 +1,25 @@
-<?php
-    include 'inc/header.php';
-    Session::CheckSession();
-    
-    if (Session::get("roleid") !== "1"){
-        header("Location: 404");
+<?php 
+    if ($_SERVER["REQUEST_METHOD"] !== "POST" || !isset($_POST)){
+        // header("Location: 404");
+        var_dump($_POST);
         exit();
     }
+    
+    include "database.php";
+    include "lib/Session.php";
+    include "classes/Users.php";
+    
+    Session::init();
+    
+    $showPendingUsers = filter_var(
+                            $_POST["showPendingUsers"],
+                            FILTER_VALIDATE_BOOLEAN,
+                            FILTER_NULL_ON_FAILURE
+                        );
+    $users = new Users();
 ?>
 
-<div class="card ">
-    <div class="card-header">
-        <h3><i class="fas fa-users mr-2"></i>User list <span class="float-right">Welcome! <strong>
-            <span class="badge badge-lg badge-secondary text-white">
-            <?php
-                $username = Session::get('username');
-                if (isset($username)) {
-                    echo $username;
-                }
-            ?>
-            </span>
-        </strong></span></h3>
-    </div>
-    <div class="card-body pr-2 pl-2">
-        <table id="example" class="table table-striped table-bordered" style="width:100%">
+<table id="example" class="table table-striped table-bordered" style="width:100%">
             <thead>
                 <tr class="text-center">
                     <th>SL</th>
@@ -37,7 +34,7 @@
             </thead>
             <tbody>
                 <?php
-                    $allUser = $users->selectAllUserData(false);
+                    $allUser = $users->selectAllUserData($showPendingUsers);
                     if ($allUser) {
                         $i = 0;
                         foreach ($allUser as $value) {
@@ -85,12 +82,10 @@
                                View
                             </a>
                         <?php if ($value->roleid === '1' && $value->id !== Session::get('id')){ ?>
-                            <!--
                                 <a class="btn btn-info btn-sm disabled" 
                                    href="javascript:void(0);">
                                    Edit
                                 </a>   
-                            -->
                         <?php }
                               else{ ?>
                                 <a class="btn btn-info btn-sm" 
@@ -153,87 +148,3 @@
 
                   </tbody>
               </table>
-            <div class="form-check form-switch float-right">
-                <input class="form-check-input" type="checkbox" id="show-pending-users" unchecked>
-                <label class="form-check-label" for="show-pending-users">Show Users Pending Admin Approval Only</label>
-            </div>
-        </div>
-      </div>
-
-
-<script type="text/javascript">
-    $(document).ready(function() {
-        // $("#example a[data-user_ID]").on("click", goToProfilePage);
-        $("#validateUser").on("click", validateUser);
-        $("#show-pending-users").on("click", showPendingUsers);
-    });
-    
-    function goToProfilePage(){
-        let form = document.createElement("form");
-        let hiddenInput;
-        
-        form.setAttribute("method", "POST");
-        form.setAttribute("action", $(this).attr("href"));
-        form.setAttribute("style", "display: none");
-        
-        hiddenInput = document.createElement("input");
-        hiddenInput.setAttribute("type", "hidden");
-        hiddenInput.setAttribute("name", "user_ID");
-        hiddenInput.setAttribute("value", $(this).attr("data-user_ID"));
-        form.appendChild(hiddenInput);
-        
-        if ($(this).get(0).hasAttribute("data-purpose")){
-            hiddenInput = document.createElement("input");
-            hiddenInput.setAttribute("type", "hidden");
-            hiddenInput.setAttribute("name", "purpose");
-            hiddenInput.setAttribute("value", $(this).attr("data-purpose"));
-            form.appendChild(hiddenInput);
-        }
-             
-        document.body.appendChild(form);
-        form.submit(); 
-        
-        return false;
-    };
-    
-    function validateUser(){
-        let form = document.createElement("form");
-        let hiddenInput;
-        
-        form.setAttribute("method", "POST");
-        form.setAttribute("action", $(this).attr("href"));
-        form.setAttribute("style", "display: none");
-        
-        hiddenInput = document.createElement("input");
-        hiddenInput.setAttribute("type", "hidden");
-        hiddenInput.setAttribute("name", "user_ID");
-        hiddenInput.setAttribute("value", $(this).attr("data-user_ID"));
-        form.appendChild(hiddenInput);
-        
-        document.body.appendChild(form);
-        form.submit();
-        
-        return false;
-    }
-    
-    function showPendingUsers(){
-        $.ajax({
-            url: "loadCorrectUsers",
-            method: "POST",
-            cache: false,
-            data:{
-                showPendingUsers: $(this).prop("checked")
-            },
-            success: function(data){
-                $("#example").html(data);
-                $("#validateUser").on("click", validateUser);
-                $("#show-pending-users").on("click", showPendingUsers);
-            }
-        });
-    }
-    
-    
-</script>
-<?php
-    include 'inc/footer.php';
-?>

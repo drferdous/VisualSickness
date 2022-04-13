@@ -4,7 +4,7 @@ include_once 'database.php';
 Session::CheckSession();
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['insert_session'])){
-    $insertSessionMessage = $users->insert_session($_POST); 
+    $insertSessionMessage = $studies->insert_session($_POST); 
     if (isset($insertSessionMessage)){
         echo $insertSessionMessage; ?>
         

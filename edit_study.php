@@ -5,7 +5,7 @@ include 'database.php';
 Session::CheckSession();
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['updateStudy'])) {
-    $updateStudy = $users->updateStudy($_POST);
+    $updateStudy = $studies->updateStudy($_POST);
     if (isset($updateStudy)){
         echo $updateStudy; ?>
         <script type="text/javascript">

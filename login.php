@@ -1,5 +1,6 @@
 <?php
 include 'inc/header.php';
+include "database.php";
 Session::CheckLogin();
 ?>
 
@@ -9,9 +10,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
     if (isset($userLog)){
         echo $userLog;
     }
-    if (Session::get('login') === TRUE){
-        header("Location: view_study");
-        exit();
+    
+    if (Session::get('login') == TRUE){
+        // header("Location: view_study");
+        header("Location: index");
+        // echo Session::get('reg_stat');
     }
 }
 

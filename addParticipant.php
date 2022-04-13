@@ -7,7 +7,7 @@ if ($sId === '1' || $sId === '2' || $sId === '3') { ?>
 <?php
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['addNewParticipant'])) {
 
-  $userAdd = $users->addNewParticipant($_POST);
+  $userAdd = $studies->addNewParticipant($_POST);
 }
 
 if (isset($userAdd)) {

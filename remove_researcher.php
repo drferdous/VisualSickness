@@ -4,7 +4,7 @@ include 'database.php';
 Session::CheckSession();
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['removeResearcher'])) {
-    $removeResearcher = $users->removeResearcher($_POST);
+    $removeResearcher = $studies->removeResearcher($_POST);
     echo $removeResearcher;
 }
 if (isset($addResearcher)) {

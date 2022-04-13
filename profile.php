@@ -33,10 +33,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update'])) {
                     <input type="text" name="username" value="<?php echo $getUinfo->username; ?>" class="form-control">
                 </div>
                 <div class="form-group">
-                    <label for="email">Email Address</label>
-                    <input type="email" id="email" name="email" value="<?php echo $getUinfo->email; ?>" class="form-control">
-                </div>
-                <div class="form-group">
                     <label for="mobile">Mobile Number</label>
                     <input type="text" id="mobile" name="mobile" value="<?php echo $getUinfo->mobile; ?>" class="form-control">
                 </div>
@@ -52,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update'])) {
                           $row = array("Name" => "-");
                       } ?>
                 <div class="form-group">
-                    <label for="affilation">Affilation Name: <?php echo $row["Name"]; ?></label>
+                    <label for="affilation">Affilation: <?php echo $row["Name"]; ?></label>
                 </div>
 
               <?php if (Session::get("roleid") == '1' && $purpose === "edit") { ?>
@@ -124,7 +120,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update'])) {
           </form>
         </div>
 
-      <?php }else{
+      <?php }
+       else{
 
         header('Location: index');
       } ?>

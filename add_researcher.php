@@ -4,7 +4,7 @@ include 'database.php';
 Session::CheckSession();
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['addResearcher'])) {
-    $addResearcher = $users->addResearcher($_POST);
+    $addResearcher = $studies->addResearcher($_POST);
 }
 
 if (isset($addResearcher)) {

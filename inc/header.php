@@ -1,9 +1,12 @@
 <?php
 $filepath = realpath(dirname(__FILE__));
 include_once $filepath."/../lib/Session.php";
+include "check_verification.php";
 Session::init();
-
-
+if (Session::get("login") == true && $_SERVER['REQUEST_URI'] !== '/pending_verification' && $_SERVER['REQUEST_URI'] !== '/verify_password') {
+    echo "<script>console.log('" . $_SERVER['REQUEST_URI'] . "')</script>";
+    checkVerification();
+}
 
 spl_autoload_register(function($classes){
 
@@ -13,6 +16,9 @@ spl_autoload_register(function($classes){
 
 
 $users = new Users();
+$studies = new Studies();
+
+
 
 ?>
 
@@ -51,7 +57,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'logout') {
     <div class="container">
 
       <nav class="navbar navbar-expand-md navbar-dark bg-dark card-header">
-        <a class="navbar-brand" href="index"><i class="fas fa-home mr-2"></i>Dashboard</a>
+        <a class="navbar-brand" href="check_verification"><i class="fas fa-home mr-2"></i>Dashboard</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -60,42 +66,44 @@ if (isset($_GET['action']) && $_GET['action'] == 'logout') {
           <ul class="navbar-nav ml-auto">
  
         <?php if (Session::get('login') === TRUE) { ?>
-            <li class="nav-item dropdown">
-                <a href="#"
-                   class="nav-link dropdown-toggle"
-                   id="study-dropdown"
-                   role="button"
-                   data-bs-toggle="dropdown"
-                   aria-expanded="false">
-                   <i class="fas fa-sticky-note mr-2"></i>Study
-                </a>
-                <ul class="dropdown-menu"
-                    aria-labelledby="study-dropdown">
-                    <li class="dropdown-item"><a href="view_study">Study List</a></li>
-                    <li class="dropdown-item"><a href="create_study">Add Study</a></li>
-                </ul>
-            </li>
-            <li class="nav-item dropdown">
-                <a href="#"
-                   class="nav-link dropdown-toggle"
-                   id="participant-dropdown"
-                   role="button"
-                   data-bs-toggle="dropdown"
-                   aria-expanded="false">
-                   <i class="fas fa-user mr-2"></i>Participant
-                </a>
-                <ul class="dropdown-menu"
-                    aria-labelledby="participant-dropdown">
-                    <li class="dropdown-item"><a href="participantList">Participant List</a></li>
-                    <li class="dropdown-item"><a href="addParticipant">Add Participant</a></li>
-                </ul>
-            </li>
-            <?php if (Session::get('roleid') == '1') { ?>
-                  <li class="nav-item">
-
-                      <a class="nav-link" href="userlist"><i class="fas fa-users mr-2"></i>User lists </span></a>
-                  </li>
-        <?php  } ?>
+            <?php if (Session::get("reg_stat") == 2) { ?>
+                <li class="nav-item dropdown">
+                    <a href="#"
+                       class="nav-link dropdown-toggle"
+                       id="study-dropdown"
+                       role="button"
+                       data-bs-toggle="dropdown"
+                       aria-expanded="false">
+                       <i class="fas fa-sticky-note mr-2"></i>Study
+                    </a>
+                    <ul class="dropdown-menu"
+                        aria-labelledby="study-dropdown">
+                        <li class="dropdown-item"><a href="view_study">Study List</a></li>
+                        <li class="dropdown-item"><a href="create_study">Add Study</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a href="#"
+                       class="nav-link dropdown-toggle"
+                       id="participant-dropdown"
+                       role="button"
+                       data-bs-toggle="dropdown"
+                       aria-expanded="false">
+                       <i class="fas fa-user mr-2"></i>Participant
+                    </a>
+                    <ul class="dropdown-menu"
+                        aria-labelledby="participant-dropdown">
+                        <li class="dropdown-item"><a href="participantList">Participant List</a></li>
+                        <li class="dropdown-item"><a href="addParticipant">Add Participant</a></li>
+                    </ul>
+                </li>
+                <?php if (Session::get('roleid') == '1') { ?>
+                      <li class="nav-item">
+    
+                          <a class="nav-link" href="userlist"><i class="fas fa-users mr-2"></i>User lists </span></a>
+                      </li>
+                <?php  } ?>
+            <?php } ?>
             <!-- Anything between this comment can be deleted.
             <?php if (Session::get('roleid') == '1' || Session::get('roleid') == '2' || Session::get('roleid') == '3') { ?>
               <li class="nav-item
@@ -114,21 +122,23 @@ if (isset($_GET['action']) && $_GET['action'] == 'logout') {
               </li>
             <?php  } ?>
             -->
-            <li class="nav-item
-            <?php
-
-      				$path = $_SERVER['SCRIPT_FILENAME'];
-      				$current = basename($path, '.php');
-      				if ($current == 'profile') {
-      					echo "active ";
-      				}
-
-      			 ?>
-
-            ">
-
-              <a class="nav-link" href="profile" data-user_ID="<?php echo Session::get('id'); ?>" onclick="redirectUser"><i class="fab fa-500px mr-2"></i>Profile <span class="sr-only">(current)</span></a>
-            </li>
+            <?php if (Session::get("reg_stat") == 2) { ?>
+                <li class="nav-item
+                <?php
+    
+          				$path = $_SERVER['SCRIPT_FILENAME'];
+          				$current = basename($path, '.php');
+          				if ($current == 'profile') {
+          					echo "active ";
+          				}
+    
+          			 ?>
+    
+                ">
+    
+                  <a class="nav-link" href="profile" data-user_ID="<?php echo Session::get('id'); ?>" onclick="redirectUser"><i class="fab fa-500px mr-2"></i>Profile <span class="sr-only">(current)</span></a>
+                </li>
+            <?php } ?>
 
             <li class="nav-item">
               <a class="nav-link" href="logout"><i class="fas fa-sign-out-alt mr-2"></i>Logout</a>

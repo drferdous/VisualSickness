@@ -6,6 +6,13 @@ include "config/config.php";
 class  Database{
 
   public $pdo;
+  
+  private static $database;
+  
+  public static function getInstance() {
+      if (!Database::$database) Database::$database = new Database();
+      return Database::$database;
+  }
 
 
   // Construct Class
