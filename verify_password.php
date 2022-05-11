@@ -1,16 +1,18 @@
 <?php
 include "lib/Session.php";
-include 'database.php';
+include 'lib/Database.php';
+include "database.php";
 include_once "classes/Users.php";
+include "inc/header.php";
 $users = new Users();
 Session::init();
 Session::CheckSession();
 
-$userid = Session::get("id");
+$userid = Session::get("email");
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["reset-submit"])) {
     
-    $changePass = $users->resetPass($userid, $_POST["password"]);
+    $changePass = $users->resetPass($email, $_POST["password"]);
     if (isset($changePass)) {
         echo $changePass;
     } else if (Session::get('reg_stat') == 0) {
@@ -35,7 +37,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["reset-submit"])) {
                 <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
                 <strong>Success!</strong> Password changed successfully! You will receive an email when your account is verified by an administrator.</div>';
     }
-    echo "<script>setTimeout(() => location.href='check_verification', 2000)</script>";
+    echo "<script>setTimeout(() => location.href='index', 2000)</script>";
 }
  ?>
 <div class="card ">

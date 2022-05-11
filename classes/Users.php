@@ -82,13 +82,13 @@ class Users{
   }
   
   // Select All User Method
-  public function selectAllUserData($showPendingUserFlag){
+  public function selectAllUserData($showPendingUserFlag, $affiliationid){
     if ($showPendingUserFlag){
-        $sql = "SELECT * FROM tbl_users WHERE reg_stat = 1
+        $sql = "SELECT * FROM tbl_users WHERE reg_stat = 1 AND affiliationid = $affiliationid
                 ORDER BY id ASC;";
     }
     else{
-        $sql = "SELECT * FROM tbl_users 
+        $sql = "SELECT * FROM tbl_users WHERE affiliationid = $affiliationid
                 ORDER BY id ASC;";
     }
     $stmt = $this->db->pdo->prepare($sql);
@@ -655,7 +655,7 @@ class Users{
     }
     
     // update user password without old password
-    public function resetPass($userid, $new_pass) {
+    public function resetPass($email, $new_pass) {
         if ($new_pass == "") {
             $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
   <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
@@ -672,11 +672,11 @@ class Users{
         $sql = "UPDATE tbl_users SET
         
         password=:password
-        WHERE id = :id";
+        WHERE email = :email";
         
         $stmt = $this->db->pdo->prepare($sql);
         $stmt->bindValue(':password', $new_pass);
-        $stmt->bindValue(':id', $userid);
+        $stmt->bindValue(':email', $email);
         $result =   $stmt->execute();
         
         if (!$result) {

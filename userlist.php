@@ -1,5 +1,6 @@
 <?php
     include 'inc/header.php';
+    include 'lib/Database.php';
     Session::CheckSession();
     
     if (Session::get("roleid") !== "1"){
@@ -37,7 +38,7 @@
             </thead>
             <tbody>
                 <?php
-                    $allUser = $users->selectAllUserData(false);
+                    $allUser = $users->selectAllUserData(false, Session::get("affiliationid"));
                     if ($allUser) {
                         $i = 0;
                         foreach ($allUser as $value) {
@@ -228,6 +229,7 @@
                 $("#example").html(data);
                 $("#validateUser").on("click", validateUser);
                 $("#show-pending-users").on("click", showPendingUsers);
+                updateTable();
             }
         });
     }

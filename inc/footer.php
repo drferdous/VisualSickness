@@ -9,9 +9,11 @@
   <script>
       $(document).ready(function () {
           $("#flash-msg").delay(7000).fadeOut("slow");
-      });
-      $(document).ready(function() {
           $('#example').DataTable();
-      } );
+      });
+      function updateTable() {
+          $("#example").DataTable().destroy();
+          $("#example").DataTable();
+      }
   </script>
 </html>

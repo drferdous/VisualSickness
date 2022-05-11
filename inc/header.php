@@ -4,7 +4,6 @@ include_once $filepath."/../lib/Session.php";
 include "check_verification.php";
 Session::init();
 if (Session::get("login") == true && $_SERVER['REQUEST_URI'] !== '/pending_verification' && $_SERVER['REQUEST_URI'] !== '/verify_password') {
-    echo "<script>console.log('" . $_SERVER['REQUEST_URI'] . "')</script>";
     checkVerification();
 }
 
@@ -57,7 +56,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'logout') {
     <div class="container">
 
       <nav class="navbar navbar-expand-md navbar-dark bg-dark card-header">
-        <a class="navbar-brand" href="check_verification"><i class="fas fa-home mr-2"></i>Dashboard</a>
+        <a class="navbar-brand" href="index"><i class="fas fa-home mr-2"></i>Dashboard</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>

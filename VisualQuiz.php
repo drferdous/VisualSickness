@@ -1,6 +1,6 @@
 <?php
 include 'inc/header.php';
-include 'database.php';
+include 'lib/Database.php';
 
 if(isset($_GET['code']) == "" && Session::get('login') === FALSE) {
   header('Location: index');

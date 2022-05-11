@@ -5,7 +5,7 @@
         
         $url = "https://visualsickness.000webhostapp.com/create-new-password.php?selector=" . $selector . "&validator=" . bin2hex($token); 
         
-        $expires = date("U") + 1800; //1800 = 1 hour
+        $expires = mktime(date("G") + 1, date("i"), date("s"), date("m"), date("d"), date("Y")); // G = hours
         
         include '../database.php';
         include "../mailer.php";
@@ -29,7 +29,7 @@
             exit();
         } else {
             $hashedToken = password_hash($token, PASSWORD_DEFAULT);
-            mysqli_stmt_bind_param($stmt, "ssss", $userEmail, $selector, $hashedToken, $expiress);
+            mysqli_stmt_bind_param($stmt, "ssss", $userEmail, $selector, $hashedToken, $expires);
             mysqli_stmt_execute($stmt);
         }
         
@@ -40,7 +40,7 @@
         $subject = "Reset your Password | Visual Sickness";
         $message = '<p>We received a password reset request. The link to reset your password is below. If you did not make this request, you can ignore this email</p>';
         $message .= '<p>Here is your password reset link: </br>';
-        $message .= '<a href="' . $url. '">' . $url . '</a></p>';
+        $message .= '<a href="' . $url . '">' . $url . '</a></p>';
         
         sendEmail($to, $subject, $message);
         

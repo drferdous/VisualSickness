@@ -1,6 +1,6 @@
 <?php
 include 'inc/header.php';
-include_once 'database.php';
+include 'lib/Database.php';
 
 Session::CheckSession();
 
