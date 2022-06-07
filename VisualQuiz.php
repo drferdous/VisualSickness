@@ -1,6 +1,8 @@
 <?php
 include 'inc/header.php';
-include 'lib/Database.php';
+include_once 'lib/Database.php';
+$db = Database::getInstance();
+$pdo = $db->pdo;
 
 if(isset($_GET['code']) == "" && Session::get('login') === FALSE) {
   header('Location: index');
@@ -845,25 +847,26 @@ if (isset($deleteQuiz)) {
         WHERE ssq_ID = " . $ssq_ID . "
         LIMIT 1;";
             
-    $result = mysqli_query($conn, $sql);
-    $row = mysqli_fetch_array($result, MYSQLI_NUM);
+    $result = $pdo->query($sql);
+    $row = $result->fetch(PDO::FETCH_NUM);
     
-    if (mysqli_num_rows($result) === 0){
+    if ($result->rowCount() === 0){
         $row = array();
         
-        for ($i = 0; $i < mysqli_num_fields($result); ++$i){
+        for ($i = 0; $i < $result->columnCount(); ++$i){
             array_push($row, -1);
         }
-    } ?>
+    }
+    ?>
     <script type="text/javascript">
         $(document).ready(function(){
             let answerChoices = document.body.getElementsByClassName("pictures");
             let pictures;
-            <?php for ($colNum = 0; $colNum < count($row); ++$colNum){ ?>
-                pictures = answerChoices[<?php echo $colNum; ?>].querySelectorAll("label > input");
-                for (let i = 0; i < pictures.length; ++i){
-                    if (parseInt(pictures[i].getAttribute("value"), 10) === <?php echo $row[$colNum]; ?>){
-                        pictures[i].setAttribute("checked", "checked");
+            <?php for ($i = 0; $i < count($row); ++$i){ ?>
+                pictures = answerChoices[<?php echo $i; ?>].querySelectorAll("label > input");
+                for (let j = 0; j < pictures.length; ++j){
+                    if (parseInt(pictures[j].getAttribute("value"), 10) === <?php echo $row[$i]; ?>){
+                        pictures[j].setAttribute("checked", "checked");
                     }
                 }
             <?php } ?>
