@@ -111,6 +111,7 @@ if (isset($insert_study)) {
                },
                success: function(data){
                    $("#study-contents").html(data);
+                   updateTable();
                }
             });
         });
