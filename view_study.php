@@ -100,7 +100,6 @@ if (isset($insert_study)) {
             else{
                 activeStatus = "all";
             }
-            
             $.ajax({
                url: "loadCorrectStudies",
                method: "POST",
@@ -110,8 +109,9 @@ if (isset($insert_study)) {
                    idToSearch: idToSearch
                },
                success: function(data){
+                   $("#example").DataTable().destroy();
                    $("#study-contents").html(data);
-                   updateTable();
+                   $("#example").DataTable();
                }
             });
         });
