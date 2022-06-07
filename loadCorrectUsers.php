@@ -34,7 +34,7 @@
             </thead>
             <tbody>
                 <?php
-                    $allUser = $users->selectAllUserData($showPendingUsers);
+                    $allUser = $users->selectAllUserData($showPendingUsers, Session::get("affiliationid"));
                     if ($allUser) {
                         $i = 0;
                         foreach ($allUser as $value) {
@@ -135,16 +135,11 @@
 
 
 
-                        <?php  } ?>
+                        <?php } ?>
                         <?php } ?>
 
                         </td>
                       </tr>
-                    <?php }else{ ?>
-                      <tr class="text-center">
-                      <td>No user available now!</td>
-                    </tr>
                     <?php } ?>
-
                   </tbody>
               </table>
