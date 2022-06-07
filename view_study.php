@@ -1,6 +1,9 @@
 <?php
 include 'inc/header.php';
-include 'lib/Database.php';
+include_once 'lib/Database.php';
+
+$db = Database::getInstance();
+$pdo = $db->pdo;
 
 Session::CheckSession();
 
@@ -23,7 +26,7 @@ if (isset($insert_study)) {
                     FROM Study
                     WHERE is_active = 1;";
                     
-            $result = mysqli_query($conn, $sql);
+            $result = $pdo->query($sql);
         }
         else if (Session::get('roleid') != '1') {
             $sql = "SELECT Study.study_ID, Study.full_name, Study.created_at, Study.is_active, Researcher_Study.study_role
@@ -35,12 +38,10 @@ if (isset($insert_study)) {
                 AND Researcher_Study.researcher_ID = " . Session::get("id") . "
                 AND is_active = 1;";
                     
-            $result = mysqli_query($conn, $sql);
+            $result = $pdo->query($sql);
         }
         
-        
-        
-                if (mysqli_num_rows($result) > 0) {
+    if ($result->rowCount() > 0) {
     ?>
         <br />
             <table class="table table-striped table-bordered" id="example">
@@ -53,7 +54,7 @@ if (isset($insert_study)) {
                 </thead>
                     
                 <tbody id="study-contents">
-                <?php while ($row = mysqli_fetch_assoc($result)){ ?>
+                <?php while ($row = $result->fetch()){ ?>
                         <tr>
                             <td><?php echo $row['full_name']; ?></td>
                             <td><?php echo $row['created_at']; ?></td>
