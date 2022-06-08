@@ -1,6 +1,9 @@
 <?php
 include 'inc/header.php';
-include_once 'database.php';
+include_once 'lib/Database.php';
+
+$db = Database::getInstance();
+$pdo = $db->pdo;
 
 Session::CheckSession();
 Session::set('session_ID', intval($_POST['session_ID']));
@@ -36,21 +39,21 @@ if (isset($_POST['delete-ssq-btn'])){
                             FROM Session
                             WHERE session_ID = " . $_POST['session_ID'] . "
                             LIMIT 1;";
-                    $result = mysqli_query($conn, $sql);
-                    $row = mysqli_fetch_assoc($result);
+                    $result = $pdo->query($sql);
+                    $row = $result->fetch(PDO::FETCH_ASSOC);
                 ?>
-                <a href="session_list" style="transform: translateX(-10px)" class="btn btn-primary" data-study_ID="<?php echo $row['study_ID']; ?>" data-session_ID="-1">Back</a>
+                <a href="session_list" style="transform: translateX(-10px)" class="btn btn-primary redirectUser" data-study_ID="<?php echo $row['study_ID']; ?>" data-session_ID="-1">Back</a>
 
                 <?php
                     $sql = "SELECT end_time
                             FROM Session
                             WHERE session_ID = " . $_POST['session_ID'] . "
                             LIMIT 1;";
-                    $result = mysqli_query($conn, $sql);
-                    $row = mysqli_fetch_assoc($result);
+                    $result = $pdo->query($sql);
+                    $row = $result->fetch(PDO::FETCH_ASSOC);
             
                     if (!isset($row['end_time'])){?>
-                        <a href="chooseQuiz" class="btn btn-primary" data-study_ID="-1" data-session_ID="<?php echo $_POST['session_ID']; ?>">New SSQ</a>    
+                        <a href="chooseQuiz" class="btn btn-primary redirectUser" data-study_ID="-1" data-session_ID="<?php echo $_POST['session_ID']; ?>">New SSQ</a>    
               <?php }?>
             </span>
         </h3>
@@ -63,8 +66,8 @@ if (isset($_POST['delete-ssq-btn'])){
                     <th>Session ID</th>
                         <?php
                         $sql_session = "SELECT * FROM Session WHERE session_ID = " . $_POST['session_ID'];
-                        $mysqli_result = mysqli_query($conn, $sql_session);
-                        $row_session = mysqli_fetch_assoc($mysqli_result);
+                        $sql_result = $pdo->query($sql_session);
+                        $row_session = $sql_result->fetch(PDO::FETCH_ASSOC);
                         echo "<td>" .  $row_session['session_ID']  . "</td>";     
                         ?>
                 </tr> 
@@ -75,8 +78,8 @@ if (isset($_POST['delete-ssq-btn'])){
                         // show name for study_ID, not id         
                         if (isset($row_session['study_ID'])){
                             $sql_users = "SELECT full_name FROM Study WHERE study_id = " . $row_session['study_ID'] . " LIMIT 1;";
-                            $result_users = mysqli_query($conn, $sql_users);
-                            $row_users = mysqli_fetch_assoc($result_users);
+                            $result_users = $pdo->query($sql_users);
+                            $row_users = $result_users->fetch(PDO::FETCH_ASSOC);
                                 
                             echo "<td>" . $row_users['full_name'] . "</td>";
                         }
@@ -92,8 +95,8 @@ if (isset($_POST['delete-ssq-btn'])){
                         // show name for participant_ID, not id         
                         if (isset($row_session['participant_ID'])){
                             $sql_users = "SELECT anonymous_name FROM Participants WHERE participant_id = " . $row_session['participant_ID'] . " LIMIT 1;";
-                            $result_users = mysqli_query($conn, $sql_users);
-                            $row_users = mysqli_fetch_assoc($result_users);
+                            $result_users = $pdo->query($sql_users);
+                            $row_users = $result_users->fetch(PDO::FETCH_ASSOC);
                                 
                             echo "<td>" . $row_users['anonymous_name'] . "</td>";
                         }
@@ -107,52 +110,30 @@ if (isset($_POST['delete-ssq-btn'])){
                     <th>Quizzes Taken</th>
                     <td>
                     <?php
-                    $sql_ssq_info = "CREATE TABLE `#SSQ_info` (
-                                    ssq_ID INT(11) NOT NULL,
-                                    ssq_time TINYINT(4) NOT NULL,
-                                    ssq_type TINYINT(4) NOT NULL,
-                                    session_ID INT(11) NOT NULL
-                                );";
-                    mysqli_query($conn, $sql_ssq_info);
                     
-                    $sql_ssq_info = "INSERT INTO `#SSQ_info`
-                                    SELECT ssq_ID, ssq_time, ssq_type, session_ID
-                                    FROM SSQ
-                                    WHERE session_ID = " . Session::get('session_ID') . ";";
-                    mysqli_query($conn, $sql_ssq_info);
+                    $sql = "SELECT ssq_ID, ssq_time, ssq_type
+                            FROM SSQ
+                            WHERE SSQ.session_ID = " . Session::get('session_ID') . "
+                            ORDER BY ssq_time ASC
+                            LIMIT 2;";
+                    $result = $pdo->query($sql);
                     
-                    $sql_times = "SELECT id, name FROM SSQ_times;";
-                    $result_times = mysqli_query($conn, $sql_times);
-                    while ($row_times = mysqli_fetch_assoc($result_times)){
-                        $sql_ssq = "SELECT *
-                                   FROM `#SSQ_info`
-                                   WHERE ssq_time = " . $row_times['id'] . "
-                                   LIMIT 1;";
-                        $result_ssq = mysqli_query($conn, $sql_ssq);
-                        
-                        if (mysqli_num_rows($result_ssq) > 0){
-                            $row_ssq = mysqli_fetch_assoc($result_ssq);
-                            
-                            $sql_type = "SELECT type
-                                        FROM SSQ_type
-                                        WHERE id = " . $row_ssq['ssq_type'] . "
-                                        LIMIT 1;";
-                            $result_type = mysqli_query($conn, $sql_type);
-                            $row_type = mysqli_fetch_assoc($result_type);
-                        ?>
-                            <a  class="btn-sm btn-success" 
-                                href="<?php echo $row_type['type']; ?>Quiz"
-                                data-ssq_ID="<?php echo $row_ssq['ssq_ID']; ?>"
-                                data-ssq_time="<?php echo $row_times['id']; ?>" 
-                                data-ssq_type="<?php echo $row_ssq['ssq_type']; ?>">
-                                <?php echo $row_times['name'] . " (" . $row_type['type'] . ")"; ?>
-                            </a>    
-                    <?php }
-                    }
-                    
-                        $sql_ssq_info = "DROP TABLE IF EXISTS `#SSQ_info`;";
-                        mysqli_query($conn, $sql_ssq_info);
-                    ?>
+                    while ($row = $result->fetch(PDO::FETCH_ASSOC)){
+                        $ssq_times = "SELECT name FROM SSQ_times WHERE id = " . $row["ssq_time"];
+                        $ssq_type = "SELECT type FROM SSQ_type WHERE id = " . $row["ssq_type"];
+                        $result_times = $pdo->query($ssq_times);
+                        $ssq_name = $result_times->fetch(PDO::FETCH_ASSOC)["name"];
+                        $result_type = $pdo->query($ssq_type);
+                        $ssq_type = $result_type->fetch(PDO::FETCH_ASSOC)["type"]; ?>
+                        <a  class="btn-sm btn-success redirectUser" 
+                            href="<?php echo $ssq_type; ?>Quiz"
+                            data-ssq_ID="<?php echo $row['ssq_ID']; ?>"
+                            data-ssq_time="<?php echo $row["ssq_time"]; ?>" 
+                            data-ssq_type="<?php echo $row['ssq_type']; ?>"
+                        >
+                        <?php echo $ssq_name . " (" . $ssq_type . ")"; ?>
+                        </a>
+                    <?php } ?>
                     </td>
                 </tr> 
                 
@@ -183,8 +164,8 @@ if (isset($_POST['delete-ssq-btn'])){
                     // show name for created_by, not id         
                     if (isset($row_session['created_by'])){
                         $sql_users = "SELECT name FROM tbl_users WHERE id = " . $row_session['created_by'] . " LIMIT 1;";
-                        $result_users = mysqli_query($conn, $sql_users);
-                        $row_users = mysqli_fetch_assoc($result_users);
+                        $result_users = $pdo->query($sql_users);
+                        $row_users = $result_users->fetch(PDO::FETCH_ASSOC);
                             
                         echo "<td>" . $row_users['name'] . "</td>";
                     } else{
@@ -199,8 +180,8 @@ if (isset($_POST['delete-ssq-btn'])){
                     // show name for last_edited_by, not id    
                     if (isset($row_session['last_edited_by'])){
                         $sql_users = "SELECT name FROM tbl_users WHERE id = " . $row_session['last_edited_by'] . " LIMIT 1;";
-                        $result_users = mysqli_query($conn, $sql_users);
-                        $row_users = mysqli_fetch_assoc($result_users);
+                        $result_users = $pdo->query($sql_users);
+                        $row_users = $result_users->fetch(PDO::FETCH_ASSOC);
                         echo "<td>" . $row_users['name'] . "</td>";
                     } else {
                         echo "<td>-</td>";
@@ -231,7 +212,7 @@ if (isset($_POST['delete-ssq-btn'])){
 </div>
 <script type="text/javascript">
     $(document).ready(function(){
-        $(document).on("click", "a", redirectUser);
+        $(document).on("click", "a.redirectUser", redirectUser);
     });
     
     function redirectUser(){
