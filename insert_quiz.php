@@ -12,9 +12,9 @@ Session::CheckSession();
         <h3><span class="float-right">Welcome! 
             <strong><span class="badge badge-lg badge-secondary text-white">
             <?php
-                $username = Session::get('username');
-                if (isset($username)) {
-                    echo $username;
+                $name = Session::get("name");
+                if (isset($name)) {
+                    echo $name;
                 }
             ?>
             </span></strong>

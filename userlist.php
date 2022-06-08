@@ -51,9 +51,9 @@
         <h3><i class="fas fa-users mr-2"></i>User list <span class="float-right">Welcome! <strong>
             <span class="badge badge-lg badge-secondary text-white">
             <?php
-                $username = Session::get('username');
-                if (isset($username)) {
-                    echo $username;
+                $name = Session::get("name");
+                if (isset($name)) {
+                    echo $name;
                 }
             ?>
             </span>
@@ -63,9 +63,8 @@
         <table id="example" class="table table-striped table-bordered" style="width:100%">
             <thead>
                 <tr class="text-center">
-                    <th>SL</th>
+                    <th>ID</th>
                     <th>Name</th>
-                    <th>Username</th>
                     <th>Email address</th>
                     <th>Mobile</th>
                     <th>Status</th>
@@ -89,18 +88,22 @@
                             >
 
                         <td><?php echo $i; ?></td>
-                        <td><?php echo $value->name; ?></td>
-                        <td><?php echo $value->username; ?> <br>
-                          <?php if ($value->roleid  == '1'){ //admin
-                          echo "<span class='badge badge-lg badge-info text-white'>Admin</span>";
-                        } elseif ($value->roleid == '2') { // PI
-                          echo "<span class='badge badge-lg badge-dark text-white'>Primary Investigator</span>";
-                        }elseif ($value->roleid == '3') { // RA
-                            echo "<span class='badge badge-lg badge-dark text-white'>Research Assistant</span>";
-                        }elseif ($value->roleid == '4') { // only users!
-                            echo "<span class='badge badge-lg badge-dark text-white'>User Only</span>";
-                        } 
-                        ?></td>
+                        <td>
+                        <?php echo $value->name; ?>
+                        <br>
+                        <?php if ($value->roleid  == '1'){ //admin role ?>
+                                <span class='badge badge-lg badge-info text-white'>Admin</span>
+                        <?php }
+                              elseif ($value->roleid == '2') { // PI role ?>
+                                <span class='badge badge-lg badge-dark text-white'>Primary Investigator</span>
+                        <?php }
+                              elseif ($value->roleid == '3') { // RA role ?>
+                                <span class='badge badge-lg badge-dark text-white'>Research Assistant</span>
+                        <?php }
+                              elseif ($value->roleid == '4') { // user role ?>
+                                <span class='badge badge-lg badge-dark text-white'>User</span>
+                        <?php } ?>
+                        </td>
                         <td><?php echo $value->email; ?></td>
                         <td><span class="badge badge-lg badge-secondary text-white"><?php echo $value->mobile; ?></span></td>
                         <td>
@@ -122,12 +125,10 @@
                                View
                             </a>
                         <?php if ($value->roleid === '1' && $value->id !== Session::get('id')){ ?>
-                            <!--
                                 <a class="btn btn-info btn-sm disabled" 
                                    href="javascript:void(0);">
                                    Edit
-                                </a>   
-                            -->
+                                </a>
                         <?php }
                               else{ ?>
                                 <a class="btn btn-info btn-sm profilePage" 
@@ -136,8 +137,9 @@
                                    data-purpose="edit">
                                    Edit
                                 </a>
-                        <?php } 
-                              if ($value->roleid === '1' || Session::get("id") == $value->id){ ?>
+                        <?php } ?>
+                                <br>
+                        <?php if ($value->roleid === '1' || Session::get("id") == $value->id){ ?>
                                 <a class="btn btn-danger btn-sm disabled"
                                    href="javascript:void(0);">
                                 Remove

@@ -33,10 +33,6 @@ if (isset($userRegistration)) {
                   <input type="text" name="name"  class="form-control" id="name">
                 </div>
                 <div class="form-group">
-                  <label for="username">Your username</label>
-                  <input type="text" name="username"  class="form-control" id="username">
-                </div>
-                <div class="form-group">
                   <label for="email">Email address</label>
                   <input type="email" name="email"  class="form-control" id="email">
                 </div>

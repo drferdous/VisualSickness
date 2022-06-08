@@ -18,24 +18,17 @@ class Users{
   // User Registration Method
   public function userRegistration($data){
     $name = $data['name'];
-    $username = $data['username'];
     $password = Util::generateRandomPassword();
     $email = $data['email'];
     $affiliationid = $data['affiliationid'];    
     $mobile = $data['mobile'];
     $roleid = $data['roleid'];
       
-    if (empty($name) || empty($username) || empty($email) || empty($roleid) || empty($affiliationid)){
+    if (empty($name) || empty($email) || empty($roleid) || empty($affiliationid)){
         $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
                 <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
                 <strong>Error!</strong> User registration fields must not be empty!</div>'; 
         return $msg; // if any field is empty
-    }
-    elseif (strlen($username) < 3){  
-        $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
-                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                <strong>Error!</strong> Your username is too short, make it at least 3 characters!</div>';
-        return $msg; // if username too short
     }
     elseif (filter_var($email, FILTER_VALIDATE_EMAIL) === FALSE){
         $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
@@ -51,12 +44,11 @@ class Users{
     }
     else{
         // if everything is sucessful, insert into DB
-        $sql = "INSERT INTO tbl_users(name, username, email, affiliationid, password, mobile, roleid) 
-                VALUES(:name, :username, :email, :affiliationid, :password, :mobile, :roleid)";
+        $sql = "INSERT INTO tbl_users(name, email, affiliationid, password, mobile, roleid) 
+                VALUES(:name, :email, :affiliationid, :password, :mobile, :roleid)";
 
         $stmt = $this->db->pdo->prepare($sql);
         $stmt->bindValue(':name', $name);
-        $stmt->bindValue(':username', $username);
         $stmt->bindValue(':email', $email);
         $stmt->bindValue(':affiliationid', $affiliationid);
         $stmt->bindValue(':password', SHA1($password));
@@ -65,7 +57,7 @@ class Users{
       
         $result = $stmt->execute();
         if ($result){
-            $body = "<p>This email was recently used to sign up with the account $username. Below is a temporary password to use for your first login. If this is not your account, please ignore this email.<br><br>Temporary password: $password</p>";
+            $body = "<p>This email was recently used to sign up with the account $name. Below is a temporary password to use for your first login. If this is not your account, please ignore this email.<br><br>Temporary password: $password</p>";
             sendEmail($email, "Temporary Password | Visual Sickness", $body);
             $msg = '<div class="alert alert-success alert-dismissible mt-3" id="flash-msg">
                     <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
@@ -160,7 +152,6 @@ class Users{
           Session::set('roleid', $logResult->roleid);
           Session::set('name', $logResult->name);
           Session::set('email', $logResult->email);
-          Session::set('username', $logResult->username);
           Session::set('affiliationid', $logResult->affiliationid);
           Session::set('reg_stat', $logResult->reg_stat);
           Session::set('session_ID', -1);
@@ -215,43 +206,37 @@ class Users{
   //   Update user profile info
     public function updateUserByIdInfo($userid, $data){
       $name = $data['name'];
-      $username = $data['username'];
       $email = $data['email'];
       $mobile = $data['mobile'];
       $roleid = $data['roleid'];
 
-      if ($name == "" || $username == ""|| $email == "" || $mobile == ""  ) {
+    if ($name == "" || $email == "" || $mobile == ""){
         $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
-  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-  <strong>Error!</strong> Input fields must not be empty!</div>';
-          return $msg;
-        }elseif (strlen($username) < 3) {
-          $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
-    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-    <strong>Error!</strong> username is too short, plase provide one of at least 3 characters!</div>';
-            return $msg;
-        }elseif (filter_var($mobile,FILTER_SANITIZE_NUMBER_INT) == FALSE) {
-          $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
-    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-    <strong>Error!</strong> Enter only numeric characters for phone number, please!</div>';
-            return $msg;
-      }elseif (filter_var($email, FILTER_VALIDATE_EMAIL === FALSE)) {
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong>Error!</strong> Input fields must not be empty!</div>';
+        return $msg;
+    }
+    elseif (filter_var($mobile,FILTER_SANITIZE_NUMBER_INT) == FALSE) {
         $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
-  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-  <strong>Error!</strong> Invalid email address!</div>';
-          return $msg;
-      }else{
-
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong>Error!</strong> Enter only numeric characters for phone number, please!</div>';
+        return $msg;
+    }
+    elseif (filter_var($email, FILTER_VALIDATE_EMAIL === FALSE)) {
+        $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong>Error!</strong> Invalid email address!</div>';
+        return $msg;
+    }
+    else{
         $sql = "UPDATE tbl_users SET
           name = :name,
-          username = :username,
           email = :email,
           mobile = :mobile,
           roleid = :roleid
           WHERE id = :id";
           $stmt= $this->db->pdo->prepare($sql);
           $stmt->bindValue(':name', $name);
-          $stmt->bindValue(':username', $username);
           $stmt->bindValue(':email', $email);
           $stmt->bindValue(':mobile', $mobile);
           $stmt->bindValue(':roleid', $roleid);

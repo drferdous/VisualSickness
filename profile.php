@@ -32,10 +32,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update'])) {
                     <input type="text" name="name" value="<?php echo $getUinfo->name; ?>" <?= $purpose === "edit" ? "" : "disabled"?> class="form-control">
                 </div>
                 <div class="form-group">
-                    <label for="username">Your Username</label>
-                    <input type="text" name="username" value="<?php echo $getUinfo->username; ?>" <?= $purpose === "edit" ? "" : "disabled"?> class="form-control">
-                </div>
-                <div class="form-group">
                     <label for="mobile">Mobile Number</label>
                     <input type="text" id="mobile" name="mobile" value="<?php echo $getUinfo->mobile; ?>" <?= $purpose === "edit" ? "" : "disabled"?> class="form-control">
                 </div>
