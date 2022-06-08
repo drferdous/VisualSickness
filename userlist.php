@@ -61,146 +61,18 @@
     </div>
     <div class="card-body pr-2 pl-2">
         <table id="example" class="table table-striped table-bordered" style="width:100%">
-            <thead>
-                <tr class="text-center">
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Email address</th>
-                    <th>Mobile</th>
-                    <th>Status</th>
-                    <th>Created</th>
-                    <th width="25%">Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php
-                    $allUser = $users->selectAllUserData(false, Session::get("affiliationid"));
-                    if ($allUser) {
-                        $i = 0;
-                        foreach ($allUser as $value) {
-                            $i++;
-
-                ?>
-                            <tr class="text-center"
-                            <?php if (Session::get("id") == $value->id) { ?>
-                                style="background:#d9edf7"
-                            <?php } ?>
-                            >
-
-                        <td><?php echo $i; ?></td>
-                        <td>
-                        <?php echo $value->name; ?>
-                        <br>
-                        <?php if ($value->roleid  == '1'){ //admin role ?>
-                                <span class='badge badge-lg badge-info text-white'>Admin</span>
-                        <?php }
-                              elseif ($value->roleid == '2') { // PI role ?>
-                                <span class='badge badge-lg badge-dark text-white'>Primary Investigator</span>
-                        <?php }
-                              elseif ($value->roleid == '3') { // RA role ?>
-                                <span class='badge badge-lg badge-dark text-white'>Research Assistant</span>
-                        <?php }
-                              elseif ($value->roleid == '4') { // user role ?>
-                                <span class='badge badge-lg badge-dark text-white'>User</span>
-                        <?php } ?>
-                        </td>
-                        <td><?php echo $value->email; ?></td>
-                        <td><span class="badge badge-lg badge-secondary text-white"><?php echo $value->mobile; ?></span></td>
-                        <td>
-                          <?php if ($value->isActive == '1') { ?>
-                          <span class="badge badge-lg badge-info text-white">Active</span>
-                        <?php }else{ ?>
-                    <span class="badge badge-lg badge-danger text-white">Inactive</span>
-                        <?php } ?>
-
-                        </td>
-                        <td><span class="badge badge-lg badge-secondary text-white"><?php echo Util::formatDate($value->created_at);  ?></span></td>
-
-                        <td>
-                          <?php if ( Session::get("roleid") == '1') {?>
-                            <a class="btn btn-warning btn-sm profilePage" 
-                               href="profile"
-                               data-user_ID="<?php echo $value->id; ?>"
-                               data-purpose="view">
-                               View
-                            </a>
-                        <?php if ($value->roleid === '1' && $value->id !== Session::get('id')){ ?>
-                                <a class="btn btn-info btn-sm disabled" 
-                                   href="javascript:void(0);">
-                                   Edit
-                                </a>
-                        <?php }
-                              else{ ?>
-                                <a class="btn btn-info btn-sm profilePage" 
-                                   href="profile"
-                                   data-user_ID="<?php echo $value->id;?>"
-                                   data-purpose="edit">
-                                   Edit
-                                </a>
-                        <?php } ?>
-                                <br>
-                        <?php if ($value->roleid === '1' || Session::get("id") == $value->id){ ?>
-                                <a class="btn btn-danger btn-sm disabled"
-                                   href="javascript:void(0);">
-                                Remove
-                                </a>
-                        <?php }
-                              else{ ?>
-                                <a class="btn btn-danger btn-sm userAction removeUser"
-                                   href="userlist"
-                                   data-user_ID="<?php echo $value->id; ?>">
-                                Remove    
-                                </a>
-                        <?php }
-                              if ($value->isActive == '1'){ ?> 
-                               <a class="btn btn-outline-dark userAction deactivateUser
-                       <?php if ($value->roleid ==='1' || Session::get("id") == $value->id) {
-                         echo "disabled";
-                       } ?>
-                                btn-sm " href="userlist" data-user_ID="<?php echo $value->id; ?>">Deactivate</a>
-                        <?php }elseif ($value->isActive == '0'){?>
-                            <a class="btn btn-success userAction activateUser
-                       <?php if ($value->roleid === '1' || Session::get("id") == $value->id) {
-                         echo "disabled";
-                       } ?>
-                                btn-sm " href="userlist" data-user_ID="<?php echo $value->id; ?>">Activate</a>
-                             <?php } ?>
-                            
-                        <?php if ($value->reg_stat === "1"){ ?>
-                            <a class="btn btn-sm btn-success"
-                               id="validateUser"
-                               href="validateUser"
-                               data-user_ID="<?php echo $value->id; ?>">
-                               Validate
-                            </a>
-                        <?php } ?>
-
-
-
-
-                        <?php  } ?>
-                        <?php } ?>
-
-                        </td>
-                      </tr>
-                    <?php }else{ ?>
-                      <tr class="text-center">
-                      <td>No user available now!</td>
-                    </tr>
-                    <?php } ?>
-
-                  </tbody>
-              </table>
-            <div class="form-check form-switch float-right" style="margin-left: 2rem">
-                <input class="form-check-input" type="checkbox" id="show-deactivated-users" unchecked>
-                <label class="form-check-label" for="show-deactivated-users">Show Deactivated Users Only</label>
-            </div>
-            <div class="form-check form-switch float-right">
-                <input class="form-check-input" type="checkbox" id="show-pending-users" unchecked>
-                <label class="form-check-label" for="show-pending-users">Show Users Pending Admin Approval Only</label>
-            </div>
-        </div>
-      </div>
+            
+        </table>
+    <div class="form-check form-switch float-right" style="margin-left: 2rem">
+        <input class="form-check-input" type="checkbox" id="show-deactivated-users" unchecked>
+        <label class="form-check-label" for="show-deactivated-users">Show Deactivated Users Only</label>
+    </div>
+    <div class="form-check form-switch float-right">
+        <input class="form-check-input" type="checkbox" id="show-pending-users" unchecked>
+        <label class="form-check-label" for="show-pending-users">Show Users Pending Admin Approval Only</label>
+    </div>
+</div>
+</div>
 
 
 <script type="text/javascript">
@@ -211,6 +83,9 @@
         $("#show-pending-users").on("click", showPendingUsers);
         $("#show-deactivated-users").on("click", showDeactivatedUsers);
     });
+    
+    let showOnlyPending = false;
+    let showOnlyDeactivated = false;
     
     function goToProfilePage(){
         let form = document.createElement("form");
@@ -260,13 +135,14 @@
         return false;
     }
     
-    function showPendingUsers(){
+    function showUsers() {
         $.ajax({
             url: "loadCorrectUsers",
             method: "POST",
             cache: false,
             data:{
-                showPendingUsers: $(this).prop("checked")
+                showPendingUsers: showOnlyPending,
+                showDeactivatedUsers: showOnlyDeactivated
             },
             success: function(data){
                 $("#example").html(data);
@@ -278,22 +154,14 @@
         });
     }
     
+    function showPendingUsers(){
+        showOnlyPending = $(this).prop('checked');
+        showUsers();
+    }
+    
     function showDeactivatedUsers(){
-        $.ajax({
-            url: "loadCorrectUsers",
-            method: "POST",
-            cache: false,
-            data:{
-                showDeactivatedUsers: $(this).prop("checked")
-            },
-            success: function(data){
-                $("#example").html(data);
-                $("#validateUser").on("click", validateUser);
-                $("#show-pending-users").on("click", showPendingUsers);
-                $("#show-deactivated-users").on("click", showActivatedUsers);
-                updateTable();
-            }
-        });
+        showOnlyDeactivated = $(this).prop('checked');
+        showUsers();
     }
     
     function doUserAction(){
@@ -340,6 +208,8 @@
         
         return false;
     }
+    
+    showUsers()
 </script>
 <?php
     include 'inc/footer.php';

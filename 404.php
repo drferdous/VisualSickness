@@ -1,5 +1,5 @@
 <?php 
-include 'inc/header.php';
+    include 'inc/header.php';
 ?>
 
 <div class="card ">
@@ -9,3 +9,7 @@ include 'inc/header.php';
         </div>
     </div>
 </div>
+
+<?php
+    include "inc/footer.php";
+?>

@@ -2,6 +2,9 @@
 include 'inc/header.php';
 include_once 'lib/Database.php';
 
+$db = Database::getInstance();
+$pdo = $db->pdo;
+
 if(isset($_GET['code']) == "" && Session::get('login') === FALSE) {
   header('Location: index');
   exit();
