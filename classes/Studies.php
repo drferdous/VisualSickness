@@ -304,14 +304,14 @@ public function takeSSQ($data){
       return $msg; // if any field is empty
    } else {
       $sql = "INSERT INTO Study (full_name, short_name, IRB, description, created_by, last_edited_by)
-            VALUES ('$full_name', '$short_name', '$IRB', '$description', '$created_by', '$last_edited_by')";
+            VALUES (:full_name, :short_name, :IRB, :description, :created_by, :last_edited_by)";
       $stmt = $this->db->pdo->prepare($sql);
       $stmt->bindValue('full_name', $full_name);
       $stmt->bindValue('short_name', $short_name);
       $stmt->bindValue('IRB', $IRB);
       $stmt->bindValue('description', $description);      
-      $stmt->bindValue('created_by', $created_by);
-      $stmt->bindValue('last_edited_by', $created_by);        
+      $stmt->bindValue('created_by', $created_by, PDO::PARAM_INT);
+      $stmt->bindValue('last_edited_by', $created_by, PDO::PARAM_INT);        
       $result = $stmt->execute();        
    }
    

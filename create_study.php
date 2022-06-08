@@ -1,6 +1,6 @@
 <?php
 include 'inc/header.php';
-include 'database.php';
+include_once 'lib/Database.php';
 Session::CheckSession();
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['insert_study'])) {

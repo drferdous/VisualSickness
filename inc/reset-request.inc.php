@@ -7,33 +7,39 @@
         
         $expires = mktime(date("G") + 1, date("i"), date("s"), date("m"), date("d"), date("Y")); // G = hours
         
-        include '../database.php';
+        include_once '../lib/Database.php';
         include "../mailer.php";
+        
+        $db = Database::getInstance();
+        $pdo = $db->pdo;
         
         $userEmail = $_POST["email"];
         $sql = "DELETE FROM pwdReset WHERE pwdResetEmail=?;";
-        $stmt = mysqli_stmt_init($conn);
-        if (!mysqli_stmt_prepare($stmt, $sql)) {
+        $stmt = $pdo->prepare($sql);
+        if (!$stmt) {
             echo "There was an error in resetting your password.";
             exit();
         } else {
-            mysqli_stmt_bind_param($stmt, "s", $userEmail);
-            mysqli_stmt_execute($stmt);
+            $stmt->bindValue(1, $userEmail, PDO::PARAM_STR);
+            $stmt->execute();
         }
         
                 
         $sql = "INSERT INTO pwdReset (pwdResetEmail, pwdResetSelector, pwdResetToken, pwdResetExpires) VALUES (?, ?, ?, ?);";
-        $stmt = mysqli_stmt_init($conn);
-        if (!mysqli_stmt_prepare($stmt, $sql)) {
+        $stmt = $pdo->prepare($sql);
+        if (!$stmt) {
             echo "There was an error in resetting your password.";
             exit();
         } else {
             $hashedToken = password_hash($token, PASSWORD_DEFAULT);
-            mysqli_stmt_bind_param($stmt, "ssss", $userEmail, $selector, $hashedToken, $expires);
-            mysqli_stmt_execute($stmt);
+            $stmt->bindValue(1, $userEmail, PDO::PARAM_STR);
+            $stmt->bindValue(2, $selector, PDO::PARAM_STR);
+            $stmt->bindValue(3, $hashedToken, PDO::PARAM_STR);
+            $stmt->bindValue(4, $expires, PDO::PARAM_STR);
+            $stmt->execute();
         }
         
-        mysqli_stmt_close($stmt);
+        $stmt->closeCursor();
         // mysqli_close();
         
         $to = $userEmail;

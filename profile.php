@@ -1,7 +1,10 @@
 <?php
 include 'inc/header.php';
-include 'database.php';
+include_once 'lib/Database.php';
 Session::CheckSession();
+
+$db = Database::getInstance();
+$pdo = $db->pdo;
 
 $userid = $_POST['user_ID'];
 $purpose = $_POST['purpose'];
@@ -26,23 +29,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update'])) {
                 <form class="" action="" method="POST">
                 <div class="form-group">
                     <label for="name">Your Name</label>
-                    <input type="text" name="name" value="<?php echo $getUinfo->name; ?>" class="form-control">
+                    <input type="text" name="name" value="<?php echo $getUinfo->name; ?>" <?= $purpose === "edit" ? "" : "disabled"?> class="form-control">
                 </div>
                 <div class="form-group">
                     <label for="username">Your Username</label>
-                    <input type="text" name="username" value="<?php echo $getUinfo->username; ?>" class="form-control">
+                    <input type="text" name="username" value="<?php echo $getUinfo->username; ?>" <?= $purpose === "edit" ? "" : "disabled"?> class="form-control">
                 </div>
                 <div class="form-group">
                     <label for="mobile">Mobile Number</label>
-                    <input type="text" id="mobile" name="mobile" value="<?php echo $getUinfo->mobile; ?>" class="form-control">
+                    <input type="text" id="mobile" name="mobile" value="<?php echo $getUinfo->mobile; ?>" <?= $purpose === "edit" ? "" : "disabled"?> class="form-control">
                 </div>
                 <?php $sql = "SELECT Name
                               FROM Affiliation
                               WHERE id = " . $getUinfo->affiliationid . "  
                               LIMIT 1;";
-                      $result = mysqli_query($conn, $sql);
+                      $result = $pdo->query($sql);
                       if ($result){
-                          $row = mysqli_fetch_assoc($result);
+                          $row = $result->fetch(PDO::FETCH_ASSOC);
                       }
                       else{
                           $row = array("Name" => "-");

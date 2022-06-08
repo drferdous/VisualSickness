@@ -24,14 +24,14 @@ class Util {
     }
   }
   
-  public function getUserEmailById($conn, $id) {
+  public function getUserEmailById($pdo, $id) {
       $sql = "SELECT email FROM tbl_users WHERE id = $id";
-      $result = mysqli_query($conn, $sql);
+      $result = $pdo->query($sql);
       if (!$result) {
-          echo mysqli_error($result);
+          echo $pdo->errorInfo();
           return null;
       }
-      return mysqli_fetch_assoc($result)['email'];
+      return $result->fetch(PDO::FETCH_ASSOC)['email'];
   }
   
   public static function generateRandomPassword(){
@@ -50,27 +50,27 @@ class Util {
     return $randomPassword;
   }
   
-  public static function getAdminsFromAffiliation($conn, $affiliationid) {
+  public static function getAdminsFromAffiliation($pdo, $affiliationid) {
       $sql = "SELECT email FROM tbl_users WHERE roleid = 1 AND affiliationid = $affiliationid";
-      $result = mysqli_query($conn, $sql);
+      $result = $pdo->query($sql);
       if (!$result) {
-          echo mysqli_error($result);
+          echo $pdo->errorInfo();
           return null;
       }
       $emails = array();
-      while ($row = mysqli_fetch_assoc($result)) {
+      while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
           array_push($emails, $row['email']);
       }
       return implode(', ', $emails);
   }
   
-  public static function getAffiliationNameById($conn, $affiliationId) {
+  public static function getAffiliationNameById($pdo, $affiliationId) {
       $sql = "SELECT Name FROM Affiliation WHERE id = $affiliationId";
-      $result = mysqli_query($conn, $sql);
+      $result = $pdo->query($sql);
       if (!$result) {
-          echo mysqli_error($result);
+          echo $pdo->errorInfo();
           return null;
       }
-      return mysqli_fetch_assoc($result)['Name'];
+      return $result->fetch(PDO::FETCH_ASSOC)['Name'];
   }
 }

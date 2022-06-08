@@ -1,6 +1,8 @@
 <?php
     include "inc/header.php";
-    include "database.php";
+    include_once "lib/Database.php";
+    $db = Database::getInstance();
+    $pdo = $db->pdo;
 ?>
 
 <div class="card">
@@ -15,22 +17,22 @@
                              WHERE id = " . Session::get("id") . ")
                 LIMIT 1;";
                 
-        $result = mysqli_query($conn, $sql);
+        $result = $pdo->query($sql);
         
         if (!$result){
-            echo mysqli_error($conn);
+            echo $pdo->errorInfo();
         }
         
-        $row = mysqli_fetch_assoc($result);
+        $row = $result->fetch(PDO::FETCH_ASSOC);
     ?>
     
     <p>Affiliation: <?php echo $row["Name"]; ?></p>
     <?php
         $sql = "SELECT * FROM Participants;";
-        $result = mysqli_query($conn, $sql);
+        $result = $pdo->query($sql);
         
         if (!$result){
-            echo mysqli_error($conn);
+            echo $pdo->errorInfo();
         }
     ?>
     <div class="card-body pr-2 pl-2">
@@ -44,7 +46,7 @@
                 </tr>
             </thead>
             <tbody>
-                <?php while ($row = mysqli_fetch_assoc($result)){ ?>
+                <?php while ($row = $result->fetch(PDO::FETCH_ASSOC)){ ?>
                         <tr>
                             <td><?php echo $row["anonymous_name"]; ?></td>
                             <td><?php echo $row["dob"]; ?></td>

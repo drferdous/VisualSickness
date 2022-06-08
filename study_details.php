@@ -1,6 +1,9 @@
 <?php
 include 'inc/header.php';
-include_once 'database.php';
+include_once 'lib/Database.php';
+
+$db = Database::getInstance();
+$pdo = $db->pdo;
 
 Session::CheckSession();
 
@@ -55,8 +58,8 @@ if (isset($_POST['leave-btn'])){
             <thead class="text-center">
                 <?php
                     $sql_study = "SELECT * FROM Study WHERE study_ID = " . $_POST["study_ID"] . " LIMIT 1;";
-                    $result_study = mysqli_query($conn, $sql_study);
-                    $row_study = mysqli_fetch_assoc($result_study);
+                    $result_study = $pdo->query($sql_study);
+                    $row_study = $result_study->fetch(PDO::FETCH_ASSOC);
                 ?>
                 
                 <tr>
@@ -124,9 +127,9 @@ if (isset($_POST['leave-btn'])){
                     // show name for created_by, not id                  
                     if (isset($row_study['created_by'])){
                         $sql_users = "SELECT name FROM tbl_users WHERE id = " . $row_study['created_by'] . " LIMIT 1;";
-                        $result_users = mysqli_query($conn, $sql_users);
-                        $row_users = mysqli_fetch_assoc($result_users);
-                            
+                        $result_users = $pdo->query($sql_users);
+                        $row_users = $result_users->fetch(PDO::FETCH_ASSOC);
+                        
                         echo "<td>" . $row_users['name'] . "</td>";
                     }
                     else{
@@ -155,8 +158,8 @@ if (isset($_POST['leave-btn'])){
                     // show name for last_edited_by, not id    
                     if (isset($row_study['last_edited_by'])){
                         $sql_users = "SELECT name FROM tbl_users WHERE id = " . $row_study['last_edited_by'] . " LIMIT 1;";
-                        $result_users = mysqli_query($conn, $sql_users);
-                        $row_users = mysqli_fetch_assoc($result_users);
+                        $result_users = $pdo->query($sql_users);
+                        $row_users = $result_users->fetch(PDO::FETCH_ASSOC);
                         echo "<td>" . $row_users['name'] . "</td>";
                     }
                     else{

@@ -1,6 +1,5 @@
 <?php
     include 'inc/header.php';
-    include_once 'database.php';
 ?>
 
 <div class="card">

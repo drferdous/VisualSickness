@@ -1,6 +1,9 @@
 <?php
 include 'inc/header.php';
-include_once 'database.php';
+include_once 'lib/Database.php';
+
+$db = Database::getInstance();
+$pdo = $db->pdo;
 
 Session::CheckSession();
 
@@ -17,9 +20,9 @@ Session::CheckSession();
     <div class="card-body pr-2 pl-2">
     <?php
         $sql = "SELECT session_ID, start_time, participant_ID FROM Session WHERE study_ID = " . $_POST["study_ID"];
-        $result = mysqli_query($conn, $sql);
+        $result = $pdo->query($sql);
             
-        if (mysqli_num_rows($result) > 0){
+        if ($result->rowCount() > 0){
     ?>
         <br />
             <table class="table table-striped table-bordered" id="example">
@@ -35,20 +38,20 @@ Session::CheckSession();
                 <tbody>
         
                 <?php
-                    while ($row = mysqli_fetch_assoc($result)) { 
+                    while ($row = $result->fetch(PDO::FETCH_ASSOC)) { 
                         echo "<tr>";
                         
                         echo "<td>" . $row['session_ID'] ."</td>";
                         
                         if (isset($row['participant_ID'])){
                             $sql_users = "SELECT anonymous_name FROM Participants WHERE participant_id = " . $row['participant_ID'] . " LIMIT 1;";
-                            $result_users = mysqli_query($conn, $sql_users);
+                            $result_users = $pdo->query($sql_users);
                             
                             if (!$result_users){
-                                echo mysqli_error($conn);
+                                echo $pdo->errorInfo($conn);
                             }
                             
-                            $row_users = mysqli_fetch_assoc($result_users);
+                            $row_users = $result_users->fetch(PDO::FETCH_ASSOC);
 
                             echo "<td>" . $row_users['anonymous_name'] . "</td>";
                         } else {

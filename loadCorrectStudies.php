@@ -4,10 +4,13 @@
         exit();
     }
     
-    include "database.php";
     include "lib/Session.php";
+    include_once "lib/Database.php";
     
     Session::init();
+    
+    $db = Database::getInstance();
+    $pdo = $db->pdo;
     
     $idToSearch = $_POST["idToSearch"];
     $activeStatus = $_POST["activeStatus"];
@@ -37,12 +40,9 @@
     }
     
     $sql = $sql . $sqlActiveStatus;
-    $result = mysqli_query($conn, $sql);
     
-    if (!$result){
-        echo mysqli_error($conn);
-    }
-      while ($row = mysqli_fetch_assoc($result)){ ?>
+    $result = $pdo->query($sql);
+    while ($row = $result->fetch(PDO::FETCH_ASSOC)){ ?>
         <tr>
             <td><?php echo $row['full_name']; ?></td>
             <td><?php echo $row['created_at']; ?></td>

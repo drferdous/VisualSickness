@@ -1,6 +1,9 @@
 <?php
     include 'inc/header.php';
-    include 'database.php';
+    include_once 'lib/Database.php';
+    
+    $db = Database::getInstance();
+    $pdo = $db->pdo;
     
     Session::CheckSession();
 ?>
@@ -20,9 +23,9 @@
                     FROM SSQ
                     WHERE session_ID = " . $_GET['session_ID'] . "
                     AND ssq_time = 0;";
-            $result = mysqli_query($conn, $sql);
-            if (mysqli_num_rows($result) > 0){
-                while ($row = mysqli_fetch_assoc($result)){
+            $result = $pdo->query($sql);
+            if ($result->rowCount() > 0){
+                while ($row = $result->fetch(PDO::FETCH_ASSOC)){
         ?>
                     <table class="table table-striped table-bordered">
                         <thead class="text-center">
@@ -38,8 +41,8 @@
                                                 FROM SSQ_type
                                                 WHERE type = " . $row['ssq_type'] . "
                                                 LIMIT 1;";
-                                    $result_type = mysqli_query($conn, $sql_type);
-                                    $row_type = mysqli_fetch_assoc($result_type);
+                                    $result_type = $pdo->query($sql_type);
+                                    $row_type = $result_type->fetch(PDO::FETCH_ASSOC);
                                     echo $row_type['type'];
                                 ?>
                                 </td>
@@ -107,10 +110,6 @@
         ?>
     </div>
 </div>
-
-<script type="text/javascript">
-        
-</script>
 
 <?php
   include 'inc/footer.php';

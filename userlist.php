@@ -1,11 +1,48 @@
 <?php
     include 'inc/header.php';
-    include 'lib/Database.php';
+    include_once 'lib/Database.php';
     Session::CheckSession();
+    
+    $db = Database::getInstance();
+    $pdo = $db->pdo;
     
     if (Session::get("roleid") !== "1"){
         header("Location: 404");
         exit();
+    }
+    
+    if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["removeUser"])){
+        $sql = "DELETE FROM tbl_users
+                WHERE id = " . $_POST["user_ID"] . ";";
+        $result = $pdo->query($sql);
+        if (!$result){
+            echo $pdo->errorInfo();
+            exit();
+        }
+    }
+    
+    if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["deactivateUser"])){
+        $sql = "UPDATE tbl_users
+                SET isActive = 0
+                WHERE id = " . $_POST["user_ID"] . "
+                LIMIT 1;";
+        $result = $pdo->query($sql);
+        if (!$result){
+            echo $pdo->errorInfo();
+            exit();
+        }
+    }
+    
+    if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["activateUser"])){
+        $sql = "UPDATE tbl_users
+                SET isActive = 1
+                WHERE id = " . $_POST["user_ID"] . "
+                LIMIT 1;";
+        $result = $pdo->query($sql);
+        if (!$result){
+            echo $pdo->errorInfo();
+            exit();
+        }
     }
 ?>
 
@@ -65,13 +102,12 @@
                         } 
                         ?></td>
                         <td><?php echo $value->email; ?></td>
-
                         <td><span class="badge badge-lg badge-secondary text-white"><?php echo $value->mobile; ?></span></td>
                         <td>
                           <?php if ($value->isActive == '1') { ?>
                           <span class="badge badge-lg badge-info text-white">Active</span>
                         <?php }else{ ?>
-                    <span class="badge badge-lg badge-danger text-white">Deactive</span>
+                    <span class="badge badge-lg badge-danger text-white">Inactive</span>
                         <?php } ?>
 
                         </td>
@@ -79,7 +115,7 @@
 
                         <td>
                           <?php if ( Session::get("roleid") == '1') {?>
-                            <a class="btn btn-success btn-sm" 
+                            <a class="btn btn-warning btn-sm profilePage" 
                                href="profile"
                                data-user_ID="<?php echo $value->id; ?>"
                                data-purpose="view">
@@ -94,7 +130,7 @@
                             -->
                         <?php }
                               else{ ?>
-                                <a class="btn btn-info btn-sm" 
+                                <a class="btn btn-info btn-sm profilePage" 
                                    href="profile"
                                    data-user_ID="<?php echo $value->id;?>"
                                    data-purpose="edit">
@@ -108,21 +144,20 @@
                                 </a>
                         <?php }
                               else{ ?>
-                                <a class="btn btn-danger btn-sm"
+                                <a class="btn btn-danger btn-sm userAction removeUser"
                                    href="userlist"
-                                   onclick="return confirm('Are you sure To Deactive ?')"
                                    data-user_ID="<?php echo $value->id; ?>">
                                 Remove    
                                 </a>
                         <?php }
                               if ($value->isActive == '1'){ ?> 
-                               <a onclick="return confirm('Are you sure To Deactive ?')" class="btn btn-warning
+                               <a class="btn btn-outline-dark userAction deactivateUser
                        <?php if ($value->roleid ==='1' || Session::get("id") == $value->id) {
                          echo "disabled";
                        } ?>
                                 btn-sm " href="userlist" data-user_ID="<?php echo $value->id; ?>">Deactivate</a>
                         <?php }elseif ($value->isActive == '0'){?>
-                            <a onclick="return confirm('Are you sure To Active ?')" class="btn btn-secondary
+                            <a class="btn btn-success userAction activateUser
                        <?php if ($value->roleid === '1' || Session::get("id") == $value->id) {
                          echo "disabled";
                        } ?>
@@ -154,6 +189,10 @@
 
                   </tbody>
               </table>
+            <div class="form-check form-switch float-right" style="margin-left: 2rem">
+                <input class="form-check-input" type="checkbox" id="show-deactivated-users" unchecked>
+                <label class="form-check-label" for="show-deactivated-users">Show Deactivated Users Only</label>
+            </div>
             <div class="form-check form-switch float-right">
                 <input class="form-check-input" type="checkbox" id="show-pending-users" unchecked>
                 <label class="form-check-label" for="show-pending-users">Show Users Pending Admin Approval Only</label>
@@ -164,9 +203,11 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
-        // $("#example a[data-user_ID]").on("click", goToProfilePage);
+        $("#example a.profilePage[data-user_ID]").on("click", goToProfilePage);
+        $("#example a.userAction[data-user_ID]").on("click", doUserAction);
         $("#validateUser").on("click", validateUser);
         $("#show-pending-users").on("click", showPendingUsers);
+        $("#show-deactivated-users").on("click", showDeactivatedUsers);
     });
     
     function goToProfilePage(){
@@ -229,12 +270,74 @@
                 $("#example").html(data);
                 $("#validateUser").on("click", validateUser);
                 $("#show-pending-users").on("click", showPendingUsers);
+                $("#show-deactivated-users").on("click", showDeactivatedUsers);
                 updateTable();
             }
         });
     }
     
+    function showDeactivatedUsers(){
+        $.ajax({
+            url: "loadCorrectUsers",
+            method: "POST",
+            cache: false,
+            data:{
+                showDeactivatedUsers: $(this).prop("checked")
+            },
+            success: function(data){
+                $("#example").html(data);
+                $("#validateUser").on("click", validateUser);
+                $("#show-pending-users").on("click", showPendingUsers);
+                $("#show-deactivated-users").on("click", showActivatedUsers);
+                updateTable();
+            }
+        });
+    }
     
+    function doUserAction(){
+        let userAction;
+        if ($(this).hasClass("removeUser")){
+            userAction = "removeUser";
+            if (!confirm("Are you sure you want to remove this user?")){
+                return false;
+            }
+        }
+        if ($(this).hasClass("deactivateUser")){
+            userAction = "deactivateUser";
+            if (!confirm("Are you sure you want to deactivate this user?")){
+                return false;
+            }
+        }
+        if ($(this).hasClass("activateUser")){
+            userAction = "activateUser";
+            if (!confirm("Are you sure you want to activate this user?")){
+                return false;
+            }
+        }
+
+        let form = document.createElement("form");
+        let hiddenInput;
+        
+        form.setAttribute("method", "POST");
+        form.setAttribute("action", $(this).attr("href"));
+        form.setAttribute("style", "display: none");
+        
+        hiddenInput = document.createElement("input");
+        hiddenInput.setAttribute("type", "hidden");
+        hiddenInput.setAttribute("name", "user_ID");
+        hiddenInput.setAttribute("value", $(this).attr("data-user_ID"));
+        form.appendChild(hiddenInput);
+        
+        hiddenInput = document.createElement("input");
+        hiddenInput.setAttribute("type", "hidden");
+        hiddenInput.setAttribute("name", userAction);
+        form.appendChild(hiddenInput);
+        
+        document.body.appendChild(form);
+        form.submit();
+        
+        return false;
+    }
 </script>
 <?php
     include 'inc/footer.php';

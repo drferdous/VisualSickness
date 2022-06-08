@@ -93,7 +93,11 @@ if (isset($_GET['action']) && $_GET['action'] == 'logout') {
                     <ul class="dropdown-menu"
                         aria-labelledby="participant-dropdown">
                         <li class="dropdown-item"><a href="participantList">Participant List</a></li>
-                        <li class="dropdown-item"><a href="addParticipant">Add Participant</a></li>
+                        <?php
+                        $roleid = Session::get('roleid');
+                        if ($roleid == 1 || $roleid == 2 || $roleid == 3) { ?>
+                            <li class="dropdown-item"><a href="addParticipant">Add Participant</a></li>
+                        <?php } ?>
                     </ul>
                 </li>
                 <?php if (Session::get('roleid') == '1') { ?>

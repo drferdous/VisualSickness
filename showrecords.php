@@ -1,12 +1,7 @@
 <?php
-include_once 'database.php';
-// Check connection
-if (mysqli_connect_errno())
-{
-echo "Failed to connect to MySQL: " . mysqli_connect_error();
-}
+include_once 'lib/Database.php';
 
-$result = mysqli_query($conn,"SELECT * FROM test");
+$result = Database::getInstance()->pdo->query("SELECT * FROM test");
 
 echo "<table border='1'>
 <tr>
@@ -27,7 +22,7 @@ echo "<table border='1'>
 <th>burp</th>
 </tr>";
 
-while($row = mysqli_fetch_array($result))
+while($row = $result->fetch(PDO::FETCH_ASSOC))
 {
 echo "<tr>";
 echo "<td>" . $_row['discomfort'] . "</td>";
@@ -48,7 +43,5 @@ echo "<td>" . $_row['burp'] . "</td>";
 echo "</tr>";
 }
 echo "</table>";
-
-mysqli_close($conn);
 ?>
 

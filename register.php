@@ -1,6 +1,9 @@
 <?php
 include 'inc/header.php';
-include 'database.php';
+include_once 'lib/Database.php';
+
+$db = Database::getInstance();
+$pdo = $db->pdo;
 ?>
 
 <?php
@@ -46,10 +49,11 @@ if (isset($userRegistration)) {
                     <label for="sel1">Select User Role</label>
                     <select class="form-control" name="roleid" id="sel1">
                       <?php 
-                      $sql = mysqli_query($conn, "SELECT id, role FROM tbl_roles WHERE id > 1");
-                      while ($row = $sql->fetch_assoc()){
-                      echo '<option value="'.$row['id'].'">' . $row['role'] . "</option>";
-                      }
+                          $sql = "SELECT id, role FROM tbl_roles WHERE id > 1";
+                          $result = $pdo->query($sql);
+                          while ($row = $result->fetch(PDO::FETCH_ASSOC)){
+                              echo '<option value="'.$row['id'].'">' . $row['role'] . "</option>";
+                          }
                       ?>
                     </select>
                   </div>
@@ -59,10 +63,11 @@ if (isset($userRegistration)) {
                     <label for="selAffil">Select Affiliation</label>
                     <select class="form-control" name="affiliationid" id="selAffil">
                       <?php 
-                      $sql = mysqli_query($conn, "SELECT id, name FROM Affiliation WHERE id > 0");
-                      while ($row = $sql->fetch_assoc()){
-                      echo '<option value="'.$row['id'].'">' . $row['name'] . "</option>";
-                      }
+                          $sql = "SELECT id, name FROM Affiliation WHERE id > 0";
+                          $result = $pdo->query($sql);
+                          while ($row = $result->fetch(PDO::FETCH_ASSOC)){
+                              echo '<option value="'.$row['id'].'">' . $row['name'] . "</option>";
+                          }
                       ?>
                     </select>
                   </div>

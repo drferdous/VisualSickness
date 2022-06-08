@@ -1,6 +1,8 @@
 <?php
     include 'inc/header.php';
-    include 'database.php';
+    include_once 'lib/Database.php';
+    $db = Database::getInstance();
+    $pdo = $db->pdo;
     
     Session::CheckSession();
     Session::set('session_ID', intval($_POST['session_ID']));
@@ -97,8 +99,8 @@
                     <option value="" disabled selected hidden>Choose Quiz Type...</option>
                     <?php
                         $sql = "SELECT id, type FROM SSQ_type;";
-                        $result = mysqli_query($conn, $sql);
-                        while ($row = mysqli_fetch_assoc($result)){
+                        $result = $pdo->query($sql);
+                        while ($row = $result->fetch(PDO::FETCH_ASSOC)){
                             echo "<option value=\"" . $row['id'] . "\">";
                             echo $row['type'];
                             echo "</option>";
@@ -112,8 +114,8 @@
                     <option value="" disabled selected hidden>Select Quiz Time...</option>
                     <?php
                         $sql = "SELECT id, name FROM SSQ_times;";
-                        $result = mysqli_query($conn, $sql);
-                        while ($row = mysqli_fetch_assoc($result)){
+                        $result = $pdo->query($sql);
+                        while ($row = $result->fetch(PDO::FETCH_ASSOC)){
                             echo "<option value=\"" . $row['id'] . "\">";
                             echo $row['name'];
                             echo "</option>";

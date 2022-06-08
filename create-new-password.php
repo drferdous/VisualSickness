@@ -1,6 +1,5 @@
 <?php
-include "database.php";
-include "lib/Database.php";
+include_once "lib/Database.php";
 if ($_SERVER["REQUEST_METHOD"] === "GET") {
     if (!isset($_GET["selector"]) || !isset($_GET["validator"])) {
         header("Location: 404.php");
@@ -32,13 +31,14 @@ if ($_SERVER["REQUEST_METHOD"] === "GET") {
             exit();
         }
         $sql = "DELETE FROM pwdReset WHERE pwdResetEmail=?;";
-        $stmt = mysqli_stmt_init($conn);
-        if (!mysqli_stmt_prepare($stmt, $sql)) {
+        // $stmt = mysqli_stmt_init($conn);
+        $stmt = $pdo->prepare($sql);
+        if ($stmt) {
             echo "There was an error in resetting your password.";
             exit();
         } else {
-            mysqli_stmt_bind_param($stmt, "s", $res["pwdResetEmail"]);
-            mysqli_stmt_execute($stmt);
+            $stmt->bindParam(1, $res["pwdResetEmail"], PDO::PARAM_STR);
+            $stmt->exexcute();
         }
     } else {
         echo "Bad token.";

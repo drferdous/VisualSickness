@@ -1,9 +1,14 @@
 <?php
 include 'inc/header.php';
-include 'database.php';
+include_once 'lib/Database.php';
+$db = Database::getInstance();
+$pdo = $db->pdo;
 
 Session::CheckSession();
-
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && (!isset($_POST['study_ID'])) || $_POST['study_ID'] == 'undefined') {
+    header('Location: view_study');
+    exit();
+}
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['updateStudy'])) {
     $updateStudy = $studies->updateStudy($_POST);
     if (isset($updateStudy)){
@@ -29,8 +34,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['updateStudy'])) {
     
     <?php
         $sql = "SELECT * FROM Study WHERE study_ID = " . $_POST['study_ID'] . " LIMIT 1;";
-        $result = mysqli_query($conn, $sql); 
-        while($row = mysqli_fetch_assoc($result)) {
+        $result = $pdo->query($sql); 
+        while($row = $result->fetch(PDO::FETCH_ASSOC)) {
             $study_ID = $row['study_ID'];
             $full_name = $row['full_name'];
             $short_name = $row['short_name'];      

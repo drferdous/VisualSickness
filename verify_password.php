@@ -1,33 +1,33 @@
 <?php
 include "lib/Session.php";
-include 'lib/Database.php';
-include "database.php";
+include_once 'lib/Database.php';
 include_once "classes/Users.php";
 include "inc/header.php";
 $users = new Users();
+$pdo = Database::getInstance()->pdo;
 Session::init();
 Session::CheckSession();
 
-$userid = Session::get("email");
+$email = Session::get("email");
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["reset-submit"])) {
     
     $changePass = $users->resetPass($email, $_POST["password"]);
-    if (isset($changePass)) {
+    if ($changePass) {
         echo $changePass;
     } else if (Session::get('reg_stat') == 0) {
         // Get comma-separated list of admin email addresses for the user's affiliation
-        $adminString = Util::getAdminsFromAffiliation($conn, Session::get('affiliationid'));
+        $adminString = Util::getAdminsFromAffiliation($pdo, Session::get('affiliationid'));
         if (!$adminString) {
             echo 'An error has occurred. Please try again.';
             exit();
         }
-        $body = '<p>A new user has signed up for Visual Sickness Study under your affiliation: ' . Util::getAffiliationNameById($conn, Session::get('affiliationid'));
+        $body = '<p>A new user has signed up for Visual Sickness Study under your affiliation: ' . Util::getAffiliationNameById($pdo, Session::get('affiliationid'));
         $body .= "<br><br>The user has signed up with the name <strong>" . Session::get("name") . "</strong> and email <strong>" . Session::get('email') . '</strong>.<br>';
         // send email here
         sendEmail($adminString, 'Visual Sickness | New User Registration', $body);
         $sql = 'UPDATE tbl_users SET reg_stat = 1 where id = ' . Session::get('id') . ';';
-        $result = mysqli_query($conn, $sql);
+        $result = Database::getInstance()->pdo->query($sql);
         Session::set("reg_stat", 1);
         if (!$result) {
             echo 'An error occurred. Please try again.';

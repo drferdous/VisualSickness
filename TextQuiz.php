@@ -1,6 +1,6 @@
 <?php
 include 'inc/header.php';
-include 'database.php';
+include_once 'lib/Database.php';
 
 if(isset($_GET['code']) == "" && Session::get('login') === FALSE) {
   header('Location: index');
@@ -542,13 +542,13 @@ else{
         WHERE ssq_ID = " . $ssq_ID . "
         LIMIT 1;";
             
-    $result = mysqli_query($conn, $sql);
-    $row = mysqli_fetch_array($result, MYSQLI_NUM);
+    $result = $pdo->query($sql);
+    $row = $result->fetch(PDO::FETCH_NUM);
     
-    if (mysqli_num_rows($result) === 0){
+    if ($result->rowCount() === 0){
         $row = array();
         
-        for ($i = 0; $i < mysqli_num_fields($result); ++$i){
+        for ($i = 0; $i < $result->columnCount(); ++$i){
             array_push($row, -1);
         }
     } ?>

@@ -1,6 +1,6 @@
 <?php
 include 'inc/header.php';
-include 'database.php';
+include_once 'lib/Database.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['deleteQuiz'])) {
   $deleteQuiz = $studies->deleteQuiz($_POST);

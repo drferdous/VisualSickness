@@ -1,6 +1,6 @@
 <?php
 include 'inc/header.php';
-include 'database.php';
+include_once 'lib/Database.php';
 Session::CheckSession();
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['removeResearcher'])) {
@@ -33,8 +33,8 @@ if (isset($addResearcher)) {
                                                                        FROM Study
                                                                        WHERE study_ID = " . $_POST['study_ID'] . ")
                                              AND NOT researcher_ID = " . Session::get('id') . ");";
-                        $result = mysqli_query($conn, $sql);
-                        while ($row = $result->fetch_assoc()){ ?>
+                        $result = $pdo->query($sql);
+                        while ($row = $result->fetch(PDO::FETCH_ASSOC)){ ?>
                             <option value="<?php echo $row['id']; ?>"><?php echo $row['name']; ?></option>
                     <?php } ?>
                     </select>

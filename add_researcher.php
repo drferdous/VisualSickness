@@ -1,7 +1,9 @@
 <?php
 include 'inc/header.php';
-include 'database.php';
+include_once 'lib/Database.php';
 Session::CheckSession();
+$db = Database::getInstance();
+$pdo = $db->pdo;
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['addResearcher'])) {
     $addResearcher = $studies->addResearcher($_POST);
@@ -31,8 +33,8 @@ if (isset($addResearcher)) {
                                     WHERE NOT id IN (SELECT researcher_ID 
                                                      FROM Researcher_Study
                                                      WHERE study_ID = " . $_POST['study_ID'] . ");";
-                            $result = mysqli_query($conn, $sql);
-                            while ($row = $result->fetch_assoc()){ ?>
+                            $result = $pdo->query($sql);
+                            while ($row = $result->fetch(PDO::FETCH_ASSOC)){ ?>
                                 <option value="<?php echo $row['id']; ?>"><?php echo $row['name']; ?></option>
                         <?php } ?>
                     </select>

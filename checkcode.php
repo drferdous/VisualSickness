@@ -1,11 +1,14 @@
 <?php
-	include_once 'database.php';
+	include_once 'lib/Database.php';
+	$db = Database::getInstance();
+	$pdo = $db->pdo;
 
-	$sql = "SELECT code FROM SSQ WHERE code = " .$_POST['txtName'];
-	$select = mysqli_query($conn, $sql);
-	$row = mysqli_fetch_assoc($select);
+	$sql = "SELECT code FROM SSQ WHERE code = ''";
+	$select = $pdo->query($sql);
+	$row = $select->fetch(PDO::FETCH_NUM);
+	echo print_r($row);
 
-	if (mysqli_num_rows > 10) {
+	if ($select->rowCount() > 10) {
 	    echo "exist";
 	}else echo 'notexist';
 ?>

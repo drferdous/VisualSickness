@@ -1,11 +1,10 @@
 <?php
-include 'database.php';
+include_once 'lib/Database.php';
 
 $id = $_GET['id']; // $id is now defined
 $sql = "DELETE FROM Study
         WHERE study_id = " . $id;
 
-mysqli_query($conn, $sql);
-mysqli_close($conn);
+Database::getInstance()->pdo->query($sql);
 header("Location: index");
 ?>

@@ -1,7 +1,9 @@
 <?php
 include 'inc/header.php';
-include_once 'database.php';
+include_once 'lib/Database.php';
 Session::CheckSession();
+$db = Database::getInstance();
+$pdo = $db->pdo;
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['insert_session'])){
     $insertSessionMessage = $studies->insert_session($_POST); 
@@ -58,8 +60,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['insert_session'])){
                             WHERE affiliation_id IN (SELECT affiliationid
                                                      FROM tbl_users
                                                      WHERE id = " . Session::get("id") . ");";
-                    $result = mysqli_query($conn, $sql);
-                    while ($row = mysqli_fetch_assoc($result)){
+                    $result = $pdo->query($sql);
+                    while ($row = $result->fetch(PDO::FETCH_ASSOC)){
                         echo "<option value=\"" . $row['participant_id'] . "\">";
                         echo $row['anonymous_name'] . " - " . $row['dob'];
                         echo "</option>";
