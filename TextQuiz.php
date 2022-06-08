@@ -31,20 +31,13 @@ else{
             </form>
             </span></strong>
         </span></h3>
-        
     </div>
-        
     <div class="card-body pr-2 pl-2">
-
-        <html>
-<body>
-
-<center>
-    <div class="Header">
-
-  <hr>
-</div>
-</center>
+    <center>
+        <div class="Header">
+            <hr>
+        </div>
+    </center>
 
 <form action="insert_quiz" method="post">
     <center>
@@ -131,7 +124,6 @@ else{
             <input type="radio" id="discomfort3" name="general_discomfort" value="3"> Severe
         </label>
     </div>
-</div>
 </div>
 </center>
 
@@ -511,6 +503,7 @@ else{
     </div>
 </div>
 </center>
+</div>
     
     <input type="hidden" id="ssq_ID" name="ssq_ID" value="<?php echo $ssq_ID; ?>">
     <input type="hidden" id="ssq_time" name="ssq_time" value="<?php echo $_POST['ssq_time']; ?>">
@@ -526,17 +519,18 @@ else{
     <?php } ?>
     
     <?php if ($isFirstTime){ ?>
-        <input type="submit" class="btn btn-success" name="Submit" value="Submit">
+        <input type="submit" class="btn btn-success float-left" name="Submit" value="Submit">
     <?php }
           else{ ?>
-        <input type="submit" class="btn btn-success" name="Submit" value="Update">
+        <input type="submit" class="btn btn-success float-left" name="Submit" value="Update">
     <?php } ?>
 </form>
 
 <br>
+<br>
 <form action="session_details" method="POST">
     <input type="hidden" name="session_ID" value="<?php echo Session::get('session_ID'); ?>">
-    <input type="submit" class="btn btn-danger" name="Cancel" value="Cancel">
+    <input type="submit" class="btn btn-danger float-left" name="Cancel" value="Cancel">
 </form>
 
 <?php
@@ -555,30 +549,21 @@ else{
             array_push($row, -1);
         }
     } ?>
-            
-        <script type="text/javascript">
-            $(document).ready(function() {
-                let answerChoices = document.body.getElementsByClassName("pictures");
-                let radioButtons;
-                <?php for ($colNum = 0; $colNum < count($row); ++$colNum){ ?>
-                    radioButtons = answerChoices[<?php echo $colNum; ?>].querySelectorAll("label > input");
-                    for (let i = 0; i < radioButtons.length; ++i){
-                        if (parseInt(radioButtons[i].getAttribute("value"), 10) === <?php echo $row[$colNum]; ?>){
-                            radioButtons[i].setAttribute("checked", "checked");
-                        }
-                    }
-                <?php } ?>
-            });
-        </script>    
-</body>
-</html>
 
-
-
-        </div>
-      </div>
-
-
+<script type="text/javascript">
+    $(document).ready(function() {
+        let answerChoices = document.body.getElementsByClassName("pictures");
+        let radioButtons;
+        <?php for ($colNum = 0; $colNum < count($row); ++$colNum){ ?>
+            radioButtons = answerChoices[<?php echo $colNum; ?>].querySelectorAll("label > input");
+            for (let i = 0; i < radioButtons.length; ++i){
+                if (parseInt(radioButtons[i].getAttribute("value"), 10) === <?php echo $row[$colNum]; ?>){
+                    radioButtons[i].setAttribute("checked", "checked");
+                }
+            }
+        <?php } ?>
+    });
+</script>
 
 <?php
   include 'inc/footer.php';
