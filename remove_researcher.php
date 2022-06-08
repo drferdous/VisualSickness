@@ -3,6 +3,9 @@ include 'inc/header.php';
 include_once 'lib/Database.php';
 Session::CheckSession();
 
+$db = Database::getInstance();
+$pdo = $db->pdo;
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['removeResearcher'])) {
     $removeResearcher = $studies->removeResearcher($_POST);
     echo $removeResearcher;
@@ -14,7 +17,7 @@ if (isset($addResearcher)) {
  
 <div class="card">
     <div class="card-header">
-        <h3>Remove A Researcher<span class="float-right"><a href="study_details" class="btn btn-primary" data-study_ID="<?php echo $_POST['study_ID']; ?>">Back</a></span></h3> 
+        <h3>Remove A Researcher<span class="float-right"><a href="study_details" class="btn btn-primary redirectUser" data-study_ID="<?php echo $_POST['study_ID']; ?>">Back</a></span></h3> 
     </div>
     <div class="card-body pr-2 pl-2">
         <form class="" action="" method="post">
@@ -49,8 +52,10 @@ if (isset($addResearcher)) {
 </div>
       
  <script type="text/javascript">
-    $(document).on("click", "a", redirectUser);
-    
+    $(document).ready(function() {
+        $(document).on("click", "a.redirectUser", redirectUser);
+    });
+
     function redirectUser(){
         let form = document.createElement("form");
         let hiddenInput = document.createElement("input");
@@ -78,7 +83,9 @@ if (isset($addResearcher)) {
               url :"researcherremoval",
               type:"POST",
               cache:false,
-              data:{study_ID:study_ID},
+              data:{
+                  study_ID:study_ID
+              },
               success:function(data){
                   $("#researcher_ID").html(data);
               }
