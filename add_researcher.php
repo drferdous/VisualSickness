@@ -14,16 +14,22 @@ if (isset($addResearcher)) {
 }
 ?>
 
-<div class="card ">
+<div class="card">
     <div class="card-header">
-        <h3>Add A Researcher <span class="float-right"><a href="study_details" class="btn btn-primary" data-study_ID= "<?php echo $_POST['study_ID']; ?>">Back</a></span></h3>  
+        <h3><span class="float-left">Add A Researcher</span>
+            <a href="study_details" 
+               class="btn btn-primary float-right" 
+               data-study_ID= "<?php echo $_POST['study_ID']; ?>">
+               Back
+            </a>
+        </h3>  
     </div>
     <div class="card-body pr-2 pl-2">
         <form class="" action="" method="post">
             <div class="form-group">
                 <div class="form-group">
                     <input type="hidden" name="study_ID" value="<?php echo $_POST['study_ID']; ?>">
-                    <br>
+                    <!-- <br> -->
                     <label for="researcher_ID">Add A Member:</label>
                     <select class="form-control" name="researcher_ID" id="researcher_ID">
                         <option value="" selected hidden disabled>Member Name</option>
@@ -49,17 +55,11 @@ if (isset($addResearcher)) {
             <div class="form-group">
                  <button type="submit" name="addResearcher" class="btn btn-success">Submit</button>
             </div>
-
-
-            </form>
-
-        </div>
-
-
-      </div>
+        </form>
+    </div>
+</div>
       
- 
- <script type="text/javascript">
+<script type="text/javascript">
      $(document).on("click", "a", redirectUser);
      
      function redirectUser(){
@@ -97,7 +97,6 @@ if (isset($addResearcher)) {
      });
  </script>
 
-  <?php
+<?php
   include 'inc/footer.php';
-
-  ?>
+?>
