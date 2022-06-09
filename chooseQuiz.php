@@ -78,16 +78,15 @@
 
 <div class="card ">
     <div class="card-header">
-        <h3><span class="float-right">Welcome! 
-            <strong><span class="badge badge-lg badge-secondary text-white">
-            <?php
-                $name = Session::get("name");
-                if (isset($name)) {
-                    echo $name;
-                }
-            ?>
-            </span></strong>
-        </span></h3>
+        <h3>
+            <span class="float-left">Choose Quiz</span>
+            <span class="float-right">
+                <a href="session_details" 
+                   class="btn btn-primary redirectUser">
+                   Back
+                </a>
+            </span>
+        </h3>
     </div>
     
     <div class="card-body pr-2 pl-2">
@@ -113,7 +112,12 @@
                 <select class="form-control" name="ssq_time" id="ssq_time">
                     <option value="" disabled selected hidden>Select Quiz Time...</option>
                     <?php
-                        $sql = "SELECT id, name FROM SSQ_times;";
+                        $session_ID = Session::get('session_ID'); 
+                        $sql = "SELECT id, name
+                                FROM SSQ_times
+                                WHERE id NOT IN (SELECT SSQ_times.id
+			                                	FROM SSQ_times JOIN SSQ ON (SSQ_times.id = SSQ.ssq_time)
+			                                   	WHERE SSQ.session_ID = $session_ID);";
                         $result = $pdo->query($sql);
                         while ($row = $result->fetch(PDO::FETCH_ASSOC)){
                             echo "<option value=\"" . $row['id'] . "\">";
@@ -130,7 +134,31 @@
         </form>
     </div>
 </div>
-
+<script type="text/javascript">
+    $(document).ready(function(){
+        $(document).on("click", "a.redirectUser", goToSessionDetails);   
+    });
+    
+    function goToSessionDetails(){
+        let form = document.createElement("form");
+        let hiddenInput;
+    
+        form.setAttribute("method", "POST");
+        form.setAttribute("action", $(this).attr("href"));
+        form.setAttribute("style", "display: none");
+        
+        hiddenInput = document.createElement("input");
+        hiddenInput.setAttribute("type", "hidden");
+        hiddenInput.setAttribute("name", "session_ID");
+        hiddenInput.setAttribute("value", <?php echo $_POST["session_ID"]; ?>);
+        form.appendChild(hiddenInput);
+        
+        document.body.appendChild(form);
+        form.submit();
+        
+        return false;
+    }
+</script>
 
 <?php
     include 'inc/footer.php';
