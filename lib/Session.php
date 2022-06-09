@@ -56,6 +56,14 @@ class Session{
         header('Location: index');
     }
   }
+  
+  public static function RedirectIfUser(){
+      $role_ID = intval(self::get("roleid"));
+      if ($role_ID > 3){
+          header("Location: index");
+          exit();
+      }
+  }
 }
 
 ?>
