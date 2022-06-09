@@ -296,7 +296,9 @@ public function takeSSQ($data){
   $full_name = $data['full_name'];
   $short_name = $data['short_name'];
   $IRB = $data['IRB'];
-  $description = $data['description'];  
+  $description = $data['description']; 
+  $ssq_times = explode(",", $data["ssq_times"]);
+  array_walk($ssq_times, create_function('&$val', '$val = trim($val);'));
   $created_by = Session::get('id');
   $last_edited_by = Session::get('id');    
 
@@ -305,7 +307,13 @@ public function takeSSQ($data){
 <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
 <strong>Error!</strong> Study registration fields must not be empty!</div>'; 
       return $msg; // if any field is empty
-   } else {
+   } 
+   elseif (count($ssq_times) !== count(array_unique($ssq_times))){
+        $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong>Error!</strong> There should be no duplicate SSQ times!</div>'; 
+        return $msg;
+   }
       $sql = "INSERT INTO Study (full_name, short_name, IRB, description, created_by, last_edited_by)
             VALUES (:full_name, :short_name, :IRB, :description, :created_by, :last_edited_by)";
       $stmt = $this->db->pdo->prepare($sql);
@@ -314,10 +322,23 @@ public function takeSSQ($data){
       $stmt->bindValue('IRB', $IRB);
       $stmt->bindValue('description', $description);      
       $stmt->bindValue('created_by', $created_by, PDO::PARAM_INT);
-      $stmt->bindValue('last_edited_by', $created_by, PDO::PARAM_INT);        
-      $result = $stmt->execute();        
-   }
-   
+      $stmt->bindValue('last_edited_by', $created_by, PDO::PARAM_INT); 
+      $result = $stmt->execute();
+      
+      if (!$result){
+            $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <strong>Error!</strong> Something went wrong, try again!</div>';
+            return $msg;
+      }
+      
+      $study_ID = $this->db->pdo->lastInsertId();
+      $insert = implode(",", array_map(function($time) use($study_ID){
+            return "('" . ucwords($time) . "'," . $study_ID . ")"; 
+      }, $ssq_times));
+      $sql = "INSERT INTO SSQ_times (name, study_id) 
+              VALUES " . $insert;
+      $result = $this->db->pdo->query($sql);
   if ($result) {
       echo '<div class="alert alert-success alert-dismissible mt-3" id="flash-msg">
     <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>

@@ -11,8 +11,13 @@
         exit();
     }
     
+    $localId = Session::get('id');
+    
     if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["removeUser"])){
-        $sql = "DELETE FROM tbl_users
+        $sql = "UPDATE tbl_users
+                SET isActive = 2,
+                updated_by = $localId,
+                updated_at = CURRENT_TIMESTAMP
                 WHERE id = " . $_POST["user_ID"] . ";";
         $result = $pdo->query($sql);
         if (!$result){
@@ -23,7 +28,9 @@
     
     if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["deactivateUser"])){
         $sql = "UPDATE tbl_users
-                SET isActive = 0
+                SET isActive = 0,
+                updated_by = $localId,
+                updated_at = CURRENT_TIMESTAMP
                 WHERE id = " . $_POST["user_ID"] . "
                 LIMIT 1;";
         $result = $pdo->query($sql);
@@ -35,7 +42,9 @@
     
     if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["activateUser"])){
         $sql = "UPDATE tbl_users
-                SET isActive = 1
+                SET isActive = 1,
+                updated_by = $localId,
+                updated_at = CURRENT_TIMESTAMP
                 WHERE id = " . $_POST["user_ID"] . "
                 LIMIT 1;";
         $result = $pdo->query($sql);
@@ -77,9 +86,9 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
-        $("#example a.profilePage[data-user_ID]").on("click", goToProfilePage);
-        $("#example a.userAction[data-user_ID]").on("click", doUserAction);
-        $("#validateUser").on("click", validateUser);
+        $("#example").on("click", "a.profilePage[data-user_ID]", goToProfilePage);
+        $("#example").on("click", "a.userAction[data-user_ID]", doUserAction);
+        $("#example").on("click", "#validateUser", validateUser);
         $("#show-pending-users").on("click", showPendingUsers);
         $("#show-deactivated-users").on("click", showDeactivatedUsers);
     });
@@ -135,7 +144,9 @@
         return false;
     }
     
-    function showUsers() {
+    let overrideDT = true;
+    
+    function showUsers(isFirstTime=false) {
         $.ajax({
             url: "loadCorrectUsers",
             method: "POST",
@@ -146,10 +157,17 @@
             },
             success: function(data){
                 $("#example").html(data);
-                $("#validateUser").on("click", validateUser);
+                if (!isFirstTime && !overrideDT){
+                    $("#example").DataTable().destroy();
+                }
+                overrideDT = false;
+                if ($("#example td.notFound").length === 0) $('#example').DataTable();
+                else overrideDT = true;
+                $("#example a.profilePage[data-user_ID]").on("click", goToProfilePage);
+                $("#example a.userAction[data-user_ID]").on("click", doUserAction);
+                $("#example").on("click", "#validateUser", validateUser);
                 $("#show-pending-users").on("click", showPendingUsers);
                 $("#show-deactivated-users").on("click", showDeactivatedUsers);
-                updateTable();
             }
         });
     }
@@ -209,7 +227,7 @@
         return false;
     }
     
-    showUsers()
+    showUsers(true);
 </script>
 <?php
     include 'inc/footer.php';
