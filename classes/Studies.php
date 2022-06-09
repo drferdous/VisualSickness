@@ -25,6 +25,7 @@ class Studies {
     $email = $data['email'];
     $additional_info = $data['additional_info'];
     $comments = $data['comments'];
+    $affiliationid = Session::get('affiliationid');
     
     $checkEmail = Util::checkExistEmail($email, $this->db);
 
@@ -58,6 +59,7 @@ class Studies {
     }
         
     $this->db->pdo->beginTransaction();
+    $result2 = '';
     try {
         $sql = "INSERT INTO Demographics (age, gender, education, race_ethnicity) 
         VALUES(:age, :gender, :education, :race_ethnicity);";  
@@ -84,8 +86,8 @@ class Studies {
         $result_id = intval($result_id['LAST_INSERT_ID()']);
         
         
-        $sql2 = "INSERT INTO Participants (demographics_id, anonymous_name, dob, weight, occupation, phone_no, email, additional_info, comments) 
-        VALUES(:demographics_id, :anonymous_name, :dob, :weight, :occupation, :phone_no, :email, :additional_info, :comments);";
+        $sql2 = "INSERT INTO Participants (demographics_id, anonymous_name, dob, weight, occupation, phone_no, email, additional_info, comments, affiliation_id) 
+        VALUES(:demographics_id, :anonymous_name, :dob, :weight, :occupation, :phone_no, :email, :additional_info, :comments, :affiliationid);";
         
         $stmt2 = $this->db->pdo->prepare($sql2);
         $stmt2->bindValue(':demographics_id', $result_id);        
@@ -97,6 +99,7 @@ class Studies {
         $stmt2->bindValue(':email', $email);
         $stmt2->bindValue(':additional_info', $additional_info);
         $stmt2->bindValue(':comments', $comments);        
+        $stmt2->bindValue(':affiliationid', $affiliationid);        
         
         $result2 = $stmt2->execute();   
         
@@ -107,7 +110,7 @@ class Studies {
         $this->db->pdo->commit();
     }
     catch (PDOException $excptn){
-        $this->db->pdo->rollBack();        
+        $this->db->pdo->rollBack();
     }
         
     if ($result2) {
@@ -333,7 +336,6 @@ public function takeSSQ($data){
         $full_name = $data['full_name'];
         $short_name = $data['short_name'];
         $IRB = $data['IRB'];
-        $description = $data['$description'];  
         $last_edited_by = Session::get('id');
         $study_ID = $data['study_ID'];
         
@@ -346,8 +348,7 @@ public function takeSSQ($data){
             $sql = "UPDATE Study SET full_name = :full_name, short_name = :short_name, IRB = :IRB, last_edited_by = :last_edited_by WHERE study_ID = $study_ID";
                 $stmt = $this->db->pdo->prepare($sql);
                 $stmt->bindValue(':full_name', $full_name);
-                $stmt->bindValue(':short_name', $short_name);
-                $stmt->bindValue(':description', $description);      
+                $stmt->bindValue(':short_name', $short_name);  
                 $stmt->bindValue(':IRB', $IRB);
                 $stmt->bindValue('last_edited_by', $last_edited_by);
                 $result = $stmt->execute();     
@@ -544,7 +545,6 @@ public function takeSSQ($data){
         
         $result = $stmt->execute();
         if ($result){
-            Session::set('session_ID', -1);
             $msg = '<div class="alert alert-success alert-dismissible mt-3" id="flash-msg">
                     <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
                     <strong>Success !</strong> Session ended!</div>';
