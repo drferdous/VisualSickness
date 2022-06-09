@@ -28,7 +28,7 @@ if (isset($addResearcher)) {
                     <select class="form-control" name="researcher_ID" id="researcher_ID">
                         <option value="" selected hidden disabled>Member Name</option>
                         <?php
-                            $sql = "SELECT id, name
+                            $sql = "SELECT id, name, email
                                     FROM tbl_users
                                     WHERE NOT id IN (SELECT researcher_ID 
                                                      FROM Researcher_Study
@@ -36,7 +36,7 @@ if (isset($addResearcher)) {
                                     AND isActive = 1;";
                             $result = $pdo->query($sql);
                             while ($row = $result->fetch(PDO::FETCH_ASSOC)){ ?>
-                                <option value="<?php echo $row['id']; ?>"><?php echo $row['name']; ?></option>
+                                <option value="<?php echo $row['id']; ?>"><?php echo $row["name"] . " (" . $row["email"] . ")"; ?></option>
                         <?php } ?>
                     </select>
                     <br>
