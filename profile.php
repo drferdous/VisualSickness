@@ -120,13 +120,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update'])) {
           </form>
         </div>
 
-      <?php }
-       /*else{
-
-        header('Location: index'); */ ?>
-
-
-
+      <?php } ?>
       </div>
     </div>
     
