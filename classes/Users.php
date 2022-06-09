@@ -218,11 +218,10 @@ class Users{
   //   Update user profile info
     public function updateUserByIdInfo($userid, $data){
       $name = $data['name'];
-      $email = $data['email'];
       $mobile = $data['mobile'];
       $roleid = $data['roleid'];
 
-    if ($name == "" || $email == "" || $mobile == ""){
+    if ($name == "" || $mobile == ""){
         $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
                 <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
                 <strong>Error!</strong> Input fields must not be empty!</div>';
@@ -234,16 +233,9 @@ class Users{
                 <strong>Error!</strong> Enter only numeric characters for phone number, please!</div>';
         return $msg;
     }
-    elseif (filter_var($email, FILTER_VALIDATE_EMAIL === FALSE)) {
-        $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
-                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                <strong>Error!</strong> Invalid email address!</div>';
-        return $msg;
-    }
     else{
         $sql = "UPDATE tbl_users SET
           name = :name,
-          email = :email,
           mobile = :mobile,
           roleid = :roleid,
           updated_by = :updated_by,
@@ -251,7 +243,6 @@ class Users{
           WHERE id = :id";
           $stmt= $this->db->pdo->prepare($sql);
           $stmt->bindValue(':name', $name);
-          $stmt->bindValue(':email', $email);
           $stmt->bindValue(':mobile', $mobile);
           $stmt->bindValue(':roleid', $roleid);
           $stmt->bindValue(':id', $userid);

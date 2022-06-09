@@ -24,9 +24,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update'])) {
     <div class="card-body">
         <?php
             $getUinfo = $users->getUserInfoById($userid);
-            if ($getUinfo !== FALSE){ ?>
+            if ($getUinfo){ ?>
                 <div style="width:600px; margin:0px auto">
-                <form class="" action="" method="POST">
+                <form class="" action="profile" method="POST">
+                <input type="hidden" name="user_ID" value="<?php echo $_POST["user_ID"]; ?>">
+                <input type="hidden" name="purpose" value="<?php echo $_POST["purpose"]; ?>">
                 <div class="form-group">
                     <label for="name">Your Name</label>
                     <input type="text" name="name" value="<?php echo $getUinfo->name; ?>" <?= $purpose === "edit" ? "" : "disabled"?> class="form-control">
@@ -93,7 +95,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update'])) {
           <?php }else{?>
             <input type="hidden" name="roleid" value="<?php echo $getUinfo->roleid; ?>">
           <?php } ?>
-
               <?php if (Session::get("id") == $getUinfo->id && $purpose === "edit") {?>
 
 
@@ -120,10 +121,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update'])) {
         </div>
 
       <?php }
-       else{
+       /*else{
 
-        header('Location: index');
-      } ?>
+        header('Location: index'); */ ?>
 
 
 
