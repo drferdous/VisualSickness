@@ -57,6 +57,10 @@ class Users{
       
         $result = $stmt->execute();
         if ($result){
+            $pdo = $this->db->pdo;
+            $id = $pdo->lastInsertId();
+            $update_sql = "UPDATE tbl_users SET updated_by=$id WHERE id=$id;";
+            $pdo->query($update_sql);
             $body = "<p>This email was recently used to sign up with the account $name. Below is a temporary password to use for your first login. If this is not your account, please ignore this email.<br><br>Temporary password: $password</p>";
             sendEmail($email, "Temporary Password | Visual Sickness", $body);
             $msg = '<div class="alert alert-success alert-dismissible mt-3" id="flash-msg">
@@ -71,18 +75,23 @@ class Users{
             return $msg;
         }
     }
-  }
+  } 
   
   // Select All User Method
-  public function selectAllUserData($showPendingUserFlag, $affiliationid){
-    if ($showPendingUserFlag){
-        $sql = "SELECT * FROM tbl_users WHERE reg_stat = 1 AND affiliationid = $affiliationid
-                ORDER BY id ASC;";
+  public function selectAllUserData($showPendingUserFlag, $showDeactivatedUserFlag, $affiliationid){
+    $args = array();
+    if ($showPendingUserFlag) {
+        $args['reg_stat'] = 1;
     }
-    else{
-        $sql = "SELECT * FROM tbl_users WHERE affiliationid = $affiliationid
-                ORDER BY id ASC;";
+    if ($showDeactivatedUserFlag) {
+        $args['isActive'] = 0;
     }
+    $argsString = "";
+    foreach ($args as $key => $value) {
+        $argsString .= "AND $key = $value ";
+    }
+    $sql = "SELECT * FROM tbl_users WHERE affiliationid = $affiliationid AND isActive != 2 $argsString
+            ORDER BY id ASC;";
     $stmt = $this->db->pdo->prepare($sql);
     $stmt->execute();
     return $stmt->fetchAll(PDO::FETCH_OBJ);
@@ -141,9 +150,12 @@ class Users{
         $isUserActive = $this->CheckActiveUser($email);
 
         if (! ($isUserActive == TRUE)) {
-          $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
-    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-    <strong>Error!</strong> Sorry, Your account is Deactivated, Contact with Admin!</div>';
+            $affiliationid_sql = "SELECT affiliationid FROM tbl_users WHERE email = :email";
+            $stmt = $this->db->pdo->prepare($affiliationid_sql);
+            $stmt->bindValue(':email', $email);
+            $stmt->execute();
+            $affiliationid = $stmt->fetch(PDO::FETCH_ASSOC)['affiliationid'];
+            $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Error!</strong> Sorry, Your account is deactivated, please contact an admin. (' . Util::getAdminsFromAffiliation($this->db->pdo, $affiliationid) . ')</div>';
             return $msg;
         }elseif ($logResult) {
           Session::init();
@@ -233,7 +245,9 @@ class Users{
           name = :name,
           email = :email,
           mobile = :mobile,
-          roleid = :roleid
+          roleid = :roleid,
+          updated_by = :updated_by,
+          updated_at = CURRENT_TIMESTAMP
           WHERE id = :id";
           $stmt= $this->db->pdo->prepare($sql);
           $stmt->bindValue(':name', $name);
@@ -241,6 +255,7 @@ class Users{
           $stmt->bindValue(':mobile', $mobile);
           $stmt->bindValue(':roleid', $roleid);
           $stmt->bindValue(':id', $userid);
+          $stmt->bindValue(':updated_by', Session::get('id'));
         $result =   $stmt->execute();
 
         if ($result) { $msg = '<div class="alert alert-success alert-dismissible mt-3" id="flash-msg">
@@ -556,9 +571,11 @@ class Users{
 
     // Delete User by Id Method
     public function deleteUserById($remove){
-      $sql = "DELETE FROM tbl_users WHERE id = :id ";
-      $stmt = $this->db->pdo->prepare($sql);
-      $stmt->bindValue(':id', $remove);
+        $localId = Session::get('id');
+        $sql = "UPDATE tbl_users SET isActive = 2, updated_by = :localId, updated_at = CURRENT_TIMESTAMP WHERE id = :id ";
+        $stmt = $this->db->pdo->prepare($sql);
+        $stmt->bindValue(':localId', $localId);
+        $stmt->bindValue(':id', $remove);
         $result =$stmt->execute();
         if ($result) {
           $msg = '<div class="alert alert-success alert-dismissible mt-3" id="flash-msg">
@@ -575,26 +592,25 @@ class Users{
 
     // User Deactivated By Admin
     public function userDeactiveByAdmin($deactive){
-      $sql = "UPDATE tbl_users SET
-
-       isActive=:isActive
-       WHERE id = :id";
-
-       $stmt = $this->db->pdo->prepare($sql);
-       $stmt->bindValue(':isActive', 1);
-       $stmt->bindValue(':id', $deactive);
-       $result =   $stmt->execute();
+        $localId = Session::get('id');
+        $sql = "UPDATE tbl_users SET
+            isActive=:isActive,
+            updated_by = :localId,
+            updated_at = CURRENT_TIMESTAMP
+            WHERE id = :id";
+        $stmt = $this->db->pdo->prepare($sql);
+        $stmt->bindValue(':isActive', 1);
+        $stmt->bindValue(':id', $deactive);
+        $result =   $stmt->execute();
         if ($result) {
-          echo "<script>location.href='index';</script>";
-          Session::set('msg', '<div class="alert alert-success alert-dismissible mt-3" id="flash-msg">
-          <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-          <strong>Success!</strong> User account deactivated successfully!</div>');
+            echo "<script>location.href='index';</script>";
+            Session::set('msg', '<div class="alert alert-success alert-dismissible mt-3" id="flash-msg">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <strong>Success!</strong> User account deactivated successfully!</div>');
 
-        }else{
-          echo "<script>location.href='index';</script>";
-          Session::set('msg', '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
-    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-    <strong>Error!</strong> Data not deactivated!</div>');
+        } else {
+            echo "<script>location.href='index';</script>";
+            Session::set('msg', '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Error!</strong> Data not deactivated!</div>');
 
             return $msg;
         }
@@ -603,24 +619,25 @@ class Users{
 
     // User Deactivated By Admin
     public function userActiveByAdmin($active){
-      $sql = "UPDATE tbl_users SET
-       isActive=:isActive
-       WHERE id = :id";
-
-       $stmt = $this->db->pdo->prepare($sql);
-       $stmt->bindValue(':isActive', 0);
-       $stmt->bindValue(':id', $active);
-       $result =   $stmt->execute();
+        $localId = Session::get('id');
+        $sql = "UPDATE tbl_users SET
+            isActive=:isActive,
+            updated_by = :localId,
+            updated_at = CURRENT_TIMESTAMP
+            WHERE id = :id";
+        $stmt = $this->db->pdo->prepare($sql);
+        $stmt->bindValue(':isActive', 0);
+        $stmt->bindValue(':localId', $localId);
+        $stmt->bindValue(':id', $active);
+        $result =   $stmt->execute();
         if ($result) {
-          echo "<script>location.href='index';</script>";
-          Session::set('msg', '<div class="alert alert-success alert-dismissible mt-3" id="flash-msg">
-          <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-          <strong>Success!</strong> User account activated successfully!</div>');
+            echo "<script>location.href='index';</script>";
+            Session::set('msg', '<div class="alert alert-success alert-dismissible mt-3" id="flash-msg">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <strong>Success!</strong> User account activated successfully!</div>');
         }else{
-          echo "<script>location.href='index';</script>";
-          Session::set('msg', '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
-    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-    <strong>Error!</strong> Data not activated!</div>');
+            echo "<script>location.href='index';</script>";
+            Session::set('msg', '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Error!</strong> Data not activated!</div>');
         }
     }
 
@@ -643,25 +660,27 @@ class Users{
     public function resetPass($email, $new_pass) {
         if ($new_pass == "") {
             $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
-  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-  <strong>Error!</strong> Password field must not be empty!</div>';
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong>Error!</strong> Password field must not be empty!</div>';
             return $msg;
         }
         if (strlen($new_pass) < 6) {
             $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
-        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-        <strong>Error!</strong> New password must be at least 6 characters!</div>';
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong>Error!</strong> New password must be at least 6 characters!</div>';
             return $msg;
         }
         $new_pass = SHA1($new_pass);
         $sql = "UPDATE tbl_users SET
-        
-        password=:password
-        WHERE email = :email";
+            password=:password,
+            updated_by = :localId,
+            updated_at = CURRENT_TIMESTAMP
+            WHERE email = :email";
         
         $stmt = $this->db->pdo->prepare($sql);
         $stmt->bindValue(':password', $new_pass);
         $stmt->bindValue(':email', $email);
+        $stmt->bindValue(':localId', Session::get('id'));
         $result =   $stmt->execute();
         
         if (!$result) {
@@ -703,12 +722,13 @@ class Users{
          }else{
             $new_pass = SHA1($new_pass);
             $sql = "UPDATE tbl_users SET
-            
-            password=:password
-            WHERE id = :id";
-            
+                password=:password,
+                updated_by = :localId,
+                updated_at = CURRENT_TIMESTAMP
+                WHERE id = :id";
             $stmt = $this->db->pdo->prepare($sql);
             $stmt->bindValue(':password', $new_pass);
+            $stmt->bindValue(':localId', Session::get('id'));
             $stmt->bindValue(':id', $userid);
             $result =   $stmt->execute();
 
