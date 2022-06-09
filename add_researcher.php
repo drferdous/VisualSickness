@@ -26,13 +26,14 @@ if (isset($addResearcher)) {
                     <br>
                     <label for="researcher_ID">Add A Member:</label>
                     <select class="form-control" name="researcher_ID" id="researcher_ID">
-                        <option value = "" selected hidden disabled>Member Name</option>
+                        <option value="" selected hidden disabled>Member Name</option>
                         <?php
                             $sql = "SELECT id, name
                                     FROM tbl_users
                                     WHERE NOT id IN (SELECT researcher_ID 
                                                      FROM Researcher_Study
-                                                     WHERE study_ID = " . $_POST['study_ID'] . ");";
+                                                     WHERE study_ID = " . $_POST['study_ID'] . ")
+                                    AND isActive = 1;";
                             $result = $pdo->query($sql);
                             while ($row = $result->fetch(PDO::FETCH_ASSOC)){ ?>
                                 <option value="<?php echo $row['id']; ?>"><?php echo $row['name']; ?></option>
