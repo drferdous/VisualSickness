@@ -97,7 +97,6 @@ if (isset($_POST['leave-btn'])){
                                 <input type="hidden" name="study_ID" value="<?php echo $_POST['study_ID']; ?>">
                                 <input type="submit" name="leave-btn" value="Leave">
                             </form>
-                            <form method=\"post\">
                     <?php } ?>
                     </td>
                 </tr>    

@@ -28,7 +28,7 @@
     
     <p>Affiliation: <?php echo $row["Name"]; ?></p>
     <?php
-        $sql = "SELECT * FROM Participants;";
+        $sql = "SELECT * FROM Participants WHERE affiliation_id = " . Session::get("affiliationid") . ";";
         $result = $pdo->query($sql);
         
         if (!$result){

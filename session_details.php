@@ -114,6 +114,7 @@ if (isset($_POST['delete-ssq-btn'])){
                     $sql = "SELECT ssq_ID, ssq_time, ssq_type
                             FROM SSQ
                             WHERE SSQ.session_ID = " . Session::get('session_ID') . "
+                            AND is_active = 1
                             ORDER BY ssq_time ASC
                             LIMIT 2;";
                     $result = $pdo->query($sql);
