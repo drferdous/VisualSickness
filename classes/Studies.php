@@ -357,35 +357,116 @@ public function takeSSQ($data){
         $full_name = $data['full_name'];
         $short_name = $data['short_name'];
         $IRB = $data['IRB'];
+        $ssq_times_str = $data['ssq_times'];
         $last_edited_by = Session::get('id');
         $study_ID = $data['study_ID'];
+        $ssq_times = explode(',', $ssq_times_str);
+        array_walk($ssq_times, function (&$time) {
+            $time = ucwords(trim($time));
+        });
         
-          if ($full_name == "" || $short_name == ""|| $IRB == "") {
-          $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
-          <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-          <strong>Error!</strong> You cannot leave Study fields empty!</div>'; 
+        if ($full_name == "" || $short_name == ""|| $IRB == "") {
+            $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <strong>Error!</strong> You cannot leave Study fields empty!</div>'; 
             return $msg; // if any field is empty
-          } else {
-            $sql = "UPDATE Study SET full_name = :full_name, short_name = :short_name, IRB = :IRB, last_edited_by = :last_edited_by WHERE study_ID = $study_ID";
-                $stmt = $this->db->pdo->prepare($sql);
-                $stmt->bindValue(':full_name', $full_name);
-                $stmt->bindValue(':short_name', $short_name);  
-                $stmt->bindValue(':IRB', $IRB);
-                $stmt->bindValue('last_edited_by', $last_edited_by);
-                $result = $stmt->execute();     
+        } else if ($ssq_times !== array_unique($ssq_times)) {
+            $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <strong>Error!</strong>You cannot have multiple SSQ times of the same name.</div>'; 
+            return $msg;
+        }
+        $pdo = $this->db->pdo;
+        $sql = "UPDATE Study SET full_name = :full_name, short_name = :short_name, IRB = :IRB, last_edited_by = :last_edited_by WHERE study_ID = $study_ID";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindValue(':full_name', $full_name);
+        $stmt->bindValue(':short_name', $short_name);  
+        $stmt->bindValue(':IRB', $IRB);
+        $stmt->bindValue('last_edited_by', $last_edited_by);
+        $result = $stmt->execute();
+        
+        if (!$result) {
+            $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong>Error!</strong> Something went wrong, try editing again!</div>';
+            return $msg;
+        }
+        
+        $old_times_sql = "SELECT name FROM SSQ_times WHERE study_id = $study_ID AND is_active = 1;";
+        $old_times_res = $pdo->query($old_times_sql);
+        $old_times = array();
+        while ($row = $old_times_res->fetch(PDO::FETCH_ASSOC)) {
+            array_push($old_times, $row['name']);
+        }
+        
+        $added_ssq_times = array_filter($ssq_times, function ($time) use($old_times) {
+            return !in_array($time, $old_times);
+        });
+        $removed_ssq_times = array_filter($old_times, function ($time) use($ssq_times) {
+            return !in_array($time, $ssq_times);
+        });
+        
+        if (count($added_ssq_times) > 0) {
+            // added 1 or more time names
+            $added = implode(', ', array_map(function ($time) { return "'$time'"; }, $added_ssq_times));
+            $added_back_sql = "SELECT name FROM SSQ_times WHERE is_active = 0 AND study_id = $study_ID AND name IN ($added)";
+            $added_back_res = $pdo->query($added_back_sql);
+            $added_back = array();
+            while ($row = $added_back_res->fetch(PDO::FETCH_ASSOC)) {
+                array_push($added_back, $row['name']);
+            }
+            if (count($added_back) > 0) {
+                // add back names
+                $added_back_str = implode(', ', array_map(function ($time) { return "'$time'"; }, $added_back));
+                $add_back_sql = "UPDATE SSQ_times SET is_active = 1 WHERE study_id = $study_ID AND name IN ($added_back_str);";
+                $result = $pdo->query($add_back_sql);
                 
-            if ($result) {
-                $msg = '<div class="alert alert-success alert-dismissible mt-3" id="flash-msg">
-              <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-              <strong>Success!</strong> You have edited this study!</div>';
-                return $msg;
-            } else {
+                if (!$result) {
+                    $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
+                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                        <strong>Error!</strong> Something went wrong, try editing again!</div>';
+                    return $msg;
+                }
+            }
+            // add new names
+            if (count(array_filter($added_ssq_times, function ($time) use($added_back) {
+                return !in_array($time, $added_back);
+            })) > 0) {
+                $insert = implode(', ', array_map(function ($time) use($study_ID) {
+                    return "('" . $time . "', " . $study_ID . ")";
+                }, array_filter($added_ssq_times, function ($time) use($added_back) {
+                    return !in_array($time, $added_back);
+                })));
+                $insert_sql = "INSERT INTO SSQ_times (name, study_id) VALUES $insert;";
+                $result = $pdo->query($insert_sql);
+                
+                if (!$result) {
+                    $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
+                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                        <strong>Error!</strong> Something went wrong, try editing again!</div>';
+                    return $msg;
+                }
+            }
+        }
+        
+        if (count($removed_ssq_times) > 0) {
+            // removed 1 or more time names
+            $remove = implode(', ', array_map(function ($time) { return "'$time'"; }, $removed_ssq_times));
+            $remove_sql = "UPDATE SSQ_times SET is_active = 0 WHERE study_id = $study_ID AND name IN ($remove)";
+            $result = $pdo->query($remove_sql);
+            
+            if (!$result) {
                 $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
-              <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-              <strong>Error!</strong> Something went wrong, try editing again!</div>';
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <strong>Error!</strong> Something went wrong, try editing again!</div>';
                 return $msg;
             }
-          }
+        }
+        
+        $msg = '<div class="alert alert-success alert-dismissible mt-3" id="flash-msg">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <strong>Success!</strong> You have edited this study!</div>';
+        return $msg;
     }
     
     // Activates study based on the given study_ID.

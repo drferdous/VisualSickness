@@ -33,13 +33,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['updateStudy'])) {
     </div>
     
     <?php
-        $sql = "SELECT * FROM Study WHERE study_ID = " . $_POST['study_ID'] . " LIMIT 1;";
-        $result = $pdo->query($sql); 
+        $sql = "SELECT study_ID, full_name, short_name, IRB FROM Study WHERE study_ID = " . $_POST['study_ID'] . " LIMIT 1;";
+        $result = $pdo->query($sql);
         while($row = $result->fetch(PDO::FETCH_ASSOC)) {
             $study_ID = $row['study_ID'];
             $full_name = $row['full_name'];
             $short_name = $row['short_name'];      
-            $IRB = $row['IRB'];                        
+            $IRB = $row['IRB'];
+        }
+        $ssq_times = array();
+        $ssq_times_sql = "SELECT name FROM SSQ_times WHERE is_active = 1 AND study_id = " . $_POST['study_ID'];
+        $ssq_times_result = $pdo->query($ssq_times_sql);
+        while ($row = $ssq_times_result->fetch(PDO::FETCH_ASSOC)) {
+            array_push($ssq_times, $row['name']);
         }
     ?>
     <div class="card-body pr-2 pl-2">
@@ -56,6 +62,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['updateStudy'])) {
             <div class="form-group">
                 <label for="IRB">IRB</label>
                 <input type="text" name="IRB" value="<?php echo $IRB;?>" class="form-control" id="IRB">
+            </div>
+            <div class="form-group">
+                <label for="ssq_times">SSQ types (comma-separated)</label>
+                <input type="text" name="ssq_times" value="<?= implode(', ', $ssq_times); ?>" class="form-control" id="ssq_times">
             </div>
             <div class="form-group">
                  <button type="submit" name="updateStudy" class="btn btn-success">Submit</button>
