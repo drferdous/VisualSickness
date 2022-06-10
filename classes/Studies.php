@@ -13,6 +13,7 @@ class Studies {
 
   // Add participant to Session table and Demographics table
   public function addNewParticipant($data){
+  // Note: this function does not work because the function does not take into account the study_ID yet.
     $anonymous_name = $data['anonymous_name'];
     $dob = $data['dob'];
     $age = $data['age'];    
@@ -29,41 +30,27 @@ class Studies {
     $checkEmail = Util::checkExistEmail($email, $this->db);
 
     if (empty($anonymous_name)){
-        $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
-                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                <strong>Error!</strong> Name of participant must not be empty!</div>';
-        return $msg;
+        return Util::generateErrorMessage("Name of participant must not be empty!");
     }
     if (empty($dob)){
-        $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
-                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                <strong>Error!</strong> Date of birth field must not be empty!</div>';
-        return $msg;
+        return Util::generateErrorMessage("Date of birth field must not be empty!");
     }
     if (filter_var($email, FILTER_VALIDATE_EMAIL === FALSE)) {
-        $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
-                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                <strong>Error!</strong> Invalid email address !</div>';
-        return $msg;
+        return Util::generateErrorMessage("Invalid email address!");
     }
     if ($checkEmail == TRUE) {
-        $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
-                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                <strong>Error !</strong> Email already Exists, please try another Email... !</div>';
-        return $msg;
+        return Util::generateErrorMessage("Email already exists. Try another email!");
     }
-        
     if (empty($weight)){
         $weight = NULL;
     }
         
     $this->db->pdo->beginTransaction();
-    $result2 = '';
     try {
         $sql = "INSERT INTO Demographics (age, gender, education, race_ethnicity) 
         VALUES(:age, :gender, :education, :race_ethnicity);";  
         $stmt = $this->db->pdo->prepare($sql);
-
+        
         $stmt->bindValue(':age', $age);
         $stmt->bindValue(':gender', $gender);
         $stmt->bindValue(':education', $education);    
@@ -84,7 +71,6 @@ class Studies {
         $result_id = $last_id_statement->fetch(PDO::FETCH_ASSOC);
         $result_id = intval($result_id['LAST_INSERT_ID()']);
         
-        
         $sql2 = "INSERT INTO Participants (demographics_id, anonymous_name, dob, weight, occupation, phone_no, email, comments, affiliation_id) 
         VALUES(:demographics_id, :anonymous_name, :dob, :weight, :occupation, :phone_no, :email, :comments, :affiliationid);";
         
@@ -104,40 +90,26 @@ class Studies {
         if (!$result2){
             throw new Exception($stmt->error);
         }
-        
         $this->db->pdo->commit();
     }
     catch (PDOException $excptn){
         $this->db->pdo->rollBack();
     }
-        
     if ($result2) {
-        $msg = '<div class="alert alert-success alert-dismissible mt-3" id    ="flash-msg">
-                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                <strong>Success!</strong> You registered a participant!</div>';
-        return $msg;
-    } else {
-        $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
-                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                <strong>Error !</strong> Something went Wrong !</div>';
-        return $msg;
+        return Util::generateSuccessMessage("You registered a participant!");
+    }
+    else {
+        return Util::generateErrorMessage("Something went wrong.");
     }
   }
 
  // Add researcher to study 
   public function addResearcher($data){
     if (empty($data['researcher_ID'])){
-        $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
-                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                <strong>Error! Please select a researcher!</strong> </div>';
-        return $msg;
+        return Util::generateErrorMessage("Please select a researcher!");
     }
-    
     if (empty($data['study_role'])){
-        $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
-                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                <strong>Error! Please select a role!</strong> </div>';
-        return $msg;
+        return Util::generateErrorMessage("Please select a role!");
     }
     
     $researcher_ID = $data['researcher_ID'];          
@@ -151,32 +123,21 @@ class Studies {
         $stmt->bindValue(':study_role', $study_role);     
         $result = $stmt->execute(); 
     
-        if ($result) { 
-            $msg = '<div class="alert alert-success alert-dismissible mt-3" id="flash-msg">
-            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-            <strong>Success!</strong> You have added a researcher!</div>';
-            return $msg; 
-        } else {
-            $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
-            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-            <strong>Error! Something went wrong, try registering again!</strong> </div>';
-            return $msg;
-         }    
-      }
+        if ($result){ 
+            return Util::generateSuccessMessage("You have added a researcher!");
+        } 
+        else{
+            return Util::generateErrorMessage("Something went wrong. Try registering again!");
+        }    
+    }
     
 // Delete researcher to study 
   public function removeResearcher($data){
     if (empty($data['researcher_ID'])){
-        $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
-        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-        <strong>Error!</strong> Please select a researcher to remove!</div>';
-        return $msg;
+        return Util::generateErrorMessage("Please select a researcher to remove!");
     }
     if (empty($data['study_ID'])){
-        $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
-        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-        <strong>Error!</strong> Please select a study!</div>';
-        return $msg;
+        return Util::generateErrorMessage("Please select a study!");
     }
     
     $researcher_ID = $data['researcher_ID'];          
@@ -188,33 +149,21 @@ class Studies {
     $stmt->bindValue(':study_ID', $study_ID);
     $result = $stmt->execute(); 
     
-    if ($result) { 
-        $msg = '<div class="alert alert-success alert-dismissible mt-3" id="flash-msg">
-        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-        <strong>Success!</strong> You have removed a researcher!</div>';
-        return $msg;
-    } else {
-        $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
-        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-        <strong>Error! Something went wrong, try removing again!</strong> </div>';
-        return $msg;
+    if ($result) {
+        return Util::generateSuccessMesssage("You have removed a researcher!");
+    }
+    else{
+        return Util::generateErrorMessage("Something went wrong. Try removing again!");
     }
   }
   
   // take SSQ quiz from Session
 public function takeSSQ($data){
     if (!(isset($data['quiz_type']) && isset($data['ssq_time']))){
-        $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
-                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                <strong>Error! Please select a quiz type and quiz time!</strong> </div>';
-        return $msg;
+        return Util::generateErrorMessage("Please select a quiz tupe and a quiz time!");
     }
-    
     if (!(isset($data['session_ID']))){
-        $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
-                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                <strong>Error! User does not have a valid session ID!</strong> </div>';
-        return $msg;
+        return Util::generateErrorMessage("User does not have a valid session ID!");
     }
     
     $quiz_type = $data['quiz_type'];
@@ -235,23 +184,14 @@ public function takeSSQ($data){
     $result = $stmt->execute();
     
     if (!$result){
-        $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
-                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                <strong>Error! Something went wrong, try again!</strong> </div>';
-        return $msg;
+        return Util::generateErrorMessage("Something went wrong. Try again!");
     }
     
     if ($stmt->rowCount() === 0){
-        $msg = '<div class="alert alert-success alert-dismissible mt-3" id="flash-msg">
-        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-        <strong>Success!</strong> You will take the quiz momentarily!</div>';
-        return $msg;
+        return Util::generateSuccessMessage("You will take the quiz momentarily!");
     }
     else{
-        $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
-                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                <strong>Error! You have already taken a quiz with the same type and time!</strong> </div>';
-        return $msg;
+        return Util::generateErrorMessage("You have already taken a quiz with the same type and time!");
     }
 }
   
@@ -265,20 +205,15 @@ public function takeSSQ($data){
     $result = $stmt->execute(); 
     
     if ($result) { 
-        $msg = '<div class="alert alert-success alert-dismissible mt-3" id="flash-msg">
-        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-        <strong>Success!</strong> You have deleted this quiz!</div>';
-        return $msg;
-    } else {
-        $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
-        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-        <strong>Error! Something went wrong, try deleting again!</strong> </div>';
-        return $msg;
+        return Util::generateSuccessMessage("You have deleted this quiz!");
+    } 
+    else {
+        return Util::generateErrorMessage("Something went wrong. Try deleting again!");
     }
-    
-    echo $msg;
-  }  // Get Study Information By Study Id
-    public function getStudyInfo($study_ID){
+  }  
+  
+  // Get Study Information By Study Id
+  public function getStudyInfo($study_ID){
       $sql = "SELECT * FROM Study WHERE study_ID = :study_ID LIMIT 1";
       $stmt = $this->db->pdo->prepare($sql);
       $stmt->bindValue(':study_ID', $study_ID);
@@ -291,64 +226,53 @@ public function takeSSQ($data){
       }
     }// Insert user's study in Study table
  public function insert_study($data) {
-  $full_name = $data['full_name'];
-  $short_name = $data['short_name'];
-  $IRB = $data['IRB'];
-  $description = $data['description']; 
-  $ssq_times = explode(",", $data["ssq_times"]);
-  array_walk($ssq_times, create_function('&$val', '$val = trim($val);'));
-  $ssq_times = array_filter($ssq_times, function ($time) { return $time != ''; });
-  $created_by = Session::get('id');
-  $last_edited_by = Session::get('id');    
+    $full_name = $data['full_name'];
+    $short_name = $data['short_name'];
+    $IRB = $data['IRB'];
+    $description = $data['description']; 
+    $ssq_times = explode(",", $data["ssq_times"]);
+    array_walk($ssq_times, create_function('&$val', '$val = trim($val);'));
+    $ssq_times = array_filter($ssq_times, function ($time) { return $time != ''; });
+    $created_by = Session::get('id');
+    $last_edited_by = Session::get('id');    
 
-   if ($full_name == "" || $short_name == "" || $IRB == "") {
-    $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
-<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-<strong>Error!</strong> Study registration fields must not be empty!</div>'; 
-      return $msg; // if any field is empty
-   } 
-   elseif (count($ssq_times) !== count(array_unique($ssq_times))){
-        $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
-                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                <strong>Error!</strong> There should be no duplicate SSQ times!</div>'; 
-        return $msg;
-   }
-      $sql = "INSERT INTO Study (full_name, short_name, IRB, description, created_by, last_edited_by)
+    if ($full_name == "" || $short_name == "" || $IRB == "") {
+        return Util::generateErrorMessage("Study registration fields must not be empty!");
+    } 
+    if (count($ssq_times) !== count(array_unique($ssq_times))){
+        return Util::generateErrorMessage("There should be no duplicate SSQ times!");
+    }
+  
+    $sql = "INSERT INTO Study (full_name, short_name, IRB, description, created_by, last_edited_by)
             VALUES (:full_name, :short_name, :IRB, :description, :created_by, :last_edited_by)";
-      $stmt = $this->db->pdo->prepare($sql);
-      $stmt->bindValue('full_name', $full_name);
-      $stmt->bindValue('short_name', $short_name);
-      $stmt->bindValue('IRB', $IRB);
-      $stmt->bindValue('description', $description);      
-      $stmt->bindValue('created_by', $created_by, PDO::PARAM_INT);
-      $stmt->bindValue('last_edited_by', $created_by, PDO::PARAM_INT); 
-      $result = $stmt->execute();
+    $stmt = $this->db->pdo->prepare($sql);
+    $stmt->bindValue('full_name', $full_name);
+    $stmt->bindValue('short_name', $short_name);
+    $stmt->bindValue('IRB', $IRB);
+    $stmt->bindValue('description', $description);      
+    $stmt->bindValue('created_by', $created_by, PDO::PARAM_INT);
+    $stmt->bindValue('last_edited_by', $created_by, PDO::PARAM_INT); 
+    $result = $stmt->execute();
       
-      if (!$result){
-            $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
-                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                    <strong>Error!</strong> Something went wrong, try again!</div>';
-            return $msg;
-      }
+    if (!$result){
+        return Util::generateErrorMessage("Something went wrong. Try again!");
+    }
       
-      $study_ID = $this->db->pdo->lastInsertId();
-      $insert = implode(",", array_map(function($time) use($study_ID){
-            return "('" . ucwords($time) . "'," . $study_ID . ")"; 
-      }, $ssq_times));
-      $sql = "INSERT INTO SSQ_times (name, study_id) 
-              VALUES " . $insert;
-      $result = $this->db->pdo->query($sql);
-  if ($result) {
-      echo '<div class="alert alert-success alert-dismissible mt-3" id="flash-msg">
-    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-    <strong>Success!</strong> You have created a study!</div>';
-      echo "<script>setTimeout(\"location.href = 'view_study';\",1500);</script>";
-  } else {
-      $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
-    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-    <strong>Error!</strong> Something went wrong, try again!</div>';
-      return $msg;
-  }
+    $study_ID = $this->db->pdo->lastInsertId();
+    $insert = implode(",", array_map(function($time) use($study_ID){
+        return "('" . ucwords($time) . "'," . $study_ID . ")"; 
+    }, $ssq_times));
+    
+    $sql = "INSERT INTO SSQ_times (name, study_id) 
+            VALUES " . $insert;
+    $result = $this->db->pdo->query($sql);
+    
+    if ($result) {
+        return Util::generateSuccessMessage("You have created a study!");
+    } 
+    else {
+        return Util::generateErrorMessage("Something went wrong. Try again!");
+    }
 } 
 
     // Edit a user's study
@@ -366,15 +290,10 @@ public function takeSSQ($data){
         $ssq_times = array_filter($ssq_times, function ($time) { return $time !== ''; });
         
         if ($full_name == "" || $short_name == ""|| $IRB == "") {
-            $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
-            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-            <strong>Error!</strong> You cannot leave Study fields empty!</div>'; 
-            return $msg; // if any field is empty
-        } else if ($ssq_times !== array_unique($ssq_times)) {
-            $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
-            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-            <strong>Error!</strong>You cannot have multiple SSQ times of the same name.</div>'; 
-            return $msg;
+            return Util::generateErrorMessage("You cannot leave required field empty!");
+        }
+        if ($ssq_times !== array_unique($ssq_times)) {
+            return Util::generateErrorMessage("You cannot have multiple SSQ times of the same name!");
         }
         $pdo = $this->db->pdo;
         $sql = "UPDATE Study SET full_name = :full_name, short_name = :short_name, IRB = :IRB, last_edited_by = :last_edited_by WHERE study_ID = $study_ID";
@@ -386,10 +305,7 @@ public function takeSSQ($data){
         $result = $stmt->execute();
         
         if (!$result) {
-            $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
-                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                <strong>Error!</strong> Something went wrong, try editing again!</div>';
-            return $msg;
+            return Util::generateErrorMessage("Something went wrong. Try editing again!");
         }
         
         $old_times_sql = "SELECT name FROM SSQ_times WHERE study_id = $study_ID AND is_active = 1;";
@@ -422,10 +338,7 @@ public function takeSSQ($data){
                 $result = $pdo->query($add_back_sql);
                 
                 if (!$result) {
-                    $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
-                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                        <strong>Error!</strong> Something went wrong, try editing again!</div>';
-                    return $msg;
+                    return Util::generateErrorMessage("Something went wrong. Try editing again!");
                 }
             }
             // add new names
@@ -441,10 +354,7 @@ public function takeSSQ($data){
                 $result = $pdo->query($insert_sql);
                 
                 if (!$result) {
-                    $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
-                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                        <strong>Error!</strong> Something went wrong, try editing again!</div>';
-                    return $msg;
+                    return Util::generateErrorMessage("Something went wrong. Try editing again!");
                 }
             }
         }
@@ -484,18 +394,12 @@ public function takeSSQ($data){
                 $result = $pdo->query($remove_sql);
                     
                 if (!$result) {
-                    $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
-                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                        <strong>Error!</strong> Something went wrong, try editing again!</div>';
-                    return $msg;
+                    return Util::generateErrorMessage("Something went wrong. Try editing again!");
                 }
             }
         }
         
-        $msg = '<div class="alert alert-success alert-dismissible mt-3" id="flash-msg">
-            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-            <strong>Success!</strong> You have edited this study!</div>';
-        return $msg;
+        return Util::generateSuccessMessage("You have edited this study!");
     }
     
     // Activates study based on the given study_ID.
@@ -510,17 +414,11 @@ public function takeSSQ($data){
         $result = $stmt->execute();
         
         if ($result){
-            $msg = '<div class="alert alert-success alert-dismissible mt-3" id="flash-msg">
-              <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-              <strong>Success!</strong> You activated this study!</div>';
+            return Util::generateSuccessMessage("You activated this study!");
         }
         else{
-            $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
-              <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-              <strong>Error!</strong> Something went wrong, try activating again!</div>';
+            return Util::generateErrorMessage("Something went wrong. Try activating again!");
         }
-        
-        return $msg;
     }
     
     // Deactivates study based on the given study_ID.
@@ -535,17 +433,11 @@ public function takeSSQ($data){
         $result = $stmt->execute();
         
         if ($result){
-            $msg = '<div class="alert alert-success alert-dismissible mt-3" id="flash-msg">
-              <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-              <strong>Success!</strong> You deactivated this study!</div>';
+            return Util::generateSuccessMessage("You deactivated this study!");
         }
         else{
-            $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
-              <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-              <strong>Error!</strong> Something went wrong, try deactivating again!</div>';
+            return Util::generateErrorMessage("Something went wrong. Try deactivating again!");
         }
-        
-        return $msg;
     }
     
     // leaves the current study
@@ -560,16 +452,11 @@ public function takeSSQ($data){
         
         $result = $stmt->execute();
         if ($result){
-            $msg = '<div class="alert alert-success alert-dismissible mt-3" id="flash-msg">
-              <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-              <strong>Success!</strong> You left this study!</div>';
+            return Util::generateSuccessMessage("You left this study!");
         }
         else{
-            $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
-              <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-              <strong>Error!</strong> Something went wrong, try leaving again!</div>';
+            return Util::generateErrorMessage("Something went wrong. Try leaving again!");
         }
-        return $msg;
     }
     
     // inserts a session of a  study into DB
@@ -578,12 +465,8 @@ public function takeSSQ($data){
         $last_edited_by = Session::get('id');    
         
         if (empty($data["participant_ID"])){
-            $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
-                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                    <strong>Error !</strong> Please select a participant!</div>';
-            return $msg;
+            return Util::generateErrorMessage("Please select a participant!");
         }
-        
         if (empty($data["comment"])){
             $data["comment"] = NULL;
         }
@@ -616,16 +499,11 @@ public function takeSSQ($data){
             Session::set('session_ID', intval($result['LAST_INSERT_ID()']));
             
             $this->db->pdo->commit();
-            $msg = '<div class="alert alert-success alert-dismissible mt-3" id="flash-msg">
-                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                    <strong>Success!</strong> You created a new session! You will now be redirected to the Session Details page for this study.</div>';
+            $msg = Util::generateSuccessMessage("You created a new session! You will now be redirected to the Session Details page for this study.");
         }
         catch (PDOException $excptn){
             $this->db->pdo->rollBack();
-            
-            $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
-                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                    <strong>Error !</strong> Something went wrong, try creating a session again!</div>';
+            $msg = Util::generateErrorMessage("Something went wrong. Try creating a session again!");
         }
         finally{
             return $msg;
@@ -649,16 +527,10 @@ public function takeSSQ($data){
         
         if ($result){
             Session::set('session_ID', intval($session_ID));
-            $msg = '<div class="alert alert-success alert-dismissible mt-3" id="flash-msg">
-                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                    <strong>Success !</strong> Session restarted!</div>';
-            return $msg;
+            return Util::generateSuccessMessage("Session restarted!");
         }
         else{
-            $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
-                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                    <strong>Error !</strong> Something went wrong, try restarting again!</div>';
-            return $msg;
+            return Util::generateErrorMessage("Something went wrong. Try restarting again!");
         }
     }
     
@@ -676,16 +548,10 @@ public function takeSSQ($data){
         
         $result = $stmt->execute();
         if ($result){
-            $msg = '<div class="alert alert-success alert-dismissible mt-3" id="flash-msg">
-                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                    <strong>Success !</strong> Session ended!</div>';
-            return $msg;
+            return Util::generateSuccessMessage("Session ended!");
         }
         else{
-            $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
-                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                    <strong>Error !</strong> Something went wrong, try ending again!</div>';
-            return $msg;
+            return Util::generateSuccessMessage("Something went wrong. Try ending again!");
         }
     }
     
@@ -704,16 +570,10 @@ public function takeSSQ($data){
         $result = $stmt->execute();
         if ($result){
             Session::set('session_ID', -1);
-            $msg = '<div class="alert alert-success alert-dismissible mt-3" id="flash-msg">
-                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                    <strong>Success !</strong> Session ended!</div>';
-            return $msg;
+            return Util::generateSuccessMessage("Session ended!");
         }
         else{
-            $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
-                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                    <strong>Error !</strong> Something went wrong, try ending again!</div>';
-            return $msg;
+            return Util::generateErrorMessage("Something went wrong. Try ending again!");
         }
     }    
 }
