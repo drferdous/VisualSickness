@@ -33,9 +33,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["reset-submit"])) {
             echo 'An error occurred. Please try again.';
             exit();
         }
-        echo '<div class="alert alert-success alert-dismissible mt-3" id="flash-msg">
-                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                <strong>Success!</strong> Password changed successfully! You will receive an email when your account is verified by an administrator.</div>';
+        echo Util::generateSuccesMessage("You will receive an email when your account is verfied by an administrator.");
     }
     echo "<script>setTimeout(() => location.href='index', 2000)</script>";
 }
@@ -50,7 +48,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["reset-submit"])) {
             <form class="" action="" method="post">
                 <div class="form-group">
                     <label for="password" class="required">New Password</label>
-                    <input type="password" name="password"  class="form-control">
+                    <input type="password" name="password"  class="form-control" required>
                 </div>
                 <div class="form-group">
                     <button type="submit" name="reset-submit" class="btn btn-success">Change</button>
