@@ -22,7 +22,7 @@ if (isset($userAdd)) {
                   <input type="text" name="anonymous_name"  class="form-control" id="anonymous_name" required>
                 </div>
                 <div class="form-group">
-                  <label for="age">Age</label>
+                  <label for="age" class="required">Age</label>
                   <input type="number" name="age"  class="form-control" id="age" min="1" step="1">
                 </div>                
                 <div class="form-group">
@@ -80,10 +80,6 @@ if (isset($userAdd)) {
                 <div class="form-group">
                   <label for="email">Participant Email</label>
                   <input type="email" name="email" class="form-control" id="email">
-                </div>
-                <div class="form-group">
-                  <label for="additional_info">Additional Info</label>
-                  <input type="text" name="additional_info" class="form-control" id="additional_info">
                 </div>
                 <div class="form-group">
                   <label for="comments">Comments</label>

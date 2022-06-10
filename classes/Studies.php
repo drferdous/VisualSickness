@@ -23,7 +23,6 @@ class Studies {
     $education = $data['education'];
     $phone_no = $data['phone_no'];
     $email = $data['email'];
-    $additional_info = $data['additional_info'];
     $comments = $data['comments'];
     $affiliationid = Session::get('affiliationid');
     
@@ -75,7 +74,7 @@ class Studies {
             throw new Exception($stmt->error);
         }
         
-        $last_id = "SELECT LAST_INSERT_ID();"; //help
+        $last_id = "SELECT LAST_INSERT_ID();"; 
         $last_id_statement = $this->db->pdo->prepare($last_id);
         $result_id = $last_id_statement->execute();
         if (!$result_id){
@@ -86,8 +85,8 @@ class Studies {
         $result_id = intval($result_id['LAST_INSERT_ID()']);
         
         
-        $sql2 = "INSERT INTO Participants (demographics_id, anonymous_name, dob, weight, occupation, phone_no, email, additional_info, comments, affiliation_id) 
-        VALUES(:demographics_id, :anonymous_name, :dob, :weight, :occupation, :phone_no, :email, :additional_info, :comments, :affiliationid);";
+        $sql2 = "INSERT INTO Participants (demographics_id, anonymous_name, dob, weight, occupation, phone_no, email, comments, affiliation_id) 
+        VALUES(:demographics_id, :anonymous_name, :dob, :weight, :occupation, :phone_no, :email, :comments, :affiliationid);";
         
         $stmt2 = $this->db->pdo->prepare($sql2);
         $stmt2->bindValue(':demographics_id', $result_id);        
@@ -97,7 +96,6 @@ class Studies {
         $stmt2->bindValue(':occupation', $occupation);
         $stmt2->bindValue(':phone_no', $phone_no);
         $stmt2->bindValue(':email', $email);
-        $stmt2->bindValue(':additional_info', $additional_info);
         $stmt2->bindValue(':comments', $comments);        
         $stmt2->bindValue(':affiliationid', $affiliationid);        
         
@@ -299,6 +297,7 @@ public function takeSSQ($data){
   $description = $data['description']; 
   $ssq_times = explode(",", $data["ssq_times"]);
   array_walk($ssq_times, create_function('&$val', '$val = trim($val);'));
+  $ssq_times = array_filter($ssq_times, function ($time) { return $time != ''; });
   $created_by = Session::get('id');
   $last_edited_by = Session::get('id');    
 
@@ -364,6 +363,7 @@ public function takeSSQ($data){
         array_walk($ssq_times, function (&$time) {
             $time = ucwords(trim($time));
         });
+        $ssq_times = array_filter($ssq_times, function ($time) { return $time !== ''; });
         
         if ($full_name == "" || $short_name == ""|| $IRB == "") {
             $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
@@ -451,15 +451,44 @@ public function takeSSQ($data){
         
         if (count($removed_ssq_times) > 0) {
             // removed 1 or more time names
-            $remove = implode(', ', array_map(function ($time) { return "'$time'"; }, $removed_ssq_times));
-            $remove_sql = "UPDATE SSQ_times SET is_active = 0 WHERE study_id = $study_ID AND name IN ($remove)";
-            $result = $pdo->query($remove_sql);
             
-            if (!$result) {
-                $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
-                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                    <strong>Error!</strong> Something went wrong, try editing again!</div>';
-                return $msg;
+            $remove = implode(', ', array_map(function ($time) { return "'$time'"; }, $removed_ssq_times));
+            
+            
+            $sql = "SELECT id FROM SSQ_times WHERE study_id = $study_ID AND name IN ($remove)";
+            $result_ssq = $pdo->query($sql);
+            
+            if($result_ssq->fetch(PDO::FETCH_ASSOC)) {
+                echo "<script>
+                    if (confirm('Deleting this SSQ Time will result in loss of previously created SSQs')) {
+                    $.ajax({
+                        url: 'ssq_connect',
+                        type: 'POST',
+                        cache: false,
+                        data:{
+                            studyID: $study_ID,
+                            remove: \"$remove\"
+                        },
+                    })
+                    .done(function(data) {
+                        const div = document.createElement('div');
+                        $(div).html(data);
+                        $('.container').insertBefore(div.firstChild, $('.card'));
+                        location.reload();
+                    });
+                }</script>";
+                return "";
+            } else {
+            
+                $remove_sql = "UPDATE SSQ_times SET is_active = 0 WHERE study_id = $study_ID AND name IN ($remove)";
+                $result = $pdo->query($remove_sql);
+                    
+                if (!$result) {
+                    $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
+                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                        <strong>Error!</strong> Something went wrong, try editing again!</div>';
+                    return $msg;
+                }
             }
         }
         
