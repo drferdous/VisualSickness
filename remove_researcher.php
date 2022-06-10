@@ -23,7 +23,7 @@ if (isset($addResearcher)) {
         <form class="" action="" method="post">
             <div class="form-group">
                 <div class="form-group">
-                    <label for="researcher_ID">Remove a Member:</label>
+                    <label for="researcher_ID" class="required">Remove a Member</label>
                     <select class="form-control" name="researcher_ID" id="researcher_ID">
                         <option value="" disabled hidden selected>Member Name</option>
                     <?php

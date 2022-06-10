@@ -30,7 +30,7 @@ if (isset($addResearcher)) {
                 <div class="form-group">
                     <input type="hidden" name="study_ID" value="<?php echo $_POST['study_ID']; ?>">
                     <!-- <br> -->
-                    <label for="researcher_ID">Add A Member:</label>
+                    <label for="researcher_ID" class="required">Add A Member</label>
                     <select class="form-control" name="researcher_ID" id="researcher_ID">
                         <option value="" selected hidden disabled>Member Name</option>
                         <?php
@@ -46,7 +46,7 @@ if (isset($addResearcher)) {
                         <?php } ?>
                     </select>
                     <br>
-                    <label for="study_role">Select Study Role:</label>
+                    <label for="study_role" class="required">Select Study Role</label>
                     <select class="form-control" name="study_role" id="study_role">
                         <option value="" selected hidden disabled>Study Role</option>
                     </select> 

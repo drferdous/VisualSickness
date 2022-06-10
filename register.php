@@ -17,23 +17,23 @@ if (isset($userRegistration)) {
 ?>
 
 
- <div class="card ">
+ <div class="card">
    <div class="card-header">
           <h3 class='text-center'>User Registration (All Fields Required)</h3>
           <p class='text-center'>After registering, check your email for a link to create a password.</p>
         </div>
-        <div class="cad-body">
+        <div class="card-body">
 
             <div style="width:600px; margin:0px auto">
 
             <form class="" action="" method="post">
                 <br>
                 <div class="form-group pt-3">
-                  <label for="name">Your name</label>
+                  <label for="name" class="required">Your name</label>
                   <input type="text" name="name"  class="form-control" id="name">
                 </div>
                 <div class="form-group">
-                  <label for="email">Email address</label>
+                  <label for="email" class="required">Email address</label>
                   <input type="email" name="email"  class="form-control" id="email">
                 </div>
                 <div class="form-group">
@@ -42,7 +42,7 @@ if (isset($userRegistration)) {
                   <small>Format: 123-456-7890, don't type the hyphens!</small>
                 <div class="form-group">
                   <div class="form-group">
-                    <label for="sel1">Select User Role</label>
+                    <label for="sel1" class="required">Select User Role</label>
                     <select class="form-control" name="roleid" id="sel1">
                       <?php 
                           $sql = "SELECT id, role FROM tbl_roles WHERE id > 1";
@@ -56,7 +56,7 @@ if (isset($userRegistration)) {
                 </div>
                 <div class="form-group">
                   <div class="form-group">
-                    <label for="selAffil">Select Affiliation</label>
+                    <label for="selAffil" class="required">Select Affiliation</label>
                     <select class="form-control" name="affiliationid" id="selAffil">
                       <?php 
                           $sql = "SELECT id, name FROM Affiliation WHERE id > 0";

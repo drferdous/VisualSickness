@@ -21,7 +21,7 @@ if (isset($logout)) {
 }
 ?>
 
-<div class="card ">
+<div class="card">
    <div class="card-header">
           <h3 class="text-center font-weight-bold">Visual Sickness</h3>
     </div>
@@ -30,11 +30,11 @@ if (isset($logout)) {
             <form class="" action="" method="post" style="margin:10px 10px 10px 10px; padding: 30px 0px 0px 0px;">
                 <p class="d-flex justify-content-center"><i class="fas fa-sign-in-alt mr-2"></i>Login to Visual Sickness</p>
                 <div class="form-group">
-                    <label for="email">Email address</label>
+                    <label for="email" class="required">Email address</label>
                     <input type="email" name="email" id="email" placeholder="Enter email..." class="form-control" autofocus>
                 </div>
                 <div class="form-group">
-                    <label for="password">Password</label>
+                    <label for="password" class="required">Password</label>
                     <input type="password" name="password" id="password" placeholder="Enter password..." class="form-control">
                 </div>
                 <div class="form-group d-flex justify-content-center">

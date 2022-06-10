@@ -40,7 +40,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["reset-submit"])) {
     echo "<script>setTimeout(() => location.href='index', 2000)</script>";
 }
  ?>
-<div class="card ">
+<div class="card">
     <div class="card-header">
         <h3 class='text-center'><i class="fas fa-sign-in-alt mr-2"></i>New Password</h3>
         <p class='text-center'>Enter your new password here. An admin will view your request & approve it. Then, you will gain full access to the site</p>
@@ -49,7 +49,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["reset-submit"])) {
         <div style="width:450px; margin:0px auto">
             <form class="" action="" method="post">
                 <div class="form-group">
-                    <label for="password">New Password</label>
+                    <label for="password" class="required">New Password</label>
                     <input type="password" name="password"  class="form-control">
                 </div>
                 <div class="form-group">

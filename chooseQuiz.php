@@ -9,7 +9,7 @@
     
     if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['take-ssq-btn'])) {
         $takeSSQMessage = $studies->takeSSQ($_POST);
-        if (isset($takeSSQMessage)){
+        if (isset($takeSSQMessage)) {
             echo $takeSSQMessage; ?>
             
             <script type="text/javascript">
@@ -76,7 +76,7 @@
 <?php   }
     } ?>
 
-<div class="card ">
+<div class="card">
     <div class="card-header">
         <h3>
             <span class="float-left">Choose Quiz</span>
@@ -93,7 +93,7 @@
         <h2 class="text-center">Quiz Settings</h2>
         <form action="<?php echo "chooseQuiz"; ?>" method="post">
             <div class="form-group pt-3">
-                <label for="quiz_type">Quiz Type</label>
+                <label for="quiz_type" class="required">Quiz Type</label>
                 <select class="form-control" name="quiz_type" id="quiz_type">
                     <option value="" disabled selected hidden>Choose Quiz Type...</option>
                     <?php
@@ -108,16 +108,16 @@
                 </select>
             </div>
             <div class="form-group">
-                <label for="ssq_time">Quiz Time</label>
+                <label for="ssq_time" class="required">Quiz Time</label>
                 <select class="form-control" name="ssq_time" id="ssq_time">
                     <option value="" disabled selected hidden>Select Quiz Time...</option>
                     <?php
                         $session_ID = Session::get('session_ID'); 
                         $sql = "SELECT id, name
                                 FROM SSQ_times
-                                WHERE id NOT IN (SELECT SSQ_times.id
-			                                	FROM SSQ_times JOIN SSQ ON (SSQ_times.id = SSQ.ssq_time)
-			                                   	WHERE SSQ.session_ID = $session_ID);";
+                                WHERE study_id IN (SELECT study_ID
+			                                       FROM Session
+			                                       WHERE session_ID = $session_ID AND is_active = 1);";
                         $result = $pdo->query($sql);
                         while ($row = $result->fetch(PDO::FETCH_ASSOC)){
                             echo "<option value=\"" . $row['id'] . "\">";

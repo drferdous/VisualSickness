@@ -21,7 +21,7 @@ if (isset($_POST["reset-submit"])) {
     header("Location: index");
 }
 ?>
-<div class="card ">
+<div class="card">
     <div class="card-header">
         <h3 class='text-center'><i class="fas fa-sign-in-alt mr-2"></i>New Password</h3>
         <p class='text-center'>Enter a new password here. Make sure to remember this password for the future.</p>
@@ -30,7 +30,7 @@ if (isset($_POST["reset-submit"])) {
         <div style="width:450px; margin:0px auto">
             <form class="" action="" method="post">
                 <div class="form-group">
-                    <label for="password">New Password</label>
+                    <label for="password" class="required">New Password</label>
                     <input type="password" name="password"  class="form-control">
                 </div>
                 <input type="hidden" name="email" value="<?=$email?>"

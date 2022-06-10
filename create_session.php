@@ -39,18 +39,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['insert_session'])){
     }
 }?>
     
- <div class="card ">
+ <div class="card">
     <div class="card-header">
         <h3 class="text-center">
             Create a Session
             <a class="float-right btn btn-primary" href="view_study">Back</a>
         </h3>
     </div>
-    <div class="cad-body">
         <div class="card-body">
             <form class="" action="" method="post">
             <div class="form-group">
-                <label for="participant_name">Add a Participant</label>
+                <label for="participant_name" class="required">Add a Participant</label>
                 <select class="form-control" name="participant_ID" id="participant_name">
                     <option value="" selected hidden disabled>Please Choose...</option>
                     <?php
@@ -84,7 +83,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['insert_session'])){
             </form>
             
         </div>
-    </div>
 </div>
 
 <?php

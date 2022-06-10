@@ -69,7 +69,7 @@ if (isset($activeId)) {
 
 </script>
 
-      <div class="card ">
+      <div class="card">
         <div class="card-header">
           <h3><span class="float-right">Welcome! <strong>
             <span class="badge badge-lg badge-secondary text-white">
@@ -87,19 +87,19 @@ if (isset($name)) {
         <div class="card-body pr-2 pl-2">
           <form>
             <h2>Please Enter Your Demographic Data</h2>
-            <label for="age">Age</label><br>
+            <label for="age" class="required">Age</label><br>
             <input type="text" id="age"/>
             <br/>
             
-            <label for="gender">Gender</label><br>
+            <label for="gender" class="required">Gender</label><br>
             <input type="text" id="gender"/>
             <br/>
 
-            <label for="education">Current Level of Education</label><br>
+            <label for="education" class="required">Current Level of Education</label><br>
             <input type="text" id="education"/>
             <br/>
 
-            <label for="race">Race/Ethnicity</label><br>
+            <label for="race" class="required">Race/Ethnicity</label><br>
             <input type="text" id="race"/>
             <br/>
     

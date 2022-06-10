@@ -10,7 +10,6 @@ if (isset($userAdd)) {
   echo $userAdd;
 }
 ?>
-
 <div class="card">
     <div class="card-header">
           <h3 class="text-center">Add New Participant</h3>
@@ -19,7 +18,7 @@ if (isset($userAdd)) {
             <div style="width:600px; margin:0px auto">
             <form class="" action="" method="post">
                 <div class="form-group pt-3">
-                  <label for="anonymous_name">Participant Name</label>
+                  <label for="anonymous_name" class="required">Participant Name</label>
                   <input type="text" name="anonymous_name"  class="form-control" id="anonymous_name" required>
                 </div>
                 <div class="form-group">
@@ -27,7 +26,7 @@ if (isset($userAdd)) {
                   <input type="number" name="age"  class="form-control" id="age" min="1" step="1">
                 </div>                
                 <div class="form-group">
-                  <label for="dob">Date of Birth</label>
+                  <label for="dob" class="required">Date of Birth</label>
                   <input type="date" name="dob"  class="form-control" id="dob" required>
                 </div>
                 <div class="form-group">
@@ -35,8 +34,8 @@ if (isset($userAdd)) {
                   <input type="number" name="weight"  class="form-control" id="weight" min="1" step="1">
                 </div>
                 <div class="form-group">
-                  <label for="gender">Gender</label>
-                  <select class=form-control name="gender" id="gender">
+                  <label for="gender" class="required">Gender</label>
+                  <select class=form-control name="gender" id="gender" required>
                       <option selected value=""> </option>
                       <option value="Male">Male</option>
                       <option value="Female">Female</option>
@@ -45,8 +44,8 @@ if (isset($userAdd)) {
                   </select>
                 </div>
                 <div class="form-group">
-                  <label for="ethnicity">Race/Ethnicity</label>
-                  <select class=form-control name="ethnicity" id="ethnicity"> 
+                  <label for="ethnicity" class="required">Race/Ethnicity</label>
+                  <select class=form-control name="ethnicity" id="ethnicity" required> 
                      <option selected value=""> </option>    
                       <option value="aian">American Indian or Alaska Native</option>
                       <option value="asian">Asian</option>
@@ -62,8 +61,8 @@ if (isset($userAdd)) {
                   <input type="text" name="occupation" class="form-control" id="occupation">
                 </div>
                 <div class="form-group">
-                  <label for="education">Education</label>
-                  <select class=form-control name="education" id="education"> 
+                  <label for="education" class="required">Education</label>
+                  <select class=form-control name="education" id="education" required> 
                       <option selected value=""> </option>    
                       <option value="elementary">Elementary School</option>
                       <option value="middle">Middle School</option>

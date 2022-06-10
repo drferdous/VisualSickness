@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['resetTempPass'])) {
 }
 ?>
 
-<div class="card ">
+<div class="card">
     <div class="card-header">
         <h3 class="text-center">Reset Temporary Password
         </h3>
@@ -20,11 +20,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['resetTempPass'])) {
     <div class="card-body pr-2 pl-2">
           <form class="" action="" method="POST">
               <div class="form-group">
-                <label for="new_password">Old Password</label>
+                <label for="new_password" class="required">Old Password</label>
                 <input type="password" name="old_password"  class="form-control">
               </div>
               <div class="form-group">
-                <label for="new_passwordconfirm">New Password</label>
+                <label for="new_passwordconfirm" class="required">New Password</label>
                 <input type="password" name="new_password"  class="form-control">
               </div>
               <input type="hidden" name="user_ID" value="<?php echo $userid; ?>">    
