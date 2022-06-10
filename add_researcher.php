@@ -18,7 +18,7 @@ if (isset($addResearcher)) {
     <div class="card-header">
         <h3><span class="float-left">Add A Researcher</span>
             <a href="study_details" 
-               class="btn btn-primary float-right" 
+               class="btn btn-primary float-right redirectUser" 
                data-study_ID= "<?php echo $_POST['study_ID']; ?>">
                Back
             </a>
@@ -60,7 +60,7 @@ if (isset($addResearcher)) {
 </div>
       
 <script type="text/javascript">
-     $(document).on("click", "a", redirectUser);
+     $(document).on("click", "a.redirectUser", redirectUser);
      
      function redirectUser(){
          let form = document.createElement("form");
