@@ -8,11 +8,25 @@ class Util {
       $strtime = strtotime($date);
     return date('Y-m-d H:i:s', $strtime);
    }
+   
+   public static function generateErrorMessage($errorMessage){
+        $msg = '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong>Error! </strong>' . $errorMessage . '</div>';
+        return $msg;
+   }
+   
+   public static function generateSuccessMessage($successMessage){
+        $msg = '<div class="alert alert-success alert-dismissible mt-3" id="flash-msg">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong>Success! </strong>' . $successMessage . '</div>';
+        return $msg;
+   }
 
   // Check Exist Email Address Method
   public function checkExistEmail($email, $db){
     $sql = "SELECT email FROM tbl_users 
-            WHERE email = :email
+            WHERE email = :email AND isActive < 2
             LIMIT 1";
     $stmt = $db->pdo->prepare($sql);
     $stmt->bindValue(':email', $email);
