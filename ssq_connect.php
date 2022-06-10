@@ -16,9 +16,7 @@
     $result = $pdo->query($remove_sql);
         
     if (!$result) {
-        echo '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
-            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-            <strong>Error!</strong> Something went wrong, try editing again!</div>';
+        echo Util::generateErrorMessage("Something went wrong. Try editing again!");
         exit();
         
     }
@@ -27,14 +25,9 @@
     $result = $pdo->query($inactive_sql);
     
     if (!$result) {
-        echo '<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg">
-            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-            <strong>Error!</strong> Something went wrong, try editing again!</div>';
+        echo Util::generateErrorMessage("Something went wrong. Try editing again!");
         exit();
     }*/
     
-    echo '<div class="alert alert-success alert-dismissible mt-3" id="flash-msg">
-            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-            <strong>Success!</strong> You have edited this study!</div>';
- 
+    echo Util::generateSuccessMessage("You have edited this study!");
  ?>
