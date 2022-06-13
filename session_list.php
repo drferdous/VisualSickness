@@ -9,10 +9,9 @@ Session::CheckSession();
 
 ?>
 
-<div class="card ">
+<div class="card">
     <div class="card-header">
-            <h3>Session List <span class="float-right"> <span class="float-right"> <a href="view_study" class="btn btn-primary">Back</a>       
-        </div>
+            <h3>Session List <span class="float-right"> <span class="float-right"> <a href="view_study" class="btn btn-primary">Back</a>    
   </h3> 
         </strong></span></h3>
     </div>

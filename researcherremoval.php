@@ -6,7 +6,7 @@ $pdo = $db->pdo;
 if (isset($_POST['study_ID']) && !empty($_POST['study_ID'])) {
 
 	// Fetch all users in a study after study id is selected
-    $sql = "SELECT id, name FROM tbl_users, Researcher_Study WHERE researcher_ID = id AND study_ID = ".$_POST['study_ID']."";	
+    $sql = "SELECT id, name FROM tbl_users, Researcher_Study WHERE researcher_ID = id AND study_ID = ".$_POST['study_ID']." AND is_active = 1";	
 	$result = $pdo->query($sql);
 	
 	if ($result->rowCount() > 0) { 

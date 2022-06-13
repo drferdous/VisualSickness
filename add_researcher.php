@@ -10,9 +10,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['addResearcher'])) {
 }
 
 if (isset($addResearcher)) {
-  echo $addResearcher;
-}
-?>
+    echo $addResearcher;?>
+    <script type="text/javascript">
+        const divMsg = document.getElementById("flash-msg");
+        if (divMsg.classList.contains("alert-success")){
+            setTimeout(function(){
+                redirect('study_details', {'study_ID': <?= $_POST["study_ID"] ?>})
+            }, 1000);
+        }
+    </script>
+<?php } ?>
 
 <div class="card">
     <div class="card-header">
@@ -26,20 +33,28 @@ if (isset($addResearcher)) {
     </div>
     <div class="card-body pr-2 pl-2">
         <form class="" action="" method="post">
+            <div style="margin-block: 6px;">
+                <small style='color: red'>
+                    * Required Field
+                </small>
+            </div>
             <div class="form-group">
                 <div class="form-group">
                     <input type="hidden" name="study_ID" value="<?php echo $_POST['study_ID']; ?>">
                     <!-- <br> -->
                     <label for="researcher_ID" class="required">Add A Member</label>
-                    <select class="form-control" name="researcher_ID" id="researcher_ID">
+                    <select class="form-control" name="researcher_ID" id="researcher_ID" required>
                         <option value="" selected hidden disabled>Member Name</option>
                         <?php
                             $sql = "SELECT id, name, email
                                     FROM tbl_users
                                     WHERE NOT id IN (SELECT researcher_ID 
                                                      FROM Researcher_Study
-                                                     WHERE study_ID = " . $_POST['study_ID'] . ")
-                                    AND isActive = 1;";
+                                                     WHERE study_ID = " . $_POST['study_ID'] . 
+                                                     " AND is_active = 1)
+                                    AND isActive = 1
+                                    AND affiliationid = " . Session::get("affiliationid") . ";";
+                            echo $sql;
                             $result = $pdo->query($sql);
                             while ($row = $result->fetch(PDO::FETCH_ASSOC)){ ?>
                                 <option value="<?php echo $row['id']; ?>"><?php echo $row["name"] . " (" . $row["email"] . ")"; ?></option>
@@ -47,7 +62,7 @@ if (isset($addResearcher)) {
                     </select>
                     <br>
                     <label for="study_role" class="required">Select Study Role</label>
-                    <select class="form-control" name="study_role" id="study_role">
+                    <select class="form-control" name="study_role" id="study_role" required>
                         <option value="" selected hidden disabled>Study Role</option>
                     </select> 
                 </div>
@@ -67,7 +82,7 @@ if (isset($addResearcher)) {
          let hiddenInput = document.createElement("input");
          
          form.setAttribute("method", "POST");
-         form.setAttribute("action", $(this).attr("href"));
+         form.setAttribute("action", $(this).attr('href'));
          form.setAttribute("style", "display: none");
          
          hiddenInput.setAttribute("type", "hidden");

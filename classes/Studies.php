@@ -261,10 +261,10 @@ public function takeSSQ($data){
     $last_edited_by = Session::get('id');    
 
     if ($full_name == "" || $short_name == "" || $IRB == "") {
-        return Util::generateErrorMessage("Study registration fields must not be empty!");
+        return array(Util::generateErrorMessage("Study registration fields must not be empty!"));
     } 
     if (count($ssq_times) !== count(array_unique($ssq_times))){
-        return Util::generateErrorMessage("There should be no duplicate SSQ times!");
+        return array(Util::generateErrorMessage("There should be no duplicate SSQ times!"));
     }
   
     $sql = "INSERT INTO Study (full_name, short_name, IRB, description, created_by, last_edited_by)
@@ -292,10 +292,10 @@ public function takeSSQ($data){
     $result = $this->db->pdo->query($sql);
     
     if ($result) {
-        return Util::generateSuccessMessage("You have created a study!");
+        return array(Util::generateSuccessMessage("You have created a study!"), $study_ID);
     } 
     else {
-        return Util::generateErrorMessage("Something went wrong. Try again!");
+        return array(Util::generateErrorMessage("Something went wrong. Try again!"));
     }
 } 
 

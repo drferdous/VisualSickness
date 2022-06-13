@@ -3,57 +3,74 @@ include 'inc/header.php';
 Session::CheckSession();
 Session::RedirectIfUser();
 
+if (!$_SERVER['REQUEST_METHOD'] || !isset($_POST['study_ID'])) {
+    header('Location: view_study');
+    exit();
+}
+if (!isset($_POST['referrer'])) $referrer = ltrim(parse_url($_SERVER['HTTP_REFERER'], PHP_URL_PATH), '/');
+else $referrer = $_POST['referrer'];
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['addNewParticipant'])) {
   $userAdd = $studies->addNewParticipant($_POST);
 }
 if (isset($userAdd)) {
-  echo $userAdd;
-}
-?>
+  echo $userAdd;?>
+    <script type="text/javascript">
+        const divMsg = document.getElementById("flash-msg");
+        if (divMsg.classList.contains("alert-success")){
+            setTimeout(function(){
+                redirect('<?= $referrer ?>', {'study_ID': <?= $_POST["study_ID"] ?>})
+            }, 1000);
+        }
+    </script>
+<?php } ?>
 <div class="card">
     <div class="card-header">
-          <h3 class="text-center">Add New Participant</h3>
+          <h3 class="text-center">Add New Participant<span class="float-right"> <a href='<?= $referrer ?>' class="btn btn-primary redirectUser" data-study_ID="<?= $_POST['study_ID'] ?>">Back</a></span></h3>
     </div>
     <div class="card-body">
             <div style="width:600px; margin:0px auto">
             <form class="" action="" method="post">
+                <input type="hidden" name="referrer" value="<?= $referrer ?>">
+                <div style="margin-block: 6px;">
+                    <small style='color: red'>
+                        * Required Field
+                    </small>
+                </div>
                 <div class="form-group pt-3">
                   <label for="anonymous_name" class="required">Participant Name</label>
-                  <input type="text" name="anonymous_name"  class="form-control" id="anonymous_name" required>
+                  <input type="text" name="anonymous_name" value="<?= Util::getValueFromPost('anonymous_name', $_POST); ?>" class="form-control" id="anonymous_name" required>
                 </div>
                 <div class="form-group">
                   <label for="age" class="required">Age</label>
-                  <input type="number" name="age"  class="form-control" id="age" min="1" step="1">
+                  <input type="number" name="age" value="<?= Util::getValueFromPost('age', $_POST); ?>" class="form-control" id="age" min="1" step="1">
                 </div>                
                 <div class="form-group">
                   <label for="dob" class="required">Date of Birth</label>
-                  <input type="date" name="dob"  class="form-control" id="dob" required>
+                  <input type="date" name="dob" value="<?= Util::getValueFromPost('dob', $_POST); ?>" class="form-control" id="dob" required>
                 </div>
                 <div class="form-group">
                   <label for="weight">Weight</label>
-                  <input type="number" name="weight"  class="form-control" id="weight" min="1" step="1">
+                  <input type="number" name="weight" value="<?= Util::getValueFromPost('weight', $_POST); ?>" class="form-control" id="weight" min="1" step="1">
                 </div>
                 <div class="form-group">
                   <label for="gender" class="required">Gender</label>
                   <select class=form-control name="gender" id="gender" required>
-                      <option selected value=""> </option>
-                      <option value="Male">Male</option>
-                      <option value="Female">Female</option>
-                      <option value="Other">Other</option>
-                      <option value="Prefer Not To Say">Prefer Not To Say</option>                      
+                      <option <?= Util::getValueFromPost('gender', $_POST) === 'Male' ? 'selected' : '' ?> value="Male">Male</option>
+                      <option <?= Util::getValueFromPost('gender', $_POST) === 'Female' ? 'selected' : '' ?> value="Female">Female</option>
+                      <option <?= Util::getValueFromPost('gender', $_POST) === 'Other' ? 'selected' : '' ?> value="Other">Other</option>
+                      <option <?= Util::getValueFromPost('gender', $_POST) === 'Prefer Not To Answer' || Util::getValueFromPost('gender', $_POST) === '' ? 'selected' : '' ?> value="Prefer Not To Answer">Prefer Not To Answer</option>                      
                   </select>
                 </div>
                 <div class="form-group">
                   <label for="ethnicity" class="required">Race/Ethnicity</label>
-                  <select class=form-control name="ethnicity" id="ethnicity" required> 
-                     <option selected value=""> </option>    
-                      <option value="aian">American Indian or Alaska Native</option>
-                      <option value="asian">Asian</option>
-                      <option value="black">Black or African American</option>
-                      <option value="nhopi">Native Hawaiian or Other Pacific Islander</option>
-                      <option value="white">White</option>
-                      <option value="other">Other</option>
-                      <option value="Prefer Not To Answer">Prefer Not To Answer</option> 
+                  <select class=form-control name="ethnicity" id="ethnicity" required>
+                      <option <?= Util::getValueFromPost('ethnicity', $_POST) === 'aian' ? 'selected' : '' ?> value="aian">American Indian or Alaska Native</option>
+                      <option <?= Util::getValueFromPost('ethnicity', $_POST) === 'asian' ? 'selected' : '' ?> value="asian">Asian</option>
+                      <option <?= Util::getValueFromPost('ethnicity', $_POST) === 'black' ? 'selected' : '' ?> value="black">Black or African American</option>
+                      <option <?= Util::getValueFromPost('ethnicity', $_POST) === 'nhopi' ? 'selected' : '' ?> value="nhopi">Native Hawaiian or Other Pacific Islander</option>
+                      <option <?= Util::getValueFromPost('ethnicity', $_POST) === 'white' ? 'selected' : '' ?> value="white">White</option>
+                      <option <?= Util::getValueFromPost('ethnicity', $_POST) === 'other' ? 'selected' : '' ?> value="other">Other</option>
+                      <option <?= Util::getValueFromPost('ethnicity', $_POST) === 'Prefer Not To Answer' || Util::getValueFromPost('ethnicity', $_POST) === '' ? 'selected' : '' ?> value="Prefer Not To Answer">Prefer Not To Answer</option> 
                   </select>      
                 </div>
                 <div class="form-group">
@@ -63,28 +80,28 @@ if (isset($userAdd)) {
                 <div class="form-group">
                   <label for="education" class="required">Education</label>
                   <select class=form-control name="education" id="education" required> 
-                      <option selected value=""> </option>    
-                      <option value="elementary">Elementary School</option>
-                      <option value="middle">Middle School</option>
-                      <option value="high">High School</option>
-                      <option value="twoYear">2 Year College</option>
-                      <option value="fourYear">4 Year College</option>
-                      <option value="Prefer Not To Answer">Prefer Not To Answer</option> 
+                      <option <?= Util::getValueFromPost('education', $_POST) === 'elementary' ? 'selected' : '' ?> value="elementary">Elementary School</option>
+                      <option <?= Util::getValueFromPost('education', $_POST) === 'middle' ? 'selected' : '' ?> value="middle">Middle School</option>
+                      <option <?= Util::getValueFromPost('education', $_POST) === 'high' ? 'selected' : '' ?> value="high">High School</option>
+                      <option <?= Util::getValueFromPost('education', $_POST) === 'twoYear' ? 'selected' : '' ?> value="twoYear">2 Year College</option>
+                      <option <?= Util::getValueFromPost('education', $_POST) === 'fourYear' ? 'selected' : '' ?> value="fourYear">4 Year College</option>
+                      <option <?= Util::getValueFromPost('education', $_POST) === 'Prefer Not To Answer' || Util::getValueFromPost('education', $_POST) === '' ? 'selected' : '' ?> value="Prefer Not To Answer">Prefer Not To Answer</option>
                   </select>
                 </div>
                 <div class="form-group">
                   <label for="phone_no">Phone Number</label>
-                  <input type="tel" name="phone_no" pattern="\d*" title="Only numbers allowed" class="form-control" id="phone_no">
+                  <input type="tel" name="phone_no" pattern="\d*" title="Only numbers allowed" class="form-control" id="phone_no" value="<?= Util::getValueFromPost('phone_no', $_POST); ?>">
                   <small>Format: 123-456-7890, don't type the hyphens!</small>
                 </div>
                 <div class="form-group">
                   <label for="email">Participant Email</label>
-                  <input type="email" name="email" class="form-control" id="email">
+                  <input type="email" name="email" class="form-control" id="email" value="<?= Util::getValueFromPost('email', $_POST); ?>">
                 </div>
                 <div class="form-group">
                   <label for="comments">Comments</label>
-                  <input type="text" name="comments" class="form-control" id="comments">
+                  <input type="text" name="comments" class="form-control" id="comments" value="<?= Util::getValueFromPost('comments', $_POST); ?>">
                 </div>
+                <input type="hidden" name="study_ID" value="<?= $_POST["study_ID"]; ?>" id="study_ID">
                 <div class="form-group">
                   <button type="submit" name="addNewParticipant" class="btn btn-success">Register</button>
                 </div>
@@ -94,6 +111,30 @@ if (isset($userAdd)) {
 
     </div>
 </div>
+<script>
+    $(document).ready(() => {
+        $('a.redirectUser').on("click", redirectUser);
+    })
+
+    function redirectUser() {
+        let form = document.createElement("form");
+        let hiddenInput = document.createElement("input");
+        
+        form.setAttribute("method", "POST");
+        form.setAttribute("action", $(this).attr('href'));
+        form.setAttribute("style", "display: none");
+        
+        hiddenInput.setAttribute("type", "hidden");
+        hiddenInput.setAttribute("name", "study_ID");
+        hiddenInput.setAttribute("value", $(this).attr("data-study_ID"));
+        
+        form.appendChild(hiddenInput);
+        document.body.append(form);
+        form.submit();
+        
+        return false;
+    }
+</script>
 
 <?php
   include 'inc/footer.php';

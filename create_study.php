@@ -2,6 +2,7 @@
 include 'inc/header.php';
 include_once 'lib/Database.php';
 Session::CheckSession();
+Session::RedirectIfUser();
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['insert_study'])) {
 
@@ -9,11 +10,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['insert_study'])) {
 }
 
 if (isset($insert_study)) {
-  echo $insert_study;
-}
-
-
- ?>
+  echo $insert_study[0];?>
+    <script type="text/javascript">
+        const divMsg = document.getElementById("flash-msg");
+        if (divMsg.classList.contains("alert-success")){
+            setTimeout(function(){
+                redirect('study_details', {'study_ID': <?= $insert_study[1] ?>})
+            }, 1000);
+        }
+    </script>
+<?php } ?>
  
     
  <div class="card">
@@ -22,25 +28,30 @@ if (isset($insert_study)) {
         </div>
         <div class="card-body">
             <form class="" action="" method="post" id="createStudyForm">
+                <div style="margin-block: 6px;">
+                    <small style='color: red'>
+                        * Required Field
+                    </small>
+                </div>
                 <div class="form-group">
                   <label for="full_name" class="required">Full Name</label>
-                  <input type="text" id="full_name" name="full_name"  class="form-control">
+                  <input type="text" value="<?= Util::getValueFromPost('full_name', $_POST); ?>" id="full_name" name="full_name"  class="form-control" required>
                 </div>
                 <div class="form-group">
                   <label for="short_name" class="required">Short Name</label>
-                  <input type="text" id="short_name" name="short_name"  class="form-control">
+                  <input type="text" value="<?= Util::getValueFromPost('short_name', $_POST); ?>" id="short_name" name="short_name"  class="form-control" required>
                 </div>
                 <div class="form-group">
                   <label for="IRB" class="required">IRB</label>
-                  <input type="text" id="IRB" name="IRB"  class="form-control">
+                  <input type="text" value="<?= Util::getValueFromPost('IRB', $_POST); ?>" id="IRB" name="IRB"  class="form-control" required>
                 </div>
                 <div class="form-group">
-                  <label for="description">Description (optional) </label>
-                  <input type="text" id="description" name="description"  class="form-control">
+                  <label for="description">Description</label>
+                  <input type="text" value="<?= Util::getValueFromPost('description', $_POST); ?>" id="description" name="description"  class="form-control">
                 </div>
                 <div class="form-group">
                   <label for="ssq_times" class="required">Input SSQ Times</label>
-                  <input type="text" id="ssq_times" name="ssq_times" class="form-control">
+                  <input type="text" value="<?= Util::getValueFromPost('ssq_times', $_POST); ?>" id="ssq_times" name="ssq_times" class="form-control" required>
                   <small>Format: comma-separated</small>
                 </div>
                 <div class="form-group">

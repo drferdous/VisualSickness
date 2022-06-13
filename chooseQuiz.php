@@ -16,7 +16,7 @@
                 $(document).ready(function(){
                     const divMsg = document.getElementById("flash-msg");
                     if (divMsg.classList.contains("alert-success")){
-                        setTimeout(redirectUser, 2000);
+                        setTimeout(redirectUser, 1000);
                     }
                 
                     function redirectUser(){
@@ -120,9 +120,11 @@
                         $session_ID = Session::get('session_ID'); 
                         $sql = "SELECT id, name
                                 FROM SSQ_times
-                                WHERE study_id IN (SELECT study_ID
+                                WHERE is_active = 1 AND study_id IN (SELECT study_ID
 			                                       FROM Session
-			                                       WHERE session_ID = $session_ID AND is_active = 1);";
+			                                       WHERE session_ID = $session_ID) AND id NOT IN (SELECT ssq_time
+			                                          FROM SSQ
+			                                          WHERE session_ID = $session_ID);";
                         $result = $pdo->query($sql);
                         while ($row = $result->fetch(PDO::FETCH_ASSOC)){
                             echo "<option value=\"" . $row['id'] . "\">";

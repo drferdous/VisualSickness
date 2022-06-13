@@ -26,7 +26,7 @@ if (isset($deleteQuiz)) {
 }
 ?>
 
-<div class="card ">
+<div class="card">
     <div class="card-header">
         <h3><span class="float-right">
             <form action="delete_quiz" method="post">
@@ -93,29 +93,33 @@ if (isset($deleteQuiz)) {
 
 <form action="insert_quiz" method="post">    
     <?php if (Session::get('login') === FALSE) { ?>
+        <div style="margin-block: 6px;">
+            <small style='color: red'>
+                * Required Field
+            </small>
+        </div>
         <div class="symptoms">
         <h1>Please Enter Your Demographic Data</h1>
-            <label>
-                <h2>Age</h2>
-                <input type="text" id="age" name="age" required />
-            </label><br>
+            <label for="age" class="required">Age</label>
+            <input type="text" id="age" name="age" required />
+            <br>
             
             <br/>
 
             <h2>Gender</h2>
-            <input type="radio" id="male" name="gender" value="Male" required>
+            <input type="radio" id="male" name="gender" value="Male">
             <label for="male">Male</label><br>
             <input type="radio" id="female" name="gender" value="Female">
             <label for="female">Female</label><br>
             <input type="radio" id="other" name="gender" value="Other">
             <label for="other">Other</label><br>
-            <input type="radio" id="no" name="gender" value="Prefer Not To Answer">
+            <input type="radio" id="no" name="gender" value="Prefer Not To Answer" checked>
             <label for="other">Prefer Not To Answer</label>
 
             <br/>
             
             <h2>Education</h2>
-            <input type="radio" id="elementary" name="education" value="Elementary School" required> 
+            <input type="radio" id="elementary" name="education" value="Elementary School"> 
             <label for="elementary">Elementary School</label><br>
             <input type="radio" id="middle" name="education" value="Middle School">
             <label for="middle">Middle School</label><br>
@@ -125,13 +129,13 @@ if (isset($deleteQuiz)) {
             <label for="twoYear">2 Year College</label><br>
             <input type="radio" id="fourYear" name="education" value="4 Year College">
             <label for="fourYear">4 Year College</label><br>
-            <input type="radio" id="no" name="education" value="Prefer Not To Answer">
+            <input type="radio" id="no" name="education" value="Prefer Not To Answer" checked>
             <label for="other">Prefer Not To Answer</label>
 
             <br/>
 
             <h2>Race/Ethnicity</h2>
-            <input type="radio" id="aian" name="race" value="American Indian or Alaska Native" required>
+            <input type="radio" id="aian" name="race" value="American Indian or Alaska Native">
             <label for="aian">American Indian or Alaska Native</label><br>
             <input type="radio" id="asian" name="race" value="Asian">
             <label for="asian">Asian</label><br>
@@ -143,7 +147,7 @@ if (isset($deleteQuiz)) {
             <label for="white">White</label><br>
             <input type="radio" id="other" name="race" value="Other">
             <label for="other">Other</label><br>
-            <input type="radio" id="no" name="race" value="Prefer Not To Answer">
+            <input type="radio" id="no" name="race" value="Prefer Not To Answer" checked>
             <label for="other">Prefer Not To Answer</label>
             <br />
         </div>

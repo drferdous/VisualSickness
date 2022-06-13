@@ -10,5 +10,5 @@
 
 	if ($select->rowCount() > 10) {
 	    echo "exist";
-	}else echo 'notexist';
+	} else echo 'notexist';
 ?>

@@ -9,6 +9,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && (!isset($_POST['study_ID'])) || $_PO
     header('Location: view_study');
     exit();
 }
+?>
+<?php
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['updateStudy'])) {
     $updateStudy = $studies->updateStudy($_POST);
     if (isset($updateStudy)){
@@ -18,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['updateStudy'])) {
             if (divMsg.classList.contains("alert-success")){
                 setTimeout(function(){
                     location.href = "view_study";
-                }, 2000);
+                }, 1000);
             }
         </script>
 <?php }
@@ -33,13 +35,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['updateStudy'])) {
     </div>
     
     <?php
-        $sql = "SELECT study_ID, full_name, short_name, IRB FROM Study WHERE study_ID = " . $_POST['study_ID'] . " LIMIT 1;";
+        $sql = "SELECT study_ID, full_name, short_name, IRB, description FROM Study WHERE study_ID = " . $_POST['study_ID'] . " LIMIT 1;";
         $result = $pdo->query($sql);
         while($row = $result->fetch(PDO::FETCH_ASSOC)) {
             $study_ID = $row['study_ID'];
             $full_name = $row['full_name'];
             $short_name = $row['short_name'];      
             $IRB = $row['IRB'];
+            $description = $row['description'];
         }
         $ssq_times = array();
         $ssq_times_sql = "SELECT name FROM SSQ_times WHERE is_active = 1 AND study_id = " . $_POST['study_ID'];
@@ -49,22 +52,31 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['updateStudy'])) {
         }
     ?>
     <div class="card-body pr-2 pl-2">
-        <form class="" action="edit_study" method="POST">
+        <form class="" action="edit_study" method="POST", id="submit_form">
+            <div style="margin-block: 6px;">
+                <small style='color: red'>
+                    * Required Field
+                </small>
+            </div>
             <input type="hidden" name="study_ID" value=<?php echo $study_ID; ?>>
             <div class="form-group">
-                <label for="full_name">Full Name </label>
-                <input type="text" name="full_name" value="<?php echo $full_name;?>"  class="form-control" id="full_name">
+                <label for="full_name" class="required">Full Name </label>
+                <input type="text" name="full_name" value="<?php echo $full_name;?>"  class="form-control" id="full_name" required>
             </div>
             <div class="form-group">
-                <label for="short_name">Short Name</label>
-                <input type="text" name="short_name" value="<?php echo $short_name;?>" class="form-control" id="short_name">
+                <label for="short_name" class="required">Short Name</label>
+                <input type="text" name="short_name" value="<?php echo $short_name;?>" class="form-control" id="short_name" required>
             </div>
             <div class="form-group">
-                <label for="IRB">IRB</label>
-                <input type="text" name="IRB" value="<?php echo $IRB;?>" class="form-control" id="IRB">
+                <label for="IRB" class="required">IRB</label>
+                <input type="text" name="IRB" value="<?php echo $IRB;?>" class="form-control" id="IRB" required>
             </div>
             <div class="form-group">
-                <label for="ssq_times">SSQ types (comma-separated)</label>
+                <label for="description">Description</label>
+                <input type="text" name="description" value="<?php echo $description;?>" class="form-control" id="description">
+            </div>
+            <div class="form-group">
+                <label for="ssq_times">SSQ times (comma-separated)</label>
                 <input type="text" name="ssq_times" value="<?= implode(', ', $ssq_times); ?>" class="form-control" id="ssq_times">
             </div>
             <div class="form-group">
@@ -74,9 +86,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['updateStudy'])) {
     </div>
 </div>
 
+
 <script type="text/javascript">
     $(document).ready(function(){
-       $(document).on("click", "a", redirectUser); 
+       $(document).on("click", "a", redirectUser);
     });
     
     function redirectUser(){

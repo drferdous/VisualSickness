@@ -7,7 +7,7 @@ $pdo = $db->pdo;
 Session::CheckSession();
 ?>
 
-<div class="card ">
+<div class="card">
     <div class="card-header">
         <h3><span class="float-right">Welcome! 
             <strong><span class="badge badge-lg badge-secondary text-white">

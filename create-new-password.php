@@ -1,5 +1,6 @@
 <?php
 include_once "lib/Database.php";
+$pdo = Database::getInstance()->pdo;
 if ($_SERVER["REQUEST_METHOD"] === "GET") {
     if (!isset($_GET["selector"]) || !isset($_GET["validator"])) {
         header("Location: 404.php");
@@ -9,15 +10,15 @@ if ($_SERVER["REQUEST_METHOD"] === "GET") {
     $selector = $_GET["selector"];
     $validator = $_GET["validator"];
     
-    if (ctype_xdigit($validator) && strlen($validator) > 1) {
+    if (ctype_xdigit($validator) && strlen($validator) % 2 === 0) {
         $validator = hex2bin($validator);
     } else {
         echo "Bad validator parameter.";
         quit();
     }
-    
+        
     $sql = "SELECT pwdResetEmail, pwdResetToken, pwdResetExpires FROM pwdReset WHERE pwdResetSelector=:selector;";
-    $stmt = Database::getInstance()->pdo->prepare($sql);
+    $stmt = $pdo->prepare($sql);
     $stmt->bindValue(':selector', $selector);
     $stmt->execute();
     $res = $stmt->fetch();
@@ -31,14 +32,13 @@ if ($_SERVER["REQUEST_METHOD"] === "GET") {
             exit();
         }
         $sql = "DELETE FROM pwdReset WHERE pwdResetEmail=?;";
-        // $stmt = mysqli_stmt_init($conn);
         $stmt = $pdo->prepare($sql);
-        if ($stmt) {
+        if (!$stmt) {
             echo "There was an error in resetting your password.";
             exit();
         } else {
             $stmt->bindParam(1, $res["pwdResetEmail"], PDO::PARAM_STR);
-            $stmt->exexcute();
+            $stmt->execute();
         }
     } else {
         echo "Bad token.";

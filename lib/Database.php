@@ -1,8 +1,9 @@
 <?php
 
-include "config/config.php";
+$filepath = realpath(dirname(__FILE__));
+include "$filepath/../config/config.php";
 
-// Class Databse
+// Class Database
 class  Database{
 
   public $pdo;

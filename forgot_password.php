@@ -31,6 +31,11 @@ if (isset($logout)) {
             <div style="width:450px; margin:0px auto">
 
             <form class="" action="inc/reset-request.inc" method="post">
+                <div style="margin-block: 6px;">
+                    <small style='color: red'>
+                        * Required Field
+                    </small>
+                </div>
                 <div class="form-group">
                   <label for="email" class="required">Email address</label>
                   <input type="email" name="email"  class="form-control">

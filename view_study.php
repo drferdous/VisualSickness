@@ -13,18 +13,20 @@ if (isset($insert_study)) {
 
 ?>
 
-<div class="card ">
+<div class="card">
     <div class="card-header">
         <h3>Study List</h3>         
     </div>
     <div class="card-body pr-2 pl-2">
     
+    
     <?php
         
-        if (Session::get('roleid') === '1'){
+        if (Session::get('roleid') == '1'){
             $sql = "SELECT study_ID, full_name, created_at, is_active
                     FROM Study
-                    WHERE is_active = 1;";
+                    WHERE is_active = 1
+                    AND created_by IN (SELECT id FROM tbl_users WHERE affiliationid = " . Session::get("affiliationid") . ");";
                     
             $result = $pdo->query($sql);
         }
@@ -33,10 +35,11 @@ if (isset($insert_study)) {
                 FROM Study, Researcher_Study
                 WHERE Study.study_ID IN (SELECT study_ID
                                          FROM Researcher_Study
-                                         WHERE researcher_ID = " . Session::get("id") . ")
+                                         WHERE researcher_ID = " . Session::get("id") . "
+                                         AND is_active = 1)
                 AND Study.study_ID = Researcher_Study.study_ID
                 AND Researcher_Study.researcher_ID = " . Session::get("id") . "
-                AND is_active = 1;";
+                AND Researcher_Study.is_active = 1;";
                     
             $result = $pdo->query($sql);
         }
@@ -54,25 +57,6 @@ if (isset($insert_study)) {
                 </thead>
                     
                 <tbody id="study-contents">
-                <?php while ($row = $result->fetch()){ ?>
-                        <tr>
-                            <td><?php echo $row['full_name']; ?></td>
-                            <td><?php echo $row['created_at']; ?></td>
-                            <td>
-                                <a class="btn-success btn-sm" href="study_details" data-study_ID="<?php echo $row['study_ID']; ?>">Study Details</a>
-                        
-                        <?php if ((Session::get('roleid') === '1' || (isset($row['study_role']) && ($row['study_role'] === '2' || $row['study_role'] === '3'))) && $row["is_active"] === '1'){ ?>
-                                <br>
-                                <br>
-                                <a class="btn-success btn-sm" href="create_session" data-study_ID="<?php echo $row['study_ID']; ?>" >Create Session</a>
-                        <?php } ?>
-                
-                            <br>
-                            <br>
-                            <a class="btn-success btn-sm" href="session_list" data-study_ID="<?php echo $row['study_ID']; ?>">Session List</a>                       
-                            </td>
-                        </tr>
-                <?php } ?>
                 </tbody>
             </table>
             <br>
@@ -91,32 +75,37 @@ if (isset($insert_study)) {
 </div>
 
 <script type="text/javascript">
+    let activeStatus = 'active';
+    let idToSearch = <?php echo Session::get("id"); ?>;;
     $(document).ready(function(){
         $(document).on("click", "#show-studies", function() {
-            let idToSearch = <?php echo Session::get("id"); ?>;
             if ($(this).prop("checked")){
                 activeStatus = "active";
             }
             else{
                 activeStatus = "all";
             }
-            $.ajax({
-               url: "loadCorrectStudies",
-               method: "POST",
-               cache: false,
-               data:{
-                   activeStatus: activeStatus,
-                   idToSearch: idToSearch
-               },
-               success: function(data){
-                   $("#example").DataTable().destroy();
-                   $("#study-contents").html(data);
-                   $("#example").DataTable();
-               }
-            });
+            getData();
         });
         $(document).on("click", "a[data-study_ID]", redirectUser);
     });
+    
+    function getData() {
+        $.ajax({
+           url: "loadCorrectStudies",
+           method: "POST",
+           cache: false,
+           data:{
+               activeStatus: activeStatus,
+               idToSearch: idToSearch
+           },
+           success: function(data){
+               $("#example").DataTable().destroy();
+               $("#study-contents").html(data);
+               $("#example").DataTable();
+           }
+        });
+    }
         
     function redirectUser(){
         let form = document.createElement("form");
@@ -136,6 +125,8 @@ if (isset($insert_study)) {
             
         return false;
     };
+    
+    getData();
 </script>
 <?php
   include 'inc/footer.php';

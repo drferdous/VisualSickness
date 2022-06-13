@@ -79,17 +79,17 @@
                         </td>
                         <td><span class="badge badge-lg badge-secondary text-white"><?php echo Util::formatDate($value->created_at);  ?></span></td>
 
-                        <td><div style="margin-bottom: 4px;">
+                        <td><div>
                           <?php if ( Session::get("roleid") == '1') {?>
                             <a class="btn btn-warning btn-sm profilePage" 
                                 href="profile"
                                 data-user_ID="<?php echo $value->id; ?>"
-                                data-purpose="view">
+                                data-purpose="view" style="margin-bottom: 4px;">
                                 View
                             </a>
                         <?php if ($value->roleid === '1' && $value->id !== Session::get('id')){ ?>
                                 <a class="btn btn-info btn-sm disabled"
-                                    href="javascript:void(0);">
+                                    href="javascript:void(0);" style="margin-bottom: 4px;">
                                     Edit
                                 </a> 
                         <?php }
@@ -97,20 +97,20 @@
                                 <a class="btn btn-info btn-sm profilePage" 
                                     href="profile"
                                     data-user_ID="<?php echo $value->id;?>"
-                                    data-purpose="edit">
+                                    data-purpose="edit" style="margin-bottom: 4px;">
                                     Edit
                                 </a>
                         <?php } ?></div><div><?php
                               if ($value->roleid === '1' || Session::get("id") == $value->id){ ?>
                                 <a class="btn btn-danger btn-sm disabled"
-                                   href="javascript:void(0);">
+                                   href="javascript:void(0);" style="margin-bottom: 4px;">
                                 Remove
                                 </a>
                         <?php }
                               else{ ?>
                                 <a class="btn btn-danger btn-sm userAction removeUser"
                                    href="userlist"
-                                   data-user_ID="<?php echo $value->id; ?>">
+                                   data-user_ID="<?php echo $value->id; ?>" style="margin-bottom: 4px;">
                                 Remove    
                                 </a>
                         <?php }
@@ -119,19 +119,19 @@
                        <?php if ($value->roleid ==='1' || Session::get("id") == $value->id) {
                          echo "disabled";
                        } ?>
-                                btn-sm " href="userlist" data-user_ID="<?php echo $value->id; ?>">Deactivate</a>
+                                btn-sm " href="userlist" style="margin-bottom: 4px;" data-user_ID="<?php echo $value->id; ?>">Deactivate</a>
                         <?php }elseif ($value->isActive == '0'){?>
                             <a class="btn btn-success btn-sm userAction activateUser 
                        <?php if ($value->roleid === '1' || Session::get("id") == $value->id) {
                          echo "disabled ";
                        } ?>
-                                btn-sm" href="userlist" data-user_ID="<?php echo $value->id; ?>">Activate</a>
+                                btn-sm" href="userlist" style="margin-bottom: 4px;" data-user_ID="<?php echo $value->id; ?>">Activate</a>
                              <?php } ?>
                             
                         <?php if ($value->reg_stat === "1"){ ?>
                             <a class="btn btn-sm btn-success"
                                id="validateUser"
-                               href="validateUser"
+                               href="validateUser" style="margin-bottom: 4px;"
                                data-user_ID="<?php echo $value->id; ?>">
                                Validate
                             </a>

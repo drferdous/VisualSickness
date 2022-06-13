@@ -27,11 +27,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update'])) {
             if ($getUinfo){ ?>
                 <div style="width:600px; margin:0px auto">
                 <form class="" action="profile" method="POST">
+                <?php if ($purpose === 'edit') { ?>
+                    <div style="margin-block: 6px;">
+                        <small style='color: red'>
+                            * Required Field
+                        </small>
+                    </div>
+                <?php } ?>
                 <input type="hidden" name="user_ID" value="<?php echo $_POST["user_ID"]; ?>">
                 <input type="hidden" name="purpose" value="<?php echo $_POST["purpose"]; ?>">
                 <div class="form-group">
-                    <label for="name">Your Name</label>
-                    <input type="text" name="name" value="<?php echo $getUinfo->name; ?>" <?= $purpose === "edit" ? "" : "disabled"?> class="form-control">
+                    <label for="name" class="<?= $purpose === 'edit' ? 'required' : ''; ?>">Your Name</label>
+                    <input type="text" name="name" value="<?php echo $getUinfo->name; ?>" <?= $purpose === "edit" ? "" : "disabled"?> class="form-control" required>
                 </div>
                 <div class="form-group">
                     <label for="mobile">Mobile Number</label>

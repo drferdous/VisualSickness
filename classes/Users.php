@@ -602,7 +602,7 @@ class Users{
             $result =   $stmt->execute();
 
           if ($result) {
-            echo "<script>location.href='index';</script>";
+            return Util::generateSuccessMessage("Password changed!");
             Session::set('msg', Util::generateSuccessMessage("Your password is now changed!"));
           } 
           else {

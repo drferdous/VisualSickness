@@ -29,9 +29,14 @@ if (isset($_POST["reset-submit"])) {
     <div class="card-body">
         <div style="width:450px; margin:0px auto">
             <form class="" action="" method="post">
+                <div style="margin-block: 6px;">
+                    <small style='color: red'>
+                        * Required Field
+                    </small>
+                </div>
                 <div class="form-group">
                     <label for="password" class="required">New Password</label>
-                    <input type="password" name="password"  class="form-control">
+                    <input type="password" name="password"  class="form-control" required>
                 </div>
                 <input type="hidden" name="email" value="<?=$email?>"
                 <div class="form-group">

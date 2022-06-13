@@ -87,4 +87,9 @@ class Util {
       }
       return $result->fetch(PDO::FETCH_ASSOC)['Name'];
   }
+  
+  public static function getValueFromPost($str, $post) {
+      $return = isset($post[$str]) ? htmlspecialchars($post[$str]) : '';
+       return $return;
+  }
 }

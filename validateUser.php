@@ -15,6 +15,8 @@
         exit();
     }
     
+    echo print_r($_POST);
+    
     $sql = "UPDATE tbl_users
             SET reg_stat = 2
             WHERE id = " . $_POST["user_ID"] . ";";

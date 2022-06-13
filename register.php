@@ -28,13 +28,18 @@ if (isset($userRegistration)) {
 
             <form class="" action="" method="post">
                 <br>
+                <div style="margin-block: 6px;">
+                    <small style='color: red'>
+                        * Required Field
+                    </small>
+                </div>
                 <div class="form-group pt-3">
                   <label for="name" class="required">Your name</label>
-                  <input type="text" name="name"  class="form-control" id="name">
+                  <input type="text" name="name" value="<?= Util::getValueFromPost('name', $_POST); ?>" class="form-control" id="name" required>
                 </div>
                 <div class="form-group">
                   <label for="email" class="required">Email address</label>
-                  <input type="email" name="email"  class="form-control" id="email">
+                  <input type="email" name="email" value="<?= Util::getValueFromPost('email', $_POST); ?>" class="form-control" id="email" required>
                 </div>
                 <div class="form-group">
                   <label for="mobile">Phone Number</label>
@@ -43,7 +48,7 @@ if (isset($userRegistration)) {
                 <div class="form-group">
                   <div class="form-group">
                     <label for="sel1" class="required">Select User Role</label>
-                    <select class="form-control" name="roleid" id="sel1">
+                    <select class="form-control" name="roleid" id="sel1" required>
                       <?php 
                           $sql = "SELECT id, role FROM tbl_roles WHERE id > 1";
                           $result = $pdo->query($sql);
@@ -57,7 +62,7 @@ if (isset($userRegistration)) {
                 <div class="form-group">
                   <div class="form-group">
                     <label for="selAffil" class="required">Select Affiliation</label>
-                    <select class="form-control" name="affiliationid" id="selAffil">
+                    <select class="form-control" name="affiliationid" id="selAffil" required>
                       <?php 
                           $sql = "SELECT id, name FROM Affiliation WHERE id > 0";
                           $result = $pdo->query($sql);
