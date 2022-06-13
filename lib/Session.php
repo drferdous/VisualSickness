@@ -60,7 +60,7 @@ class Session{
   public static function RedirectIfUser(){
       $role_ID = intval(self::get("roleid"));
       if ($role_ID > 3){
-          header("Location: index");
+          header("Location: 404");
           exit();
       }
   }

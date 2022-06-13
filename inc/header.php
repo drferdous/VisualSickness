@@ -67,44 +67,39 @@ if (isset($_GET['action']) && $_GET['action'] == 'logout') {
  
         <?php if (Session::get('login') === TRUE) { ?>
             <?php if (Session::get("reg_stat") == 2) { ?>
-                <li class="nav-item dropdown">
-                    <a href="#"
-                       class="nav-link dropdown-toggle"
-                       id="study-dropdown"
-                       role="button"
-                       data-bs-toggle="dropdown"
-                       aria-expanded="false">
-                       <i class="fas fa-sticky-note mr-2"></i>Study
-                    </a>
-                    <ul class="dropdown-menu"
-                        aria-labelledby="study-dropdown">
-                        <li class="dropdown-item"><a href="view_study">Study List</a></li>
-                        <li class="dropdown-item"><a href="create_study">Add Study</a></li>
-                    </ul>
-                </li>
-                <li class="nav-item dropdown">
-                    <a href="#"
-                       class="nav-link dropdown-toggle"
-                       id="participant-dropdown"
-                       role="button"
-                       data-bs-toggle="dropdown"
-                       aria-expanded="false">
-                       <i class="fas fa-user mr-2"></i>Participant
-                    </a>
-                    <ul class="dropdown-menu"
-                        aria-labelledby="participant-dropdown">
-                        <li class="dropdown-item"><a href="participantList">Participant List</a></li>
-                        <?php
-                        $roleid = Session::get('roleid');
-                        if ($roleid == 1 || $roleid == 2 || $roleid == 3) { ?>
-                            <li class="dropdown-item"><a href="addParticipant">Add Participant</a></li>
-                        <?php } ?>
-                    </ul>
-                </li>
+                <?php if (intval(Session::get("roleid")) <= 3){ ?>
+                    <li class="nav-item dropdown">
+                        <a href="#"
+                        class="nav-link dropdown-toggle"
+                        id="study-dropdown"
+                        role="button"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        <i class="fas fa-sticky-note mr-2"></i>Study
+                        </a>
+                        <ul class="dropdown-menu"
+                            aria-labelledby="study-dropdown">
+                            <li class="dropdown-item"><a href="view_study">Study List</a></li>
+                            <li class="dropdown-item"><a href="create_study">Add Study</a></li>
+                        </ul>
+                    </li>
+                <?php } 
+                      else{ ?>
+                        <li class="nav-item">
+                            <a class="nav-link" 
+                               href="view_study">
+                               <i class="fas fa-sticky-note mr-2"></i>Study List
+                            </a>
+                        </li>
+                <?php } ?>
+                <li class="nav-item">
+
+                      <a class="nav-link" href="participantList"><i class="fas fa-user mr-2"></i>Participants</span></a>
+                  </li>
                 <?php if (Session::get('roleid') == '1') { ?>
                       <li class="nav-item">
     
-                          <a class="nav-link" href="userlist"><i class="fas fa-users mr-2"></i>User lists </span></a>
+                          <a class="nav-link" href="userlist"><i class="fas fa-users mr-2"></i>User lists</span></a>
                       </li>
                 <?php  } ?>
             <?php } ?>
@@ -189,7 +184,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'logout') {
 </script>      
 <script type="text/javascript">
     $(document).ready(function() {
-       $("nav a[data-user_ID]").on('click', function() {
+        $("nav a[data-user_ID]").on('click', function() {
             let form = document.createElement("form");
             let hiddenInput;
             
