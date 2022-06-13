@@ -553,17 +553,21 @@ class Users{
             return Util::generateErrorMessage("New password must be at least 6 characters!");
         }
         $new_pass = SHA1($new_pass);
+        $id_sql = "SELECT id FROM tbl_users WHERE email = :email LIMIT 1";
+        $stmt = $this->db->pdo->prepare($id_sql);
+        $stmt->bindValue(':email', $email);
+        $stmt->execute();
+        $id = $stmt->fetch(PDO::FETCH_ASSOC)['id'];
         $sql = "UPDATE tbl_users SET
             password=:password,
-            updated_by = :localId,
+            updated_by = $id,
             updated_at = CURRENT_TIMESTAMP
             WHERE email = :email";
         
         $stmt = $this->db->pdo->prepare($sql);
         $stmt->bindValue(':password', $new_pass);
         $stmt->bindValue(':email', $email);
-        $stmt->bindValue(':localId', Session::get('id'));
-        $result =   $stmt->execute();
+        $result = $stmt->execute();
         
         if (!$result) {
             return Util::generateErrorMessage("Password did not change!");
