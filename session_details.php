@@ -50,10 +50,26 @@ if (isset($_POST['delete-ssq-btn'])){
                             WHERE session_ID = " . $_POST['session_ID'] . "
                             LIMIT 1;";
                     $result = $pdo->query($sql);
-                    $row = $result->fetch(PDO::FETCH_ASSOC);
+                    $isSessionActive = !isset($result->fetch(PDO::FETCH_ASSOC)["end_time"]);
+                    
+                    $sql = "SELECT * 
+                            FROM SSQ_times 
+                            WHERE study_id = " . $row["study_ID"] . " 
+                            AND is_active = 1;";
+                    $result = $pdo->query($sql);
+                    $totalQuizTimesAvailable = $result->rowCount();
+                    
+                    $sql = "SELECT * FROM SSQ_times 
+                            WHERE id IN (SELECT ssq_time 
+                                         FROM SSQ 
+                                         WHERE session_ID = " . $_POST["session_ID"] .") 
+                            AND is_active = 1;";
+                    $result = $pdo->query($sql);
+                    $numQuizTimesTaken = $result->rowCount();
+                    $areQuizTimesAvailable = $totalQuizTimesAvailable - $numQuizTimesTaken > 0;
             
-                    if (!isset($row['end_time'])){?>
-                        <a href="chooseQuiz" class="btn btn-primary redirectUser" data-study_ID="-1" data-session_ID="<?php echo $_POST['session_ID']; ?>">New SSQ</a>    
+                    if ($isSessionActive && $areQuizTimesAvailable){?>
+                        <a href="chooseQuiz" class="btn btn-primary redirectUser" data-study_ID="-1" data-session_ID="<?php echo $_POST['session_ID']; ?>">New SSQ</a>
               <?php }?>
             </span>
         </h3>
@@ -111,12 +127,11 @@ if (isset($_POST['delete-ssq-btn'])){
                     <td>
                     <?php
                     
-                    $sql = "SELECT ssq_ID, ssq_time, ssq_type
-                            FROM SSQ
+                    $sql = "SELECT SSQ.ssq_ID, SSQ.ssq_time, SSQ.ssq_type
+                            FROM SSQ JOIN SSQ_times ON (SSQ.ssq_time = SSQ_times.id)
                             WHERE SSQ.session_ID = " . Session::get('session_ID') . "
-                            AND is_active = 1
-                            ORDER BY ssq_time ASC
-                            LIMIT 2;";
+                            AND SSQ_times.is_active = 1
+                            ORDER BY SSQ.ssq_time ASC;";
                     $result = $pdo->query($sql);
                     
                     while ($row = $result->fetch(PDO::FETCH_ASSOC)){
