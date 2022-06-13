@@ -62,7 +62,8 @@ if (isset($_POST['delete-ssq-btn'])){
                     $sql = "SELECT * FROM SSQ_times 
                             WHERE id IN (SELECT ssq_time 
                                          FROM SSQ 
-                                         WHERE session_ID = " . $_POST["session_ID"] .") 
+                                         WHERE session_ID = " . $_POST["session_ID"] . "
+                                         AND is_active = 1) 
                             AND is_active = 1;";
                     $result = $pdo->query($sql);
                     $numQuizTimesTaken = $result->rowCount();
@@ -131,6 +132,7 @@ if (isset($_POST['delete-ssq-btn'])){
                             FROM SSQ JOIN SSQ_times ON (SSQ.ssq_time = SSQ_times.id)
                             WHERE SSQ.session_ID = " . Session::get('session_ID') . "
                             AND SSQ_times.is_active = 1
+                            AND SSQ.is_active = 1
                             ORDER BY SSQ.ssq_time ASC;";
                     $result = $pdo->query($sql);
                     
@@ -141,7 +143,7 @@ if (isset($_POST['delete-ssq-btn'])){
                         $ssq_name = $result_times->fetch(PDO::FETCH_ASSOC)["name"];
                         $result_type = $pdo->query($ssq_type);
                         $ssq_type = $result_type->fetch(PDO::FETCH_ASSOC)["type"]; ?>
-                        <a  class="btn-sm btn-success redirectUser" 
+                        <a style="margin-inline: 3px;" class="btn-sm btn-success redirectUser" 
                             href="<?php echo $ssq_type; ?>Quiz"
                             data-ssq_ID="<?php echo $row['ssq_ID']; ?>"
                             data-ssq_time="<?php echo $row["ssq_time"]; ?>" 

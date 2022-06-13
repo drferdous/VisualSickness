@@ -92,9 +92,14 @@
     <div class="card-body pr-2 pl-2">
         <h2 class="text-center">Quiz Settings</h2>
         <form action="<?php echo "chooseQuiz"; ?>" method="post">
+            <div style="margin-block: 6px;">
+                <small style='color: red'>
+                    * Required Field
+                </small>
+            </div>
             <div class="form-group pt-3">
                 <label for="quiz_type" class="required">Quiz Type</label>
-                <select class="form-control" name="quiz_type" id="quiz_type">
+                <select class="form-control" name="quiz_type" id="quiz_type" required>
                     <option value="" disabled selected hidden>Choose Quiz Type...</option>
                     <?php
                         $sql = "SELECT id, type FROM SSQ_type;";
@@ -109,7 +114,7 @@
             </div>
             <div class="form-group">
                 <label for="ssq_time" class="required">Quiz Time</label>
-                <select class="form-control" name="ssq_time" id="ssq_time">
+                <select class="form-control" name="ssq_time" id="ssq_time" required>
                     <option value="" disabled selected hidden>Select Quiz Time...</option>
                     <?php
                         $session_ID = Session::get('session_ID'); 

@@ -25,7 +25,7 @@ class Studies {
     $phone_no = $data['phone_no'];
     $email = $data['email'];
     $comments = $data['comments'];
-    $affiliationid = Session::get('affiliationid');
+    $study_ID = $data['study_ID'];
     
     $checkEmail = Util::checkExistEmail($email, $this->db);
 
@@ -46,6 +46,7 @@ class Studies {
     }
         
     $this->db->pdo->beginTransaction();
+    $result2 = '';
     try {
         $sql = "INSERT INTO Demographics (age, gender, education, race_ethnicity) 
         VALUES(:age, :gender, :education, :race_ethnicity);";  
@@ -61,18 +62,11 @@ class Studies {
             throw new Exception($stmt->error);
         }
         
-        $last_id = "SELECT LAST_INSERT_ID();"; 
-        $last_id_statement = $this->db->pdo->prepare($last_id);
-        $result_id = $last_id_statement->execute();
-        if (!$result_id){
-            throw new Exception($last_id_statement->error);
-        }
+        $result_id = $this->db->pdo->lastInsertId();
         
-        $result_id = $last_id_statement->fetch(PDO::FETCH_ASSOC);
-        $result_id = intval($result_id['LAST_INSERT_ID()']);
         
-        $sql2 = "INSERT INTO Participants (demographics_id, anonymous_name, dob, weight, occupation, phone_no, email, comments, affiliation_id) 
-        VALUES(:demographics_id, :anonymous_name, :dob, :weight, :occupation, :phone_no, :email, :comments, :affiliationid);";
+        $sql2 = "INSERT INTO Participants (demographics_id, anonymous_name, dob, weight, occupation, phone_no, email, comments, study_id) 
+        VALUES(:demographics_id, :anonymous_name, :dob, :weight, :occupation, :phone_no, :email, :comments, :study_ID);";
         
         $stmt2 = $this->db->pdo->prepare($sql2);
         $stmt2->bindValue(':demographics_id', $result_id);        
@@ -83,7 +77,7 @@ class Studies {
         $stmt2->bindValue(':phone_no', $phone_no);
         $stmt2->bindValue(':email', $email);
         $stmt2->bindValue(':comments', $comments);        
-        $stmt2->bindValue(':affiliationid', $affiliationid);        
+        $stmt2->bindValue(':study_ID', $study_ID);        
         
         $result2 = $stmt2->execute();   
         
@@ -143,14 +137,40 @@ class Studies {
     $researcher_ID = $data['researcher_ID'];          
     $study_ID = $data['study_ID'];     
       
-    $sql = "DELETE FROM Researcher_Study WHERE researcher_ID = :researcher_ID AND study_ID = :study_ID";
+    $sql = "UPDATE Researcher_Study SET is_active = 0 WHERE researcher_ID = :researcher_ID AND study_ID = :study_ID";
     $stmt = $this->db->pdo->prepare($sql);
     $stmt->bindValue(':researcher_ID', $researcher_ID);
     $stmt->bindValue(':study_ID', $study_ID);
     $result = $stmt->execute(); 
     
     if ($result) {
-        return Util::generateSuccessMesssage("You have removed a researcher!");
+        return Util::generateSuccessMessage("You have removed a researcher!");
+    }
+    else{
+        return Util::generateErrorMessage("Something went wrong. Try removing again!");
+    }
+  }
+  
+// Delete participant to study 
+  public function removeParticipant($data){
+    if (empty($data['participant_ID'])){
+        return Util::generateErrorMessage("Please select a participant to remove!");
+    }
+    if (empty($data['study_ID'])){
+        return Util::generateErrorMessage("Please select a study!");
+    }
+    
+    $participant_ID = $data['participant_ID'];          
+    $study_ID = $data['study_ID'];     
+      
+    $sql = "UPDATE Participants SET is_active = 0 WHERE participant_ID = :participant_ID AND study_ID = :study_ID";
+    $stmt = $this->db->pdo->prepare($sql);
+    $stmt->bindValue(':participant_ID', $participant_ID);
+    $stmt->bindValue(':study_ID', $study_ID);
+    $result = $stmt->execute(); 
+    
+    if ($result) {
+        return Util::generateSuccessMessage("You have removed a participant!");
     }
     else{
         return Util::generateErrorMessage("Something went wrong. Try removing again!");
@@ -160,7 +180,7 @@ class Studies {
   // take SSQ quiz from Session
 public function takeSSQ($data){
     if (!(isset($data['quiz_type']) && isset($data['ssq_time']))){
-        return Util::generateErrorMessage("Please select a quiz tupe and a quiz time!");
+        return Util::generateErrorMessage("Please select a quiz type and a quiz time!");
     }
     if (!(isset($data['session_ID']))){
         return Util::generateErrorMessage("User does not have a valid session ID!");
@@ -175,6 +195,7 @@ public function takeSSQ($data){
             WHERE session_ID = :session_ID
             AND ssq_time = :ssq_time
             AND ssq_type = :quiz_type
+            AND is_active = 1
             LIMIT 1;";
     
     $stmt = $this->db->pdo->prepare($sql);
@@ -197,12 +218,15 @@ public function takeSSQ($data){
   
   // remove SSQ quiz from Session
   public function deleteQuiz($data){
-    $ssq_ID = intval($_POST['ssq_ID']);          
+    $ssq_ID = $data["ssq_ID"];          
       
-    $sql = "DELETE FROM SSQ WHERE ssq_ID = :ssq_ID";
+    $sql = "UPDATE SSQ
+            SET is_active = 0
+            WHERE ssq_ID = :ssq_ID
+            LIMIT 1;";
     $stmt = $this->db->pdo->prepare($sql);
     $stmt->bindValue(':ssq_ID', $ssq_ID);
-    $result = $stmt->execute(); 
+    $result = $stmt->execute();
     
     if ($result) { 
         return Util::generateSuccessMessage("You have deleted this quiz!");
@@ -280,6 +304,7 @@ public function takeSSQ($data){
         $full_name = $data['full_name'];
         $short_name = $data['short_name'];
         $IRB = $data['IRB'];
+        $description = $data['description'];
         $ssq_times_str = $data['ssq_times'];
         $last_edited_by = Session::get('id');
         $study_ID = $data['study_ID'];
@@ -296,11 +321,12 @@ public function takeSSQ($data){
             return Util::generateErrorMessage("You cannot have multiple SSQ times of the same name!");
         }
         $pdo = $this->db->pdo;
-        $sql = "UPDATE Study SET full_name = :full_name, short_name = :short_name, IRB = :IRB, last_edited_by = :last_edited_by WHERE study_ID = $study_ID";
+        $sql = "UPDATE Study SET full_name = :full_name, short_name = :short_name, IRB = :IRB, description = :description, last_edited_by = :last_edited_by WHERE study_ID = $study_ID";
         $stmt = $pdo->prepare($sql);
         $stmt->bindValue(':full_name', $full_name);
         $stmt->bindValue(':short_name', $short_name);  
         $stmt->bindValue(':IRB', $IRB);
+        $stmt->bindValue(':description', $description);
         $stmt->bindValue('last_edited_by', $last_edited_by);
         $result = $stmt->execute();
         
@@ -365,29 +391,32 @@ public function takeSSQ($data){
             $remove = implode(', ', array_map(function ($time) { return "'$time'"; }, $removed_ssq_times));
             
             
-            $sql = "SELECT id FROM SSQ_times WHERE study_id = $study_ID AND name IN ($remove)";
+            $sql = "SELECT ssq_ID FROM SSQ WHERE ssq_time IN (SELECT id FROM SSQ_times WHERE study_id = $study_ID AND name IN ($remove) AND is_active = 1)";
             $result_ssq = $pdo->query($sql);
             
             if($result_ssq->fetch(PDO::FETCH_ASSOC)) {
-                echo "<script>
-                    if (confirm('Deleting this SSQ Time will result in loss of previously created SSQs')) {
-                    $.ajax({
-                        url: 'ssq_connect',
-                        type: 'POST',
-                        cache: false,
-                        data:{
-                            studyID: $study_ID,
-                            remove: \"$remove\"
-                        },
-                    })
-                    .done(function(data) {
-                        const div = document.createElement('div');
-                        $(div).html(data);
-                        $('.container').insertBefore(div.firstChild, $('.card'));
-                        location.reload();
+                return "<script type='text/javascript'>
+                    $(document).ready(() => {
+                        if (confirm('Deleting this SSQ Time will result in loss of previously created SSQs')) {
+                            $.ajax({
+                                url: 'ssq_connect',
+                                type: 'POST',
+                                cache: false,
+                                data:{
+                                    studyID: $study_ID,
+                                    remove: \"$remove\"
+                                },
+                            })
+                            .done(function(data) {
+                                const div = document.createElement('div');
+                                $(div).html(data);
+                                $('.container').insertBefore(div.firstChild, $('.card'));
+                                location.reload();
+                            });
+                        }
                     });
-                }</script>";
-                return "";
+                </script>";
+                // return "";
             } else {
             
                 $remove_sql = "UPDATE SSQ_times SET is_active = 0 WHERE study_id = $study_ID AND name IN ($remove)";
@@ -442,7 +471,8 @@ public function takeSSQ($data){
     
     // leaves the current study
     public function leaveStudy($study_ID){
-        $sql = "DELETE FROM Researcher_Study
+        $sql = "UPDATE Researcher_Study
+                SET is_active = 0
                 WHERE researcher_ID = :researcher_ID
                 AND study_ID = :study_ID
                 LIMIT 1;";
