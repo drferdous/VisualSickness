@@ -14,6 +14,7 @@ class Studies {
   // Add participant to Session table and Demographics table
   public function addNewParticipant($data){
   // Note: this function does not work because the function does not take into account the study_ID yet.
+    array_walk($data, create_function('&$val', '$val = trim($val)'));
     $anonymous_name = $data['anonymous_name'];
     $dob = $data['dob'];
     $age = $data['age'];    
@@ -99,6 +100,7 @@ class Studies {
 
  // Add researcher to study 
   public function addResearcher($data){
+    array_walk($data, create_function('&$val', '$val = trim($val)'));
     if (empty($data['researcher_ID'])){
         return Util::generateErrorMessage("Please select a researcher!");
     }
@@ -127,6 +129,7 @@ class Studies {
     
 // Delete researcher to study 
   public function removeResearcher($data){
+    array_walk($data, create_function('&$val', '$val = trim($val)'));
     if (empty($data['researcher_ID'])){
         return Util::generateErrorMessage("Please select a researcher to remove!");
     }
@@ -153,6 +156,7 @@ class Studies {
   
 // Delete participant to study 
   public function removeParticipant($data){
+    array_walk($data, create_function('&$val', '$val = trim($val)'));
     if (empty($data['participant_ID'])){
         return Util::generateErrorMessage("Please select a participant to remove!");
     }
@@ -179,6 +183,7 @@ class Studies {
   
   // take SSQ quiz from Session
 public function takeSSQ($data){
+    array_walk($data, create_function('&$val', '$val = trim($val)'));
     if (!(isset($data['quiz_type']) && isset($data['ssq_time']))){
         return Util::generateErrorMessage("Please select a quiz type and a quiz time!");
     }
@@ -218,6 +223,7 @@ public function takeSSQ($data){
   
   // remove SSQ quiz from Session
   public function deleteQuiz($data){
+    array_walk($data, create_function('&$val', '$val = trim($val)'));
     $ssq_ID = $data["ssq_ID"];          
       
     $sql = "UPDATE SSQ
@@ -249,7 +255,9 @@ public function takeSSQ($data){
         return false;
       }
     }// Insert user's study in Study table
+    
  public function insert_study($data) {
+    array_walk($data, create_function('&$val', '$val = trim($val)'));
     $full_name = $data['full_name'];
     $short_name = $data['short_name'];
     $IRB = $data['IRB'];
@@ -301,6 +309,7 @@ public function takeSSQ($data){
 
     // Edit a user's study
     public function updateStudy($data){
+        array_walk($data, create_function('&$val', '$val = trim($val)'));
         $full_name = $data['full_name'];
         $short_name = $data['short_name'];
         $IRB = $data['IRB'];
@@ -491,6 +500,7 @@ public function takeSSQ($data){
     
     // inserts a session of a  study into DB
     public function insert_session($data){
+        array_walk($data, create_function('&$val', '$val = trim($val)'));
         $created_by = Session::get('id');
         $last_edited_by = Session::get('id');    
         

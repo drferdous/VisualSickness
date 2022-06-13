@@ -30,14 +30,11 @@
                 WHERE created_by IN (SELECT id FROM tbl_users WHERE affiliationid = " . Session::get("affiliationid") . ")";
     }
     else{
-        $sql = "SELECT Study.study_ID, Study.full_name, Study.created_at, Study.is_active, Researcher_Study.study_role
-                FROM Study, Researcher_Study
-                WHERE Study.study_ID IN (SELECT study_ID
-                                         FROM Researcher_Study
-                                         WHERE researcher_ID = " . $idToSearch . " AND is_active = 1)
-                AND Study.study_ID = Researcher_Study.study_ID
-                AND Researcher_Study.researcher_ID = " . $idToSearch . "
-                AND Researcher_Study.is_active = 1";
+        $sql = "SELECT Study.study_ID, Study.full_name, Study.created_at, Study.is_active, RS.study_role 
+                FROM Researcher_Study AS RS 
+                JOIN Study ON RS.study_ID = Study.study_ID 
+                WHERE RS.researcher_ID = " . $idToSearch . "
+                AND RS.is_active = 1";
     }
     
     $sql = $sql . $sqlActiveStatus;

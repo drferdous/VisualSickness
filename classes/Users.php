@@ -17,6 +17,7 @@ class Users{
 
   // User Registration Method
   public function userRegistration($data){
+    array_walk($data, create_function('&$val', '$val = trim($val)'));
     $name = $data['name'];
     $password = Util::generateRandomPassword();
     $email = $data['email'];
@@ -87,7 +88,11 @@ class Users{
   // User login Autho Method
   public function userLoginAutho($email, $password){
     $password = SHA1($password);
-    $sql = "SELECT * FROM tbl_users WHERE email = :email and password = :password LIMIT 1";
+    $sql = "SELECT * FROM tbl_users 
+            WHERE email = :email 
+            AND password = :password 
+            AND isActive < 2 
+            LIMIT 1;";
     $stmt = $this->db->pdo->prepare($sql);
     $stmt->bindValue(':email', $email);
     $stmt->bindValue(':password', $password);
@@ -97,7 +102,10 @@ class Users{
   
   // Check User Account Status
   public function CheckActiveUser($email){
-    $sql = "SELECT * FROM tbl_users WHERE email = :email and isActive = :isActive LIMIT 1";
+    $sql = "SELECT * FROM tbl_users 
+            WHERE email = :email 
+            AND isActive = :isActive 
+            LIMIT 1";
     $stmt = $this->db->pdo->prepare($sql);
     $stmt->bindValue(':email', $email);
     $stmt->bindValue(':isActive', 1);
@@ -107,7 +115,7 @@ class Users{
 
     // User Login Authentication Method
     public function userLoginAuthentication($data){
-      $email = $data['email'];
+      $email = trim($data['email']);
       $password = $data['password'];
 
 
@@ -127,7 +135,7 @@ class Users{
         $isUserActive = $this->CheckActiveUser($email);
 
         if (! ($isUserActive == TRUE)) {
-            $affiliationid_sql = "SELECT affiliationid FROM tbl_users WHERE email = :email";
+            $affiliationid_sql = "SELECT affiliationid FROM tbl_users WHERE email = :email AND isActive = 0 OR isActive = 1;";
             $stmt = $this->db->pdo->prepare($affiliationid_sql);
             $stmt->bindValue(':email', $email);
             $stmt->execute();
@@ -229,6 +237,7 @@ class Users{
     
  // Insert user's study in Study table
  public function insert_study($data) {
+  array_walk($data, create_function('&$val', '$val = trim($val)'));
   $full_name = $data['full_name'];
   $short_name = $data['short_name'];
   $IRB = $data['IRB'];
@@ -262,6 +271,7 @@ class Users{
 
     // Edit a user's study
     public function updateStudy($data){
+        array_walk($data, create_function('&$val', '$val = trim($val)'));
         $full_name = $data['full_name'];
         $short_name = $data['short_name'];
         $IRB = $data['IRB'];
@@ -350,6 +360,7 @@ class Users{
     
     // inserts a session of a  study into DB
     public function insert_session($data){
+        array_walk($data, create_function('&$val', '$val = trim($val)'));
         $created_by = Session::get('id');
         $last_edited_by = Session::get('id');    
         
