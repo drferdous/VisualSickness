@@ -6,7 +6,20 @@ $db = Database::getInstance();
 $pdo = $db->pdo;
 
 Session::CheckSession();
+if (!isset($_POST["study_ID"]) || !isset($_POST["iv"])){
+    header("Location: view_study");
+    exit();
+}
 
+$iv = explode(',', $_POST['iv']);
+$iv_str = call_user_func_array("pack", array_merge(array("C*"), $iv));
+$decrypted = Crypto::decrypt($_POST['study_ID'], $iv_str);
+Session::setStudyId(intval($decrypted), $pdo);
+
+if (Session::get("study_ID") == 0){
+    header("Location: view_study");
+    exit();
+}
 ?>
 
 <div class="card">
@@ -18,7 +31,7 @@ Session::CheckSession();
         
     <div class="card-body pr-2 pl-2">
     <?php
-        $sql = "SELECT session_ID, start_time, participant_ID FROM Session WHERE study_ID = " . $_POST["study_ID"];
+        $sql = "SELECT session_ID, start_time, participant_ID FROM Session WHERE study_ID = " . Session::get("study_ID");
         $result = $pdo->query($sql);
             
         if ($result->rowCount() > 0){
@@ -27,7 +40,6 @@ Session::CheckSession();
             <table class="table table-striped table-bordered" id="example">
                 <thead class="text-center">
                     <tr>
-                        <th>Session ID</th>
                         <th>Participant Name</th>
                         <th>Start Time</th>                        
                         <th>Action</th>
@@ -40,7 +52,7 @@ Session::CheckSession();
                     while ($row = $result->fetch(PDO::FETCH_ASSOC)) { 
                         echo "<tr>";
                         
-                        echo "<td>" . $row['session_ID'] ."</td>";
+                        //echo "<td>" . $row['session_ID'] ."</td>";
                         
                         if (isset($row['participant_ID'])){
                             $sql_users = "SELECT anonymous_name FROM Participants WHERE participant_id = " . $row['participant_ID'] . " LIMIT 1;";
