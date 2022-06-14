@@ -17,7 +17,7 @@ if (isset($_POST['deactivate-btn'])){
             if (divMsg.classList.contains("alert-success")){
                 setTimeout(function() {
                     location.href = "view_study";
-                }, 2000);
+                }, 1000);
             }
         </script>
 <?php }
@@ -31,13 +31,9 @@ if (isset($_POST["activate-btn"])){
 }
 
 if (isset($_POST['leave-btn'])){
-    $successMessage = '<div class="alert alert-success alert-dismissible mt-3" id="flash-msg">
-              <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-              <strong>Success!</strong> You left this study!</div>';
     $leaveStudyMessage = $studies->leaveStudy($_POST["study_ID"]);
-    
     if (isset($leaveStudyMessage)){
-        if ($leaveStudyMessage === $successMessage){
+        if (strpos($leaveStudyMessage, "alert-success") !== FALSE){
             echo $leaveStudyMessage;
             header("Location: ./view_study");
         }
@@ -72,32 +68,24 @@ if (isset($_POST['leave-btn'])){
                 ?>
                 
                 <tr>
-                    <th>Full Name</th>
-                    <td><?php echo $row_study['full_name']; ?></td> 
-                    
-                </tr>    
-                    
+                    <th class="align-middle">Full Name</th>
+                    <td class="align-middle"><?= $row_study['full_name'] ?></td>
+                </tr>
                 <tr>        
-                    <th>Short Name</th>
-                    <?php
-                        echo "<td>" . $row_study['short_name']  . "</td>";     
-                    ?>                        
+                    <th class="align-middle">Short Name</th>
+                    <td class="align-middle"><?= $row_study['short_name'] ?></td>
                 </tr> 
                 <tr>
-                    <th>Description</th>
-                    <?php
-                        echo "<td>" . $row_study['description'] . "</td>";
-                    ?>
+                    <th class="align-middle">Description</th>
+                    <td class="align-middle"><?= $row_study['description'] ?></td>
                 </tr>
                 <tr>    
-                    <th>IRB</th>
-                    <?php
-                        echo "<td>" . $row_study['IRB']  . "</td>";     
-                    ?>                        
+                    <th class="align-middle">IRB</th>
+                    <td class="align-middle"><?= $row_study['IRB'] ?></td>
                 </tr> 
                 <tr>
-                    <th>SSQ Times</th>
-                    <?php          
+                    <th class="align-middle">SSQ Times</th>
+                    <td class="align-middle"><?php          
                     // show name for SSQ Times    
                     if (isset($row_times['name'])){
                         
@@ -112,62 +100,49 @@ if (isset($_POST['leave-btn'])){
                         
                         $final_times = implode(", ",$times);
                         
-                        echo "<td>" . $final_times . "</td>";
+                        echo $final_times;
                     }
-                    else{
-                        echo "<td>-</td>";
-                    }    
-                    ?>
+                    ?></td>
                 </tr> 
                 <tr>
-                    <th>Created By</th>
-                    <?php
+                    <th class="align-middle">Created By</th>
+                    <td class="align-middle"><?php
                     // show name for created_by, not id                  
                     if (isset($row_study['created_by'])){
                         $sql_users = "SELECT name FROM tbl_users WHERE id = " . $row_study['created_by'] . " LIMIT 1;";
                         $result_users = $pdo->query($sql_users);
                         $row_users = $result_users->fetch(PDO::FETCH_ASSOC);
                         
-                        echo "<td>" . $row_users['name'] . "</td>";
+                        echo $row_users['name'];
                     }
-                    else{
-                        echo "<td>-</td>";
-                    }  
-                    ?>
+                    ?></td>
                 </tr> 
                     
                 <tr>                    
-                    <th>Time Created</th>
-                    <?php
-                    echo "<td>" . $row_study['created_at']     . "</td>";  
-                    ?>
+                    <th class="align-middle">Time Created</th>
+                    <td class="align-middle"><?= $row_study['created_at'] ?></td>
                 </tr> 
                     
                 <tr>                    
-                    <th>Time of Last Edit</th>
-                    <?php
-                    echo "<td>" . $row_study['last_edited_at']     . "</td>";  
-                    ?>                    
+                    <th class="align-middle">Time of Last Edit</th>
+                    <td class="align-middle"><?= $row_study['last_edited_at'] ?></td>
                 </tr> 
                     
                 <tr>
-                    <th>Last Edited By</th>
-                    <?php          
+                    <th class="align-middle">Last Edited By</th>
+                    <td class="align-middle"><?php          
                     // show name for last_edited_by, not id    
                     if (isset($row_study['last_edited_by'])){
                         $sql_users = "SELECT name FROM tbl_users WHERE id = " . $row_study['last_edited_by'] . " LIMIT 1;";
                         $result_users = $pdo->query($sql_users);
                         $row_users = $result_users->fetch(PDO::FETCH_ASSOC);
-                        echo "<td>" . $row_users['name'] . "</td>";
+                        echo $row_users['name'];
                     }
-                    else{
-                        echo "<td>-</td>";
-                    }    
-                    ?>
+                    ?></td>
                 </tr> 
             </thead>
         </table>
-                    <div style="border: 1px solid #e3e3e3; display: flex; flex-direction: column; margin-bottom: 1rem; flex-basis: 40%; align-items: center; justify-content: center;"><?php if (Session::get('roleid') === '1' || Session::get('roleid') === '2') {?>
+                    <div style="padding-block: 32px; border: 1px solid #e3e3e3; display: flex; flex-direction: column; margin-bottom: 1rem; flex-basis: 40%; align-items: center; justify-content: center;"><?php if (Session::get('roleid') === '1' || Session::get('roleid') === '2') {?>
                             <form method="post">
                                 <input type="hidden" name="study_ID" value="<?php echo $_POST['study_ID']; ?>">
                                 <?php if ($row_study["is_active"] === "1"){ ?>
