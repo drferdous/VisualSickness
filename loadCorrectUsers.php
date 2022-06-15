@@ -3,6 +3,7 @@
     include_once "lib/Database.php";
     include "lib/Session.php";
     include "classes/Users.php";
+    include "classes/Crypto.php";
     
     $pdo = Database::getInstance()->pdo;
     
@@ -79,11 +80,12 @@
                         </td>
                         <td><span class="badge badge-lg badge-secondary text-white"><?php echo Util::formatDate($value->created_at);  ?></span></td>
 
-                        <td><div>
+                        <td data-user_ID="<?php echo Crypto::encrypt($value->id, $iv); ?>"
+                            data-iv="<?php echo bin2hex($iv); ?>">
+                            <div>
                           <?php if ( Session::get("roleid") == '1') {?>
                             <a class="btn btn-warning btn-sm profilePage" 
                                 href="profile"
-                                data-user_ID="<?php echo $value->id; ?>"
                                 data-purpose="view" style="margin-bottom: 4px;">
                                 View
                             </a>
@@ -96,7 +98,6 @@
                               else{ ?>
                                 <a class="btn btn-info btn-sm profilePage" 
                                     href="profile"
-                                    data-user_ID="<?php echo $value->id;?>"
                                     data-purpose="edit" style="margin-bottom: 4px;">
                                     Edit
                                 </a>
@@ -110,8 +111,8 @@
                               else{ ?>
                                 <a class="btn btn-danger btn-sm userAction removeUser"
                                    href="userlist"
-                                   data-user_ID="<?php echo $value->id; ?>" style="margin-bottom: 4px;">
-                                Remove    
+                                   style="margin-bottom: 4px;">
+                                Remove
                                 </a>
                         <?php }
                               if ($value->isActive == '1'){ ?> 
@@ -119,20 +120,19 @@
                        <?php if ($value->roleid ==='1' || Session::get("id") == $value->id) {
                          echo "disabled";
                        } ?>
-                                btn-sm " href="userlist" style="margin-bottom: 4px;" data-user_ID="<?php echo $value->id; ?>">Deactivate</a>
+                                btn-sm " href="userlist" style="margin-bottom: 4px;" ?>Deactivate</a>
                         <?php }elseif ($value->isActive == '0'){?>
                             <a class="btn btn-success btn-sm userAction activateUser 
                        <?php if ($value->roleid === '1' || Session::get("id") == $value->id) {
                          echo "disabled ";
                        } ?>
-                                btn-sm" href="userlist" style="margin-bottom: 4px;" data-user_ID="<?php echo $value->id; ?>">Activate</a>
+                                btn-sm" href="userlist" style="margin-bottom: 4px;">Activate</a>
                              <?php } ?>
                             
                         <?php if ($value->reg_stat === "1"){ ?>
                             <a class="btn btn-sm btn-success"
                                id="validateUser"
-                               href="validateUser" style="margin-bottom: 4px;"
-                               data-user_ID="<?php echo $value->id; ?>">
+                               href="validateUser" style="margin-bottom: 4px;">
                                Validate
                             </a>
                         <?php } ?>

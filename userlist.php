@@ -12,13 +12,17 @@
     }
     
     $localId = Session::get('id');
+    if (isset($_POST["user_ID"]) && isset($_POST["iv"])){
+        $iv = hex2bin($_POST["iv"]);
+        $user_ID = Crypto::decrypt($_POST["user_ID"], $iv);
+    }
     
     if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["removeUser"])){
         $sql = "UPDATE tbl_users
                 SET isActive = 2,
                 updated_by = $localId,
                 updated_at = CURRENT_TIMESTAMP
-                WHERE id = " . $_POST["user_ID"] . ";";
+                WHERE id = " . $user_ID . ";";
         $result = $pdo->query($sql);
         if (!$result){
             echo $pdo->errorInfo();
@@ -31,7 +35,7 @@
                 SET isActive = 0,
                 updated_by = $localId,
                 updated_at = CURRENT_TIMESTAMP
-                WHERE id = " . $_POST["user_ID"] . "
+                WHERE id = " . $user_ID . "
                 LIMIT 1;";
         $result = $pdo->query($sql);
         if (!$result){
@@ -45,7 +49,7 @@
                 SET isActive = 1,
                 updated_by = $localId,
                 updated_at = CURRENT_TIMESTAMP
-                WHERE id = " . $_POST["user_ID"] . "
+                WHERE id = " . $user_ID . "
                 LIMIT 1;";
         $result = $pdo->query($sql);
         if (!$result){
@@ -86,8 +90,8 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
-        $("#example").on("click", "a.profilePage[data-user_ID]", goToProfilePage);
-        $("#example").on("click", "a.userAction[data-user_ID]", doUserAction);
+        $("#example").on("click", "a.profilePage", goToProfilePage);
+        $("#example").on("click", "a.userAction", doUserAction);
         $("#example").on("click", "#validateUser", validateUser);
         $("#show-pending-users").on("click", showPendingUsers);
         $("#show-deactivated-users").on("click", showDeactivatedUsers);
@@ -107,7 +111,13 @@
         hiddenInput = document.createElement("input");
         hiddenInput.setAttribute("type", "hidden");
         hiddenInput.setAttribute("name", "user_ID");
-        hiddenInput.setAttribute("value", $(this).attr("data-user_ID"));
+        hiddenInput.setAttribute("value", $(this).parent().parent().attr("data-user_ID"));
+        form.appendChild(hiddenInput);
+        
+        hiddenInput = document.createElement("input");
+        hiddenInput.setAttribute("type", "hidden");
+        hiddenInput.setAttribute("name", "iv");
+        hiddenInput.setAttribute("value", $(this).parent().parent().attr("data-iv"));
         form.appendChild(hiddenInput);
         
         if ($(this).get(0).hasAttribute("data-purpose")){
@@ -117,7 +127,7 @@
             hiddenInput.setAttribute("value", $(this).attr("data-purpose"));
             form.appendChild(hiddenInput);
         }
-             
+        
         document.body.appendChild(form);
         form.submit(); 
         
@@ -135,7 +145,13 @@
         hiddenInput = document.createElement("input");
         hiddenInput.setAttribute("type", "hidden");
         hiddenInput.setAttribute("name", "user_ID");
-        hiddenInput.setAttribute("value", $(this).attr("data-user_ID"));
+        hiddenInput.setAttribute("value", $(this).parent().parent().attr("data-user_ID"));
+        form.appendChild(hiddenInput);
+        
+        hiddenInput = document.createElement("input");
+        hiddenInput.setAttribute("type", "hidden");
+        hiddenInput.setAttribute("name", "iv");
+        hiddenInput.setAttribute("value", $(this).parent().parent().attr("data-iv"));
         form.appendChild(hiddenInput);
         
         document.body.appendChild(form);
@@ -213,7 +229,13 @@
         hiddenInput = document.createElement("input");
         hiddenInput.setAttribute("type", "hidden");
         hiddenInput.setAttribute("name", "user_ID");
-        hiddenInput.setAttribute("value", $(this).attr("data-user_ID"));
+        hiddenInput.setAttribute("value", $(this).parent().parent().attr("data-user_ID"));
+        form.appendChild(hiddenInput);
+        
+        hiddenInput = document.createElement("input");
+        hiddenInput.setAttribute("type", "hidden");
+        hiddenInput.setAttribute("name", "iv");
+        hiddenInput.setAttribute("value", $(this).parent().parent().attr("data-iv"));
         form.appendChild(hiddenInput);
         
         hiddenInput = document.createElement("input");
