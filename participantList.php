@@ -4,6 +4,11 @@
     $db = Database::getInstance();
     $pdo = $db->pdo;
     if (isset($_GET['forStudy']) && $_GET['forStudy'] && Session::get('study_ID') != 0) $study_ID = Session::get('study_ID');
+    
+    if (Study::get("study_ID") == 0){
+        header("Location: view_study");
+        exit();
+    }
 ?>
 
 <div class="card">
