@@ -3,10 +3,11 @@ include 'inc/header.php';
 Session::CheckSession();
 Session::RedirectIfUser();
 
-if (!$_SERVER['REQUEST_METHOD'] || !isset($_POST['study_ID'])) {
+if (Session::get('study_ID') == 0) {
     header('Location: view_study');
     exit();
 }
+
 if (!isset($_POST['referrer'])) $referrer = ltrim(parse_url($_SERVER['HTTP_REFERER'], PHP_URL_PATH), '/');
 else $referrer = $_POST['referrer'];
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['addNewParticipant'])) {
@@ -18,14 +19,14 @@ if (isset($userAdd)) {
         const divMsg = document.getElementById("flash-msg");
         if (divMsg.classList.contains("alert-success")){
             setTimeout(function(){
-                redirect('<?= $referrer ?>', {'study_ID': <?= $_POST["study_ID"] ?>})
+                location.href = <?php echo $referrer; ?>;
             }, 1000);
         }
     </script>
 <?php } ?>
 <div class="card">
     <div class="card-header">
-          <h3 class="text-center">Add New Participant<span class="float-right"> <a href='<?= $referrer ?>' class="btn btn-primary redirectUser" data-study_ID="<?= $_POST['study_ID'] ?>">Back</a></span></h3>
+          <h3 class="text-center">Add New Participant<span class="float-right"> <a href='<?= $referrer ?>' class="btn btn-primary redirectUser">Back</a></span></h3>
     </div>
     <div class="card-body">
             <div style="width:600px; margin:0px auto">
@@ -101,7 +102,6 @@ if (isset($userAdd)) {
                   <label for="comments">Comments</label>
                   <input type="text" name="comments" class="form-control" id="comments" value="<?= Util::getValueFromPost('comments', $_POST); ?>">
                 </div>
-                <input type="hidden" name="study_ID" value="<?= $_POST["study_ID"]; ?>" id="study_ID">
                 <div class="form-group">
                   <button type="submit" name="addNewParticipant" class="btn btn-success">Register</button>
                 </div>
@@ -111,30 +111,6 @@ if (isset($userAdd)) {
 
     </div>
 </div>
-<script>
-    $(document).ready(() => {
-        $('a.redirectUser').on("click", redirectUser);
-    })
-
-    function redirectUser() {
-        let form = document.createElement("form");
-        let hiddenInput = document.createElement("input");
-        
-        form.setAttribute("method", "POST");
-        form.setAttribute("action", $(this).attr('href'));
-        form.setAttribute("style", "display: none");
-        
-        hiddenInput.setAttribute("type", "hidden");
-        hiddenInput.setAttribute("name", "study_ID");
-        hiddenInput.setAttribute("value", $(this).attr("data-study_ID"));
-        
-        form.appendChild(hiddenInput);
-        document.body.append(form);
-        form.submit();
-        
-        return false;
-    }
-</script>
 
 <?php
   include 'inc/footer.php';
