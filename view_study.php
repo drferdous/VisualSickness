@@ -7,10 +7,6 @@ $pdo = $db->pdo;
 
 Session::CheckSession();
 
-if (isset($insert_study)) {
-  echo $insert_study;
-}
-
 ?>
 
 <div class="card">
@@ -18,59 +14,14 @@ if (isset($insert_study)) {
         <h3>Study List</h3>         
     </div>
     <div class="card-body pr-2 pl-2">
-    
-    
-    <?php
-        
-        if (Session::get('roleid') == '1'){
-            $sql = "SELECT study_ID, full_name, created_at, is_active
-                    FROM Study
-                    WHERE is_active = 1
-                    AND created_by IN (SELECT id FROM tbl_users WHERE affiliationid = " . Session::get("affiliationid") . ");";
-                    
-            $result = $pdo->query($sql);
-        }
-        else if (Session::get('roleid') != '1') {
-            $sql = "SELECT Study.study_ID, Study.full_name, Study.created_at, Study.is_active, Researcher_Study.study_role
-                FROM Study, Researcher_Study
-                WHERE Study.study_ID IN (SELECT study_ID
-                                         FROM Researcher_Study
-                                         WHERE researcher_ID = " . Session::get("id") . "
-                                         AND is_active = 1)
-                AND Study.study_ID = Researcher_Study.study_ID
-                AND Researcher_Study.researcher_ID = " . Session::get("id") . "
-                AND Researcher_Study.is_active = 1;";
-                    
-            $result = $pdo->query($sql);
-        }
-        
-    if ($result->rowCount() > 0) {
-    ?>
         <br />
-            <table class="table table-striped table-bordered" id="example">
-                <thead class="text-center">
-                    <tr>
-                        <th>Study Name</th>
-                        <th>Created At</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                    
-                <tbody id="study-contents">
-                </tbody>
-            </table>
-            <br>
-            <div class="form-check form-switch float-right">
-                <input class="form-check-input" type="checkbox" id="show-studies" checked>
-                <label class="form-check-label" for="show-studies">Show Active Studies Only</label>
-            </div>
-    <?php } 
-        else{
-            echo "<br>"; 
-            echo "<br>";             
-            echo "<p>You have no studies!</p>";
-        }
-    ?>
+        <table class="table table-striped table-bordered" id="example">
+        </table>
+        <br>
+        <div class="form-check form-switch float-right">
+            <input class="form-check-input" type="checkbox" id="show-studies" checked>
+            <label class="form-check-label" for="show-studies">Show Active Studies Only</label>
+        </div>
     </div>
 </div>
 
@@ -87,10 +38,13 @@ if (isset($insert_study)) {
             }
             getData();
         });
-        $(document).on("click", "a[data-study_ID]", redirectUser);
+        $(document).on("click", ".redirectUserBtns a", redirectUser);
+        // ('a').on("click", redirectUser);
     });
     
-    function getData() {
+    let overrideDT = false;
+    
+    function getData(isFirstTime = false) {
         $.ajax({
            url: "loadCorrectStudies",
            method: "POST",
@@ -100,24 +54,34 @@ if (isset($insert_study)) {
                idToSearch: idToSearch
            },
            success: function(data){
-               $("#example").DataTable().destroy();
-               $("#study-contents").html(data);
-               $("#example").DataTable();
+                $("#example").html(data);
+                if (!isFirstTime && !overrideDT){
+                    $("#example").DataTable().destroy();
+                }
+                overrideDT = false;
+                if ($("#example td.notFound").length === 0) $('#example').DataTable();
+                else overrideDT = true;
            }
         });
     }
         
     function redirectUser(){
         let form = document.createElement("form");
-        let hiddenInput = document.createElement("input");
             
         form.setAttribute("method", "POST");
         form.setAttribute("action", $(this).attr("href"));
         form.setAttribute("style", "display: none");
             
+        let hiddenInput = document.createElement("input");
         hiddenInput.setAttribute("type", "hidden");
         hiddenInput.setAttribute("name", "study_ID");
-        hiddenInput.setAttribute("value", $(this).attr("data-study_ID"));
+        hiddenInput.setAttribute("value", $(this).parent().attr("data-study_ID"));
+        form.appendChild(hiddenInput);
+        
+        hiddenInput = document.createElement("input");
+        hiddenInput.setAttribute("type", "hidden");
+        hiddenInput.setAttribute("name", "iv");
+        hiddenInput.setAttribute("value", $(this).parent().attr("data-IV"));
         form.appendChild(hiddenInput);
         
         document.body.appendChild(form);
@@ -126,7 +90,7 @@ if (isset($insert_study)) {
         return false;
     };
     
-    getData();
+    getData(true);
 </script>
 <?php
   include 'inc/footer.php';

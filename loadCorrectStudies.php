@@ -1,4 +1,5 @@
 <?php
+    include_once 'classes/Crypto.php';
     if ($_SERVER["REQUEST_METHOD"] !== "POST" || empty($_POST)){
         header("Location: 404");
         exit();
@@ -40,25 +41,49 @@
     $sql = $sql . $sqlActiveStatus;
     
     $result = $pdo->query($sql);
-    while ($row = $result->fetch(PDO::FETCH_ASSOC)){ ?>
-        <tr>
-            <td><?php echo $row['full_name']; ?></td>
-            <td><?php echo $row['created_at']; ?></td>
-            <td>
-                <a class="btn-success btn-sm" href="study_details" data-study_ID="<?php echo $row['study_ID']; ?>">Study Details</a>
-                        
-                <?php if ($row["is_active"] === "1" &&
-                          Session::get("roleid") === "1" ||
-                         ((isset($row["study_role"]) &&
-                         ($row["study_role"] === "2" || $row["study_role"] === "3")))){ ?>
-                        <br>
-                        <br>
-                        <a class="btn-success btn-sm" href="create_session" data-study_ID="<?php echo $row['study_ID']; ?>" >Create Session</a>
-                <?php } ?>
-                
-                <br>
-                <br>
-                <a class="btn-success btn-sm" href="session_list" data-study_ID="<?php echo $row['study_ID']; ?>">Session List</a>                       
-            </td>
-        </tr>
-<?php } ?>
+    ?>
+    
+<thead class="text-center">
+    <tr>
+        <th>Study Name</th>
+        <th>Created At</th>
+        <th>Action</th>
+    </tr>
+</thead>
+    
+<tbody id="study-contents">
+<?php
+    if ($result->rowCount() > 0) {
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)){ ?>
+            <tr>
+                <td><?php echo $row['full_name']; ?></td>
+                <td><?php echo $row['created_at']; ?></td>
+                <td>
+                    <?php
+                        $encrypted = Crypto::encrypt($row['study_ID'], $iv);
+                    ?>
+                    <div class="redirectUserBtns" data-study_ID="<?= $encrypted ?>" data-IV="<?= bin2hex($iv) ?>">
+                        <a class="btn-success btn-sm" href="study_details">Study Details</a>
+                            
+                    <?php if ($row["is_active"] === "1" &&
+                              Session::get("roleid") === "1" ||
+                             ((isset($row["study_role"]) &&
+                             ($row["study_role"] === "2" || $row["study_role"] === "3")))){ ?>
+                            <br>
+                            <br>
+                            <a class="btn-success btn-sm" href="create_session">Create Session</a>
+                    <?php } ?>
+                    
+                    <br>
+                    <br>
+                    <a class="btn-success btn-sm" href="session_list">Session List</a>   
+                    </div>
+                </td>
+            </tr>
+    <?php } 
+    } else {?>
+        <td colspan="100%" class="text-center notFound">
+            You have no studies!
+        </td>
+    <?php }?>
+</tbody>
