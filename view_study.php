@@ -39,7 +39,6 @@ Session::CheckSession();
             getData();
         });
         $(document).on("click", ".redirectUserBtns a", redirectUser);
-        // ('a').on("click", redirectUser);
     });
     
     let overrideDT = false;

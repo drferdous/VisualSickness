@@ -6,11 +6,38 @@ $db = Database::getInstance();
 $pdo = $db->pdo;
 
 Session::CheckSession();
+if (isset($_POST['study_ID']) && isset($_POST['iv'])) {
+    $iv = hex2bin($_POST['iv']);
+    $decrypted = Crypto::decrypt($_POST['study_ID'], $iv);
+    Session::setStudyId(intval($decrypted), $pdo);
+    header('Location: study_details');
+    exit();
+}
+if (Session::get('study_ID') == 0) {
+    header('Location: view_study');
+    exit();
+}
+$study_ID = Session::get('study_ID');
 
 if (isset($_POST['deactivate-btn'])){
-    $studyDeactivatedMessage = $studies->deactivateStudy($_POST["study_ID"]);
+    $studyDeactivatedMessage = $studies->deactivateStudy($study_ID);
     if (isset($studyDeactivatedMessage)){
-        echo $studyDeactivatedMessage; ?>
+        echo $studyDeactivatedMessage;
+    }
+}
+
+
+if (isset($_POST["activate-btn"])){
+    $studyActivatedMessage = $studies->activateStudy($study_ID);
+    if (isset($studyActivatedMessage)){
+        echo $studyActivatedMessage;
+    }
+}
+
+if (isset($_POST['leave-btn'])){
+    $leaveStudyMessage = $studies->leaveStudy($study_ID);
+    if (isset($leaveStudyMessage)){
+        echo $leaveStudyMessage;?>
         
         <script type="text/javascript">
             const divMsg = document.getElementById("flash-msg");
@@ -22,31 +49,11 @@ if (isset($_POST['deactivate-btn'])){
         </script>
 <?php }
 }
-
-if (isset($_POST["activate-btn"])){
-    $studyActivatedMessage = $studies->activateStudy($_POST["study_ID"]);
-    if (isset($studyActivatedMessage)){
-        echo $studyActivatedMessage;
-    }
-}
-
-if (isset($_POST['leave-btn'])){
-    $leaveStudyMessage = $studies->leaveStudy($_POST["study_ID"]);
-    if (isset($leaveStudyMessage)){
-        if (strpos($leaveStudyMessage, "alert-success") !== FALSE){
-            echo $leaveStudyMessage;
-            header("Location: ./view_study");
-        }
-        else{
-            echo $leaveStudyMessage;
-        }
-    }
-}
 ?>
 
 <div class="card">
     <div class="card-header">
-        <h3>Study Details <span class="float-right"> <a href="view_study" class="btn btn-primary">Back</a></span></h3>
+        <h3>Study Details <span class="float-right"> <a href="view_study" class="btn btn-primary backButton">Back</a></span></h3>
     </div>
 
     <div class="card-body pr-2 pl-2" style="display: flex; align-items: stretch;">
@@ -55,13 +62,13 @@ if (isset($_POST['leave-btn'])){
                 <?php
                     $sql_study = "SELECT S.study_ID, S.is_active, S.full_name, S.short_name, S.IRB, S.description, S.created_by, S.created_at, S.last_edited_at, S.last_edited_by 
                                   FROM Study AS S 
-                                  WHERE S.study_ID = " . $_POST["study_ID"] . ";";
+                                  WHERE S.study_ID = " . $study_ID . ";";
                     $result_study = $pdo->query($sql_study);
                     $row_study = $result_study->fetch(PDO::FETCH_ASSOC);
                     
                     $sql_times = "SELECT SSQ.name
                                   FROM SSQ_times as SSQ JOIN Study AS S ON(S.study_ID = SSQ.study_ID)
-                                  WHERE S.study_ID = " . $_POST["study_ID"] . " AND SSQ.is_active = 1;";
+                                  WHERE S.study_ID = " . $study_ID . " AND SSQ.is_active = 1;";
                     $result_times = $pdo->query($sql_times);
                     $row_times = $result_times->fetch(PDO::FETCH_ASSOC);
                     
@@ -144,79 +151,54 @@ if (isset($_POST['leave-btn'])){
         </table>
                     <div style="padding-block: 32px; border: 1px solid #e3e3e3; display: flex; flex-direction: column; margin-bottom: 1rem; flex-basis: 40%; align-items: center; justify-content: center;"><?php if (Session::get('roleid') === '1' || Session::get('roleid') === '2') {?>
                             <form method="post">
-                                <input type="hidden" name="study_ID" value="<?php echo $_POST['study_ID']; ?>">
                                 <?php if ($row_study["is_active"] === "1"){ ?>
-                                        <input type="submit" name="deactivate-btn" value="Deactivate">
+                                        <input class="btn btn-danger" type="submit" name="deactivate-btn" value="Deactivate">
                                 <?php }
                                       else{ ?>
-                                        <input type="submit" name="activate-btn" value="Activate">
+                                        <input class="btn btn-danger" type="submit" name="activate-btn" value="Activate">
                                 <?php } ?>
                             </form>
                             <br>
                             <div>
-                                <a href="edit_study"  class="btn btn-success" data-study_ID="<?php echo $row_study['study_ID']; ?>">Edit</a>
+                                <a href="edit_study"  class="btn btn-success">Edit</a>
+                            </div>
+                            <br>
+                            <div>
+                                <a href="researcher_list" class="btn btn-primary btn-success">View Researchers</a>
+                            </div>
+                            <br>
+                            <div>
+                                <a href="add_researcher" class="btn btn-primary btn-success">Add A Researcher</a> 
                             </div>
                             <br>
                             
                             <div>
-                                <a href="add_researcher" class="btn btn-primary btn-success" data-study_ID="<?php echo $_POST['study_ID']; ?>">Add A Researcher</a> 
-                            </div>
-                            <br>
-                            
-                            <div>
-                                <a href="remove_researcher" class="btn btn-primary btn-success" data-study_ID="<?php echo $_POST['study_ID']; ?>">Remove A Researcher</a>
+                                <a href="remove_researcher" class="btn btn-primary btn-success">Remove A Researcher</a>
                             </div>
                             <br>
                             <div>
-                                <a href="participantList" class="btn btn-primary btn-success" data-study_ID="<?php echo $_POST['study_ID']; ?>">View Participants</a>
+                                <a href="participantList?forStudy=true" class="btn btn-primary btn-success">View Participants</a>
                             </div>
                             <br>
                             <div>
-                                <a href="addParticipant" class="btn btn-primary btn-success" data-study_ID="<?php echo $_POST['study_ID']; ?>">Add A Participant</a>
+                                <a href="addParticipant" class="btn btn-primary btn-success">Add A Participant</a>
                             </div>
                             <br>
                             <div>
-                                <a href="remove_participant" class="btn btn-primary btn-success" data-study_ID="<?php echo $_POST['study_ID']; ?>">Remove A Participant</a>
+                                <a href="remove_participant" class="btn btn-primary btn-success">Remove A Participant</a>
                             </div>
                             
                     <?php } else if (Session::get('roleid') === '3' || Session::get('roleid') === '4'){ ?>
                             <form method="POST">
-                                <input type="hidden" name="study_ID" value="<?php echo $_POST['study_ID']; ?>">
-                                <input type="submit" name="leave-btn" value="Leave">
+                                <input class="btn btn-danger" type="submit" name="leave-btn" value="Leave">
                             </form>
                             <br>
                             <div>
-                                <a href="participantList" class="btn btn-primary btn-success" data-study_ID="<?php echo $_POST['study_ID']; ?>">View Participants</a>
+                                <a href="participantList" class="btn btn-primary btn-success">View Participants</a>
                             </div>
                     <?php } ?></div>
     </div>
 </div>
-
-<script type="text/javascript">
-$(document).ready(function() {
-   $(document).on("click", "a.btn-success", redirectUser); 
-});
-
-function redirectUser(){
-    let form = document.createElement("form");
-    let hiddenInput = document.createElement("input");
-    
-    form.setAttribute("method", "POST");
-    form.setAttribute("action", $(this).attr("href"));
-    form.setAttribute("style", "display: none");
-    
-    hiddenInput.setAttribute("type", "hidden");
-    hiddenInput.setAttribute("name", "study_ID");
-    hiddenInput.setAttribute("value", $(this).attr("data-study_ID"));
-    
-    form.appendChild(hiddenInput);
-    document.body.appendChild(form);
-    form.submit();
-    
-    return false;
-}
-</script>
-
 <?php
   include 'inc/footer.php';
 ?>
