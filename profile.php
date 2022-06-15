@@ -6,8 +6,19 @@ Session::CheckSession();
 $db = Database::getInstance();
 $pdo = $db->pdo;
 
-$userid = $_POST['user_ID'];
-$purpose = $_POST['purpose'];
+if (isset($_POST["user_ID"]) && isset($_POST["iv"])){
+    $iv = hex2bin($_POST["iv"]);
+    $userid = Crypto::decrypt($_POST["user_ID"], $iv);
+}
+else{
+    $userid = Session::get("id");
+}
+if (isset($_POST["purpose"])){
+    $purpose = $_POST["purpose"];
+}
+else{
+    $purpose = "edit";
+}
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update'])) {
     $updateUser = $users->updateUserByIdInfo($userid, $_POST);
@@ -27,6 +38,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update'])) {
             if ($getUinfo){ ?>
                 <div style="width:600px; margin:0px auto">
                 <form class="" action="profile" method="POST">
+                    <input type="hidden" name="user_ID" value="<?php echo Crypto::encrypt($userid, $iv);?>">
+                    <input type="hidden" name="iv" value="<?php echo bin2hex($iv); ?>">
                 <?php if ($purpose === 'edit') { ?>
                     <div style="margin-block: 6px;">
                         <small style='color: red'>
@@ -34,8 +47,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update'])) {
                         </small>
                     </div>
                 <?php } ?>
-                <input type="hidden" name="user_ID" value="<?php echo $_POST["user_ID"]; ?>">
-                <input type="hidden" name="purpose" value="<?php echo $_POST["purpose"]; ?>">
                 <div class="form-group">
                     <label for="name" class="<?= $purpose === 'edit' ? 'required' : ''; ?>">Your Name</label>
                     <input type="text" name="name" value="<?php echo $getUinfo->name; ?>" <?= $purpose === "edit" ? "" : "disabled"?> class="form-control" required>
@@ -67,41 +78,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update'])) {
               } ?>
               ">
                 <div class="form-group">
-                  <label for="sel1">Select user Role</label>
+                  <label for="roleid">Select user Role</label>
                   <select class="form-control" name="roleid" id="roleid">
 
-                  <?php
-
-                if($getUinfo->roleid == '1'){?>
-                  <option value="1" selected='selected'>Admin</option>
-                  <option value="2">Primary Investigator</option>
-                  <option value="3">Research Assistant</option>
-                  <option value="3">User only</option>
-                <?php }elseif($getUinfo->roleid == '2'){?>
-                  <option value="1">Admin</option>
-                  <option value="2" selected='selected'>Primary Investigator</option>
-                  <option value="3">Research Assistant</option>
-                  <option value="3">User only</option>
-                <?php }elseif($getUinfo->roleid == '3'){?>
-                  <option value="1">Admin</option>
-                  <option value="2">Primary Investigator</option>
-                  <option value="3" selected='selected'>Research Assistant</option>
-                  <option value="3">User only</option>
-                <?php }elseif($getUinfo->roleid == '4'){?>  
-                  <option value="1">Admin</option>
-                  <option value="2">Primary Investigator</option>
-                  <option value="3">Research Assistant</option>
-                  <option value="4" selected='selected'>User only</option>                
-                <?php } ?>
-
-
+                  <?php 
+                  $sql = "SELECT role FROM tbl_roles ORDER BY id ASC;";
+                  $result = $pdo->query($sql);
+                  for ($i = 1; $i <= $result->rowCount(); ++$i){
+                      $row = $result->fetch(PDO::FETCH_ASSOC);
+                        if (Session::get("roleid") == $i){ ?>
+                            <option value="<?php echo $i; ?>" selected><?php echo $row["role"]; ?></option>
+                  <?php } 
+                        else{ ?>  
+                            <option value="<?php echo $i; ?>"><?php echo $row["role"]; ?></option>
+                  <?php } 
+                  } 
+                } ?>
                   </select>
                 </div>
               </div>
-
-          <?php }else{?>
-            <input type="hidden" name="roleid" value="<?php echo $getUinfo->roleid; ?>">
-          <?php } ?>
+              
               <?php if (Session::get("id") == $getUinfo->id && $purpose === "edit") {?>
 
 
