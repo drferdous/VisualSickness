@@ -14,7 +14,7 @@ class Studies {
   // Add participant to Session table and Demographics table
   public function addNewParticipant($data){
   // Note: this function does not work because the function does not take into account the study_ID yet.
-    array_walk($data, create_function('&$val', '$val = trim($val)'));
+    array_walk($data, create_function('&$val', '$val = trim($val);'));
     $anonymous_name = $data['anonymous_name'];
     $dob = $data['dob'];
     $age = $data['age'];    
@@ -26,7 +26,7 @@ class Studies {
     $phone_no = $data['phone_no'];
     $email = $data['email'];
     $comments = $data['comments'];
-    $study_ID = $data['study_ID'];
+    $study_ID = Session::get('study_ID');
     
     $checkEmail = Util::checkExistEmail($email, $this->db);
 
@@ -45,6 +45,11 @@ class Studies {
     if (empty($weight)){
         $weight = NULL;
     }
+    
+    $anonymous_name = Crypto::encrypt($data['anonymous_name'], $iv);
+    echo "name: " . $anonymous_name;
+    echo "iv: " . $iv;
+    
         
     $this->db->pdo->beginTransaction();
     $result2 = '';
@@ -66,8 +71,8 @@ class Studies {
         $result_id = $this->db->pdo->lastInsertId();
         
         
-        $sql2 = "INSERT INTO Participants (demographics_id, anonymous_name, dob, weight, occupation, phone_no, email, comments, study_id) 
-        VALUES(:demographics_id, :anonymous_name, :dob, :weight, :occupation, :phone_no, :email, :comments, :study_ID);";
+        $sql2 = "INSERT INTO Participants (demographics_id, anonymous_name, dob, weight, occupation, phone_no, email, comments, study_id, iv) 
+        VALUES(:demographics_id, :anonymous_name, :dob, :weight, :occupation, :phone_no, :email, :comments, :study_ID, :iv);";
         
         $stmt2 = $this->db->pdo->prepare($sql2);
         $stmt2->bindValue(':demographics_id', $result_id);        
@@ -79,6 +84,7 @@ class Studies {
         $stmt2->bindValue(':email', $email);
         $stmt2->bindValue(':comments', $comments);        
         $stmt2->bindValue(':study_ID', $study_ID);        
+        $stmt2->bindValue(':iv', $iv); 
         
         $result2 = $stmt2->execute();   
         
@@ -89,6 +95,7 @@ class Studies {
     }
     catch (PDOException $excptn){
         $this->db->pdo->rollBack();
+        return $excptn;
     }
     if ($result2) {
         return Util::generateSuccessMessage("You registered a participant!");
@@ -100,7 +107,10 @@ class Studies {
 
  // Add researcher to study 
   public function addResearcher($data){
-    array_walk($data, create_function('&$val', '$val = trim($val)'));
+    array_walk($data, create_function('&$val', '$val = trim($val);'));
+    if (Session::get("study_ID") == 0){
+        return Util::generateErrorMessage("You have an invalid study ID!");
+    }
     if (empty($data['researcher_ID'])){
         return Util::generateErrorMessage("Please select a researcher!");
     }
@@ -109,7 +119,7 @@ class Studies {
     }
     
     $researcher_ID = $data['researcher_ID'];          
-    $study_ID = $data['study_ID']; 
+    $study_ID = Session::get("study_ID");
     $study_role = $data['study_role'];    
       
     $sql = "INSERT INTO Researcher_Study (researcher_ID, study_ID, study_role) VALUES (:researcher_ID, :study_ID, :study_role)";
@@ -129,7 +139,7 @@ class Studies {
     
 // Delete researcher to study 
   public function removeResearcher($data){
-    array_walk($data, create_function('&$val', '$val = trim($val)'));
+    array_walk($data, create_function('&$val', '$val = trim($val);'));
     if (empty($data['researcher_ID'])){
         return Util::generateErrorMessage("Please select a researcher to remove!");
     }
@@ -156,7 +166,7 @@ class Studies {
   
 // Delete participant to study 
   public function removeParticipant($data){
-    array_walk($data, create_function('&$val', '$val = trim($val)'));
+    array_walk($data, create_function('&$val', '$val = trim($val);'));
     if (empty($data['participant_ID'])){
         return Util::generateErrorMessage("Please select a participant to remove!");
     }
@@ -183,7 +193,7 @@ class Studies {
   
   // take SSQ quiz from Session
 public function takeSSQ($data){
-    array_walk($data, create_function('&$val', '$val = trim($val)'));
+    array_walk($data, create_function('&$val', '$val = trim($val);'));
     if (!(isset($data['quiz_type']) && isset($data['ssq_time']))){
         return Util::generateErrorMessage("Please select a quiz type and a quiz time!");
     }
@@ -223,7 +233,7 @@ public function takeSSQ($data){
   
   // remove SSQ quiz from Session
   public function deleteQuiz($data){
-    array_walk($data, create_function('&$val', '$val = trim($val)'));
+    array_walk($data, create_function('&$val', '$val = trim($val);'));
     $ssq_ID = $data["ssq_ID"];          
       
     $sql = "UPDATE SSQ
@@ -257,7 +267,7 @@ public function takeSSQ($data){
     }// Insert user's study in Study table
     
  public function insert_study($data) {
-    array_walk($data, create_function('&$val', '$val = trim($val)'));
+    array_walk($data, create_function('&$val', '$val = trim($val);'));
     $full_name = $data['full_name'];
     $short_name = $data['short_name'];
     $IRB = $data['IRB'];
@@ -309,14 +319,14 @@ public function takeSSQ($data){
 
     // Edit a user's study
     public function updateStudy($data){
-        array_walk($data, create_function('&$val', '$val = trim($val)'));
+        array_walk($data, create_function('&$val', '$val = trim($val);'));
         $full_name = $data['full_name'];
         $short_name = $data['short_name'];
         $IRB = $data['IRB'];
         $description = $data['description'];
         $ssq_times_str = $data['ssq_times'];
         $last_edited_by = Session::get('id');
-        $study_ID = $data['study_ID'];
+        $study_ID = Session::get('study_ID');
         $ssq_times = explode(',', $ssq_times_str);
         array_walk($ssq_times, function (&$time) {
             $time = ucwords(trim($time));
@@ -349,6 +359,8 @@ public function takeSSQ($data){
         while ($row = $old_times_res->fetch(PDO::FETCH_ASSOC)) {
             array_push($old_times, $row['name']);
         }
+        
+        array_walk($old_times, create_function('&$val', '$val = trim($val);'));
         
         $added_ssq_times = array_filter($ssq_times, function ($time) use($old_times) {
             return !in_array($time, $old_times);
@@ -500,9 +512,8 @@ public function takeSSQ($data){
     
     // inserts a session of a  study into DB
     public function insert_session($data){
-        array_walk($data, create_function('&$val', '$val = trim($val)'));
+        array_walk($data, create_function('&$val', '$val = trim($val);'));
         $created_by = Session::get('id');
-        $last_edited_by = Session::get('id');    
         
         if (empty($data["participant_ID"])){
             return Util::generateErrorMessage("Please select a participant!");
@@ -517,7 +528,7 @@ public function takeSSQ($data){
                     VALUES (:study_ID, :participant_ID, :comment, :created_by, :last_edited_by);";
             $stmt = $this->db->pdo->prepare($sql);
             
-            $stmt->bindValue(':study_ID', $data["study_ID"]);
+            $stmt->bindValue(':study_ID', Session::get('study_ID'));
             $stmt->bindValue(':participant_ID', $data["participant_ID"]);
             $stmt->bindValue(':comment', $data["comment"]);
             $stmt->bindValue(':created_by', $created_by);

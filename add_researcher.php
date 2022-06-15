@@ -5,6 +5,11 @@ Session::CheckSession();
 $db = Database::getInstance();
 $pdo = $db->pdo;
 
+if (Session::get("study_ID") == 0){
+    header("Location: view_study");
+    exit();
+}
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['addResearcher'])) {
     $addResearcher = $studies->addResearcher($_POST);
 }
@@ -15,7 +20,8 @@ if (isset($addResearcher)) {
         const divMsg = document.getElementById("flash-msg");
         if (divMsg.classList.contains("alert-success")){
             setTimeout(function(){
-                redirect('study_details', {'study_ID': <?= $_POST["study_ID"] ?>})
+                let redirectURL = "study_details";
+                location.href = redirectURL;
             }, 1000);
         }
     </script>
@@ -25,8 +31,7 @@ if (isset($addResearcher)) {
     <div class="card-header">
         <h3><span class="float-left">Add A Researcher</span>
             <a href="study_details" 
-               class="btn btn-primary float-right redirectUser" 
-               data-study_ID= "<?php echo $_POST['study_ID']; ?>">
+               class="btn btn-primary float-right redirectUser">
                Back
             </a>
         </h3>  
@@ -40,8 +45,6 @@ if (isset($addResearcher)) {
             </div>
             <div class="form-group">
                 <div class="form-group">
-                    <input type="hidden" name="study_ID" value="<?php echo $_POST['study_ID']; ?>">
-                    <!-- <br> -->
                     <label for="researcher_ID" class="required">Add A Member</label>
                     <select class="form-control" name="researcher_ID" id="researcher_ID" required>
                         <option value="" selected hidden disabled>Member Name</option>
@@ -50,7 +53,7 @@ if (isset($addResearcher)) {
                                     FROM tbl_users
                                     WHERE NOT id IN (SELECT researcher_ID 
                                                      FROM Researcher_Study
-                                                     WHERE study_ID = " . $_POST['study_ID'] . 
+                                                     WHERE study_ID = " . Session::get("study_ID") . 
                                                      " AND is_active = 1)
                                     AND isActive = 1
                                     AND affiliationid = " . Session::get("affiliationid") . ";";
@@ -75,27 +78,6 @@ if (isset($addResearcher)) {
 </div>
       
 <script type="text/javascript">
-     $(document).on("click", "a.redirectUser", redirectUser);
-     
-     function redirectUser(){
-         let form = document.createElement("form");
-         let hiddenInput = document.createElement("input");
-         
-         form.setAttribute("method", "POST");
-         form.setAttribute("action", $(this).attr('href'));
-         form.setAttribute("style", "display: none");
-         
-         hiddenInput.setAttribute("type", "hidden");
-         hiddenInput.setAttribute("name", "study_ID");
-         hiddenInput.setAttribute("value", $(this).attr("data-study_ID"));
-         
-         form.appendChild(hiddenInput);
-         document.body.append(form);
-         form.submit();
-         
-         return false;
-     }
-     
      $(document).ready(function() {
          $('#researcher_ID').change(function() {
              var researcher_ID = $(this).val();
