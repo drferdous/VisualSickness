@@ -35,13 +35,16 @@ class Users{
         return Util::generateErrorMessage("This email already exists. Try another email!");
     }
     $affil_sql = "SELECT domain from Affiliation WHERE id = $affiliationid;";
-    $affil_result = $this->db->pdo->prepare($affil_sql);
+    $affil_result = $this->db->pdo->query($affil_sql);
     $affil_domain = $affil_result->fetch(PDO::FETCH_ASSOC)['domain'];
-    $register_domain = array_pop(explode('@', $email));
-    // commented out for TESTING
-    // if ($affil_domain != $register_domain) {
-    //     return Util.generateErrorMessage("This affiliation requires the use of a $affil_domain email account during registration.");
-    // }
+    // print_r($affil_domain);
+    if (!is_null($affil_domain)) {
+        $arr = explode('@', $email);
+        $register_domain = array_pop($arr);
+        if ($affil_domain != $register_domain) {
+            return Util::generateErrorMessage("This affiliation requires the use of a $affil_domain email account during registration.");
+        }
+    }
     
     // if everything is sucessful, insert into DB
     $sql = "INSERT INTO tbl_users(name, email, affiliationid, password, mobile, roleid) 
@@ -207,42 +210,52 @@ class Users{
     
 
   //   Update user profile info
-    public function updateUserByIdInfo($userid, $data){
-      array_walk($data, create_function('&$val', '$val = trim($val);'));
-      $name = $data['name'];
-      $mobile = $data['mobile'];
-      $roleid = $data['roleid'];
-
-    if ($name == "" || $mobile == ""){
-        return Util::generateErrorMessage("Input fields must not be empty!");
+    public function updateUserByIdInfo($data){
+    if (!isset($data["user_ID"]) || !isset($data["iv"])){
+        return Util::generateErrorMessage("Invalid user ID!");
     }
-    if (filter_var($mobile,FILTER_SANITIZE_NUMBER_INT) == FALSE) {
+    
+    array_walk($data, create_function('&$val', '$val = trim($val);'));
+    $iv = hex2bin($data["iv"]);
+    $encryptedUserID = $data["user_ID"];
+    $name = $data['name'];
+    $mobile = $data['mobile'];
+    $userid = Crypto::decrypt($encryptedUserID, $iv);
+    
+    if ($name == ""){
+        return Util::generateErrorMessage("Name field should not be empty!");
+    }
+    if (!empty($mobile) && filter_var($mobile,FILTER_SANITIZE_NUMBER_INT) !== $mobile) {
         return Util::generateErrorMessage("Please enter only numeric characters for phone number!");
     }
-    else{
-        $sql = "UPDATE tbl_users SET
-          name = :name,
-          mobile = :mobile,
-          roleid = :roleid,
-          updated_by = :updated_by,
-          updated_at = CURRENT_TIMESTAMP
-          WHERE id = :id";
-          $stmt= $this->db->pdo->prepare($sql);
-          $stmt->bindValue(':name', $name);
-          $stmt->bindValue(':mobile', $mobile);
-          $stmt->bindValue(':roleid', $roleid);
-          $stmt->bindValue(':id', trim($userid));
-          $stmt->bindValue(':updated_by', Session::get('id'));
-        $result =   $stmt->execute();
-
-        if ($result){ 
-            return Util::generateSuccessMessage("you have updated your information!");
-        } 
-        else {
-            return Util::generateErrorMessage("Your profile could not be updated!");
-        }
-      }
+    if (isset($data["roleid"])){
+        $roleid = $data["roleid"];
     }
+    
+    $sql = "UPDATE tbl_users SET
+            name = :name,
+            mobile = :mobile, "
+            . (isset($roleid) ? "roleid = :roleid," : "") . "
+            updated_by = :updated_by,
+            updated_at = CURRENT_TIMESTAMP
+            WHERE id = :id";
+    $stmt= $this->db->pdo->prepare($sql);
+    $stmt->bindValue(':name', $name);
+    $stmt->bindValue(':mobile', $mobile);
+    if (isset($roleid)){
+        $stmt->bindValue(":roleid", $roleid);
+    }
+    $stmt->bindValue(':id', trim($userid));
+    $stmt->bindValue(':updated_by', Session::get('id'));
+    $result =   $stmt->execute();
+
+    if ($result){ 
+        return Util::generateSuccessMessage("you have updated your information!");
+    } 
+    else{
+        return Util::generateErrorMessage("Your profile could not be updated!");
+    }
+}
     
  // Insert user's study in Study table
  public function insert_study($data) {

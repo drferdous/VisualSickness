@@ -20,22 +20,25 @@ if (isset($_POST["purpose"])){
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update'])) {
-    $updateUser = $users->updateUserByIdInfo($userid, $_POST);
+    $updateUser = $users->updateUserByIdInfo($_POST);
     if (isset($updateUser)) {
         echo $updateUser;
+    }
+    else{
+        echo "updateUser is not set properly.";
     }
 }
 ?>
 
 <div class="card">
     <div class="card-header">
-        <h3>User Profile <span class="float-right"><a href="index" class="btn btn-primary" data-user_ID="0">Back</a></span></h3>
+        <h3>User Profile <span class="float-right"><a href="index" class="btn btn-primary">Back</a></span></h3>
     </div>
     <div class="card-body">
         <?php
             $getUinfo = $users->getUserInfoById($userid);
             if ($getUinfo){ ?>
-                <div style="width:600px; margin:0px auto">
+                <div style="max-width:600px; margin:0px auto">
                   <form class="" action="profile" method="POST">
                       <input type="hidden" name="user_ID" value="<?php echo Crypto::encrypt($userid, $iv);?>">
                       <input type="hidden" name="iv" value="<?php echo bin2hex($iv); ?>">
@@ -68,13 +71,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update'])) {
                     <div class="form-group">
                       <label for="affilation">Affilation: <?php echo $row["Name"]; ?></label>
                     </div>
-                    <?php if (Session::get("roleid") == '1' && $purpose === "edit") { ?>
-
-                      <div class="form-group
-                      <?php if (Session::get("roleid") == '1' && Session::get("id") == $getUinfo->id) {
-                        echo "d-none";
-                            } ?>
-                      ">
+                    <?php if (Session::get("roleid") == '1' && $purpose === "edit" && Session::get("id") != $getUinfo->id) { ?>
+                      <div class="form-group">
                         <div class="form-group">
                           <label for="roleid">Select user Role</label>
                           <select class="form-control" name="roleid" id="roleid">
@@ -84,7 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update'])) {
                             $result = $pdo->query($sql);
                             for ($i = 1; $i <= $result->rowCount(); ++$i){
                               $row = $result->fetch(PDO::FETCH_ASSOC);
-                              if (Session::get("roleid") == $i){ ?>
+                              if ($getUinfo->roleid == $i){ ?>
                                 <option value="<?php echo $i; ?>" selected><?php echo $row["role"]; ?></option>
                         <?php } 
                               else{ ?>  
@@ -95,12 +93,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update'])) {
                         </div>
                       </div>
                      <?php } ?>
-                        <!-- </div>
-                      </div> -->
-                      
                     <div class="form-group">
                       <button type="submit" name="update" class="btn btn-success">Update</button>
-                      <a class="btn btn-primary" href="changepass" data-user-ID="<?php echo $getUinfo->id; ?>">Password change</a>
+                      <a class="btn btn-primary" href="changepass">Password Change</a>
                     </div>
                   </form>
 </div>

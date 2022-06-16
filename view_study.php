@@ -27,7 +27,6 @@ Session::CheckSession();
 
 <script type="text/javascript">
     let activeStatus = 'active';
-    let idToSearch = <?php echo Session::get("id"); ?>;;
     $(document).ready(function(){
         $(document).on("click", "#show-studies", function() {
             if ($(this).prop("checked")){
@@ -49,8 +48,7 @@ Session::CheckSession();
            method: "POST",
            cache: false,
            data:{
-               activeStatus: activeStatus,
-               idToSearch: idToSearch
+               activeStatus: activeStatus
            },
            success: function(data){
                 $("#example").html(data);

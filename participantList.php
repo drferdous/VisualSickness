@@ -10,7 +10,7 @@
                     WHERE researcher_ID = " . Session::get("id") . "
                     AND study_ID = $study_ID;";
         $access_result = $pdo->query($access_sql);
-        if (Session::get('roleid') == 1 && !$access_result->rowCount()) {
+        if (!$access_result->rowCount()) {
             header('Location: participantList');
             exit();
         }
@@ -32,7 +32,7 @@
     </div>
     <?php
     
-        $sql = "SELECT P.anonymous_name, P.dob, P.email, P.phone_no, S.full_name, P.iv
+        $sql = "SELECT P.participant_ID, P.anonymous_name, P.dob, P.email, P.phone_no, S.full_name, P.iv
                 FROM Participants AS P 
                 JOIN Study AS S ON (P.study_id = S.study_ID)
                 WHERE P.is_active = 1 
@@ -65,7 +65,12 @@
                         $name = Crypto::decrypt($row['anonymous_name'], $iv); 
                         ?>
                         <tr>
-                            <td><?php echo $name; ?></td>
+                            <td><a href="participantMoreInfo"
+                                   class="redirectUser"
+                                   data-participant_ID="<?php echo Crypto::encrypt($row["participant_ID"], $iv); ?>"
+                                   data-iv="<?php echo bin2hex($iv); ?>">
+                                   <?php echo $name; ?>
+                            </a></td>
                             <td><?php echo $row["dob"]; ?></td>
                             <td><?php echo $row["full_name"]; ?></td>
                         </tr>
@@ -82,7 +87,34 @@
 <script>
     $(document).ready(() => {
         if (!document.querySelector('.notFound')) $('#example').DataTable();
+        $(document).on("click", "a.redirectUser", redirectUser);
     });
+    
+    function redirectUser(){
+        let form = document.createElement("form");
+        let hiddenInput;
+        
+        form.setAttribute("method", "POST");
+        form.setAttribute("action", $(this).attr("href"));
+        form.setAttribute("style", "display: none");
+        
+        hiddenInput = document.createElement("input");
+        hiddenInput.setAttribute("type", "hidden");
+        hiddenInput.setAttribute("name", "participant_ID");
+        hiddenInput.setAttribute("value", $(this).attr("data-participant_ID"));
+        form.appendChild(hiddenInput);
+        
+        hiddenInput = document.createElement("input");
+        hiddenInput.setAttribute("type", "hidden");
+        hiddenInput.setAttribute("name", "iv");
+        hiddenInput.setAttribute("value", $(this).attr("data-iv"));
+        form.appendChild(hiddenInput);
+        
+        document.body.appendChild(form);
+        form.submit();
+        
+        return false;
+    };
 </script>
 <?php
   include "inc/footer.php";

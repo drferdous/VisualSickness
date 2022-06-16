@@ -46,7 +46,7 @@ if (isset($addResearcher)) {
             </div>
             <div class="form-group">
                 <div class="form-group">
-                    <label for="researcher_ID" class="required">Add A Member</label>
+                    <label for="researcher_ID" class="required">Add A Researcher</label>
                     <?php
                     $sql = "SELECT id, name, email
                             FROM tbl_users
@@ -58,7 +58,7 @@ if (isset($addResearcher)) {
                             AND affiliationid = " . Session::get("affiliationid") . ";";
                     $result = $pdo->query($sql); ?>
                     <select class="form-control" name="researcher_ID" id="researcher_ID" required <?= $result->rowCount() === 0 ? 'disabled' : '' ?>>
-                        <option value="" disabled hidden selected><?= $result->rowCount() === 0 ? 'There are no members you can add to this study!' : 'Member Name' ?></option>
+                        <option value="" disabled hidden selected><?= $result->rowCount() === 0 ? 'There are no researchers you can add to this study!' : 'Researcher Name' ?></option>
                         <?php
                         while ($row = $result->fetch(PDO::FETCH_ASSOC)){ ?>
                                 <option value="<?php echo $row['id']; ?>"><?php echo $row["name"] . " (" . $row["email"] . ")"; ?></option>
@@ -66,7 +66,7 @@ if (isset($addResearcher)) {
                     </select>
                     <br>
                     <label for="study_role" class="required">Select Study Role</label>
-                    <select class="form-control" name="study_role" id="study_role" required <?= $result->rowCount() === 0 ? 'disabled' : '' ?>>
+                    <select class="form-control" name="study_role" id="study_role" required disabled>
                         <option value="" selected hidden disabled>Study Role</option>
                     </select> 
                 </div>
@@ -90,7 +90,9 @@ if (isset($addResearcher)) {
               cache:false,
               data:{researcher_ID:researcher_ID},
               success:function(data){
-                  $("#study_role").html(data);
+                    let studyRoleSelector = document.getElementById("study_role");
+                    $(studyRoleSelector).html(data);
+                    studyRoleSelector.removeAttribute("disabled");
               }
             });	
          });
