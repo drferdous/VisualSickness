@@ -4,6 +4,7 @@
         $token = random_bytes(32);
         
         $url = "https://visualsickness.000webhostapp.com/create-new-password.php?selector=" . $selector . "&validator=" . bin2hex($token); 
+        echo $url;
         
         $expires = mktime(date("G") + 1, date("i"), date("s"), date("m"), date("d"), date("Y")); // G = hours
         
@@ -23,7 +24,6 @@
             $stmt->bindValue(1, $userEmail, PDO::PARAM_STR);
             $stmt->execute();
         }
-        
                 
         $sql = "INSERT INTO pwdReset (pwdResetEmail, pwdResetSelector, pwdResetToken, pwdResetExpires) VALUES (?, ?, ?, ?);";
         $stmt = $pdo->prepare($sql);
@@ -32,13 +32,8 @@
             exit();
         } else {
             $hashedToken = password_hash($token, PASSWORD_DEFAULT);
-            $stmt->bindValue(1, $userEmail, PDO::PARAM_STR);
-            $stmt->bindValue(2, $selector, PDO::PARAM_STR);
-            $stmt->bindValue(3, $hashedToken, PDO::PARAM_STR);
-            $stmt->bindValue(4, $expires, PDO::PARAM_STR);
-            $stmt->execute();
+            $stmt->execute([$userEmail, $selector, $hashedToken, $expires]);
         }
-        
         $stmt->closeCursor();
         // mysqli_close();
         
@@ -48,9 +43,10 @@
         $message .= '<p>Here is your password reset link: </br>';
         $message .= '<a href="' . $url . '">' . $url . '</a></p>';
         
+        // sleep(5);
         sendEmail($to, $subject, $message);
         
         header("Location: ../forgot_password.php?success=true");
     } else {
-        header("Location: ../view_study.php");
+        header("Location: ../forgot_password.php");
     }

@@ -57,7 +57,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'logout') {
     <div class="container">
 
       <nav class="navbar navbar-expand-md navbar-dark bg-dark card-header">
-        <a class="navbar-brand" href="index"><i class="fas fa-home mr-2"></i>Dashboard</a>
+        <a class="navbar-brand" href="index"><i class="fas fa-home mr-2"></i>Home</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -103,24 +103,6 @@ if (isset($_GET['action']) && $_GET['action'] == 'logout') {
                       </li>
                 <?php  } ?>
             <?php } ?>
-            <!-- Anything between this comment can be deleted.
-            <?php if (Session::get('roleid') == '1' || Session::get('roleid') == '2' || Session::get('roleid') == '3') { ?>
-              <li class="nav-item
-
-              <?php
-
-                          $path = $_SERVER['SCRIPT_FILENAME'];
-                          $current = basename($path, '.php');
-                          if ($current == 'addUser') {
-                            echo " active ";
-                          }
-
-                         ?>">
-
-                <a class="nav-link" href="addParticipant"><i class="fas fa-user-plus mr-2"></i>Add Participant </span></a>
-              </li>
-            <?php  } ?>
-            -->
             <?php if (Session::get("reg_stat") == 2) { ?>
                 <li class="nav-item
                 <?php
@@ -135,7 +117,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'logout') {
     
                 ">
     
-                  <a class="nav-link" href="profile" data-user_ID="<?php echo Session::get('id'); ?>" onclick="redirectUser"><i class="fab fa-500px mr-2"></i>Profile <span class="sr-only">(current)</span></a>
+                  <a class="nav-link" href="profile"><i class="fab fa-500px mr-2"></i>Profile <span class="sr-only">(current)</span></a>
                 </li>
             <?php } ?>
 
@@ -170,8 +152,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'logout') {
                 <a class="nav-link" href="login"><i class="fas fa-sign-in-alt mr-2"></i>Login</a>
               </li>
 
-        <?php } 
-        ?>
+        <?php } ?>
 
 
           </ul>

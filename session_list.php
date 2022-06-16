@@ -4,18 +4,20 @@ include_once 'lib/Database.php';
 
 $db = Database::getInstance();
 $pdo = $db->pdo;
-
-Session::CheckSession();
-if (!isset($_POST["study_ID"]) || !isset($_POST["iv"])){
-    header("Location: view_study");
+if (Session::get('study_ID') == 0) {
+    header('Location: view_study');
     exit();
 }
 
-$iv = explode(',', $_POST['iv']);
-$iv_str = call_user_func_array("pack", array_merge(array("C*"), $iv));
-$decrypted = Crypto::decrypt($_POST['study_ID'], $iv_str);
-Session::setStudyId(intval($decrypted), $pdo);
 
+Session::CheckSession();
+Session::requireResearcherOrUser(Session::get('study_ID'), $pdo);
+
+if (isset($_POST["study_ID"]) && isset($_POST["iv"])){
+    $iv = hex2bin($_POST['iv']);
+    $decrypted = Crypto::decrypt($_POST['study_ID'], $iv);
+    Session::setStudyId(intval($decrypted), $pdo);
+}
 if (Session::get("study_ID") == 0){
     header("Location: view_study");
     exit();
@@ -31,7 +33,7 @@ if (Session::get("study_ID") == 0){
         
     <div class="card-body pr-2 pl-2">
     <?php
-        $sql = "SELECT session_ID, start_time, participant_ID FROM Session WHERE study_ID = " . Session::get("study_ID");
+        $sql = "SELECT session_ID, start_time, participant_ID FROM Session WHERE is_active = 1 AND study_ID = " . Session::get("study_ID");
         $result = $pdo->query($sql);
             
         if ($result->rowCount() > 0){
@@ -55,7 +57,7 @@ if (Session::get("study_ID") == 0){
                         //echo "<td>" . $row['session_ID'] ."</td>";
                         
                         if (isset($row['participant_ID'])){
-                            $sql_users = "SELECT anonymous_name FROM Participants WHERE participant_id = " . $row['participant_ID'] . " LIMIT 1;";
+                            $sql_users = "SELECT anonymous_name, iv FROM Participants WHERE participant_id = " . $row['participant_ID'] . " LIMIT 1;";
                             $result_users = $pdo->query($sql_users);
                             
                             if (!$result_users){
@@ -63,8 +65,11 @@ if (Session::get("study_ID") == 0){
                             }
                             
                             $row_users = $result_users->fetch(PDO::FETCH_ASSOC);
+                            
+                            $iv = hex2bin($row_users['iv']);
+                            $name = Crypto::decrypt($row_users['anonymous_name'], $iv);
 
-                            echo "<td>" . $row_users['anonymous_name'] . "</td>";
+                            echo "<td>" . $name . "</td>";
                         } else {
                             echo "<td>-</td>";
                         }                             
@@ -72,7 +77,8 @@ if (Session::get("study_ID") == 0){
                         echo "<td>" .  $row['start_time']     . "</td>";                           
                     
                         echo "<td>";
-                        echo "<a class='btn-success btn-sm' href=\"session_details\" data-session_ID=\"" . $row['session_ID'] . "\">Session Details</a>";
+                        $session_ID = Crypto::encrypt($row['session_ID'], $session_iv);
+                        echo "<a class='btn-success btn-sm redirectUser' href='session_details' data-session_ID= $session_ID data-IV=" . bin2hex($session_iv) . ">Session Details</a>";
                         
                         echo "</td>";
                         
@@ -91,19 +97,26 @@ if (Session::get("study_ID") == 0){
 
 <script type="text/javascript">
     $(document).ready(function(){
-        $(document).on("click", "a.btn-success", redirectUser);
+        $(document).on("click", "a.redirectUser", redirectUser);
         
         function redirectUser(){
             let form = document.createElement("form");
-            let hiddenInput = document.createElement("input");
             
             form.setAttribute("method", "POST");
             form.setAttribute("action", $(this).attr("href"));
             form.setAttribute("style", "display: none");
             
+            let hiddenInput = document.createElement("input");
             hiddenInput.setAttribute("type", "hidden");
             hiddenInput.setAttribute("name", "session_ID");
             hiddenInput.setAttribute("value", $(this).attr("data-session_ID"));
+            
+            form.appendChild(hiddenInput);
+            
+            hiddenInput = document.createElement("input");
+            hiddenInput.setAttribute("type", "hidden");
+            hiddenInput.setAttribute("name", "iv");
+            hiddenInput.setAttribute("value", $(this).attr("data-IV"));
             
             form.appendChild(hiddenInput);
             document.body.appendChild(form);

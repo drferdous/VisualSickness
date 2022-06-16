@@ -1,12 +1,12 @@
 <?php
 include 'inc/header.php';
 Session::CheckSession();
-Session::RedirectIfUser();
 
 if (Session::get('study_ID') == 0) {
     header('Location: view_study');
     exit();
 }
+Session::requirePIorRA(Session::get('study_ID'), Database::getInstance()->pdo);
 
 if (!isset($_POST['referrer'])) $referrer = ltrim(parse_url($_SERVER['HTTP_REFERER'], PHP_URL_PATH), '/');
 else $referrer = $_POST['referrer'];
@@ -19,7 +19,7 @@ if (isset($userAdd)) {
         const divMsg = document.getElementById("flash-msg");
         if (divMsg.classList.contains("alert-success")){
             setTimeout(function(){
-                location.href = <?php echo $referrer; ?>;
+                location.href = '<?php echo $referrer; ?>';
             }, 1000);
         }
     </script>

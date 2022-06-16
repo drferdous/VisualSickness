@@ -4,8 +4,13 @@
     $db = Database::getInstance();
     $pdo = $db->pdo;
     
+    if (Session::get('study_ID') == 0) {
+        header('Location: view_study');
+        exit();
+    }
+    
     Session::CheckSession();
-    Session::set('session_ID', intval($_POST['session_ID']));
+    Session::requireResearcherOrUser(Session::get('session_ID'), $pdo);
     
     if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['take-ssq-btn'])) {
         $takeSSQMessage = $studies->takeSSQ($_POST);
@@ -121,10 +126,11 @@
                         $sql = "SELECT id, name
                                 FROM SSQ_times
                                 WHERE is_active = 1 AND study_id IN (SELECT study_ID
-			                                       FROM Session
-			                                       WHERE session_ID = $session_ID) AND id NOT IN (SELECT ssq_time
-			                                          FROM SSQ
-			                                          WHERE session_ID = $session_ID);";
+									 FROM Session
+			                         WHERE session_ID = $session_ID) 
+			                         AND id NOT IN (SELECT ssq_time
+			                                        FROM SSQ
+			                                        WHERE session_ID = $session_ID and is_active = 1);";
                         $result = $pdo->query($sql);
                         while ($row = $result->fetch(PDO::FETCH_ASSOC)){
                             echo "<option value=\"" . $row['id'] . "\">";

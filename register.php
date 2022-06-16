@@ -11,10 +11,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register'])) {
     $userRegistration = $users->userRegistration($_POST);
 }
 if (isset($userRegistration)) {
-    echo $userRegistration;
-}
-
-?>
+    echo $userRegistration;?>
+    <script type="text/javascript">
+        const divMsg = document.getElementById("flash-msg");
+        if (divMsg.classList.contains("alert-success")){
+            setTimeout(function(){
+                redirect('login', {})
+            }, 1000);
+        }
+    </script>
+<?php } ?>
 
 
  <div class="card">
@@ -50,7 +56,7 @@ if (isset($userRegistration)) {
                     <label for="sel1" class="required">Select User Role</label>
                     <select class="form-control" name="roleid" id="sel1" required>
                       <?php 
-                          $sql = "SELECT id, role FROM tbl_roles WHERE id > 1";
+                          $sql = "SELECT id, role FROM tbl_roles WHERE id > 1;";
                           $result = $pdo->query($sql);
                           while ($row = $result->fetch(PDO::FETCH_ASSOC)){
                               echo '<option value="'.$row['id'].'">' . $row['role'] . "</option>";
@@ -64,7 +70,7 @@ if (isset($userRegistration)) {
                     <label for="selAffil" class="required">Select Affiliation</label>
                     <select class="form-control" name="affiliationid" id="selAffil" required>
                       <?php 
-                          $sql = "SELECT id, name FROM Affiliation WHERE id > 0";
+                          $sql = "SELECT id, name FROM Affiliation;";
                           $result = $pdo->query($sql);
                           while ($row = $result->fetch(PDO::FETCH_ASSOC)){
                               echo '<option value="'.$row['id'].'">' . $row['name'] . "</option>";

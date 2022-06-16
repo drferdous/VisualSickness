@@ -47,8 +47,7 @@ class Studies {
     }
     
     $anonymous_name = Crypto::encrypt($data['anonymous_name'], $iv);
-    echo "name: " . $anonymous_name;
-    echo "iv: " . $iv;
+    $iv = bin2hex($iv);
     
         
     $this->db->pdo->beginTransaction();
@@ -143,12 +142,9 @@ class Studies {
     if (empty($data['researcher_ID'])){
         return Util::generateErrorMessage("Please select a researcher to remove!");
     }
-    if (empty($data['study_ID'])){
-        return Util::generateErrorMessage("Please select a study!");
-    }
     
     $researcher_ID = $data['researcher_ID'];          
-    $study_ID = $data['study_ID'];     
+    $study_ID = Session::get('study_ID');     
       
     $sql = "UPDATE Researcher_Study SET is_active = 0 WHERE researcher_ID = :researcher_ID AND study_ID = :study_ID";
     $stmt = $this->db->pdo->prepare($sql);
@@ -170,12 +166,9 @@ class Studies {
     if (empty($data['participant_ID'])){
         return Util::generateErrorMessage("Please select a participant to remove!");
     }
-    if (empty($data['study_ID'])){
-        return Util::generateErrorMessage("Please select a study!");
-    }
     
-    $participant_ID = $data['participant_ID'];          
-    $study_ID = $data['study_ID'];     
+    $participant_ID = $data['participant_ID'];
+    $study_ID = Session::get('study_ID');
       
     $sql = "UPDATE Participants SET is_active = 0 WHERE participant_ID = :participant_ID AND study_ID = :study_ID";
     $stmt = $this->db->pdo->prepare($sql);
@@ -600,6 +593,26 @@ public function takeSSQ($data){
         $result = $stmt->execute();
         if ($result){
             return Util::generateSuccessMessage("Session ended!");
+        }
+        else{
+            return Util::generateSuccessMessage("Something went wrong. Try ending again!");
+        }
+    }
+    
+    // removes current session within a study.
+    public function removeSession($session_ID){
+        $currentDate = new DateTime();
+        $sql = "UPDATE Session
+                SET is_active = 0
+                WHERE session_ID = :session_ID
+                LIMIT 1;";
+        
+        $stmt = $this->db->pdo->prepare($sql);
+        $stmt->bindValue(':session_ID', $session_ID);
+        
+        $result = $stmt->execute();
+        if ($result){
+            return Util::generateSuccessMessage("Session has been removed!");
         }
         else{
             return Util::generateSuccessMessage("Something went wrong. Try ending again!");

@@ -38,7 +38,7 @@ if (isset($_POST["reset-submit"])) {
                     <label for="password" class="required">New Password</label>
                     <input type="password" name="password"  class="form-control" required>
                 </div>
-                <input type="hidden" name="email" value="<?=$email?>"
+                <input type="hidden" name="email" value="<?=$email?>">
                 <div class="form-group">
                     <button type="submit" name="reset-submit" class="btn btn-success">Set Password</button>
                 </div>

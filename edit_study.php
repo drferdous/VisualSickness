@@ -11,6 +11,7 @@ if (Session::get('study_ID') == 0) {
     exit();
 }
 $study_ID = Session::get('study_ID');
+Session::requirePI($study_ID, $pdo);
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['updateStudy'])) {
     $updateStudy = $studies->updateStudy($_POST);

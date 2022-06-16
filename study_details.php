@@ -145,58 +145,97 @@ if (isset($_POST['leave-btn'])){
                         $row_users = $result_users->fetch(PDO::FETCH_ASSOC);
                         echo $row_users['name'];
                     }
+                    $role_sql = "SELECT study_role FROM Researcher_Study WHERE study_ID = " . Session::get("study_ID") . " AND  researcher_ID = " . Session::get("id") . " AND is_active = 1;";
+                    
+                    $role_result = $pdo->query($role_sql);
+                    $role = $role_result->fetch(PDO::FETCH_ASSOC);
+                                
                     ?></td>
                 </tr> 
             </thead>
         </table>
-                    <div style="padding-block: 32px; border: 1px solid #e3e3e3; display: flex; flex-direction: column; margin-bottom: 1rem; flex-basis: 40%; align-items: center; justify-content: center;"><?php if (Session::get('roleid') === '1' || Session::get('roleid') === '2') {?>
+                    <div style="padding-block: 32px; border: 1px solid #e3e3e3; display: flex; flex-direction: column; margin-bottom: 1rem; flex-basis: 40%; align-items: center; justify-content: center;">
                             <form method="post">
-                                <?php if ($row_study["is_active"] === "1"){ ?>
+                                <?php if ($row_study["is_active"] === "1" && $role['study_role'] == 2){ ?>
                                         <input class="btn btn-danger" type="submit" name="deactivate-btn" value="Deactivate">
                                 <?php }
                                       else{ ?>
-                                        <input class="btn btn-danger" type="submit" name="activate-btn" value="Activate">
+                                        <?php if($role['study_role'] == 2) { ?>
+                                            <input class="btn btn-danger" type="submit" name="activate-btn" value="Activate">
+                                        <?php } ?>
                                 <?php } ?>
                             </form>
-                            <br>
                             <div>
-                                <a href="edit_study"  class="btn btn-success">Edit</a>
+                                <?php if (isset($role['study_role']) && $role['study_role'] != 2){ ?>
+                                        <input class="btn btn-danger" type="submit" name="leave-btn" value="Leave">
+                                <?php } ?>
                             </div>
                             <br>
                             <div>
-                                <a href="researcher_list" class="btn btn-primary btn-success">View Researchers</a>
+                                <?php if($role['study_role'] == 2) { ?>
+                                    <a href="edit_study"  class="btn btn-success">Edit</a>
+                                <?php } ?>
                             </div>
                             <br>
-                            <div>
-                                <a href="add_researcher" class="btn btn-primary btn-success">Add A Researcher</a> 
+                            <div class="text-center">
+                                <!--<div class="input-group">-->
+                                    <!--<select class="form-control">-->
+                                    <!--    <option value="" selected hidden disabled>User Actions</option>-->
+                                    <!--    <option>-->
+                                    <!--        <a href="researcher_list" class="btn btn-primary btn-success">View Researchers</a>-->
+                                    <!--    </option>-->
+                                    <!--    <option>-->
+                                    <!--        <a href="add_researcher" class="btn btn-primary btn-success">Add A Researcher</a>-->
+                                    <!--    </option>-->
+                                    <!--    <option>-->
+                                    <!--        <a href="remove_researcher" class="btn btn-primary btn-success">Remove A Researcher</a>-->
+                                    <!--    </option>-->
+                                    <!--    <option>-->
+                                    <!--        <a href="participantList?forStudy=true" class="btn btn-primary btn-success">View Participants</a>-->
+                                    <!--    </option>-->
+                                    <!--    <option>-->
+                                    <!--        <a href="addParticipant" class="btn btn-primary btn-success">Add A Participant</a>-->
+                                    <!--    </option>-->
+                                    <!--    <option href="remove_participant">-->
+                                    <!--        <a href="remove_participant" class="btn btn-primary btn-success">Remove A Participant</a>-->
+                                    <!--    </option>-->
+                                    <!--</select>-->
+                                    
+                                    
+                                    <button class="btn btn-info dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">User Actions</button>
+                                    <ul class="dropdown-menu">
+                                        <li>
+                                            <a href="researcher_list" class="dropdown-item">View Researchers</a>
+                                        </li>
+                                        <li>
+                                            <?php if(isset($role['study_role']) && $role['study_role'] == 2){ ?>
+                                                <a href="add_researcher" class="dropdown-item">Add A Researcher</a>
+                                            <?php } ?>
+                                        </li>
+                                        <li>
+                                            <?php if(isset($role['study_role']) && $role['study_role'] == 2){ ?>
+                                                <a href="remove_researcher" class="dropdown-item">Remove A Researcher</a>
+                                            <?php } ?>
+                                        </li>
+                                        <li>
+                                            <?php 
+                                            if(isset($role['study_role'])) {
+                                            ?>
+                                                <a href="participantList?forStudy=true" class="dropdown-item">View Participants</a>
+                                            <?php } ?>
+                                        </li>
+                                        <li>
+                                            <?php if(isset($role['study_role']) && $role['study_role'] != 4){ ?>
+                                                <a href="addParticipant" class="dropdown-item">Add A Participant</a>
+                                            <?php } ?>
+                                        </li>
+                                            <?php if(isset($role['study_role']) && $role['study_role'] != 4){ ?>
+                                                <a href="remove_participant" class="dropdown-item">Remove A Participant</a>
+                                            <?php } ?>
+                                        </li>
+                                    </ul>
+                                <!--</div>-->
                             </div>
-                            <br>
-                            
-                            <div>
-                                <a href="remove_researcher" class="btn btn-primary btn-success">Remove A Researcher</a>
-                            </div>
-                            <br>
-                            <div>
-                                <a href="participantList?forStudy=true" class="btn btn-primary btn-success">View Participants</a>
-                            </div>
-                            <br>
-                            <div>
-                                <a href="addParticipant" class="btn btn-primary btn-success">Add A Participant</a>
-                            </div>
-                            <br>
-                            <div>
-                                <a href="remove_participant" class="btn btn-primary btn-success">Remove A Participant</a>
-                            </div>
-                            
-                    <?php } else if (Session::get('roleid') === '3' || Session::get('roleid') === '4'){ ?>
-                            <form method="POST">
-                                <input class="btn btn-danger" type="submit" name="leave-btn" value="Leave">
-                            </form>
-                            <br>
-                            <div>
-                                <a href="participantList" class="btn btn-primary btn-success">View Participants</a>
-                            </div>
-                    <?php } ?></div>
     </div>
 </div>
 <?php

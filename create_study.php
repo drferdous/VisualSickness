@@ -15,7 +15,7 @@ if (isset($insert_study)) {
         const divMsg = document.getElementById("flash-msg");
         if (divMsg.classList.contains("alert-success")){
             setTimeout(function(){
-                redirect('study_details', {'study_ID': <?= $insert_study[1] ?>})
+                location.href = 'study_details';
             }, 1000);
         }
     </script>

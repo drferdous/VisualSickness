@@ -1,4 +1,5 @@
 <?php
+include "inc/header.php";
 include_once "lib/Database.php";
 $pdo = Database::getInstance()->pdo;
 if ($_SERVER["REQUEST_METHOD"] === "GET") {
@@ -14,12 +15,13 @@ if ($_SERVER["REQUEST_METHOD"] === "GET") {
         $validator = hex2bin($validator);
     } else {
         echo "Bad validator parameter.";
-        quit();
+        exit();
     }
         
-    $sql = "SELECT pwdResetEmail, pwdResetToken, pwdResetExpires FROM pwdReset WHERE pwdResetSelector=:selector;";
+    $sql = 'SELECT pwdResetEmail, pwdResetToken, pwdResetExpires FROM pwdReset WHERE pwdResetSelector = :selector;';
     $stmt = $pdo->prepare($sql);
-    $stmt->bindValue(':selector', $selector);
+    $stmt->bindParam(':selector', $selector, PDO::PARAM_STR);
+    
     $stmt->execute();
     $res = $stmt->fetch();
     if ($res) {
@@ -31,7 +33,7 @@ if ($_SERVER["REQUEST_METHOD"] === "GET") {
             echo "Token expired.";
             exit();
         }
-        $sql = "DELETE FROM pwdReset WHERE pwdResetEmail=?;";
+        $sql = "UPDATE pwdReset SET pwdResetExpires = 0 WHERE pwdResetEmail=?;";
         $stmt = $pdo->prepare($sql);
         if (!$stmt) {
             echo "There was an error in resetting your password.";
@@ -39,6 +41,7 @@ if ($_SERVER["REQUEST_METHOD"] === "GET") {
         } else {
             $stmt->bindParam(1, $res["pwdResetEmail"], PDO::PARAM_STR);
             $stmt->execute();
+            $stmt->closeCursor();
         }
     } else {
         echo "Bad token.";
@@ -46,7 +49,7 @@ if ($_SERVER["REQUEST_METHOD"] === "GET") {
     }
 }?>
 <script>
-    window.addEventListener("load", () => {
+    $(document).ready(() => {
         let form = document.createElement("form");
         let hiddenInput;
         

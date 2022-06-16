@@ -1,8 +1,9 @@
 <?php 
 
-session_start();
-session_destroy();
-header('Location: login');
+include_once 'lib/Session.php';
+
+Session::init();
+Session::destroy();
 exit();
 
 ?>

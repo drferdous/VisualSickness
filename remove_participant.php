@@ -12,6 +12,8 @@ if (Session::get('study_ID') == 0) {
 }
 $study_ID = Session::get('study_ID');
 
+Session::requirePIorRA($study_ID, $pdo);
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['removeParticipant'])) {
     $removeParticipant = $studies->removeParticipant($_POST);
 }
@@ -41,22 +43,29 @@ if (isset($removeParticipant)) {
             <div class="form-group">
                 <div class="form-group">
                     <label for="researcher_ID" class="required">Remove a Participant</label>
-                    <select class="form-control" name="participant_ID" id="participant_ID" required>
-                        <option value="" disabled hidden selected>Participant Name</option>
                     <?php
-                        $sql = "SELECT participant_ID, anonymous_name
+                        $sql = "SELECT participant_ID, anonymous_name, iv, dob
                                 FROM Participants
                                 WHERE is_active = 1 AND study_id = $study_ID;";
-                        $result = $pdo->query($sql);
-                        while ($row = $result->fetch(PDO::FETCH_ASSOC)){ ?>
-                            <option value="<?php echo $row['participant_ID']; ?>"><?php echo $row['anonymous_name']; ?></option>
+                        $result = $pdo->query($sql); ?>
+                    <select class="form-control" name="participant_ID" id="participant_ID" required <?= $result->rowCount() === 0 ? 'disabled' : '' ?>>
+                        <option value="" disabled hidden selected><?= $result->rowCount() === 0 ? 'There are no participants you can remove from this study!' : 'Participant Name' ?></option>
+                        <?php
+                        while ($row = $result->fetch(PDO::FETCH_ASSOC)){ 
+                            $iv = hex2bin($row['iv']);
+                            $name = Crypto::decrypt($row['anonymous_name'], $iv); ?>
+                                <option value="<?= $row['participant_ID']; ?>">
+                                    <?= $name . " - " . $row['dob']; ?>
+                                </option>
                     <?php } ?>
                     </select>
                 </div>
             </div>
-            <div class="form-group">
-                 <button type="submit" name="removeParticipant" class="btn btn-success">Submit</button>
-            </div>
+            <?php if ($result->rowCount()) { ?>
+                <div class="form-group">
+                    <button type="submit" name="removeParticipant" class="btn btn-success">Submit</button>
+                </div>
+            <?php } ?>
         </form>
     </div>
 </div>

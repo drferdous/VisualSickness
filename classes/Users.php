@@ -17,7 +17,7 @@ class Users{
 
   // User Registration Method
   public function userRegistration($data){
-    array_walk($data, create_function('&$val', '$val = trim($val)'));
+    array_walk($data, create_function('&$val', '$val = trim($val);'));
     $name = $data['name'];
     $password = Util::generateRandomPassword();
     $email = $data['email'];
@@ -34,33 +34,40 @@ class Users{
     if (Util::checkExistEmail($email, $this->db) !== FALSE) {
         return Util::generateErrorMessage("This email already exists. Try another email!");
     }
-    else{
-        // if everything is sucessful, insert into DB
-        $sql = "INSERT INTO tbl_users(name, email, affiliationid, password, mobile, roleid) 
-                VALUES(:name, :email, :affiliationid, :password, :mobile, :roleid)";
+    $affil_sql = "SELECT domain from Affiliation WHERE id = $affiliationid;";
+    $affil_result = $this->db->pdo->prepare($affil_sql);
+    $affil_domain = $affil_result->fetch(PDO::FETCH_ASSOC)['domain'];
+    $register_domain = array_pop(explode('@', $email));
+    // commented out for TESTING
+    // if ($affil_domain != $register_domain) {
+    //     return Util.generateErrorMessage("This affiliation requires the use of a $affil_domain email account during registration.");
+    // }
+    
+    // if everything is sucessful, insert into DB
+    $sql = "INSERT INTO tbl_users(name, email, affiliationid, password, mobile, roleid) 
+            VALUES(:name, :email, :affiliationid, :password, :mobile, :roleid)";
 
-        $stmt = $this->db->pdo->prepare($sql);
-        $stmt->bindValue(':name', $name);
-        $stmt->bindValue(':email', $email);
-        $stmt->bindValue(':affiliationid', $affiliationid);
-        $stmt->bindValue(':password', SHA1($password));
-        $stmt->bindValue(':mobile', $mobile);
-        $stmt->bindValue(':roleid', $roleid);
-      
-        $result = $stmt->execute();
-        if ($result){
-            $pdo = $this->db->pdo;
-            $id = $pdo->lastInsertId();
-            $update_sql = "UPDATE tbl_users SET updated_by=$id WHERE id=$id;";
-            $pdo->query($update_sql);
-            $body = "<p>This email was recently used to sign up with the account $name. Below is a temporary password to use for your first login. If this is not your account, please ignore this email.<br><br>Temporary password: $password</p>";
-            sendEmail($email, "Temporary Password | Visual Sickness", $body);
-            
-            return Util::generateSuccessMessage("You have registered successfully! Please check your email for a temporary password to login with.");
-        } 
-        else{
-            return Util::generateErrorMessage("Something went wrong! Try registering again!");
-        }
+    $stmt = $this->db->pdo->prepare($sql);
+    $stmt->bindValue(':name', $name);
+    $stmt->bindValue(':email', $email);
+    $stmt->bindValue(':affiliationid', $affiliationid);
+    $stmt->bindValue(':password', SHA1($password));
+    $stmt->bindValue(':mobile', $mobile);
+    $stmt->bindValue(':roleid', $roleid);
+  
+    $result = $stmt->execute();
+    if ($result){
+        $pdo = $this->db->pdo;
+        $id = $pdo->lastInsertId();
+        $update_sql = "UPDATE tbl_users SET updated_by=$id WHERE id=$id;";
+        $pdo->query($update_sql);
+        $body = "<p>This email was recently used to sign up with the account $name. Below is a temporary password to use for your first login. If this is not your account, please ignore this email.<br><br>Temporary password: $password</p>";
+        sendEmail($email, "Temporary Password | Visual Sickness", $body);
+        
+        return Util::generateSuccessMessage("You have registered successfully! Please check your email for a temporary password to login with.");
+    } 
+    else{
+        return Util::generateErrorMessage("Something went wrong! Try registering again!");
     }
   } 
   
@@ -152,8 +159,9 @@ class Users{
           Session::set('email', $logResult->email);
           Session::set('affiliationid', $logResult->affiliationid);
           Session::set('reg_stat', $logResult->reg_stat);
-          Session::set('session_ID', -1);
+          Session::set('session_ID', 0);
           Session::set('logMsg', Util::generateSuccessMessage("You logged in!"));
+          Session::set('study_ID', 0);
         //   echo "<script>location.href='index';</script>";
 
         }
@@ -173,7 +181,7 @@ class Users{
     public function getUserInfoById($userid){
       $sql = "SELECT * FROM tbl_users WHERE id = :id LIMIT 1";
       $stmt = $this->db->pdo->prepare($sql);
-      $stmt->bindValue(':id', $userid);
+      $stmt->bindValue(':id', trim($userid));
       $stmt->execute();
       $result = $stmt->fetch(PDO::FETCH_OBJ);
       if ($result) {
@@ -187,7 +195,7 @@ class Users{
     public function getStudyInfo($study_ID){
       $sql = "SELECT * FROM Study WHERE study_ID = :study_ID LIMIT 1";
       $stmt = $this->db->pdo->prepare($sql);
-      $stmt->bindValue(':study_ID', $study_ID);
+      $stmt->bindValue(':study_ID', trim($study_ID));
       $stmt->execute();
       $result = $stmt->fetch(PDO::FETCH_OBJ);
       if ($result) {
@@ -200,6 +208,7 @@ class Users{
 
   //   Update user profile info
     public function updateUserByIdInfo($userid, $data){
+      array_walk($data, create_function('&$val', '$val = trim($val);'));
       $name = $data['name'];
       $mobile = $data['mobile'];
       $roleid = $data['roleid'];
@@ -222,7 +231,7 @@ class Users{
           $stmt->bindValue(':name', $name);
           $stmt->bindValue(':mobile', $mobile);
           $stmt->bindValue(':roleid', $roleid);
-          $stmt->bindValue(':id', $userid);
+          $stmt->bindValue(':id', trim($userid));
           $stmt->bindValue(':updated_by', Session::get('id'));
         $result =   $stmt->execute();
 
@@ -237,7 +246,7 @@ class Users{
     
  // Insert user's study in Study table
  public function insert_study($data) {
-  array_walk($data, create_function('&$val', '$val = trim($val)'));
+  array_walk($data, create_function('&$val', '$val = trim($val);'));
   $full_name = $data['full_name'];
   $short_name = $data['short_name'];
   $IRB = $data['IRB'];
@@ -271,7 +280,7 @@ class Users{
 
     // Edit a user's study
     public function updateStudy($data){
-        array_walk($data, create_function('&$val', '$val = trim($val)'));
+        array_walk($data, create_function('&$val', '$val = trim($val);'));
         $full_name = $data['full_name'];
         $short_name = $data['short_name'];
         $IRB = $data['IRB'];
@@ -309,7 +318,7 @@ class Users{
                 LIMIT 1;";
                 
         $stmt = $this->db->pdo->prepare($sql);
-        $stmt->bindValue(":study_ID", $study_ID);
+        $stmt->bindValue(":study_ID", trim($study_ID));
         $result = $stmt->execute();
         
         if ($result){
@@ -328,7 +337,7 @@ class Users{
                 LIMIT 1;";
         
         $stmt = $this->db->pdo->prepare($sql);
-        $stmt->bindValue(':study_ID', $study_ID);
+        $stmt->bindValue(':study_ID', trim($study_ID));
         $result = $stmt->execute();
         
         if ($result){
@@ -347,7 +356,7 @@ class Users{
                 LIMIT 1;";
         $stmt = $this->db->pdo->prepare($sql);
         $stmt->bindValue(':researcher_ID', Session::get('id'));
-        $stmt->bindValue(':study_ID', $study_ID);
+        $stmt->bindValue(':study_ID', trim($study_ID));
         
         $result = $stmt->execute();
         if ($result){
@@ -360,7 +369,7 @@ class Users{
     
     // inserts a session of a  study into DB
     public function insert_session($data){
-        array_walk($data, create_function('&$val', '$val = trim($val)'));
+        array_walk($data, create_function('&$val', '$val = trim($val);'));
         $created_by = Session::get('id');
         $last_edited_by = Session::get('id');    
         
@@ -421,7 +430,7 @@ class Users{
                 LIMIT 1;";
                 
         $stmt = $this->db->pdo->prepare($sql);
-        $stmt->bindValue(':session_ID', $session_ID);
+        $stmt->bindValue(':session_ID', trim($session_ID));
         $stmt->bindValue('last_edited_by', $last_edited_by);
         $result = $stmt->execute();
         
@@ -444,7 +453,7 @@ class Users{
         
         $stmt = $this->db->pdo->prepare($sql);
         $stmt->bindValue(':end_time', $currentDate->format('Y-m-d H:i:s'));
-        $stmt->bindValue(':session_ID', $session_ID);
+        $stmt->bindValue(':session_ID', trim($session_ID));
         
         $result = $stmt->execute();
         if ($result){
@@ -466,7 +475,7 @@ class Users{
         
         $stmt = $this->db->pdo->prepare($sql);
         $stmt->bindValue(':end_time', $currentDate->format('Y-m-d H:i:s'));
-        $stmt->bindValue(':session_ID', $session_ID);
+        $stmt->bindValue(':session_ID', trim($session_ID));
         
         $result = $stmt->execute();
         if ($result){
@@ -484,7 +493,7 @@ class Users{
         $sql = "UPDATE tbl_users SET isActive = 2, updated_by = :localId, updated_at = CURRENT_TIMESTAMP WHERE id = :id ";
         $stmt = $this->db->pdo->prepare($sql);
         $stmt->bindValue(':localId', $localId);
-        $stmt->bindValue(':id', $remove);
+        $stmt->bindValue(':id', trim($remove));
         $result =$stmt->execute();
         if ($result) {
             return Util::generateSuccessMessage("User account deleted!");
@@ -504,7 +513,7 @@ class Users{
             WHERE id = :id";
         $stmt = $this->db->pdo->prepare($sql);
         $stmt->bindValue(':isActive', 1);
-        $stmt->bindValue(':id', $deactive);
+        $stmt->bindValue(':id', trim($deactive));
         $result =   $stmt->execute();
         if ($result) {
             echo "<script>location.href='index';</script>";
@@ -517,7 +526,7 @@ class Users{
     }
 
 
-    // User Deactivated By Admin
+    // User Activated By Admin
     public function userActiveByAdmin($active){
         $localId = Session::get('id');
         $sql = "UPDATE tbl_users SET
@@ -528,7 +537,7 @@ class Users{
         $stmt = $this->db->pdo->prepare($sql);
         $stmt->bindValue(':isActive', 0);
         $stmt->bindValue(':localId', $localId);
-        $stmt->bindValue(':id', $active);
+        $stmt->bindValue(':id', trim($active));
         $result =   $stmt->execute();
         if ($result) {
             echo "<script>location.href='index';</script>";
@@ -546,7 +555,7 @@ class Users{
       $sql = "SELECT password FROM tbl_users WHERE password = :password AND id =:id";
       $stmt = $this->db->pdo->prepare($sql);
       $stmt->bindValue(':password', $old_pass);
-      $stmt->bindValue(':id', $userid);
+      $stmt->bindValue(':id', trim($userid));
       $stmt->execute();
       if ($stmt->rowCount() > 0) {
         return true;
@@ -566,7 +575,7 @@ class Users{
         $new_pass = SHA1($new_pass);
         $id_sql = "SELECT id FROM tbl_users WHERE email = :email LIMIT 1";
         $stmt = $this->db->pdo->prepare($id_sql);
-        $stmt->bindValue(':email', $email);
+        $stmt->bindValue(':email', trim($email));
         $stmt->execute();
         $id = $stmt->fetch(PDO::FETCH_ASSOC)['id'];
         $sql = "UPDATE tbl_users SET
@@ -577,7 +586,7 @@ class Users{
         
         $stmt = $this->db->pdo->prepare($sql);
         $stmt->bindValue(':password', $new_pass);
-        $stmt->bindValue(':email', $email);
+        $stmt->bindValue(':email', trim($email));
         $result = $stmt->execute();
         
         if (!$result) {

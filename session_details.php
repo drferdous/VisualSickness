@@ -5,6 +5,11 @@ include_once 'lib/Database.php';
 $db = Database::getInstance();
 $pdo = $db->pdo;
 
+if (Session::get('study_ID') == 0) {
+    header('Location: view_study');
+    exit();
+}
+
 Session::CheckSession();
 if (isset($_POST['session_ID']) && isset($_POST['iv'])) {
     $iv = hex2bin($_POST['iv']);
@@ -14,22 +19,39 @@ if (isset($_POST['session_ID']) && isset($_POST['iv'])) {
     exit();
 }
 
+$session_ID = Session::get('session_ID');
+
 if (isset($_POST['restart-session-btn'])){
-    $startSessionMessage = $studies->restart_session($_POST['session_ID']);
+    $startSessionMessage = $studies->restart_session($session_ID);
     if (isset($startSessionMessage)){
         echo $startSessionMessage;
     }
 }
 
 if (isset($_POST['end-session-btn'])){
-    $endSessionMessage = $studies->endSession($_POST['session_ID']);
+    $endSessionMessage = $studies->endSession($session_ID);
     if (isset($endSessionMessage)){
         echo $endSessionMessage;
     }
 }
 
+if (isset($_POST['remove-session-btn'])){
+    $removeSessionMessage = $studies->removeSession($session_ID);
+    if (isset($removeSessionMessage)){
+        echo $removeSessionMessage; ?>
+        <script type="text/javascript">
+        const divMsg = document.getElementById("flash-msg");
+        if (divMsg.classList.contains("alert-success")){
+            setTimeout(function(){
+                location.href = 'session_list';
+            }, 1000);
+        }
+    </script> <?php
+    }
+}
+
 if (isset($_POST['delete-ssq-btn'])){
-    $deleteSSQmessage = $studies->deleteSSQ($_POST['session_ID']);
+    $deleteSSQmessage = $studies->deleteSSQ($session_ID);
     if (isset($deleteSSQmessage)){
         echo $deleteSSQmessage ;
     }
@@ -43,7 +65,7 @@ if (isset($_POST['delete-ssq-btn'])){
                 <?php
                     $sql = "SELECT study_ID
                             FROM Session
-                            WHERE session_ID = " . $_POST['session_ID'] . "
+                            WHERE session_ID = $session_ID
                             LIMIT 1;";
                     $result = $pdo->query($sql);
                     $row = $result->fetch(PDO::FETCH_ASSOC);
@@ -53,7 +75,7 @@ if (isset($_POST['delete-ssq-btn'])){
                 <?php
                     $sql = "SELECT end_time
                             FROM Session
-                            WHERE session_ID = " . $_POST['session_ID'] . "
+                            WHERE session_ID = $session_ID
                             LIMIT 1;";
                     $result = $pdo->query($sql);
                     $isSessionActive = !isset($result->fetch(PDO::FETCH_ASSOC)["end_time"]);
@@ -68,7 +90,7 @@ if (isset($_POST['delete-ssq-btn'])){
                     $sql = "SELECT * FROM SSQ_times 
                             WHERE id IN (SELECT ssq_time 
                                          FROM SSQ 
-                                         WHERE session_ID = " . $_POST["session_ID"] . "
+                                         WHERE session_ID = $session_ID
                                          AND is_active = 1) 
                             AND is_active = 1;";
                     $result = $pdo->query($sql);
@@ -76,7 +98,7 @@ if (isset($_POST['delete-ssq-btn'])){
                     $areQuizTimesAvailable = $totalQuizTimesAvailable - $numQuizTimesTaken > 0;
             
                     if ($isSessionActive && $areQuizTimesAvailable){?>
-                        <a href="chooseQuiz" class="btn btn-primary" data-session_ID="<?php echo $_POST['session_ID']; ?>">New SSQ</a>
+                        <a href="chooseQuiz" class="btn btn-primary">New SSQ</a>
               <?php }?>
             </span>
         </h3>
@@ -86,7 +108,7 @@ if (isset($_POST['delete-ssq-btn'])){
         <table class="table table-striped table-bordered">
             <thead class="text-center">
                 <?php
-                    $sql_session = "SELECT * FROM Session WHERE session_ID = " . $_POST['session_ID'];
+                    $sql_session = "SELECT * FROM Session WHERE session_ID = $session_ID";
                     $sql_result = $pdo->query($sql_session);
                     $row_session = $sql_result->fetch(PDO::FETCH_ASSOC);
                 ?>
@@ -113,11 +135,14 @@ if (isset($_POST['delete-ssq-btn'])){
                         <?php
                         // show name for participant_ID, not id         
                         if (isset($row_session['participant_ID'])){
-                            $sql_users = "SELECT anonymous_name FROM Participants WHERE participant_id = " . $row_session['participant_ID'] . " LIMIT 1;";
+                            $sql_users = "SELECT anonymous_name, iv FROM Participants WHERE participant_id = " . $row_session['participant_ID'] . " LIMIT 1;";
                             $result_users = $pdo->query($sql_users);
                             $row_users = $result_users->fetch(PDO::FETCH_ASSOC);
+                            
+                        $iv = hex2bin($row_users['iv']);
+                        $name = Crypto::decrypt($row_users['anonymous_name'], $iv); 
                                 
-                            echo "<td>" . $row_users['anonymous_name'] . "</td>";
+                            echo "<td>" . $name . "</td>";
                         }
                         else{
                             echo "<td>-</td>";
@@ -132,7 +157,7 @@ if (isset($_POST['delete-ssq-btn'])){
                     
                     $sql = "SELECT SSQ.ssq_ID, SSQ.ssq_time, SSQ.ssq_type
                             FROM SSQ JOIN SSQ_times ON (SSQ.ssq_time = SSQ_times.id)
-                            WHERE SSQ.session_ID = " . Session::get('session_ID') . "
+                            WHERE SSQ.session_ID = $session_ID
                             AND SSQ_times.is_active = 1
                             AND SSQ.is_active = 1
                             ORDER BY SSQ.ssq_time ASC;";
@@ -208,20 +233,39 @@ if (isset($_POST['delete-ssq-btn'])){
                 </tr>
                 
                 <tr>
-                    <th>Action</th>
+                    <th class='align-middle'>Action</th>
                     <?php
-                    echo "<td>";
-                    echo "<form action=\"session_details\" method=\"POST\">";
-                    echo "<input type=\"hidden\" name=\"session_ID\" value=\"" . $_POST['session_ID'] ."\">";
-                    if (isset($row_session['end_time'])){
-                        echo "<input type=\"submit\" name=\"restart-session-btn\" value=\"Restart Session\">";
-                    }
-                    else{
-                        echo "<input type=\"submit\" name=\"end-session-btn\"   value=\"End Session\">";
-                    }
-                    echo "</form>";
-                    echo "</td>";
-                    ?>                     
+                        $remove_sql = "SELECT is_active, created_by FROM Session WHERE session_ID = $session_ID;";
+                        $remove_result = $pdo->query($remove_sql);
+                        $remove_row = $remove_result->fetch(PDO::FETCH_ASSOC); 
+                        
+                        $role_sql = "SELECT study_role FROM Researcher_Study WHERE study_ID = " . Session::get("study_ID") . " AND  researcher_ID = " . Session::get("id") . " AND is_active = 1;";
+                        $role_result = $pdo->query($role_sql);
+                        $role_row = $role_result->fetch(PDO::FETCH_ASSOC);
+                        
+                        ?>
+                    <td class='d-flex justify-content-center align-items-center'>
+                        <form action="session_details" method="POST">
+                        <?php if (isset($row_session['end_time']) && $remove_row['is_active'] == 1){ ?>
+                            <input class="btn btn-warning" type="submit" name="restart-session-btn" value="Restart Session">
+                            <?php if($role_row['study_role'] == 2 || $remove_row['created_by'] == Session::get("id")) {
+                            ?>
+                                    <input class="btn btn-danger" type="submit" name="remove-session-btn" value="Remove Session">
+                            <?php }
+                                
+                            }
+                        else {
+                            if ($remove_row['is_active'] == 1) { ?>
+                                <input class="btn btn-warning" type="submit" name="end-session-btn" value="End Session">
+                                <?php if($role_row['study_role'] == 2 || $remove_row['created_by'] == Session::get("id")) {
+                                 ?>
+                                <input class="btn btn-danger" type="submit"  name="remove-session-btn" value="Remove Session">
+                            <?php 
+                                }
+                             }
+                        } ?>
+                        </form>
+                    </td>                 
                 </tr>
                 
             </thead>

@@ -5,9 +5,15 @@
     $pdo = $db->pdo;
     if (isset($_GET['forStudy']) && $_GET['forStudy'] && Session::get('study_ID') != 0) $study_ID = Session::get('study_ID');
     
-    if (Study::get("study_ID") == 0){
-        header("Location: view_study");
-        exit();
+    if (isset($study_ID)) {
+        $access_sql = "SELECT study_role FROM Researcher_Study
+                    WHERE researcher_ID = " . Session::get("id") . "
+                    AND study_ID = $study_ID;";
+        $access_result = $pdo->query($access_sql);
+        if (Session::get('roleid') == 1 && !$access_result->rowCount()) {
+            header('Location: participantList');
+            exit();
+        }
     }
 ?>
 
@@ -26,10 +32,10 @@
     </div>
     <?php
     
-        $sql = "SELECT P.anonymous_name, P.dob, P.email, P.phone_no, S.full_name
+        $sql = "SELECT P.anonymous_name, P.dob, P.email, P.phone_no, S.full_name, P.iv
                 FROM Participants AS P 
                 JOIN Study AS S ON (P.study_id = S.study_ID)
-                WHERE P.is_active 
+                WHERE P.is_active = 1 
                 AND P.study_id IN (SELECT study_ID
                                    FROM Researcher_Study
                                    WHERE researcher_ID = " . Session::get("id") . (isset($study_ID) ? " AND study_ID = $study_ID" : "") . ");";
@@ -42,25 +48,25 @@
     ?>
     
     <div class="card-body pr-2 pl-2">
-        <table class="table table-striped table-bordered" id="example">
+        <table class="table table-striped table-bordered table-responsive" style="display: table" id="example">
             <thead class="text-center">
                 <tr>
-                    <th>Participant Name</th>
-                    <th>Date of Birth</th>
-                    <th>Email</th>
-                    <th>Phone Number</th>
-                    <th>Study Name</th>
+                    <th>Name</th>
+                    <th>DOB</th>
+                    <th>Study</th>
                 </tr>
             </thead>
             <tbody>
                 <?php 
                 if ($result->rowCount() > 0) {
                     while ($row = $result->fetch(PDO::FETCH_ASSOC)){ ?>
+                        <?php
+                        $iv = hex2bin($row['iv']);
+                        $name = Crypto::decrypt($row['anonymous_name'], $iv); 
+                        ?>
                         <tr>
-                            <td><?php echo $row["anonymous_name"]; ?></td>
+                            <td><?php echo $name; ?></td>
                             <td><?php echo $row["dob"]; ?></td>
-                            <td><?php echo $row["email"]; ?></td>
-                            <td><?php echo $row["phone_no"]; ?></td>
                             <td><?php echo $row["full_name"]; ?></td>
                         </tr>
                 <?php }

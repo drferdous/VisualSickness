@@ -61,14 +61,17 @@
                 <td>
                     <?php
                         $encrypted = Crypto::encrypt($row['study_ID'], $iv);
+                        $role_sql = "SELECT study_role FROM Researcher_Study WHERE study_ID = " . $row['study_ID'] . " AND  researcher_ID = " . Session::get("id") . " AND is_active = 1;";
+                    
+                        $role_result = $pdo->query($role_sql);
+                        $role = $role_result->fetch(PDO::FETCH_ASSOC);
+                        
+                        
                     ?>
                     <div class="redirectUserBtns" data-study_ID="<?= $encrypted ?>" data-IV="<?= bin2hex($iv) ?>">
                         <a class="btn-success btn-sm" href="study_details">Study Details</a>
                             
-                    <?php if ($row["is_active"] === "1" &&
-                              Session::get("roleid") === "1" ||
-                             ((isset($row["study_role"]) &&
-                             ($row["study_role"] === "2" || $row["study_role"] === "3")))){ ?>
+                    <?php if(isset($role['study_role'])){ ?>
                             <br>
                             <br>
                             <a class="btn-success btn-sm" href="create_session">Create Session</a>

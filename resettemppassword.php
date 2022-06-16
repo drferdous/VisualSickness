@@ -7,6 +7,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['resetTempPass'])) {
     $resetTempPass = $users->resetTempPass($_POST);
     if (isset($resetTempPass)){
         echo $resetTempPass; ?>
+    <script type="text/javascript">
+        const divMsg = document.getElementById("flash-msg");
+        if (divMsg.classList.contains("alert-success")){
+            setTimeout(function(){
+                redirect('index', {})
+            }, 1000);
+        }
+    </script>
 <?php }
 }
 ?>

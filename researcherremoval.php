@@ -3,6 +3,12 @@ include_once 'lib/Database.php';
 $db = Database::getInstance();
 $pdo = $db->pdo;
 
+if (Session::get('study_ID') == 0) {
+    header('Location: view_study');
+    exit();
+}
+Session::requirePI(Session::get('study_ID'), $pdo);
+
 if (isset($_POST['study_ID']) && !empty($_POST['study_ID'])) {
 
 	// Fetch all users in a study after study id is selected

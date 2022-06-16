@@ -9,6 +9,7 @@ if (Session::get("study_ID") == 0){
     header("Location: view_study");
     exit();
 }
+Session::requirePI(Session::get('study_ID'), $pdo);
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['addResearcher'])) {
     $addResearcher = $studies->addResearcher($_POST);
@@ -46,33 +47,35 @@ if (isset($addResearcher)) {
             <div class="form-group">
                 <div class="form-group">
                     <label for="researcher_ID" class="required">Add A Member</label>
-                    <select class="form-control" name="researcher_ID" id="researcher_ID" required>
-                        <option value="" selected hidden disabled>Member Name</option>
+                    <?php
+                    $sql = "SELECT id, name, email
+                            FROM tbl_users
+                            WHERE NOT id IN (SELECT researcher_ID 
+                                             FROM Researcher_Study
+                                             WHERE study_ID = " . Session::get("study_ID") . 
+                                             " AND is_active = 1)
+                            AND isActive = 1
+                            AND affiliationid = " . Session::get("affiliationid") . ";";
+                    $result = $pdo->query($sql); ?>
+                    <select class="form-control" name="researcher_ID" id="researcher_ID" required <?= $result->rowCount() === 0 ? 'disabled' : '' ?>>
+                        <option value="" disabled hidden selected><?= $result->rowCount() === 0 ? 'There are no members you can add to this study!' : 'Member Name' ?></option>
                         <?php
-                            $sql = "SELECT id, name, email
-                                    FROM tbl_users
-                                    WHERE NOT id IN (SELECT researcher_ID 
-                                                     FROM Researcher_Study
-                                                     WHERE study_ID = " . Session::get("study_ID") . 
-                                                     " AND is_active = 1)
-                                    AND isActive = 1
-                                    AND affiliationid = " . Session::get("affiliationid") . ";";
-                            echo $sql;
-                            $result = $pdo->query($sql);
-                            while ($row = $result->fetch(PDO::FETCH_ASSOC)){ ?>
+                        while ($row = $result->fetch(PDO::FETCH_ASSOC)){ ?>
                                 <option value="<?php echo $row['id']; ?>"><?php echo $row["name"] . " (" . $row["email"] . ")"; ?></option>
                         <?php } ?>
                     </select>
                     <br>
                     <label for="study_role" class="required">Select Study Role</label>
-                    <select class="form-control" name="study_role" id="study_role" required>
+                    <select class="form-control" name="study_role" id="study_role" required <?= $result->rowCount() === 0 ? 'disabled' : '' ?>>
                         <option value="" selected hidden disabled>Study Role</option>
                     </select> 
                 </div>
             </div>
-            <div class="form-group">
-                 <button type="submit" name="addResearcher" class="btn btn-success">Submit</button>
-            </div>
+            <?php if ($result->rowCount()) { ?>
+                <div class="form-group">
+                    <button type="submit" name="addResearcher" class="btn btn-success">Submit</button>
+                </div>
+            <?php } ?>
         </form>
     </div>
 </div>

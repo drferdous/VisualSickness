@@ -18,11 +18,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["reset-submit"])) {
     } else if (Session::get('reg_stat') == 0) {
         // Get comma-separated list of admin email addresses for the user's affiliation
         $adminString = Util::getAdminsFromAffiliation($pdo, Session::get('affiliationid'));
-        if (!$adminString) {
-            echo 'An error has occurred. Please try again.';
-            exit();
-        }
         $body = '<p>A new user has signed up for Visual Sickness Study under your affiliation: ' . Util::getAffiliationNameById($pdo, Session::get('affiliationid'));
+        if (!$adminString) {
+            $body = '<p>A new user has signed up for Visual Sickness Study under an affiliation with no admin: ' . Util::getAffiliationNameById($pdo, Session::get('affiliationid'));
+        }
+        
         $body .= "<br><br>The user has signed up with the name <strong>" . Session::get("name") . "</strong> and email <strong>" . Session::get('email') . '</strong>.<br>';
         // send email here
         sendEmail($adminString, 'Visual Sickness | New User Registration', $body);
@@ -33,11 +33,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["reset-submit"])) {
             echo 'An error occurred. Please try again.';
             exit();
         }
-        echo Util::generateSuccesMessage("You will receive an email when your account is verfied by an administrator.");
+        echo Util::generateSuccessMessage("You will receive an email when your account is verfied by an administrator.");
     }
-    echo "<script>setTimeout(() => location.href='index', 2000)</script>";
-}
- ?>
+    ?>
+    <script>
+        setTimeout(() => location.href='index', 2000);
+    </script>";
+<?php } ?>
 <div class="card">
     <div class="card-header">
         <h3 class='text-center'><i class="fas fa-sign-in-alt mr-2"></i>New Password</h3>

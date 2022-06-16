@@ -4,7 +4,7 @@
 ?>
 <?php
 
-    $userid = intval($_POST["user_ID"]);
+    $userid = Session::get("id");
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['changepass'])) {
         $changePass = $users->changePasswordBysingelUserId($userid, $_POST);
@@ -18,7 +18,7 @@ if (isset($changePass)) {
         const divMsg = document.getElementById("flash-msg");
         if (divMsg.classList.contains("alert-success")){
             setTimeout(function(){
-                redirect('profile', {'user_ID': <?= $_POST["user_ID"] ?>, purpose: 'edit'})
+                redirect('profile', {purpose: 'edit'})
             }, 1000);
         }
     </script>
