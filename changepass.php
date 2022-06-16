@@ -7,7 +7,7 @@
     $userid = Session::get("id");
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['changepass'])) {
-        $changePass = $users->changePasswordBysingelUserId($userid, $_POST);
+        $changePass = $users->changePasswordBysingleUserId($userid, $_POST);
     }
 
 
@@ -48,8 +48,6 @@ if (isset($changePass)) {
                     <label for="new_password"class="required">New Password</label>
                     <input type="password" name="new_password" value="<?= Util::getValueFromPost('new_password', $_POST); ?>" class="form-control" required>
                 </div>
-                <input type="hidden" name="user_ID" value="<?php echo $userid; ?>">    
-    
                 <div class="form-group">
                     <button type="submit" name="changepass" class="btn btn-success">Change password</button>
                 </div>
