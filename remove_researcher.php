@@ -41,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['removeResearcher'])) {
             </div>
             <div class="form-group">
                 <div class="form-group">
-                    <label for="researcher_ID" class="required">Remove a Member</label>
+                    <label for="researcher_ID" class="required">Remove a Researcher</label>
                     <?php
                     
                     $sql = "SELECT id, name
@@ -56,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['removeResearcher'])) {
                                          AND NOT researcher_ID = " . Session::get('id') . ");";
                     $result = $pdo->query($sql); ?>
                     <select class="form-control" name="researcher_ID" id="researcher_ID" required <?= $result->rowCount() === 0 ? 'disabled' : '' ?>>
-                        <option value="" disabled hidden selected><?= $result->rowCount() === 0 ? 'There are no members you can remove from this study!' : 'Member Name' ?></option>
+                        <option value="" disabled hidden selected><?= $result->rowCount() === 0 ? 'There are no researchers you can remove from this study!' : 'Researcher Name' ?></option>
                         <?php
                         while ($row = $result->fetch(PDO::FETCH_ASSOC)){ ?>
                             <option value="<?php echo $row['id']; ?>"><?php echo $row['name']; ?></option>
