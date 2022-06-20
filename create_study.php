@@ -2,7 +2,9 @@
 include 'inc/header.php';
 include_once 'lib/Database.php';
 Session::CheckSession();
-Session::RedirectIfUser();
+if (Session::get('roleid') > 2) {
+    header('Location: view_study');
+}
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['insert_study'])) {
 

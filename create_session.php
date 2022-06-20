@@ -17,6 +17,12 @@ if (Session::get('study_ID') == 0) {
 }
     
 Session::requireResearcherOrUser(Session::get('study_ID'), $pdo);
+$active_sql = "SELECT is_active FROM Study WHERE study_ID = " . Session::get('study_ID') . " LIMIT 1;";
+$res = $pdo->query($active_sql);
+if ($res->fetch(PDO::FETCH_ASSOC)['is_active'] == 0) {
+    header('Location: view_study');
+    exit();
+}
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['insert_session'])){
     $insertSessionMessage = $studies->insert_session($_POST); 
@@ -42,13 +48,13 @@ $role = $role_result->fetch(PDO::FETCH_ASSOC);
     
  <div class="card">
     <div class="card-header">
-        <h3 class="text-center">
+        <h3 class="text-center float-left">
             Create a Session
-            <?php if(isset($role['study_role']) && $role['study_role'] != 4){ ?>
-            <a class="float-right btn btn-primary" href="addParticipant">Add Participant</a>
-            <?php } ?>
-            <a class="float-right btn btn-primary" href="view_study" style="transform: translateX(-10px)">Back </a>
         </h3>
+        <?php if(isset($role['study_role']) && $role['study_role'] != 4){ ?>
+        <a class="float-right btn btn-primary" href="addParticipant">Add Participant</a>
+        <?php } ?>
+        <a class="float-right btn btn-primary" href="view_study" style="transform: translateX(-10px)">Back </a>
     </div>
         <div class="card-body">
             <form class="" action="" method="post">

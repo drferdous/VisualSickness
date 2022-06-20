@@ -4,7 +4,6 @@ include_once 'lib/Database.php';
 
 $db = Database::getInstance();
 $pdo = $db->pdo;
-
 if (Session::get('study_ID') == 0) {
     header('Location: view_study');
     exit();
@@ -20,6 +19,10 @@ if (isset($_POST['session_ID']) && isset($_POST['iv'])) {
 }
 
 $session_ID = Session::get('session_ID');
+Session::requireResearcherOrUser(Session::get('study_ID'), $pdo);
+$study_sql = "SELECT is_active FROM Study WHERE study_ID = " . Session::get('study_ID') . " LIMIT 1;";
+$study_result = $pdo->query($study_sql);
+$study_is_active = $study_result->fetch(PDO::FETCH_ASSOC)['is_active'] == 1;
 
 if (isset($_POST['restart-session-btn'])){
     $startSessionMessage = $studies->restart_session($session_ID);
@@ -60,48 +63,60 @@ if (isset($_POST['delete-ssq-btn'])){
 
 <div class="card">
     <div class="card-header">
-        <h3>Session Details 
-            <span class="float-right"> 
-                <?php
-                    $sql = "SELECT study_ID
-                            FROM Session
-                            WHERE session_ID = $session_ID
-                            LIMIT 1;";
-                    $result = $pdo->query($sql);
-                    $row = $result->fetch(PDO::FETCH_ASSOC);
-                ?>
-                <a href="session_list" style="transform: translateX(-10px)" class="btn btn-primary">Back</a>
+        <h3 class="float-left">Session Details</h3>
+        <span class="float-right"> 
+            <?php
+                $sql = "SELECT study_ID
+                        FROM Session
+                        WHERE session_ID = $session_ID
+                        LIMIT 1;";
+                $result = $pdo->query($sql);
+                $row = $result->fetch(PDO::FETCH_ASSOC);
+            ?>
+            <a href="session_list" style="transform: translateX(-10px)" class="btn btn-primary">Back</a>
 
-                <?php
-                    $sql = "SELECT end_time
-                            FROM Session
-                            WHERE session_ID = $session_ID
-                            LIMIT 1;";
-                    $result = $pdo->query($sql);
-                    $isSessionActive = !isset($result->fetch(PDO::FETCH_ASSOC)["end_time"]);
-                    
-                    $sql = "SELECT * 
-                            FROM SSQ_times 
-                            WHERE study_id = " . $row["study_ID"] . " 
-                            AND is_active = 1;";
-                    $result = $pdo->query($sql);
-                    $totalQuizTimesAvailable = $result->rowCount();
-                    
-                    $sql = "SELECT * FROM SSQ_times 
-                            WHERE id IN (SELECT ssq_time 
-                                         FROM SSQ 
-                                         WHERE session_ID = $session_ID
-                                         AND is_active = 1) 
-                            AND is_active = 1;";
-                    $result = $pdo->query($sql);
-                    $numQuizTimesTaken = $result->rowCount();
-                    $areQuizTimesAvailable = $totalQuizTimesAvailable - $numQuizTimesTaken > 0;
-            
-                    if ($isSessionActive && $areQuizTimesAvailable){?>
-                        <a href="chooseQuiz" class="btn btn-primary">New SSQ</a>
-              <?php }?>
-            </span>
-        </h3>
+            <?php
+                $sql = "SELECT end_time
+                        FROM Session
+                        WHERE session_ID = $session_ID
+                        LIMIT 1;";
+                $result = $pdo->query($sql);
+                $isSessionActive = !isset($result->fetch(PDO::FETCH_ASSOC)["end_time"]);
+                
+                $sql = "SELECT * 
+                        FROM SSQ_times 
+                        WHERE study_id = " . $row["study_ID"] . " 
+                        AND is_active = 1;";
+                $result = $pdo->query($sql);
+                $totalQuizTimesAvailable = $result->rowCount();
+                
+                $sql = "SELECT * FROM SSQ_times 
+                        WHERE id IN (SELECT ssq_time 
+                                     FROM SSQ 
+                                     WHERE session_ID = $session_ID
+                                     AND is_active = 1) 
+                        AND is_active = 1;";
+                $result = $pdo->query($sql);
+                $numQuizTimesTaken = $result->rowCount();
+                $areQuizTimesAvailable = $totalQuizTimesAvailable - $numQuizTimesTaken > 0;
+                
+                $id_sql = "SELECT created_by FROM Session 
+                        WHERE session_ID = $session_ID
+                        AND is_active = 1;";
+                $id_result = $pdo->query($id_sql);
+                $id_row = $id_result->fetch(PDO::FETCH_ASSOC);
+                
+                $role_sql = "SELECT study_role FROM Researcher_Study WHERE study_ID = " . Session::get('study_ID') . "
+                 AND  researcher_ID = " . Session::get("id") . " 
+                 AND is_active = 1;";
+                
+                $role_result = $pdo->query($role_sql);
+                $role = $role_result->fetch(PDO::FETCH_ASSOC);
+        
+                if ($study_is_active && $isSessionActive && $areQuizTimesAvailable && ($id_row['created_by'] == Session::get('id') || $role['study_role'] == 2)){?>
+                    <a href="chooseQuiz" class="btn btn-primary">New SSQ</a>
+          <?php }?>
+        </span>
     </div>
 
     <div class="card-body pr-2 pl-2">
@@ -169,10 +184,12 @@ if (isset($_POST['delete-ssq-btn'])){
                         $result_times = $pdo->query($ssq_times);
                         $ssq_name = $result_times->fetch(PDO::FETCH_ASSOC)["name"];
                         $result_type = $pdo->query($ssq_type);
-                        $ssq_type = $result_type->fetch(PDO::FETCH_ASSOC)["type"]; ?>
-                        <a style="margin-inline: 3px;" class="btn-sm btn-success redirectUser" 
-                            href="<?php echo $ssq_type; ?>Quiz"
-                            data-ssq_ID="<?php echo $row['ssq_ID']; ?>"
+                        $ssq_type = $result_type->fetch(PDO::FETCH_ASSOC)["type"];
+                        $encrypted_ssq_ID = Crypto::encrypt($row['ssq_ID'], $iv); ?>
+                        <a style="margin-inline: 3px; margin-block: 2px;" class="btn btn-sm btn-success redirectUser" 
+                            href="<?= $ssq_type ?>Quiz"
+                            data-ssq_ID="<?= $encrypted_ssq_ID ?>"
+                            data-IV="<?= bin2hex($iv) ?>"
                         >
                         <?php echo $ssq_name . " (" . $ssq_type . ")"; ?>
                         </a>
@@ -231,7 +248,7 @@ if (isset($_POST['delete-ssq-btn'])){
                     }    
                     ?>
                 </tr>
-                
+                <?php if ($study_is_active) { ?>
                 <tr>
                     <th class='align-middle'>Action</th>
                     <?php
@@ -244,13 +261,13 @@ if (isset($_POST['delete-ssq-btn'])){
                         $role_row = $role_result->fetch(PDO::FETCH_ASSOC);
                         
                         ?>
-                    <td class='d-flex justify-content-center align-items-center'>
-                        <form action="session_details" method="POST">
+                    <td>
+                        <form action="session_details" method="POST" class="d-flex justify-content-center align-items-center" style="gap: 6px;flex-wrap: wrap;">
                         <?php if (isset($row_session['end_time']) && $remove_row['is_active'] == 1){ ?>
                             <input class="btn btn-warning" type="submit" name="restart-session-btn" value="Restart Session">
                             <?php if($role_row['study_role'] == 2 || $remove_row['created_by'] == Session::get("id")) {
                             ?>
-                                    <input class="btn btn-danger" type="submit" name="remove-session-btn" value="Remove Session">
+                                    <input onclick="return confirm('Are you sure you want to remove this session? This action cannot be undone.');" class="btn btn-danger" type="submit" name="remove-session-btn" value="Remove Session">
                             <?php }
                                 
                             }
@@ -259,7 +276,7 @@ if (isset($_POST['delete-ssq-btn'])){
                                 <input class="btn btn-warning" type="submit" name="end-session-btn" value="End Session">
                                 <?php if($role_row['study_role'] == 2 || $remove_row['created_by'] == Session::get("id")) {
                                  ?>
-                                <input class="btn btn-danger" type="submit"  name="remove-session-btn" value="Remove Session">
+                                <input onclick="return confirm('Are you sure you want to remove this session? This action cannot be undone.');" class="btn btn-danger" type="submit"  name="remove-session-btn" value="Remove Session">
                             <?php 
                                 }
                              }
@@ -267,11 +284,42 @@ if (isset($_POST['delete-ssq-btn'])){
                         </form>
                     </td>                 
                 </tr>
-                
+                <?php } ?>
             </thead>
         </table>
     </div>
 </div>
+<script>
+    $(document).ready(() => {
+        [...document.getElementsByClassName('redirectUser')].forEach(a => {
+            console.log(a);
+            a.onclick = redirectUser;
+        })
+    });
+    
+    const redirectUser = (el) => {
+        const form = document.createElement('form');
+        form.setAttribute("method", "POST");
+        form.setAttribute("action", el.target.href);
+        form.setAttribute("style", "display: none");
+        
+        hiddenInput = document.createElement("input");
+        hiddenInput.setAttribute("type", "hidden");
+        hiddenInput.setAttribute("name", "ssq_ID");
+        hiddenInput.setAttribute("value", el.target.dataset.ssq_id);
+        form.appendChild(hiddenInput);
+        
+        hiddenInput = document.createElement("input");
+        hiddenInput.setAttribute("type", "hidden");
+        hiddenInput.setAttribute("name", "iv");
+        hiddenInput.setAttribute("value", el.target.dataset.iv);
+        form.appendChild(hiddenInput);
+        
+        document.body.appendChild(form);
+        form.submit();
+        return false;
+    }
+</script>
 <?php
   include 'inc/footer.php';
 ?>

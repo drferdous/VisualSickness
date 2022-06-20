@@ -9,13 +9,13 @@ Session::CheckSession();
 
 ?>
 
-<div class="card">
+<div class="card overflow-hidden">
     <div class="card-header">
         <h3>Study List</h3>         
     </div>
     <div class="card-body pr-2 pl-2">
         <br />
-        <table class="table table-striped table-bordered" id="example">
+        <table class="table table-striped table-bordered table-responsive" style="display: table" id="example">
         </table>
         <br>
         <div class="form-check form-switch float-right">
@@ -35,7 +35,7 @@ Session::CheckSession();
             else{
                 activeStatus = "all";
             }
-            getData();
+            getData(false);
         });
         $(document).on("click", ".redirectUserBtns a", redirectUser);
     });
@@ -56,7 +56,10 @@ Session::CheckSession();
                     $("#example").DataTable().destroy();
                 }
                 overrideDT = false;
-                if ($("#example td.notFound").length === 0) $('#example').DataTable();
+                if ($("#example td.notFound").length === 0) {
+                    $('#example').DataTable();
+                    $('#example').parent().css('overflow-x', 'auto');
+                }
                 else overrideDT = true;
            }
         });

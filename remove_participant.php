@@ -15,7 +15,11 @@ $study_ID = Session::get('study_ID');
 Session::requirePIorRA($study_ID, $pdo);
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['removeParticipant'])) {
-    $removeParticipant = $studies->removeParticipant($_POST);
+    $info = explode(';', $_POST['participant_ID']);
+    $participant_ID = $info[0];
+    $iv = $info[1];
+    $participant_ID = Crypto::decrypt($participant_ID, hex2bin($iv));
+    $removeParticipant = $studies->removeParticipant($participant_ID);
 }
 if (isset($removeParticipant)) {
   echo $removeParticipant;?>
@@ -31,7 +35,8 @@ if (isset($removeParticipant)) {
  
 <div class="card">
     <div class="card-header">
-        <h3>Remove A Participant<span class="float-right"><a href="study_details" class="btn btn-primary">Back</a></span></h3> 
+        <h3 class="float-left">Remove A Participant</h3>
+        <span class="float-right"><a href="study_details" class="btn btn-primary">Back</a></span>
     </div>
     <div class="card-body pr-2 pl-2">
         <form class="" action="" method="post">
@@ -53,9 +58,10 @@ if (isset($removeParticipant)) {
                         <?php
                         while ($row = $result->fetch(PDO::FETCH_ASSOC)){ 
                             $iv = hex2bin($row['iv']);
-                            $name = Crypto::decrypt($row['anonymous_name'], $iv); ?>
-                                <option value="<?= $row['participant_ID']; ?>">
-                                    <?= $name . " - " . $row['dob']; ?>
+                            $name = Crypto::decrypt($row['anonymous_name'], $iv);
+                            $participant_ID = Crypto::encrypt($row['participant_ID'], $id_IV); ?>
+                                <option value="<?= $participant_ID ?>;<?= bin2hex($id_IV) ?>">
+                                    <?= $name . " - " . $row['dob'] ?>
                                 </option>
                     <?php } ?>
                     </select>

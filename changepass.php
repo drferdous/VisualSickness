@@ -27,12 +27,11 @@ if (isset($changePass)) {
 
 <div class="card">
     <div class="card-header">
-        <h3>Change your password 
-            <a href="profile" class="btn btn-primary float-right">Back</a> 
-        </h3>
+        <h3 class="float-left">Change your password</h3>
+        <a href="profile" class="btn btn-primary float-right">Back</a> 
     </div>
         <div class="card-body">
-            <div style="width:600px; margin:0px auto">
+            <div style="max-width:600px; margin:0px auto">
 
             <form class="" action="" method="POST">
                 <div style="margin-block: 6px;">

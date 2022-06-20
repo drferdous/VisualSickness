@@ -7,17 +7,22 @@
         header('Location: view_study');
     }
     $study_ID = Session::get('study_ID');
-    Session::requireResearcherOrUser($study_ID, $pdo);
+    $affil_sql = "SELECT users.affiliationid FROM tbl_users AS users
+                    JOIN Study AS study ON users.id = study.created_by
+                    WHERE study.study_ID = $study_ID LIMIT 1;";
+    $affil_result = $pdo->query($affil_sql);
+    if (!(Session::get('roleid') == 1 && $affil_result->fetch(PDO::FETCH_ASSOC)['affiliationid'] == Session::get('affiliationid'))) {
+        Session::requireResearcherOrUser($study_ID, $pdo);
+    }
 ?>
 
 <div class="card">
     <div class="card-header">
-        <h3>Researcher List
-            <?php
-            if (isset($study_ID)) {
-                echo "<span class='float-right'><a href='study_details' class='btn btn-primary redirectUser' data-study_ID=" . $study_ID . ">Back</a></span>";
-            }?>
-        </h3>
+        <h3 class="float-left">Researcher List</h3>
+        <?php
+        if (isset($study_ID)) {
+            echo "<span class='float-right'><a href='study_details' class='btn btn-primary'>Back</a></span>";
+        }?>
     </div>
     <?php
     
@@ -32,13 +37,12 @@
     ?>
     
     <div class="card-body pr-2 pl-2">
-        <table class="table table-striped table-bordered" id="example">
+        <table class="table table-striped table-bordered table-responsive" style="display: table" id="example">
             <thead class="text-center">
                 <tr>
-                    <th>Researcher Name</th>
-                    <th>Email</th>
-                    <th>Phone Number</th>
+                    <th>Name</th>
                     <th>Role</th>
+                    <th>Contact</th>
                 </tr>
             </thead>
             <tbody>
@@ -46,10 +50,12 @@
                 if ($result->rowCount() > 0) {
                     while ($row = $result->fetch(PDO::FETCH_ASSOC)){ ?>
                         <tr>
-                            <td><?php echo $row["name"]; ?></td>
-                            <td><?php echo $row["email"]; ?></td>
-                            <td><?php echo $row["mobile"]; ?></td>
-                            <td><?php echo $row["role"]; ?></td>
+                            <td><?= $row["name"] ?></td>
+                            <td><?= $row["role"] ?></td>
+                            <td>
+                                <a href="mailto:<?= $row["email"] ?>"<i class="fa fa-envelope mr-2 text-decoration-none"></i></a>
+                                <a href="tel:<?= $row["mobile"] ?>"<i class="fa fa-phone mr-2 text-decoration-none"></i></a>
+                            </td>
                         </tr>
                 <?php }
                 } else { ?>
@@ -63,28 +69,15 @@
 </div>
 <script>
     $(document).ready(() => {
-        $(document).on("click", "a.redirectUser", redirectUser);
         if (!document.querySelector('.notFound')) $('#example').DataTable();
+        div = document.createElement('div');
+        div.style.overflowX = 'auto';
+        const table = document.querySelector('table');
+        const parent = table.parentElement
+        const index = [...parent.children].indexOf(table);
+        div.appendChild(table.cloneNode(true));
+        parent.replaceChild(div, table);
     });
-    
-    function redirectUser(){
-        let form = document.createElement("form");
-        let hiddenInput = document.createElement("input");
-        
-        form.setAttribute("method", "POST");
-        form.setAttribute("action", $(this).attr("href"));
-        form.setAttribute("style", "display: none");
-        
-        hiddenInput.setAttribute("type", "hidden");
-        hiddenInput.setAttribute("name", "study_ID");
-        hiddenInput.setAttribute("value", $(this).attr("data-study_ID"));
-        
-        form.appendChild(hiddenInput);
-        document.body.appendChild(form);
-        form.submit();
-        
-        return false;
-    }
 </script>
 <?php
   include "inc/footer.php";

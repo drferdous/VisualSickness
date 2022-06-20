@@ -20,7 +20,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["reset-submit"])) {
         $adminString = Util::getAdminsFromAffiliation($pdo, Session::get('affiliationid'));
         $body = '<p>A new user has signed up for Visual Sickness Study under your affiliation: ' . Util::getAffiliationNameById($pdo, Session::get('affiliationid'));
         if (!$adminString) {
-            $body = '<p>A new user has signed up for Visual Sickness Study under an affiliation with no admin: ' . Util::getAffiliationNameById($pdo, Session::get('affiliationid'));
+            $adminString = "visualsicknessstudy@gmail.com";
+            $body = '<p>A new user has signed up for Visual Sickness Study under an affiliation with no administrator: ' . Util::getAffiliationNameById($pdo, Session::get('affiliationid'));
         }
         
         $body .= "<br><br>The user has signed up with the name <strong>" . Session::get("name") . "</strong> and email <strong>" . Session::get('email') . '</strong>.<br>';

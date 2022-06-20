@@ -19,16 +19,15 @@
 
 <div class="card">
     <div class="card-header">
-        <h3>Participant List
-            <?php if (isset($study_ID)) { ?>
-                <span class='float-right'>
-                    <a href='study_details' 
-                       class='btn btn-primary redirectUser'> 
-                       Back
-                    </a>
-                </span>
-            <?php } ?>
-        </h3>
+        <h3 class="float-left">Participant List</h3>
+        <?php if (isset($study_ID)) { ?>
+            <span class='float-right'>
+                <a href='study_details' 
+                   class='btn btn-primary redirectUser'> 
+                   Back
+                </a>
+            </span>
+        <?php } ?>
     </div>
     <?php
     
@@ -65,8 +64,8 @@
                         $name = Crypto::decrypt($row['anonymous_name'], $iv); 
                         ?>
                         <tr>
-                            <td><a href="participantMoreInfo"
-                                   class="redirectUser"
+                            <td><a href="participant_more_info"
+                                   class="redirectUser link"
                                    data-participant_ID="<?php echo Crypto::encrypt($row["participant_ID"], $iv); ?>"
                                    data-iv="<?php echo bin2hex($iv); ?>">
                                    <?php echo $name; ?>
@@ -109,6 +108,14 @@
         hiddenInput.setAttribute("name", "iv");
         hiddenInput.setAttribute("value", $(this).attr("data-iv"));
         form.appendChild(hiddenInput);
+        
+        <?php if (isset($study_ID)) {
+            echo 'console.log("ok");';?>
+            hiddenInput = document.createElement("input");
+            hiddenInput.setAttribute("type", "hidden");
+            hiddenInput.setAttribute("name", "forStudy");
+            form.appendChild(hiddenInput);
+        <?php } ?>
         
         document.body.appendChild(form);
         form.submit();

@@ -26,10 +26,11 @@ if (isset($userAdd)) {
 <?php } ?>
 <div class="card">
     <div class="card-header">
-          <h3 class="text-center">Add New Participant<span class="float-right"> <a href='<?= $referrer ?>' class="btn btn-primary redirectUser">Back</a></span></h3>
+          <h3 class="text-center float-left">Add New Participant</h3>
+          <span class="float-right"> <a href='<?= $referrer ?>' class="btn btn-primary redirectUser">Back</a></span>
     </div>
     <div class="card-body">
-            <div style="width:600px; margin:0px auto">
+            <div style="max-width:600px; margin:0px auto">
             <form class="" action="" method="post">
                 <input type="hidden" name="referrer" value="<?= $referrer ?>">
                 <div style="margin-block: 6px;">

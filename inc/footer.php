@@ -1,6 +1,5 @@
 <div class="well card-footer"></div>
-</body>
-
+</div>
   <!-- Jquery script -->
 <script src="assets/jquery.min.js"></script>
 <script src="assets/bootstrap.min.js"></script>
@@ -42,4 +41,5 @@
         return false;
     }
   </script>
+</body>
 </html>

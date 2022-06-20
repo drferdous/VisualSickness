@@ -24,13 +24,12 @@
 
             <thead>
                 <tr class="text-center">
-                    <th>ID</th>
                     <th>Name</th>
-                    <th>Email address</th>
-                    <th>Mobile</th>
+                    <th>Email</th>
+                    <th>Phone</th>
                     <th>Status</th>
                     <th>Created</th>
-                    <th width="25%">Action</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -48,8 +47,7 @@
                             <?php } ?>
                             >
 
-                        <td><?php echo $i; ?></td>
-                        <td><?php echo $value->name; ?>
+                        <td><?= $value->name; ?>
                         <br>
                         <?php if ($value->roleid  == '1'){ //admin ?>
                                 <span class='badge badge-lg badge-info text-white'>Admin</span>
@@ -64,7 +62,7 @@
                                 <span class='badge badge-lg badge-dark text-white'>User Only</span>
                         <?php } ?>
                         </td>
-                        <td><?php echo $value->email; ?></td>
+                        <td><a href="mailto:<?= $value->email ?>"><?= $value->email ?></a></td>
                         <td><span class="badge badge-lg badge-secondary text-white"><?php echo $value->mobile; ?></span></td>
                         <td>
                         <?php if ($value->status == 0) { ?>

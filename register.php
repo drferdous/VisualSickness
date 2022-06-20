@@ -30,7 +30,7 @@ if (isset($userRegistration)) {
         </div>
         <div class="card-body">
 
-            <div style="width:600px; margin:0px auto">
+            <div style="max-width:600px; margin:0px auto">
 
             <form class="" action="" method="post">
                 <br>
@@ -58,9 +58,9 @@ if (isset($userRegistration)) {
                       <?php 
                           $sql = "SELECT id, role FROM tbl_roles WHERE id > 1;";
                           $result = $pdo->query($sql);
-                          while ($row = $result->fetch(PDO::FETCH_ASSOC)){
-                              echo '<option value="'.$row['id'].'">' . $row['role'] . "</option>";
-                          }
+                          while ($row = $result->fetch(PDO::FETCH_ASSOC)){ ?>
+                            <option <?= Util::getValueFromPost('roleid', $_POST) == $row['id'] ? 'selected' : ''; ?> value='<?= $row['id'] ?>'><?= $row['role'] ?></option>
+                          <?php }
                       ?>
                     </select>
                   </div>
@@ -72,9 +72,9 @@ if (isset($userRegistration)) {
                       <?php 
                           $sql = "SELECT id, name FROM Affiliation;";
                           $result = $pdo->query($sql);
-                          while ($row = $result->fetch(PDO::FETCH_ASSOC)){
-                              echo '<option value="'.$row['id'].'">' . $row['name'] . "</option>";
-                          }
+                          while ($row = $result->fetch(PDO::FETCH_ASSOC)){ ?>
+                              <option <?= Util::getValueFromPost('affiliationid', $_POST) == $row['id'] ? 'selected' : ''; ?> value='<?= $row['id'] ?>'><?= $row['name'] ?></option>
+                          <?php }
                       ?>
                     </select>
                   </div>

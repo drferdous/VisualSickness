@@ -32,7 +32,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update'])) {
 
 <div class="card">
     <div class="card-header">
-        <h3>User Profile <span class="float-right"><a href="index" class="btn btn-primary">Back</a></span></h3>
+        <h3 class="float-left">User Profile</h3>
+        <span class="float-right"><a href="index" class="btn btn-primary">Back</a></span>
     </div>
     <div class="card-body">
         <?php

@@ -73,7 +73,7 @@
         </strong></span></h3>
     </div>
     <div class="card-body pr-2 pl-2">
-        <table id="example" class="table table-striped table-bordered" style="width:100%">
+        <table id="example" class="table table-striped table-bordered table-responsive" style="width:100%;display:table">
             
         </table>
     <div class="form-check form-switch float-right" style="margin-left: 2rem">

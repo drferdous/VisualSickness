@@ -12,7 +12,11 @@ if (Session::get("study_ID") == 0){
 Session::requirePI(Session::get('study_ID'), $pdo);
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['addResearcher'])) {
-    $addResearcher = $studies->addResearcher($_POST);
+    $info = explode(';', $_POST['researcher_ID']);
+    $researcher_ID = $info[0];
+    $iv = $info[1];
+    $researcher_ID = Crypto::decrypt($researcher_ID, hex2bin($iv));
+    $addResearcher = $studies->addResearcher($researcher_ID, $_POST['study_role']);
 }
 
 if (isset($addResearcher)) {
@@ -30,12 +34,11 @@ if (isset($addResearcher)) {
 
 <div class="card">
     <div class="card-header">
-        <h3><span class="float-left">Add A Researcher</span>
-            <a href="study_details" 
-               class="btn btn-primary float-right redirectUser">
-               Back
-            </a>
-        </h3>  
+        <h3 class="float-left">Add A Researcher</h3>
+        <a href="study_details" 
+           class="btn btn-primary float-right redirectUser">
+           Back
+        </a>
     </div>
     <div class="card-body pr-2 pl-2">
         <form class="" action="" method="post">
@@ -60,8 +63,9 @@ if (isset($addResearcher)) {
                     <select class="form-control" name="researcher_ID" id="researcher_ID" required <?= $result->rowCount() === 0 ? 'disabled' : '' ?>>
                         <option value="" disabled hidden selected><?= $result->rowCount() === 0 ? 'There are no researchers you can add to this study!' : 'Researcher Name' ?></option>
                         <?php
-                        while ($row = $result->fetch(PDO::FETCH_ASSOC)){ ?>
-                                <option value="<?php echo $row['id']; ?>"><?php echo $row["name"] . " (" . $row["email"] . ")"; ?></option>
+                        while ($row = $result->fetch(PDO::FETCH_ASSOC)){
+                            $enc_id = Crypto::encrypt($row['id'], $iv); ?>
+                                <option value="<?= $enc_id ?>;<?= bin2hex($iv) ?>"><?= $row["name"] . " (" . $row["email"] . ")"; ?></option>
                         <?php } ?>
                     </select>
                     <br>
@@ -83,17 +87,22 @@ if (isset($addResearcher)) {
 <script type="text/javascript">
      $(document).ready(function() {
          $('#researcher_ID').change(function() {
-             var researcher_ID = $(this).val();
+            const info = $(this).val();
+            const researcher_ID = info.split(';')[0];
+            const iv = info.split(';')[1];
             $.ajax({
-              url :"researcherrole",
-              type:"POST",
-              cache:false,
-              data:{researcher_ID:researcher_ID},
-              success:function(data){
+                url: "researcherrole",
+                type: "POST",
+                cache: false,
+                data: {
+                    researcher_ID,
+                    iv
+                },
+                success:function(data){
                     let studyRoleSelector = document.getElementById("study_role");
                     $(studyRoleSelector).html(data);
                     studyRoleSelector.removeAttribute("disabled");
-              }
+                }
             });	
          });
      });

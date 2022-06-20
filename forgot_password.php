@@ -28,7 +28,7 @@ if (isset($logout)) {
         <div class="card-body">
 
 
-            <div style="width:450px; margin:0px auto">
+            <div style="max-width:450px; margin:0px auto">
 
             <form class="" action="inc/reset-request.inc" method="post">
                 <div style="margin-block: 6px;">

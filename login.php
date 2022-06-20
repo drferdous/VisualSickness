@@ -11,7 +11,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
     }
     
     if (Session::get('login') == TRUE){
-        header("Location: index");
+        if (Session::get('roleid') == '1') {
+            $homepage = "userlist";
+        } else {
+            $homepage = "view_study";
+        }
+        header("Location: " . $homepage);
     }
 }
 
@@ -26,7 +31,7 @@ if (isset($logout)) {
           <h3 class="text-center font-weight-bold">Visual Sickness</h3>
     </div>
     <div class="card-body">
-        <div style="width:450px; margin:0px auto; border-radius: 25px;" class="shadow">
+        <div style="max-width:450px; margin:0px auto; border-radius: 25px;" class="shadow">
             <form class="" action="" method="post" style="margin: 10px; padding-top: 30px;">
                 <p class="d-flex justify-content-center"><i class="fas fa-sign-in-alt mr-2"></i>Login to Visual Sickness</p>
                 <div style="margin-block: 6px;">

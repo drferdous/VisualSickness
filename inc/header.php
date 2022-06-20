@@ -20,9 +20,6 @@ $studies = new Studies();
 
 
 ?>
-
-
-
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
   <head>
@@ -38,9 +35,55 @@ $studies = new Studies();
     <link rel="stylesheet" href="assets/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" href="assets/style.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <style type="text/css">
+        /* VisualQuiz.php CSS
+           HIDE RADIO           */
+        .pictures [type=radio] { 
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .symptoms {
+            margin: auto;
+            margin-top: 10px;
+            background: white;
+            width: 53%;
+            padding: 10px;
+        }
+
+        .pictures {
+            margin: auto;
+            margin-top: 10px;
+            background: white;
+            align-items: center;
+            padding: 10px;
+        }
+
+        .pictures img {
+            border: 3px solid lightblue;
+            border-radius: 4px;
+            width: 100px;
+            margin: auto;
+        }
+
+        /* IMAGE STYLES */
+        .pictures [type=radio] + img {
+            cursor: pointer;
+        }
+
+        /* CHECKED STYLES */
+        .pictures [type=radio]:checked + img {
+            outline: 2px solid #f00;
+        }
+
+        .pictures [type=radio]:checked {
+            border-color: #f00;
+        }
+    </style>
   </head>
   <body>
-
 
 <?php
 
@@ -49,7 +92,11 @@ if (isset($_GET['action']) && $_GET['action'] == 'logout') {
   Session::destroy();
 }
 
-
+if (Session::get('roleid') == '1') {
+    $homepage = "userlist";
+} else {
+    $homepage = "view_study";
+}
 
  ?>
 
@@ -57,7 +104,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'logout') {
     <div class="container">
 
       <nav class="navbar navbar-expand-md navbar-dark bg-dark card-header">
-        <a class="navbar-brand" href="index"><i class="fas fa-home mr-2"></i>Home</a>
+        <a class="navbar-brand" href= <?php echo $homepage; ?>><i class="fas fa-home mr-2"></i>Home</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -85,21 +132,54 @@ if (isset($_GET['action']) && $_GET['action'] == 'logout') {
                     </li>
                 <?php } 
                       else{ ?>
-                        <li class="nav-item">
+                        <li class="nav-item
+                            <?php
+                
+                      				$path = $_SERVER['SCRIPT_FILENAME'];
+                      				$current = basename($path, '.php');
+                      				if ($current == 'view_study') {
+                      					echo "active ";
+                      				}
+                
+                      			 ?>
+                
+                            ">
                             <a class="nav-link" 
                                href="view_study">
                                <i class="fas fa-sticky-note mr-2"></i>Study List
                             </a>
                         </li>
                 <?php } ?>
-                <li class="nav-item">
+                <li class="nav-item
+                <?php
+    
+          				$path = $_SERVER['SCRIPT_FILENAME'];
+          				$current = basename($path, '.php');
+          				if ($current == 'participantList' && !isset($_GET['forStudy'])) {
+          					echo "active ";
+          				}
+    
+          			 ?>
+    
+                ">
 
-                      <a class="nav-link" href="participantList"><i class="fas fa-user mr-2"></i>Participants</span></a>
+                      <a class="nav-link" href="participantList"><i class="fas fa-user mr-2"></i>Participants</a>
                   </li>
                 <?php if (Session::get('roleid') == '1') { ?>
-                      <li class="nav-item">
+                      <li class="nav-item
+                <?php
     
-                          <a class="nav-link" href="userlist"><i class="fas fa-users mr-2"></i>User lists</span></a>
+          				$path = $_SERVER['SCRIPT_FILENAME'];
+          				$current = basename($path, '.php');
+          				if ($current == 'userlist') {
+          					echo "active ";
+          				}
+    
+          			 ?>
+    
+                ">
+    
+                          <a class="nav-link" href="userlist"><i class="fas fa-users mr-2"></i>User Lists</a>
                       </li>
                 <?php  } ?>
             <?php } ?>
@@ -113,14 +193,28 @@ if (isset($_GET['action']) && $_GET['action'] == 'logout') {
           					echo "active ";
           				}
     
-          			 ?>
+          	    ?>
     
                 ">
     
                   <a class="nav-link" href="profile"><i class="fab fa-500px mr-2"></i>Profile <span class="sr-only">(current)</span></a>
                 </li>
+                
+                <li class="nav-item
+                <?php
+    
+          				$path = $_SERVER['SCRIPT_FILENAME'];
+          				$current = basename($path, '.php');
+          				if ($current == 'index') {
+          					echo "active";
+          				}
+    
+          	    ?>"
+                >
+                    <a class="nav-link" href="index"><i class="fas fa-info-circle mr-2"></i>About Us</a>
+                </li>
             <?php } ?>
-
+            
             <li class="nav-item">
               <a class="nav-link" href="logout"><i class="fas fa-sign-out-alt mr-2"></i>Logout</a>
             </li>
@@ -162,33 +256,4 @@ if (isset($_GET['action']) && $_GET['action'] == 'logout') {
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" 
         integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" 
         crossorigin="anonymous">
-</script>      
-<script type="text/javascript">
-    $(document).ready(function() {
-        $("nav a[data-user_ID]").on('click', function() {
-            let form = document.createElement("form");
-            let hiddenInput;
-            
-            form.setAttribute("method", "POST");
-            form.setAttribute("action", $(this).attr("href"));
-            form.setAttribute("style", "display: none");
-            
-            hiddenInput = document.createElement("input");
-            hiddenInput.setAttribute("type", "hidden");
-            hiddenInput.setAttribute("name", "user_ID");
-            hiddenInput.setAttribute("value", $(this).attr("data-user_ID"));
-            form.appendChild(hiddenInput);
-            
-            hiddenInput = document.createElement("input");
-            hiddenInput.setAttribute("type", "hidden");
-            hiddenInput.setAttribute("name", "purpose");
-            hiddenInput.setAttribute("value", "edit");
-            form.appendChild(hiddenInput);
-            
-            document.body.appendChild(form);
-            form.submit();
-            
-            return false;
-       }); 
-    });
 </script>

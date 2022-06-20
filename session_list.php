@@ -4,31 +4,28 @@ include_once 'lib/Database.php';
 
 $db = Database::getInstance();
 $pdo = $db->pdo;
-if (Session::get('study_ID') == 0) {
-    header('Location: view_study');
-    exit();
-}
 
 
 Session::CheckSession();
-Session::requireResearcherOrUser(Session::get('study_ID'), $pdo);
 
 if (isset($_POST["study_ID"]) && isset($_POST["iv"])){
     $iv = hex2bin($_POST['iv']);
     $decrypted = Crypto::decrypt($_POST['study_ID'], $iv);
     Session::setStudyId(intval($decrypted), $pdo);
+    header('Location: session_list');
+    exit();
 }
 if (Session::get("study_ID") == 0){
     header("Location: view_study");
     exit();
 }
+Session::requireResearcherOrUser(Session::get('study_ID'), $pdo);
 ?>
 
 <div class="card">
     <div class="card-header">
-            <h3>Session List <span class="float-right"> <span class="float-right"> <a href="view_study" class="btn btn-primary">Back</a>    
-  </h3> 
-        </strong></span></h3>
+        <h3 class="float-left">Session List</h3> 
+        <span class="float-right"> <a href="view_study" class="btn btn-primary">Back</a></span>
     </div>
         
     <div class="card-body pr-2 pl-2">
@@ -43,20 +40,17 @@ if (Session::get("study_ID") == 0){
                 <thead class="text-center">
                     <tr>
                         <th>Participant Name</th>
-                        <th>Start Time</th>                        
-                        <th>Action</th>
+                        <th>Start Time</th>
                     </tr>
                 </thead>
                     
                 <tbody>
         
                 <?php
-                    while ($row = $result->fetch(PDO::FETCH_ASSOC)) { 
-                        echo "<tr>";
+                while ($row = $result->fetch(PDO::FETCH_ASSOC)) { ?>
+                    <tr>
                         
-                        //echo "<td>" . $row['session_ID'] ."</td>";
-                        
-                        if (isset($row['participant_ID'])){
+                        <?php if (isset($row['participant_ID'])){
                             $sql_users = "SELECT anonymous_name, iv FROM Participants WHERE participant_id = " . $row['participant_ID'] . " LIMIT 1;";
                             $result_users = $pdo->query($sql_users);
                             
@@ -67,36 +61,29 @@ if (Session::get("study_ID") == 0){
                             $row_users = $result_users->fetch(PDO::FETCH_ASSOC);
                             
                             $iv = hex2bin($row_users['iv']);
-                            $name = Crypto::decrypt($row_users['anonymous_name'], $iv);
+                            $name = Crypto::decrypt($row_users['anonymous_name'], $iv); 
+                            
+                            $session_ID = Crypto::encrypt($row['session_ID'], $session_iv); ?>
 
-                            echo "<td>" . $name . "</td>";
-                        } else {
-                            echo "<td>-</td>";
-                        }                             
-
-                        echo "<td>" .  $row['start_time']     . "</td>";                           
-                    
-                        echo "<td>";
-                        $session_ID = Crypto::encrypt($row['session_ID'], $session_iv);
-                        echo "<a class='btn-success btn-sm redirectUser' href='session_details' data-session_ID= $session_ID data-IV=" . bin2hex($session_iv) . ">Session Details</a>";
+                            <td><a class='redirectUser' href='session_details' data-session_ID="<?= $session_ID ?>" data-IV="<?= bin2hex($session_iv) ?>"><?= $name ?></a></td>
+                        <?php } else { ?>
+                            <td>-</td>
+                        <?php } ?>
+                        <td><?= $row['start_time'] ?></td>
                         
-                        echo "</td>";
-                        
-                        echo "</tr>";
-                    }
-                ?>
+                    </tr>
+                <?php } ?>
                 </tbody>
             </table>
-    <?php } 
-        else{
-            echo "<p>You have no sessions!</p>";
-        }
-    ?>
+    <?php } else { ?>
+            <p class="notFound">You have no sessions!</p>
+    <?php } ?>
     </div>
 </div>
 
 <script type="text/javascript">
     $(document).ready(function(){
+        if (!document.querySelector('.notFound')) $('#example').DataTable();
         $(document).on("click", "a.redirectUser", redirectUser);
         
         function redirectUser(){

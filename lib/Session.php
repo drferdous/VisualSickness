@@ -105,38 +105,42 @@ class Session{
     }
     
     public static function requirePI($study_ID, $pdo) {
-        $sql = "SELECT researcher_ID FROM Researcher_Study
-                WHERE researcher_ID = " . self::get('id') . "
-                AND is_active = 1
-                AND study_ID = $study_ID
-                AND study_role = 2;";
+        $sql = "SELECT rs.researcher_ID FROM Researcher_Study AS rs
+                JOIN Study AS s ON rs.study_ID = s.study_ID
+                WHERE rs.researcher_ID = " . self::get('id') . "
+                AND rs.is_active = 1
+                AND s.is_active = 1
+                AND rs.study_ID = $study_ID
+                AND rs.study_role = 2;";
         $result = $pdo->query($sql);
         if (!$result->rowCount()) {
-            header('Location: view_study');
+            header('Location: study_details');
             exit();
         }
     }
     
     public static function requirePIorRA($study_ID, $pdo) {
-        $sql = "SELECT researcher_ID FROM Researcher_Study
-                WHERE researcher_ID = " . self::get('id') . "
-                AND is_active = 1
-                AND study_ID = $study_ID
-                AND study_role = 2 OR study_role = 3;";
+        $sql = "SELECT rs.researcher_ID FROM Researcher_Study AS rs
+                JOIN Study AS s ON rs.study_ID = s.study_ID
+                WHERE rs.researcher_ID = " . self::get('id') . "
+                AND rs.is_active = 1
+                AND s.is_active = 1
+                AND rs.study_ID = $study_ID
+                AND rs.study_role = 2 OR study_role = 3;";
         $result = $pdo->query($sql);
         if (!$result->rowCount()) {
-            header('Location: view_study');
+            header('Location: study_details');
             exit();
         }
     }
     
     public static function requireCreator($study_ID, $pdo) {
         $sql = "SELECT created_by FROM Study
-                AND is_active = 1
+                WHERE is_active = 1
                 AND study_ID = $study_ID;";
         $result = $pdo->query($sql);
         if ($result->fetch(PDO::FETCH_ASSOC)['created_by'] != Session::get('id')) {
-            header('Location: view_study');
+            header('Location: study_details');
             exit();
         }
     }

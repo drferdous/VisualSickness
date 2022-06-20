@@ -165,6 +165,7 @@ class Users{
           Session::set('session_ID', 0);
           Session::set('logMsg', Util::generateSuccessMessage("You logged in!"));
           Session::set('study_ID', 0);
+          Session::set('ssq_ID', -1);
         //   echo "<script>location.href='index';</script>";
 
         }
@@ -609,7 +610,7 @@ class Users{
     }
 
     // Change User pass By Id
-    public  function changePasswordBysingelUserId($userid, $data){
+    public  function changePasswordBysingleUserId($userid, $data){
 
       $old_pass = $data['old_password'];
       $new_pass = $data['new_password'];
