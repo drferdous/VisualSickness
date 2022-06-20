@@ -54,7 +54,7 @@ if (isset($addResearcher)) {
                                              FROM Researcher_Study
                                              WHERE study_ID = " . Session::get("study_ID") . 
                                              " AND is_active = 1)
-                            AND isActive = 1
+                            AND status = 1
                             AND affiliationid = " . Session::get("affiliationid") . ";";
                     $result = $pdo->query($sql); ?>
                     <select class="form-control" name="researcher_ID" id="researcher_ID" required <?= $result->rowCount() === 0 ? 'disabled' : '' ?>>

@@ -67,7 +67,7 @@
                         <td><?php echo $value->email; ?></td>
                         <td><span class="badge badge-lg badge-secondary text-white"><?php echo $value->mobile; ?></span></td>
                         <td>
-                        <?php if ($value->isActive == 0) { ?>
+                        <?php if ($value->status == 0) { ?>
                             <span class="badge badge-lg badge-danger text-white">Inactive</span>
                         <?php } else if ($value->reg_stat == 0) { ?>
                             <span class="badge badge-lg badge-secondary text-white">Pending Email</span>
@@ -115,13 +115,13 @@
                                 Remove
                                 </a>
                         <?php }
-                              if ($value->isActive == '1'){ ?> 
+                              if ($value->status == '1'){ ?> 
                                <a class="btn btn-outline-dark userAction deactivateUser
                        <?php if ($value->roleid ==='1' || Session::get("id") == $value->id) {
                          echo "disabled";
                        } ?>
                                 btn-sm " href="userlist" style="margin-bottom: 4px;" ?>Deactivate</a>
-                        <?php }elseif ($value->isActive == '0'){?>
+                        <?php }elseif ($value->status == '0'){?>
                             <a class="btn btn-success btn-sm userAction activateUser 
                        <?php if ($value->roleid === '1' || Session::get("id") == $value->id) {
                          echo "disabled ";

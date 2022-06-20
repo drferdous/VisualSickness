@@ -81,13 +81,13 @@ class Users{
         $args['reg_stat'] = 1;
     }
     if ($showDeactivatedUserFlag) {
-        $args['isActive'] = 0;
+        $args['status'] = 0;
     }
     $argsString = "";
     foreach ($args as $key => $value) {
         $argsString .= "AND $key = $value ";
     }
-    $sql = "SELECT * FROM tbl_users WHERE affiliationid = $affiliationid AND isActive != 2 $argsString
+    $sql = "SELECT * FROM tbl_users WHERE affiliationid = $affiliationid AND status != 2 $argsString
             ORDER BY id ASC;";
     $stmt = $this->db->pdo->prepare($sql);
     $stmt->execute();
@@ -101,7 +101,7 @@ class Users{
     $sql = "SELECT * FROM tbl_users 
             WHERE email = :email 
             AND password = :password 
-            AND isActive < 2 
+            AND status < 2 
             LIMIT 1;";
     $stmt = $this->db->pdo->prepare($sql);
     $stmt->bindValue(':email', $email);
@@ -114,11 +114,11 @@ class Users{
   public function CheckActiveUser($email){
     $sql = "SELECT * FROM tbl_users 
             WHERE email = :email 
-            AND isActive = :isActive 
+            AND status = :status 
             LIMIT 1";
     $stmt = $this->db->pdo->prepare($sql);
     $stmt->bindValue(':email', $email);
-    $stmt->bindValue(':isActive', 1);
+    $stmt->bindValue(':status', 1);
     $stmt->execute();
     return $stmt->fetch(PDO::FETCH_OBJ);
   }
@@ -145,7 +145,7 @@ class Users{
         $isUserActive = $this->CheckActiveUser($email);
 
         if (! ($isUserActive == TRUE)) {
-            $affiliationid_sql = "SELECT affiliationid FROM tbl_users WHERE email = :email AND isActive = 0 OR isActive = 1;";
+            $affiliationid_sql = "SELECT affiliationid FROM tbl_users WHERE email = :email AND status = 0 OR status = 1;";
             $stmt = $this->db->pdo->prepare($affiliationid_sql);
             $stmt->bindValue(':email', $email);
             $stmt->execute();
@@ -503,7 +503,7 @@ class Users{
     // Delete User by Id Method
     public function deleteUserById($remove){
         $localId = Session::get('id');
-        $sql = "UPDATE tbl_users SET isActive = 2, updated_by = :localId, updated_at = CURRENT_TIMESTAMP WHERE id = :id ";
+        $sql = "UPDATE tbl_users SET status = 2, updated_by = :localId, updated_at = CURRENT_TIMESTAMP WHERE id = :id ";
         $stmt = $this->db->pdo->prepare($sql);
         $stmt->bindValue(':localId', $localId);
         $stmt->bindValue(':id', trim($remove));
@@ -520,12 +520,12 @@ class Users{
     public function userDeactiveByAdmin($deactive){
         $localId = Session::get('id');
         $sql = "UPDATE tbl_users SET
-            isActive=:isActive,
+            status=:status,
             updated_by = :localId,
             updated_at = CURRENT_TIMESTAMP
             WHERE id = :id";
         $stmt = $this->db->pdo->prepare($sql);
-        $stmt->bindValue(':isActive', 1);
+        $stmt->bindValue(':status', 1);
         $stmt->bindValue(':id', trim($deactive));
         $result =   $stmt->execute();
         if ($result) {
@@ -543,12 +543,12 @@ class Users{
     public function userActiveByAdmin($active){
         $localId = Session::get('id');
         $sql = "UPDATE tbl_users SET
-            isActive=:isActive,
+            status=:status,
             updated_by = :localId,
             updated_at = CURRENT_TIMESTAMP
             WHERE id = :id";
         $stmt = $this->db->pdo->prepare($sql);
-        $stmt->bindValue(':isActive', 0);
+        $stmt->bindValue(':status', 0);
         $stmt->bindValue(':localId', $localId);
         $stmt->bindValue(':id', trim($active));
         $result =   $stmt->execute();

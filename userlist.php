@@ -19,7 +19,7 @@
     
     if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["removeUser"])){
         $sql = "UPDATE tbl_users
-                SET isActive = 2,
+                SET status = 2,
                 updated_by = $localId,
                 updated_at = CURRENT_TIMESTAMP
                 WHERE id = " . $user_ID . ";";
@@ -32,7 +32,7 @@
     
     if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["deactivateUser"])){
         $sql = "UPDATE tbl_users
-                SET isActive = 0,
+                SET status = 0,
                 updated_by = $localId,
                 updated_at = CURRENT_TIMESTAMP
                 WHERE id = " . $user_ID . "
@@ -46,7 +46,7 @@
     
     if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["activateUser"])){
         $sql = "UPDATE tbl_users
-                SET isActive = 1,
+                SET status = 1,
                 updated_by = $localId,
                 updated_at = CURRENT_TIMESTAMP
                 WHERE id = " . $user_ID . "

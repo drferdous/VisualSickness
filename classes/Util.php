@@ -26,7 +26,7 @@ class Util {
   // Check Exist Email Address Method
   public function checkExistEmail($email, $db){
     $sql = "SELECT email FROM tbl_users 
-            WHERE email = :email AND isActive < 2
+            WHERE email = :email AND status < 2
             LIMIT 1";
     $stmt = $db->pdo->prepare($sql);
     $stmt->bindValue(':email', $email);
