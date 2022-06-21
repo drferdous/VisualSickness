@@ -37,8 +37,8 @@ if (isset($changePass)) {
                 $rand = bin2hex(openssl_random_pseudo_bytes(16));
                 Session::set("post_ID", $rand);
             ?>
-            <input type="hidden" name="randCheck" value="<?php echo $rand; ?>">
             <form class="" action="" method="POST">
+                <input type="hidden" name="randCheck" value="<?php echo $rand; ?>">
                 <div style="margin-block: 6px;">
                     <small style='color: red'>
                         * Required Field
@@ -59,39 +59,6 @@ if (isset($changePass)) {
         </div>
     </div>
 </div>
-
-<script type="text/javascript">
-    $(document).ready(function(){
-        $(".card a").on("click", redirectUser);
-    });
-    
-    function redirectUser(){
-        let form = document.createElement("form");
-        let hiddenInput;
-        
-        form.setAttribute("method", "POST");
-        form.setAttribute("action", $(this).attr("href"));
-        form.setAttribute("style", "display: none");
-        
-        hiddenInput = document.createElement("input");
-        hiddenInput.setAttribute("type", "hidden");
-        hiddenInput.setAttribute("name", "user_ID");
-        hiddenInput.setAttribute("value", "<?php echo $userid; ?>");
-        form.appendChild(hiddenInput);
-        
-        hiddenInput = document.createElement("input");
-        hiddenInput.setAttribute("type", "hidden");
-        hiddenInput.setAttribute("name", "purpose");
-        hiddenInput.setAttribute("value", "edit");
-        form.appendChild(hiddenInput);
-        
-        document.body.appendChild(form);
-        form.submit();
-        
-        return false;
-    }
-</script>
-
 
 <?php
   include 'inc/footer.php';
