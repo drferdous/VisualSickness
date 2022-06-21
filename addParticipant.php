@@ -10,9 +10,11 @@ Session::requirePIorRA(Session::get('study_ID'), Database::getInstance()->pdo);
 
 if (!isset($_POST['referrer'])) $referrer = ltrim(parse_url($_SERVER['HTTP_REFERER'], PHP_URL_PATH), '/');
 else $referrer = $_POST['referrer'];
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['addNewParticipant'])) {
-  $userAdd = $studies->addNewParticipant($_POST);
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['addNewParticipant']) && Session::CheckPostID($_POST)){
+    $userAdd = $studies->addNewParticipant($_POST);
 }
+
 if (isset($userAdd)) {
   echo $userAdd;?>
     <script type="text/javascript">
@@ -32,6 +34,11 @@ if (isset($userAdd)) {
     <div class="card-body">
             <div style="max-width:600px; margin:0px auto">
             <form class="" action="" method="post">
+                <?php 
+                    $rand = bin2hex(openssl_random_pseudo_bytes(16));
+                    Session::set("post_ID", $rand);
+                ?>
+                <input type="hidden" name="randCheck" value="<?php echo $rand; ?>">
                 <input type="hidden" name="referrer" value="<?= $referrer ?>">
                 <div style="margin-block: 6px;">
                     <small style='color: red'>

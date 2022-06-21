@@ -55,6 +55,11 @@ class Session{
             header('Location: index');
         }
     }
+    
+    public static function CheckPostID($data){
+        $key = "randCheck";
+        return isset($data[$key]) && self::get("post_ID") === $data[$key];
+    }
   
     public static function RedirectIfUser(){
         $role_ID = intval(self::get("roleid"));
