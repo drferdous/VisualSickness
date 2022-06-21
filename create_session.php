@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['insert_session']) && S
             const divMsg = document.getElementById("flash-msg");
             if (divMsg.classList.contains("alert-success")){
                 setTimeout(() => {
-                    redirect('session_details', {'session_ID': <?= Session::get('session_ID') ?>})
+                    location.href = "session_details";
                 }, 1000);
             }
         </script>
