@@ -17,7 +17,7 @@ class Users{
 
   // User Registration Method
   public function userRegistration($data){
-    array_walk($data, create_function('&$val', '$val = trim($val);'));
+    array_walk($data, function (&$val) {         $val = trim($val);     });
     $name = $data['name'];
     $password = Util::generateRandomPassword();
     $email = $data['email'];
@@ -216,7 +216,7 @@ class Users{
         return Util::generateErrorMessage("Invalid user ID!");
     }
     
-    array_walk($data, create_function('&$val', '$val = trim($val);'));
+    array_walk($data, function (&$val) {         $val = trim($val);     });
     $iv = hex2bin($data["iv"]);
     $encryptedUserID = $data["user_ID"];
     $name = $data['name'];
@@ -260,7 +260,7 @@ class Users{
     
  // Insert user's study in Study table
  public function insert_study($data) {
-  array_walk($data, create_function('&$val', '$val = trim($val);'));
+  array_walk($data, function (&$val) {         $val = trim($val);     });
   $full_name = $data['full_name'];
   $short_name = $data['short_name'];
   $IRB = $data['IRB'];
@@ -294,7 +294,7 @@ class Users{
 
     // Edit a user's study
     public function updateStudy($data){
-        array_walk($data, create_function('&$val', '$val = trim($val);'));
+        array_walk($data, function (&$val) {         $val = trim($val);     });
         $full_name = $data['full_name'];
         $short_name = $data['short_name'];
         $IRB = $data['IRB'];
@@ -383,7 +383,7 @@ class Users{
     
     // inserts a session of a  study into DB
     public function insert_session($data){
-        array_walk($data, create_function('&$val', '$val = trim($val);'));
+        array_walk($data, function (&$val) {         $val = trim($val);     });
         $created_by = Session::get('id');
         $last_edited_by = Session::get('id');    
         
