@@ -10,8 +10,7 @@ Session::CheckSession();
 
 $email = Session::get("email");
 
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["reset-submit"])) {
-    
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["reset-submit"]) && Session::CheckPostID($_POST)) {
     $changePass = $users->resetPass($email, $_POST["password"]);
     if ($changePass) {
         echo $changePass;
@@ -54,6 +53,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["reset-submit"])) {
                         * Required Field
                     </small>
                 </div>
+                <?php 
+                    $rand = bin2hex(openssl_random_pseudo_bytes(16));
+                    Session::set("post_ID", $rand);
+                ?>
+                <input type="hidden" name="randCheck" value="<?php echo $rand; ?>">
                 <div class="form-group">
                     <label for="password" class="required">New Password</label>
                     <input type="password" name="password"  class="form-control" required>

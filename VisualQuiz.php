@@ -4,94 +4,90 @@ include_once 'lib/Database.php';
 $db = Database::getInstance();
 $pdo = $db->pdo;
 
+if (Session::get('study_ID') == 0) {
+    header('Location: view_study');
+    exit();
+}
+Session::requireResearcherOrUser(Session::get('study_ID'), $pdo);
+if (isset($_POST['submitQuiz']) && Session::CheckPostID($_POST)) {
+    $submitted = $studies->insertQuiz($_POST);
+    if (isset($submitted)) {
+        echo $submitted; ?>
+            <script>
+                $(document).ready(() => {
+                    $('.modal').on('hidden.bs.modal', () => {
+                        location.href = 'session_details';
+                    });
+                });
+            </script>
+        <?php
+    }
+}
+if (isset($_POST['viewResults'])) {
+    echo Util::getModalForSSQ($pdo, FALSE);
+}
 if(isset($_GET['code']) == "" && Session::get('login') === FALSE) {
   header('Location: index');
   exit();
 }
 
-$isFirstTime = ($_POST['is_first_time'] === "true");
-if ($isFirstTime){
-    $ssq_ID = -1;
-}
-else{
-    $ssq_ID = intval($_POST['ssq_ID']);
+if (isset($_POST['ssq_ID']) && isset($_POST['iv'])) {
+    $iv = hex2bin($_POST['iv']);
+    $ssq_ID = Crypto::decrypt($_POST['ssq_ID'], $iv);
+    Session::set('ssq_ID', $ssq_ID);
 }
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['deleteQuiz'])) {
-  $deleteQuiz = $studies->deleteQuiz($_POST);
-}
+$ssq_ID = Session::get('ssq_ID');
 
-if (isset($deleteQuiz)) {
-  echo $deleteQuiz;
-}
+$role_sql = "SELECT study_role FROM Researcher_Study WHERE study_ID = " . Session::get('study_ID') . "
+             AND  researcher_ID = " . Session::get("id") . " 
+             AND is_active = 1;";
+                    
+$role_result = $pdo->query($role_sql);
+$role = $role_result->fetch(PDO::FETCH_ASSOC);
+
+$id_sql = "SELECT created_by FROM Session 
+           WHERE session_ID = " . Session::get('session_ID') . "
+           AND is_active = 1;";
+$id_result = $pdo->query($id_sql);
+$id_row = $id_result->fetch(PDO::FETCH_ASSOC);
+
+$study_sql = "SELECT is_active FROM Study WHERE study_ID = " . Session::get('study_ID') . " LIMIT 1;";
+$study_result = $pdo->query($study_sql);
+$study_is_active = $study_result->fetch(PDO::FETCH_ASSOC)['is_active'] == 1;
+
+$rand = bin2hex(openssl_random_pseudo_bytes(16));
+Session::set("post_ID", $rand);
 ?>
-
+<div class="alert alert-danger alert-dismissible mt-3" id="flash-msg" style="display: none;">
+    <a href="#" 
+       class="close" 
+       data-dismiss="alert" 
+       aria-label="close">
+        &times;
+    </a>
+    <strong>Error!</strong> Please select an answer to all questions.
+</div>
 <div class="card">
     <div class="card-header">
-        <h3><span class="float-right">
-            <form action="delete_quiz" method="post">
-                <input type="hidden" id="ssq_ID" name="ssq_ID" value="<?php echo $ssq_ID; ?>">    
-                <button type="submit" name="deleteQuiz" class="btn btn-danger">Delete SSQ</button>      
-            </form>
-        </span></h3>
+            <h3>
+            <?php
+                if(($role['study_role'] == 2 || $id_row['created_by'] == Session::get('id')) && $study_is_active) {
+            ?>
+                    <form class="float-right mx-1" onsubmit="return confirm('Are you sure you want to delete this SSQ? This action cannot be undone.');" action="delete_quiz" method="post">
+                        <button type="submit" name="deleteQuiz" class="btn btn-danger">Delete</button>
+                    </form>
+            <?php } ?>
+                <form class="float-right" action="" method="post">
+                    <button type="submit" name="viewResults" class="btn btn-success">Results</button>
+                </form>
+            </h3>
     </div>
-    
-    <div class="card-body pr-2 pl-2">
-
-<style type="text/css">
-  /* HIDE RADIO */
-.pictures [type=radio] { 
-  position: absolute;
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-
-.symptoms {
-  margin: auto;
-  margin-top: 10px;
-  background: white;
-  width: 53%;
-  padding: 10px;
-}
-
- .pictures {
-  margin: auto;
-  margin-top: 10px;
-  background: white;
-  align-items:  : center;
-  padding: 10px;
-}
-
-.pictures img {
-  border: 3px solid lightblue;
-  border-radius: 4px;
-  width: 100px;
-  margin: auto;
-
-    margin: auto;
-}
-
-/* IMAGE STYLES */
-.pictures [type=radio] + img {
-  cursor: pointer;
-}
-
-/* CHECKED STYLES */
-.pictures [type=radio]:checked + img {
-  outline: 2px solid #f00;
-}
-
-.pictures [type=radio]:checked {
-  border-color: #f00;
-}
-</style>
-<body>
-
+<div class="card-body pr-2 pl-2">
 
 <!-- <div class="Header"> -->
 
-<form action="insert_quiz" method="post">    
+<form action="" method="post" id="quizForm">    
     <?php if (Session::get('login') === FALSE) { ?>
         <div style="margin-block: 6px;">
             <small style='color: red'>
@@ -156,18 +152,11 @@ if (isset($deleteQuiz)) {
   <hr>
   
   <h1>Cybersickness Online Questionnaire</h1>
-  <p>Please pick your current discomfort level on the categories mentioned below. If you do not understand the meaning of the symptom, pick "Do not Understand".</p>
+  <p>Please pick your current discomfort level on the categories mentioned below.</p>
 
         <h2>General Discomfort</h2>
         <hr>
         <div class = "pictures">
-        <label>
-            <input type="radio" id="discomfort4" name="general_discomfort" value="-1" >
-            <img src="images/question.png" alt="Basic">
-            <center>
-              <p>Don't Understand</p>
-            </center>
-        </label>
         <label>
             <input type="radio" id="discomfort0" name="general_discomfort" value="0">
             <img src="images/base0.png" alt="Basic">
@@ -202,13 +191,6 @@ if (isset($deleteQuiz)) {
   <hr>
 
     <div class = "pictures">
-      <label>
-            <input type="radio" id="fatigue4" name="fatigue" value="-1" >
-            <img src="images/question.png" alt="Basic">
-            <center>
-              <p>Don't Understand</p>
-            </center>
-        </label>
         <label>
             <input type="radio" id="fatigue0" name="fatigue" value="0">
             <img src="images/base0.png" alt="Basic">
@@ -244,13 +226,6 @@ if (isset($deleteQuiz)) {
   <hr>
 
     <div class = "pictures">
-      <label>
-            <input type="radio" id="headache4" name="headache" value="-1" >
-            <img src="images/question.png" alt="Basic">
-            <center>
-              <p>Don't Understand</p>
-            </center>
-        </label>
         <label>
             <input type="radio" id="headache0" name="headache" value="0">
             <img src="images/base0.png" alt="Basic">
@@ -285,13 +260,6 @@ if (isset($deleteQuiz)) {
   <hr>
 
     <div class = "pictures">
-      <label>
-            <input type="radio" id="eyestrain4" name="eye_strain" value="-1" >
-            <img src="images/question.png" alt="Basic">
-            <center>
-              <p>Don't Understand</p>
-            </center>
-        </label>
         <label>
             <input type="radio" id="eyestrain0" name="eye_strain" value="0">
             <img src="images/base0.png" alt="Basic">
@@ -326,13 +294,6 @@ if (isset($deleteQuiz)) {
   <hr>
 
     <div class = "pictures">
-      <label>
-            <input type="radio" id="difficulty_focusing4" name="difficulty_focusing" value="-1" >
-            <img src="images/question.png" alt="Basic">
-            <center>
-              <p>Don't Understand</p>
-            </center>
-        </label>
         <label>
             <input type="radio" id="difficulty_focusing0" name="difficulty_focusing" value="0">
             <img src="images/base0.png" alt="Basic">
@@ -367,13 +328,6 @@ if (isset($deleteQuiz)) {
   <hr>
 
     <div class = "pictures">
-      <label>
-            <input type="radio" id="saliva4" name="increased_salivation" value="-1" >
-            <img src="images/question.png" alt="Basic">
-            <center>
-              <p>Don't Understand</p>
-            </center>
-        </label>
         <label>
             <input type="radio" id="saliva0" name="increased_salivation" value="0">
             <img src="images/base0.png" alt="Basic">
@@ -408,13 +362,6 @@ if (isset($deleteQuiz)) {
   <hr>
 
     <div class = "pictures">
-      <label>
-            <input type="radio" id="sweating4" name="sweating" value="-1" >
-            <img src="images/question.png" alt="Basic">
-            <center>
-              <p>Don't Understand</p>
-            </center>
-        </label>
         <label>
             <input type="radio" id="sweat0" name="sweating" value="0">
             <img src="images/base0.png" alt="Basic">
@@ -449,13 +396,6 @@ if (isset($deleteQuiz)) {
   <hr>
 
     <div class = "pictures">
-      <label>
-            <input type="radio" id="nausea4" name="nausea" value="-1" >
-            <img src="images/question.png" alt="Basic">
-            <center>
-              <p>Don't Understand</p>
-            </center>
-        </label>
         <label>
             <input type="radio" id="nausea0" name="nausea" value="0">
             <img src="images/base0.png" alt="Basic">
@@ -490,13 +430,6 @@ if (isset($deleteQuiz)) {
   <hr>
 
     <div class = "pictures">
-      <label>
-            <input type="radio" id="difficulty_concentrating4" name="difficulty_concentrating" value="-1" >
-            <img src="images/question.png" alt="Basic">
-            <center>
-              <p>Don't Understand</p>
-            </center>
-        </label>
         <label>
             <input type="radio" id="focus0" name="difficulty_concentrating" value="0">
             <img src="images/base0.png" alt="Basic">
@@ -531,13 +464,6 @@ if (isset($deleteQuiz)) {
   <hr>
 
     <div class = "pictures">
-      <label>
-            <input type="radio" id="fullness_of_head4" name="fullness_of_head" value="-1" >
-            <img src="images/question.png" alt="Basic">
-            <center>
-              <p>Don't Understand</p>
-            </center>
-        </label>
         <label>
             <input type="radio" id="fullness0" name="fullness_of_head" value="0">
             <img src="images/base0.png" alt="Basic">
@@ -572,13 +498,6 @@ if (isset($deleteQuiz)) {
   <hr>
 
     <div class = "pictures">
-      <label>
-            <input type="radio" id="blurred_vision4" name="blurred_vision" value="-1" >
-            <img src="images/question.png" alt="Basic">
-            <center>
-              <p>Don't Understand</p>
-            </center>
-        </label>
         <label>
             <input type="radio" id="blurred0" name="blurred_vision" value="0">
             <img src="images/base0.png" alt="Basic">
@@ -613,13 +532,6 @@ if (isset($deleteQuiz)) {
   <hr>
 
     <div class = "pictures">
-      <label>
-            <input type="radio" id="dizzinessEyes4" name="dizziness_with_eyes_open" value="-1" >
-            <img src="images/question.png" alt="Basic">
-            <center>
-              <p>Don't Understand</p>
-            </center>
-        </label>
         <label>
             <input type="radio" id="dizzinessEyes0" name="dizziness_with_eyes_open" value="0">
             <img src="images/base0.png" alt="Basic">
@@ -655,13 +567,6 @@ if (isset($deleteQuiz)) {
   <hr>
 
     <div class = "pictures">
-      <label>
-            <input type="radio" id="dizzyclose4" name="dizziness_with_eyes_closed" value="-1" >
-            <img src="images/question.png" alt="Basic">
-            <center>
-              <p>Don't Understand</p>
-            </center>
-        </label>
         <label>
             <input type="radio" id="dizzyclose0" name="dizziness_with_eyes_closed" value="0">
             <img src="images/base0.png" alt="Basic">
@@ -697,13 +602,6 @@ if (isset($deleteQuiz)) {
   <hr>
 
     <div class = "pictures">
-      <label>
-            <input type="radio" id="vertigo4" name="vertigo" value="-1" >
-            <img src="images/question.png" alt="Basic">
-            <center>
-              <p>Don't Understand</p>
-            </center>
-        </label>
         <label>
             <input type="radio" id="vertigo0" name="vertigo" value="0">
             <img src="images/base0.png" alt="Basic">
@@ -739,13 +637,6 @@ if (isset($deleteQuiz)) {
   <hr>
 
     <div class = "pictures">
-      <label>
-            <input type="radio" id="stomach4" name="stomach_awareness" value="-1">
-            <img src="images/question.png" alt="Basic">
-            <center>
-              <p>Don't Understand</p>
-            </center>
-        </label>
         <label>
             <input type="radio" id="stomach0" name="stomach_awareness" value="0">
             <img src="images/base0.png" alt="Basic">
@@ -781,13 +672,6 @@ if (isset($deleteQuiz)) {
   <hr>
 
     <div class = "pictures">
-      <label>
-            <input type="radio" id="burp4" name="burping" value="-1">
-            <img src="images/question.png" alt="Basic">
-            <center>
-              <p>Don't Understand</p>
-            </center>
-        </label>
         <label>
             <input type="radio" id="burp0" name="burping" value="0">
             <img src="images/base0.png" alt="Basic">
@@ -818,10 +702,8 @@ if (isset($deleteQuiz)) {
         </label>
     </div>
     
-    <input type="hidden" id="ssq_ID" name="ssq_ID" value="<?php echo $ssq_ID; ?>">
     <input type="hidden" id="ssq_time" name="ssq_time" value="<?php echo $_POST['ssq_time']; ?>">
     <input type="hidden" id="ssq_type" name="ssq_type" value="1">
-    <input type="hidden" id="session_ID" name="session_ID" value="<?php echo Session::get('session_ID'); ?>">
     
     <?php
     // Ask professor how to deal with code in URL.
@@ -832,17 +714,27 @@ if (isset($deleteQuiz)) {
         <input type="hidden" id="code" name="code" value="">
     <?php } ?>
 
-    <?php if ($isFirstTime){?>
-        <input type="submit" class="btn btn-success" name="Submit" value="Submit">
-    <?php } 
+    <?php if (Session::get('ssq_ID') == -1){?>
+        <input type="submit" class="btn btn-success" value="Submit">
+        <input type="hidden" name="submitQuiz" value="submitQuiz">
+    <?php }
           else{ ?>
-        <input type="submit" class="btn btn-success" name="Submit" value="Update">
-    <?php } ?>
+        <?php
+            if(($role['study_role'] == 2 || $id_row['created_by'] == Session::get('id')) && $study_is_active) {
+        ?>
+        <input type="hidden" name="randCheck" value="<?php echo $rand; ?>">
+        <input type="submit" class="btn btn-success" value="Update">
+        <input type="hidden" name="submitQuiz" value="submitQuiz">
+    <?php }
+        } ?>
 </form>
 
 <form action="session_details" method="POST">
+    <input type="hidden" name="randCheck" value="<?php echo $rand; ?>">
     <input type="hidden" name="session_ID" value="<?php echo Session::get('session_ID'); ?>">
-    <input type="submit" class="btn btn-danger" name="Cancel" value="Cancel">
+    <div>
+        <input type="submit" class="btn btn-danger" name="Cancel" value="Cancel">
+    </div>
 </form>
 
 <?php
@@ -854,37 +746,48 @@ if (isset($deleteQuiz)) {
     $result = $pdo->query($sql);
     $row = $result->fetch(PDO::FETCH_NUM);
     
-    if ($result->rowCount() === 0){
-        $row = array();
-        
-        for ($i = 0; $i < $result->columnCount(); ++$i){
-            array_push($row, -1);
-        }
-    }
-    ?>
-    <script type="text/javascript">
-        $(document).ready(function(){
-            let answerChoices = document.body.getElementsByClassName("pictures");
-            let pictures;
-            <?php for ($i = 0; $i < count($row); ++$i){ ?>
-                pictures = answerChoices[<?php echo $i; ?>].querySelectorAll("label > input");
-                for (let j = 0; j < pictures.length; ++j){
-                    if (parseInt(pictures[j].getAttribute("value"), 10) === <?php echo $row[$i]; ?>){
-                        pictures[j].setAttribute("checked", "checked");
+      if ($result->rowCount() > 0){ ?>
+        <script type="text/javascript">
+            $(document).ready(function(){
+                let answerChoices = document.body.getElementsByClassName("pictures");
+                let pictures;
+                <?php for ($i = 0; $i < count($row); ++$i){ ?>
+                    pictures = answerChoices[<?php echo $i; ?>].querySelectorAll("label > input");
+                    for (let j = 0; j < pictures.length; ++j){
+                        if (parseInt(pictures[j].getAttribute("value"), 10) === <?php echo $row[$i]; ?>){
+                            pictures[j].setAttribute("checked", "checked");
+                        }
                     }
-                }
-            <?php } ?>
-        });
-    </script>
-
-</body>
-</html>
+                <?php } ?>
+            });
+        </script>
+<?php } ?>
 
 
 
         </div>
       </div>
-
+<script type="text/javascript">
+    $(document).ready(function(){
+        let form = document.getElementById("quizForm");
+        $(form).submit(function(event){
+            event.preventDefault();
+            let questions = document.getElementsByClassName("pictures");
+            let errorMessage;
+            let checkedAnswers;
+            for (let i = 0; i < questions.length; ++i){
+                checkedAnswers = questions[i].querySelector("input:checked");
+                if (checkedAnswers === null){
+                    errorMessage = document.getElementById("flash-msg");
+                    errorMessage.removeAttribute("style");
+                    window.scrollTo(0, 0);
+                    return;
+                }
+            }
+            form.submit();
+        });
+    });
+</script>
 
 
   <?php

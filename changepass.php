@@ -6,7 +6,7 @@
 
     $userid = Session::get("id");
 
-    if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['changepass'])) {
+    if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['changepass']) && Session::CheckPostID($_POST)) {
         $changePass = $users->changePasswordBysingleUserId($userid, $_POST);
     }
 
@@ -33,6 +33,11 @@ if (isset($changePass)) {
         <div class="card-body">
             <div style="max-width:600px; margin:0px auto">
 
+            <?php 
+                $rand = bin2hex(openssl_random_pseudo_bytes(16));
+                Session::set("post_ID", $rand);
+            ?>
+            <input type="hidden" name="randCheck" value="<?php echo $rand; ?>">
             <form class="" action="" method="POST">
                 <div style="margin-block: 6px;">
                     <small style='color: red'>

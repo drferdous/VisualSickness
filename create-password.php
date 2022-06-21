@@ -5,7 +5,7 @@ if ($_SERVER["REQUEST_METHOD"] != "POST" || !isset($_POST["email"])) {
     exit();
 }
 $email = $_POST["email"];
-if (isset($_POST["reset-submit"])) {
+if (isset($_POST["reset-submit"]) && Session::CheckPostID($_POST)) {
     // Reset password here, then log in user and redirect to homepage
     $password = $_POST["password"];
     $changePass = $users->resetPass($email, $password);
@@ -29,6 +29,11 @@ if (isset($_POST["reset-submit"])) {
     <div class="card-body">
         <div style="width:450px; margin:0px auto">
             <form class="" action="" method="post">
+                <?php 
+                    $rand = bin2hex(openssl_random_pseudo_bytes(16));
+                    Session::set("post_ID", $rand);
+                ?>
+                <input type="hidden" name="randCheck" value="<?php echo $rand; ?>">
                 <div style="margin-block: 6px;">
                     <small style='color: red'>
                         * Required Field

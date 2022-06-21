@@ -19,7 +19,7 @@ if (isset($_POST["purpose"])){
     $purpose = "edit";
 }
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update'])) {
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update']) && Session::CheckPostID($_POST)) {
     $updateUser = $users->updateUserByIdInfo($_POST);
     if (isset($updateUser)) {
         echo $updateUser;
@@ -40,9 +40,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update'])) {
             $getUinfo = $users->getUserInfoById($userid);
             if ($getUinfo){ ?>
                 <div style="max-width:600px; margin:0px auto">
-                  <form class="" action="profile" method="POST">
-                      <input type="hidden" name="user_ID" value="<?php echo Crypto::encrypt($userid, $iv);?>">
-                      <input type="hidden" name="iv" value="<?php echo bin2hex($iv); ?>">
+                  <form class="" action="" method="POST">
+                        <?php 
+                            $rand = bin2hex(openssl_random_pseudo_bytes(16));
+                            Session::set("post_ID", $rand);
+                        ?>
+                        <input type="hidden" name="randCheck" value="<?php echo $rand; ?>">
+                        <input type="hidden" name="user_ID" value="<?php echo Crypto::encrypt($userid, $iv);?>">
+                        <input type="hidden" name="iv" value="<?php echo bin2hex($iv); ?>">
                   <?php if ($purpose === 'edit') { ?>
                       <div style="margin-block: 6px;">
                           <small style='color: red'>
@@ -100,36 +105,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update'])) {
                     </div>
                   </form>
 </div>
-      <?php } ?>
-      </div>
+    <?php } ?>
     </div>
+</div>
     
-<script type="text/javascript">
-    $(document).ready(function() {
-        $(".card").on("click", "a", redirectUser);
-    });
-    
-    function redirectUser(){
-        let form = document.createElement("form");
-        let hiddenInput = document.createElement("input");
-        
-        form.setAttribute("method", "POST");
-        form.setAttribute("action", $(this).attr("href"));
-        form.setAttribute("style", "display: none");
-        
-        hiddenInput.setAttribute("type", "hidden");
-        hiddenInput.setAttribute("name", "user_ID");
-        hiddenInput.setAttribute("value", $(this).attr("data-user_ID"));
-        
-        form.appendChild(hiddenInput);
-        document.body.appendChild(form);
-        form.submit();
-        
-        return false;
-    };
-</script>
 
-  <?php
-  include 'inc/footer.php';
+<?php
+include 'inc/footer.php';
 
-  ?>
+?>

@@ -10,11 +10,88 @@ class Studies {
     public function __construct() {
         $this->db = Database::getInstance();
     }
+    
+    public function insertQuiz($data) {
+        if(isset($_POST['submitQuiz'])){    
+            $ssq_ID = Session::get('ssq_ID');
+            $general_discomfort = $_POST['general_discomfort'];
+            $fatigue = $_POST['fatigue'];
+            $headache = $_POST['headache'];
+            $eye_strain = $_POST['eye_strain'];
+            $difficulty_focusing = $_POST['difficulty_focusing'];
+            $increased_salivation = $_POST['increased_salivation'];
+            $sweating = $_POST['sweating'];
+            $nausea = $_POST['nausea'];
+            $difficulty_concentrating = $_POST['difficulty_concentrating'];
+            $fullness_of_head = $_POST['fullness_of_head'];
+            $blurred_vision = $_POST['blurred_vision'];
+            $dizziness_with_eyes_open = $_POST['dizziness_with_eyes_open'];
+            $dizziness_with_eyes_closed = $_POST['dizziness_with_eyes_closed'];
+            $vertigo = $_POST['vertigo'];
+            $stomach_awareness = $_POST['stomach_awareness'];
+            $burping = $_POST['burping'];
+            $ssq_time = $_POST['ssq_time'];
+            $ssq_type = $_POST['ssq_type'];
+            $session_ID = Session::get('session_ID');
+            $code = $_POST['code'];
+        
+            if (Session::get('login') === FALSE) { 
+                $age = $_POST['age'];
+                $gender = $_POST['gender'];
+                $race = $_POST['race'];
+                $education = $_POST['education'];
+            }
+            
+            if ($ssq_ID > 0){
+                $sql = "UPDATE SSQ
+                        SET general_discomfort = " . $general_discomfort . ",
+                            fatigue = " . $fatigue . ",
+                            headache = " . $headache . ",
+                            difficulty_focusing = " . $difficulty_focusing . ",
+                            eye_strain = " . $eye_strain . ",
+                            increased_salivation = " . $increased_salivation . ",
+                            sweating = " . $sweating . ",
+                            nausea = " . $nausea . ",
+                            difficulty_concentrating = " . $difficulty_concentrating . ",
+                            fullness_of_head = " . $fullness_of_head . ",
+                            blurred_vision = " . $blurred_vision . ",
+                            dizziness_with_eyes_open = " . $dizziness_with_eyes_open . ",
+                            dizziness_with_eyes_closed = " . $dizziness_with_eyes_closed . ",
+                            vertigo = " . $vertigo . ",
+                            stomach_awareness = " . $stomach_awareness . ",
+                            burping = " . $burping . "
+                        WHERE ssq_ID = " . $ssq_ID . "
+                        LIMIT 1;";
+            }
+            else{
+                $sql = "INSERT INTO SSQ (general_discomfort, fatigue, headache, difficulty_focusing, eye_strain,              increased_salivation, sweating, nausea, difficulty_concentrating, fullness_of_head, blurred_vision, dizziness_with_eyes_open, dizziness_with_eyes_closed, vertigo, stomach_awareness, burping, ssq_time, ssq_type, session_ID, code)
+                    VALUES ('$general_discomfort', '$fatigue', '$headache', '$difficulty_focusing', '$eye_strain', '$increased_salivation', '$sweating', '$nausea', '$difficulty_concentrating', '$fullness_of_head', '$blurred_vision', '$dizziness_with_eyes_open', '$dizziness_with_eyes_closed', '$vertigo', '$stomach_awareness', '$burping', '$ssq_time', '$ssq_type', '$session_ID', '$code')";
+            }
+            $result = $this->db->pdo->query($sql);
+            if ($result) {
+                if ($ssq_ID == -1) Session::set('ssq_ID', $this->db->pdo->lastInsertId());
+                $message = Util::getModalForSSQ($this->db->pdo);
+            }
+            else{
+                $message = "Error: " . $sql;
+                $message .= $this->db->pdo->errorInfo();
+            }
+            
+            if (Session::get('login') === FALSE) {     
+                $sql2 = "INSERT INTO Demographics (Age, Race_Ethnicity, Gender, Education, Quiz)
+                        VALUES ('$age', '$race', '$gender', '$education')";
+                $this->db->pdo->query($sql2);
+            }
+            return $message;
+        }
+    }
 
   // Add participant to Session table and Demographics table
   public function addNewParticipant($data){
   // Note: this function does not work because the function does not take into account the study_ID yet.
-    array_walk($data, create_function('&$val', '$val = trim($val);'));
+    array_walk($data, function (&$val){
+        $val = trim($val);
+    });
     $anonymous_name = $data['anonymous_name'];
     $dob = $data['dob'];
     $age = $data['age'];    
@@ -96,6 +173,24 @@ class Studies {
         $this->db->pdo->rollBack();
         return $excptn;
     }
+    
+    $last_edited_by = Session::get('id'); 
+    $currentDate = new DateTime();
+        
+        $sql3 = "UPDATE Study
+                SET last_edited_by = :last_edited_by, last_edited_at = :last_edited_at 
+                WHERE study_ID = :study_ID
+                LIMIT 1;";
+        $stmt = $this->db->pdo->prepare($sql3);
+        $stmt->bindValue(':last_edited_by', $last_edited_by);
+        $stmt->bindValue(':last_edited_at', $currentDate->format('Y-m-d H:i:s'));
+        $stmt->bindValue(':study_ID', $study_ID);
+        $result_edit = $stmt->execute();
+        
+    if (!$result_edit){
+        throw new Exception($stmt->error);
+    }
+        
     if ($result2) {
         return Util::generateSuccessMessage("You registered a participant!");
     }
@@ -105,30 +200,41 @@ class Studies {
   }
 
  // Add researcher to study 
-  public function addResearcher($data){
-    array_walk($data, create_function('&$val', '$val = trim($val);'));
+  public function addResearcher($researcher_ID, $study_role){
     if (Session::get("study_ID") == 0){
         return Util::generateErrorMessage("You have an invalid study ID!");
     }
-    if (empty($data['researcher_ID'])){
+    $researcher_ID = trim($researcher_ID);
+    $study_role = trim($study_role);
+    if (empty($researcher_ID)){
         return Util::generateErrorMessage("Please select a researcher!");
     }
-    if (empty($data['study_role'])){
+    if (empty($study_role)){
         return Util::generateErrorMessage("Please select a role!");
     }
     
-    $researcher_ID = $data['researcher_ID'];          
     $study_ID = Session::get("study_ID");
-    $study_role = $data['study_role'];    
+    $last_edited_by = Session::get('id'); 
+    $currentDate = new DateTime();
       
     $sql = "INSERT INTO Researcher_Study (researcher_ID, study_ID, study_role) VALUES (:researcher_ID, :study_ID, :study_role)";
         $stmt = $this->db->pdo->prepare($sql);
         $stmt->bindValue(':researcher_ID', $researcher_ID);
         $stmt->bindValue(':study_ID', $study_ID);
-        $stmt->bindValue(':study_role', $study_role);     
+        $stmt->bindValue(':study_role', $study_role); 
         $result = $stmt->execute(); 
+        
+    $sql = "UPDATE Study
+                SET last_edited_by = :last_edited_by, last_edited_at = :last_edited_at 
+                WHERE study_ID = :study_ID
+                LIMIT 1;";
+        $stmt = $this->db->pdo->prepare($sql);
+        $stmt->bindValue('last_edited_by', $last_edited_by);
+        $stmt->bindValue(':last_edited_at', $currentDate->format('Y-m-d H:i:s'));
+        $stmt->bindValue(':study_ID', $study_ID);
+        $result2 = $stmt->execute();
     
-        if ($result){ 
+        if ($result && $result2){ 
             return Util::generateSuccessMessage("You have added a researcher!");
         } 
         else{
@@ -137,14 +243,15 @@ class Studies {
     }
     
 // Delete researcher to study 
-  public function removeResearcher($data){
-    array_walk($data, create_function('&$val', '$val = trim($val);'));
-    if (empty($data['researcher_ID'])){
+  public function removeResearcher($researcher_ID){
+    $researcher_ID = trim($researcher_ID);   
+    if (empty($researcher_ID)){
         return Util::generateErrorMessage("Please select a researcher to remove!");
     }
-    
-    $researcher_ID = $data['researcher_ID'];          
-    $study_ID = Session::get('study_ID');     
+           
+    $study_ID = Session::get('study_ID');  
+    $last_edited_by = Session::get('id'); 
+    $currentDate = new DateTime();
       
     $sql = "UPDATE Researcher_Study SET is_active = 0 WHERE researcher_ID = :researcher_ID AND study_ID = :study_ID";
     $stmt = $this->db->pdo->prepare($sql);
@@ -152,7 +259,17 @@ class Studies {
     $stmt->bindValue(':study_ID', $study_ID);
     $result = $stmt->execute(); 
     
-    if ($result) {
+    $sql = "UPDATE Study
+                SET last_edited_by = :last_edited_by, last_edited_at = :last_edited_at 
+                WHERE study_ID = :study_ID
+                LIMIT 1;";
+        $stmt = $this->db->pdo->prepare($sql);
+        $stmt->bindValue(':last_edited_by', $last_edited_by);
+        $stmt->bindValue(':last_edited_at', $currentDate->format('Y-m-d H:i:s'));
+        $stmt->bindValue(':study_ID', $study_ID);
+        $result2 = $stmt->execute();
+    
+    if ($result && $result2){
         return Util::generateSuccessMessage("You have removed a researcher!");
     }
     else{
@@ -160,14 +277,58 @@ class Studies {
     }
   }
   
-// Delete participant to study 
-  public function removeParticipant($data){
-    array_walk($data, create_function('&$val', '$val = trim($val);'));
-    if (empty($data['participant_ID'])){
+ // Edit researcher 
+  public function editResearcher($researcher_ID, $study_role){
+    $researcher_ID = trim($researcher_ID);
+    $study_role = trim($study_role);
+    if (Session::get("study_ID") == 0){
+        return Util::generateErrorMessage("You have an invalid study ID!");
+    }
+    if (empty($researcher_ID)){
+        return Util::generateErrorMessage("Please select a researcher!");
+    }
+    if (empty($study_role)){
+        return Util::generateErrorMessage("Please select a role!");
+    }
+    
+    $study_ID = Session::get("study_ID");
+    $last_edited_by = Session::get('id'); 
+    $currentDate = new DateTime();
+      
+    $sql = "UPDATE Researcher_Study SET study_role = :study_role WHERE study_ID = :study_ID AND researcher_ID = :researcher_ID";
+    
+    
+        $stmt = $this->db->pdo->prepare($sql);
+        $stmt->bindValue(':researcher_ID', $researcher_ID);
+        $stmt->bindValue(':study_ID', $study_ID);
+        $stmt->bindValue(':study_role', $study_role);   
+        $result = $stmt->execute(); 
+    
+    $sql2 = "UPDATE Study
+            SET last_edited_by = :last_edited_by, last_edited_at = :last_edited_at 
+            WHERE study_ID = :study_ID
+            LIMIT 1;";
+        $stmt = $this->db->pdo->prepare($sql2);
+        $stmt->bindValue('last_edited_by', $last_edited_by);
+        $stmt->bindValue(':last_edited_at', $currentDate->format('Y-m-d H:i:s'));
+        $stmt->bindValue(':study_ID', $study_ID);
+        $result2 = $stmt->execute();
+    
+        if ($result && $result2){ 
+            return Util::generateSuccessMessage("You have edited a researcher!");
+        } 
+        else{
+            return Util::generateErrorMessage("Something went wrong. Try registering again!");
+        }    
+    }
+  
+// Delete participant from study 
+  public function removeParticipant($participant_ID){
+    $participant_ID = trim($participant_ID);
+    if (empty($participant_ID)){
         return Util::generateErrorMessage("Please select a participant to remove!");
     }
     
-    $participant_ID = $data['participant_ID'];
     $study_ID = Session::get('study_ID');
       
     $sql = "UPDATE Participants SET is_active = 0 WHERE participant_ID = :participant_ID AND study_ID = :study_ID";
@@ -176,7 +337,20 @@ class Studies {
     $stmt->bindValue(':study_ID', $study_ID);
     $result = $stmt->execute(); 
     
-    if ($result) {
+    $last_edited_by = Session::get('id'); 
+    $currentDate = new DateTime();
+    
+    $sql = "UPDATE Study
+                SET last_edited_by = :last_edited_by, last_edited_at = :last_edited_at 
+                WHERE study_ID = :study_ID
+                LIMIT 1;";
+        $stmt = $this->db->pdo->prepare($sql);
+        $stmt->bindValue('last_edited_by', $last_edited_by);
+        $stmt->bindValue(':last_edited_at', $currentDate->format('Y-m-d H:i:s'));
+        $stmt->bindValue(':study_ID', $study_ID);
+        $result2 = $stmt->execute();
+    
+    if ($result && $result2) {
         return Util::generateSuccessMessage("You have removed a participant!");
     }
     else{
@@ -186,17 +360,16 @@ class Studies {
   
   // take SSQ quiz from Session
 public function takeSSQ($data){
-    array_walk($data, create_function('&$val', '$val = trim($val);'));
+    array_walk($data, function (&$val){
+        $val = trim($val);
+    });
     if (!(isset($data['quiz_type']) && isset($data['ssq_time']))){
         return Util::generateErrorMessage("Please select a quiz type and a quiz time!");
-    }
-    if (!(isset($data['session_ID']))){
-        return Util::generateErrorMessage("User does not have a valid session ID!");
     }
     
     $quiz_type = $data['quiz_type'];
     $ssq_time = $data['ssq_time'];
-    $session_ID = $data['session_ID'];
+    $session_ID = Session::get('session_ID');
     
     $sql = "SELECT *
             FROM SSQ
@@ -226,8 +399,10 @@ public function takeSSQ($data){
   
   // remove SSQ quiz from Session
   public function deleteQuiz($data){
-    array_walk($data, create_function('&$val', '$val = trim($val);'));
-    $ssq_ID = $data["ssq_ID"];          
+    array_walk($data, function (&$val){
+        $val = trim($val);
+    });
+    $ssq_ID = Session::get('ssq_ID');          
       
     $sql = "UPDATE SSQ
             SET is_active = 0
@@ -260,13 +435,17 @@ public function takeSSQ($data){
     }// Insert user's study in Study table
     
  public function insert_study($data) {
-    array_walk($data, create_function('&$val', '$val = trim($val);'));
+    array_walk($data, function (&$val){
+        $val = trim($val);
+    });
     $full_name = $data['full_name'];
     $short_name = $data['short_name'];
     $IRB = $data['IRB'];
     $description = $data['description']; 
     $ssq_times = explode(",", $data["ssq_times"]);
-    array_walk($ssq_times, create_function('&$val', '$val = trim($val);'));
+    array_walk($ssq_times, function (&$val){
+        $val = ucwords(trim($val));
+    });
     $ssq_times = array_filter($ssq_times, function ($time) { return $time != ''; });
     $created_by = Session::get('id');
     $last_edited_by = Session::get('id');    
@@ -312,7 +491,9 @@ public function takeSSQ($data){
 
     // Edit a user's study
     public function updateStudy($data){
-        array_walk($data, create_function('&$val', '$val = trim($val);'));
+        array_walk($data, function (&$val){
+            $val = trim($val);
+        });
         $full_name = $data['full_name'];
         $short_name = $data['short_name'];
         $IRB = $data['IRB'];
@@ -326,6 +507,8 @@ public function takeSSQ($data){
         });
         $ssq_times = array_filter($ssq_times, function ($time) { return $time !== ''; });
         
+        $currentDate = new DateTime();
+        
         if ($full_name == "" || $short_name == ""|| $IRB == "") {
             return Util::generateErrorMessage("You cannot leave required field empty!");
         }
@@ -333,13 +516,15 @@ public function takeSSQ($data){
             return Util::generateErrorMessage("You cannot have multiple SSQ times of the same name!");
         }
         $pdo = $this->db->pdo;
-        $sql = "UPDATE Study SET full_name = :full_name, short_name = :short_name, IRB = :IRB, description = :description, last_edited_by = :last_edited_by WHERE study_ID = $study_ID";
+        $sql = "UPDATE Study SET full_name = :full_name, short_name = :short_name, IRB = :IRB, description = :description, last_edited_by = :last_edited_by, last_edited_at = :last_edited_at WHERE study_ID = :study_ID";
         $stmt = $pdo->prepare($sql);
         $stmt->bindValue(':full_name', $full_name);
         $stmt->bindValue(':short_name', $short_name);  
         $stmt->bindValue(':IRB', $IRB);
         $stmt->bindValue(':description', $description);
         $stmt->bindValue('last_edited_by', $last_edited_by);
+        $stmt->bindValue(':last_edited_at', $currentDate->format('Y-m-d H:i:s'));
+        $stmt->bindValue(':study_ID', $study_ID);
         $result = $stmt->execute();
         
         if (!$result) {
@@ -352,8 +537,9 @@ public function takeSSQ($data){
         while ($row = $old_times_res->fetch(PDO::FETCH_ASSOC)) {
             array_push($old_times, $row['name']);
         }
-        
-        array_walk($old_times, create_function('&$val', '$val = trim($val);'));
+        array_walk($data, function (&$old_times){
+            $val = trim($old_times);
+        });
         
         $added_ssq_times = array_filter($ssq_times, function ($time) use($old_times) {
             return !in_array($time, $old_times);
@@ -447,13 +633,18 @@ public function takeSSQ($data){
     
     // Activates study based on the given study_ID.
     public function activateStudy($study_ID){
+        $last_edited_by = Session::get('id'); 
+        $currentDate = new DateTime();
+        
         $sql = "UPDATE Study
-                SET is_active = 1
+                SET is_active = 1, last_edited_by = :last_edited_by, last_edited_at = :last_edited_at
                 WHERE study_ID = :study_ID;
                 LIMIT 1;";
                 
         $stmt = $this->db->pdo->prepare($sql);
         $stmt->bindValue(":study_ID", $study_ID);
+         $stmt->bindValue('last_edited_by', $last_edited_by);
+        $stmt->bindValue(':last_edited_at', $currentDate->format('Y-m-d H:i:s'));
         $result = $stmt->execute();
         
         if ($result){
@@ -466,14 +657,19 @@ public function takeSSQ($data){
     
     // Deactivates study based on the given study_ID.
     public function deactivateStudy($study_ID){
+        $last_edited_by = Session::get('id'); 
+        $currentDate = new DateTime();
         $sql = "UPDATE Study
-                SET is_active = 0
+                SET is_active = 0, last_edited_by = :last_edited_by, last_edited_at = :last_edited_at 
                 WHERE study_ID = :study_ID
                 LIMIT 1;";
         
         $stmt = $this->db->pdo->prepare($sql);
         $stmt->bindValue(':study_ID', $study_ID);
+        $stmt->bindValue('last_edited_by', $last_edited_by);
+        $stmt->bindValue(':last_edited_at', $currentDate->format('Y-m-d H:i:s'));
         $result = $stmt->execute();
+        
         
         if ($result){
             return Util::generateSuccessMessage("You deactivated this study!");
@@ -485,27 +681,35 @@ public function takeSSQ($data){
     
     // leaves the current study
     public function leaveStudy($study_ID){
-        $sql = "UPDATE Researcher_Study
-                SET is_active = 0
-                WHERE researcher_ID = :researcher_ID
-                AND study_ID = :study_ID
-                LIMIT 1;";
-        $stmt = $this->db->pdo->prepare($sql);
-        $stmt->bindValue(':researcher_ID', Session::get('id'));
-        $stmt->bindValue(':study_ID', $study_ID);
-        
-        $result = $stmt->execute();
-        if ($result){
-            return Util::generateSuccessMessage("You left this study!");
-        }
-        else{
-            return Util::generateErrorMessage("Something went wrong. Try leaving again!");
+        $pi_sql = "SELECT COUNT(study_role) AS Count FROM Researcher_Study WHERE study_ID = " . Session::get("study_ID") . " AND study_role = 2 AND is_active = 1;";
+        $pi_result = $this->db->pdo->query($pi_sql);
+        $pi_count = $pi_result->fetch(PDO::FETCH_ASSOC);
+        if ($pi_count['Count'] > 1){
+            $sql = "UPDATE Researcher_Study
+                    SET is_active = 0
+                    WHERE researcher_ID = :researcher_ID
+                    AND study_ID = :study_ID
+                    AND is_active = 1
+                    LIMIT 1;";
+            $stmt = $this->db->pdo->prepare($sql);
+            $stmt->bindValue(':researcher_ID', Session::get('id'));
+            $stmt->bindValue(':study_ID', $study_ID);
+            
+            $result = $stmt->execute();
+            if ($result){
+                return Util::generateSuccessMessage("You left this study!");
+            }
+            else{
+                return Util::generateErrorMessage("Something went wrong. Try leaving again!");
+            }
         }
     }
     
     // inserts a session of a  study into DB
     public function insert_session($data){
-        array_walk($data, create_function('&$val', '$val = trim($val);'));
+        array_walk($data, function (&$val){
+        $val = trim($val);
+    });
         $created_by = Session::get('id');
         
         if (empty($data["participant_ID"])){

@@ -14,7 +14,7 @@ $study_ID = Session::get('study_ID');
 
 Session::requirePIorRA($study_ID, $pdo);
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['removeParticipant'])) {
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['removeParticipant']) && Session::CheckPostID($_POST)) {
     $info = explode(';', $_POST['participant_ID']);
     $participant_ID = $info[0];
     $iv = $info[1];
@@ -40,6 +40,11 @@ if (isset($removeParticipant)) {
     </div>
     <div class="card-body pr-2 pl-2">
         <form class="" action="" method="post">
+            <?php 
+                $rand = bin2hex(openssl_random_pseudo_bytes(16));
+                Session::set("post_ID", $rand);
+            ?>
+            <input type="hidden" name="randCheck" value="<?php echo $rand; ?>">
             <div style="margin-block: 6px;">
                 <small style='color: red'>
                     * Required Field

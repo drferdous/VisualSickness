@@ -7,7 +7,7 @@ $pdo = $db->pdo;
 ?>
 
 <?php
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register'])) {
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register']) && Session::CheckPostID($_POST)) {
     $userRegistration = $users->userRegistration($_POST);
 }
 if (isset($userRegistration)) {
@@ -33,6 +33,11 @@ if (isset($userRegistration)) {
             <div style="max-width:600px; margin:0px auto">
 
             <form class="" action="" method="post">
+                <?php 
+                    $rand = bin2hex(openssl_random_pseudo_bytes(16));
+                    Session::set("post_ID", $rand);
+                ?>
+                <input type="hidden" name="randCheck" value="<?php echo $rand; ?>">
                 <br>
                 <div style="margin-block: 6px;">
                     <small style='color: red'>

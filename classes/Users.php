@@ -288,7 +288,7 @@ class Users{
       return Util::generateSuccessMessage("You have created a study!");
   } 
   else {
-      return Util::genereateErrorMessage("Something went wrong. Try creating a study again!");
+      return Util::generateErrorMessage("Something went wrong. Try creating a study again!");
   }
 } 
 
@@ -339,7 +339,7 @@ class Users{
             return Util::generateSuccessMessage("You activated this study!");
         }
         else{
-            return Util::generateErroMessage("SOmething went wrong. Try activating again!");
+            return Util::generateErrorMessage("SOmething went wrong. Try activating again!");
         }
     }
     

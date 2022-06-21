@@ -17,7 +17,8 @@
         $user_ID = Crypto::decrypt($_POST["user_ID"], $iv);
     }
     
-    if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["removeUser"])){
+    if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["removeUser"]) && Session::CheckPostID($_POST)){
+        $message = "This function is called.";
         $sql = "UPDATE tbl_users
                 SET status = 2,
                 updated_by = $localId,
@@ -30,7 +31,8 @@
         }
     }
     
-    if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["deactivateUser"])){
+    if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["deactivateUser"]) && Session::CheckPostID($_POST)){
+        $message = "This function is called.";
         $sql = "UPDATE tbl_users
                 SET status = 0,
                 updated_by = $localId,
@@ -44,7 +46,8 @@
         }
     }
     
-    if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["activateUser"])){
+    if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["activateUser"]) && Session::CheckPostID($_POST)){
+        $message = "This function is called.";
         $sql = "UPDATE tbl_users
                 SET status = 1,
                 updated_by = $localId,
@@ -57,6 +60,9 @@
             exit();
         }
     }
+
+$rand = bin2hex(openssl_random_pseudo_bytes(16));
+Session::set("post_ID", $rand);
 ?>
 
 <div class="card">
@@ -72,6 +78,14 @@
             </span>
         </strong></span></h3>
     </div>
+    <?php
+        if (isset($message)){
+            echo $message;
+        }
+        else{
+            echo "This function was not run.";
+        }
+    ?>
     <div class="card-body pr-2 pl-2">
         <table id="example" class="table table-striped table-bordered table-responsive" style="width:100%;display:table">
             
@@ -153,6 +167,11 @@
         hiddenInput.setAttribute("name", "iv");
         hiddenInput.setAttribute("value", $(this).parent().parent().attr("data-iv"));
         form.appendChild(hiddenInput);
+        
+        hiddenInput = document.createElement("input");
+        hiddenInput.setAttribute("type", "hidden");
+        hiddenInput.setAttribute("name", "randCheck");
+        hiddenInput.setAttribute("value", "<?php echo $rand; ?>");
         
         document.body.appendChild(form);
         form.submit();
@@ -243,12 +262,17 @@
         hiddenInput.setAttribute("name", userAction);
         form.appendChild(hiddenInput);
         
+        hiddenInput = document.createElement("input");
+        hiddenInput.setAttribute("type", "hidden");
+        hiddenInput.setAttribute("name", "randCheck");
+        hiddenInput.setAttribute("value", "<?php echo $rand; ?>");
+        form.appendChild(hiddenInput);
+        
         document.body.appendChild(form);
         form.submit();
         
         return false;
     }
-    
     showUsers(true);
 </script>
 <?php

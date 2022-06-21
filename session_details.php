@@ -24,21 +24,21 @@ $study_sql = "SELECT is_active FROM Study WHERE study_ID = " . Session::get('stu
 $study_result = $pdo->query($study_sql);
 $study_is_active = $study_result->fetch(PDO::FETCH_ASSOC)['is_active'] == 1;
 
-if (isset($_POST['restart-session-btn'])){
+if (isset($_POST['restart-session-btn']) && Session::CheckPostId($_POST)){
     $startSessionMessage = $studies->restart_session($session_ID);
     if (isset($startSessionMessage)){
         echo $startSessionMessage;
     }
 }
 
-if (isset($_POST['end-session-btn'])){
+if (isset($_POST['end-session-btn']) && Session::CheckPostID($_POST)){
     $endSessionMessage = $studies->endSession($session_ID);
     if (isset($endSessionMessage)){
         echo $endSessionMessage;
     }
 }
 
-if (isset($_POST['remove-session-btn'])){
+if (isset($_POST['remove-session-btn']) && Session::CheckPostID($_POST)){
     $removeSessionMessage = $studies->removeSession($session_ID);
     if (isset($removeSessionMessage)){
         echo $removeSessionMessage; ?>
@@ -53,7 +53,7 @@ if (isset($_POST['remove-session-btn'])){
     }
 }
 
-if (isset($_POST['delete-ssq-btn'])){
+if (isset($_POST['delete-ssq-btn']) && Session::CheckPostID($_POST)){
     $deleteSSQmessage = $studies->deleteSSQ($session_ID);
     if (isset($deleteSSQmessage)){
         echo $deleteSSQmessage ;
@@ -263,24 +263,29 @@ if (isset($_POST['delete-ssq-btn'])){
                         ?>
                     <td>
                         <form action="session_details" method="POST" class="d-flex justify-content-center align-items-center" style="gap: 6px;flex-wrap: wrap;">
-                        <?php if (isset($row_session['end_time']) && $remove_row['is_active'] == 1){ ?>
-                            <input class="btn btn-warning" type="submit" name="restart-session-btn" value="Restart Session">
-                            <?php if($role_row['study_role'] == 2 || $remove_row['created_by'] == Session::get("id")) {
-                            ?>
-                                    <input onclick="return confirm('Are you sure you want to remove this session? This action cannot be undone.');" class="btn btn-danger" type="submit" name="remove-session-btn" value="Remove Session">
-                            <?php }
-                                
-                            }
-                        else {
-                            if ($remove_row['is_active'] == 1) { ?>
-                                <input class="btn btn-warning" type="submit" name="end-session-btn" value="End Session">
-                                <?php if($role_row['study_role'] == 2 || $remove_row['created_by'] == Session::get("id")) {
-                                 ?>
-                                <input onclick="return confirm('Are you sure you want to remove this session? This action cannot be undone.');" class="btn btn-danger" type="submit"  name="remove-session-btn" value="Remove Session">
                             <?php 
+                                $rand = bin2hex(openssl_random_pseudo_bytes(16));
+                                Session::set("post_ID", $rand);
+                            ?>
+                            <input type="hidden" name="randCheck" value="<?php echo $rand; ?>">
+                            <?php if (isset($row_session['end_time']) && $remove_row['is_active'] == 1){ ?>
+                                <input class="btn btn-warning" type="submit" name="restart-session-btn" value="Restart Session">
+                                <?php if($role_row['study_role'] == 2 || $remove_row['created_by'] == Session::get("id")) {
+                                ?>
+                                        <input onclick="return confirm('Are you sure you want to remove this session? This action cannot be undone.');" class="btn btn-danger" type="submit" name="remove-session-btn" value="Remove Session">
+                                <?php }
+                                    
                                 }
-                             }
-                        } ?>
+                            else {
+                                if ($remove_row['is_active'] == 1) { ?>
+                                    <input class="btn btn-warning" type="submit" name="end-session-btn" value="End Session">
+                                    <?php if($role_row['study_role'] == 2 || $remove_row['created_by'] == Session::get("id")) {
+                                     ?>
+                                    <input onclick="return confirm('Are you sure you want to remove this session? This action cannot be undone.');" class="btn btn-danger" type="submit"  name="remove-session-btn" value="Remove Session">
+                                <?php 
+                                    }
+                                 }
+                            } ?>
                         </form>
                     </td>                 
                 </tr>

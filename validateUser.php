@@ -13,7 +13,7 @@
     
     Session::init();
     
-    if (Session::get("roleid") != "1" || !isset($_POST)){
+    if (Session::get("roleid") != "1" || !isset($_POST) && Session::CheckPostID($_POST)){
         // header("Location: 404");
         var_dump($_POST);
         exit();

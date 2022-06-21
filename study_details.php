@@ -82,75 +82,97 @@ $role_sql = "SELECT study_role FROM Researcher_Study WHERE study_ID = " . Sessio
 ?>
 
 <div class="card">
-    <div class="card-header">
-        <h3 class="float-left">Study Details</h3>
-        <span class="float-right"> 
-             <div class="d-inline">
+    <nav class="navDropdown navbar navbar-expand-lg navbar-light bg-light justify-content-between">
+        <a class="navbar-brand">Study Details</a>
+      <div class="container-fluid">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item dropdown mr-2">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLinkRight" role="button"
+                data-mdb-toggle="dropdown" aria-expanded="false">
+                More Actions
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLinkRight">
+              <li><a href="researcher_list" class="dropdown-item">View Researchers</a></li>
+              <?php 
+                if(isset($role['study_role']) && $role['study_role'] != 4){ ?>
+                    <li><a href="edit_researchers" class="dropdown-item">Edit Researchers</a></li>
+              <?php }
+              if(isset($role['study_role']) && $role['study_role'] == 2){ ?>
+                <li><a href="add_researcher" class="dropdown-item">Add A Researcher</a></li>
+                    <?php
+                        $sql = "SELECT u.email FROM tbl_users AS u
+                            JOIN Researcher_Study AS rs ON rs.researcher_ID = u.id
+                            WHERE rs.study_ID = $study_ID
+                            AND rs.is_active = 1
+                            AND u.status = 1;";
+                        $email_result = $pdo->query($sql);
+                        $emails = array();
+                        while ($row = $email_result->fetch(PDO::FETCH_ASSOC)) {
+                            array_push($emails, $row['email']);
+                        }
+                        $mailing_list = implode(',', $emails);
+                    ?>
+                <li><a href="mailto:<?= $mailing_list ?>" class="dropdown-item">Contact Researchers</a></li>
+                <?php } 
+                    if($role['study_role'] == 2){ ?>
+                        <li><a href="remove_researcher" class="dropdown-item">Remove A Researcher</a></li>
+                <?php }
+                    if(isset($role['study_role'])) { ?>
+                        <li><a href="participantList?forStudy=true" class="dropdown-item">View Participants</a></li>
+                <?php }
+                    if(isset($role['study_role']) && $role['study_role'] != 4){ ?>
+                        <li><a href="addParticipant" class="dropdown-item">Add A Participant</a></li>
+                <?php } 
+                    if(isset($role['study_role']) && $role['study_role'] != 4){ ?>
+                        <li><a href="remove_participant" class="dropdown-item">Remove A Participant</a></li>
+                <?php } ?>
                 <form method="post" class="d-inline" action="">
                     <?php 
-                        $pi_sql = "SELECT COUNT(study_role) AS Count FROM Researcher_Study WHERE study_ID = " . Session::get("study_ID") . " AND study_role = 2 AND is_active = 1;";
-                        $pi_result = $pdo->query($pi_sql);
-                        $pi_count = $pi_result->fetch(PDO::FETCH_ASSOC);
-                        if (isset($role['study_role']) && ($role['study_role'] != 2 || $pi_count['Count'] > 1)){ ?>
-                            <input class="btn btn-secondary" type="submit" name="leave-btn" value="Leave" onclick="return confirm('Are you sure you want to leave the study? You will no longer have access to the study \'<?php echo $row_study['full_name']; ?>\' unless a researcher adds you back.');">
-                        <?php }
-                    
                         if ($row_study["is_active"] === "1" && $role['study_role'] == 2){ ?>
-                            <input class="btn btn-danger" type="submit" name="deactivate-btn" value="Deactivate" onclick="return confirm('Are you sure you want to deactivate the study \'<?php echo $row_study['full_name']; ?>\'? You cannot edit the study if it is inactive.');">
-                    <?php }
-                          else{ ?>
-                            <?php if($role['study_role'] == 2) { ?>
-                                <input class="btn btn-warning" type="submit" name="activate-btn" value="Activate" onclick="return confirm('Are you sure you want to activate the study \'<?php echo $row_study['full_name']; ?>\'?');">
-                            <?php } 
-                            } ?>
-                </form>
-                    <?php if ($row_study['is_active'] === '1') { ?>
+                            <li><input class="dropdown-item" type="submit" name="deactivate-btn" value="Deactivate" onclick="return confirm('Are you sure you want to deactivate the study \'<?php echo $row_study['short_name']; ?>\'? You cannot edit the study if it is inactive.');"></li>
+                    <?php } else{ ?>
                         <?php if($role['study_role'] == 2) { ?>
-                            <a href="edit_study"  class="btn btn-success">Edit</a>
-                        <?php } ?>
-                        
-                        <button class="btn btn-info dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">More Actions</button>
-                        <ul class="dropdown-menu">
-                            <li>
-                                <a href="researcher_list" class="dropdown-item">View Researchers</a>
-                            </li>
-                            <?php 
-                            if(isset($role['study_role']) && $role['study_role'] != 4){ ?>
-                                <li>
-                                    <a href="edit_researchers" class="dropdown-item">Edit Researchers</a>
-                                </li>
-                            <?php }
-                            if(isset($role['study_role']) && $role['study_role'] == 2){ ?>
-                                <li>
-                                    <a href="add_researcher" class="dropdown-item">Add A Researcher</a>
-                                </li>
-                            <?php } 
-                            if($role['study_role'] == 2){ ?>
-                                <li>
-                                    <a href="remove_researcher" class="dropdown-item">Remove A Researcher</a>
-                            </li>
-                            <?php }
-                            if(isset($role['study_role'])) { ?>
-                                <li>
-                                    <a href="participantList?forStudy=true" class="dropdown-item">View Participants</a>
-                                </li>
-                            <?php }
-                            if(isset($role['study_role']) && $role['study_role'] != 4){ ?>
-                                <li>
-                                    <a href="addParticipant" class="dropdown-item">Add A Participant</a>
-                                </li>
-                            <?php }
-                            if(isset($role['study_role']) && $role['study_role'] != 4){ ?>
-                                <li>
-                                    <a href="remove_participant" class="dropdown-item">Remove A Participant</a>
-                                </li>
-                            <?php } ?>
-                        </ul>
+                            <li><input class="dropdown-item" type="submit" name="activate-btn" value="Activate" onclick="return confirm('Are you sure you want to activate the study \'<?php echo $row_study['short_name']; ?>\'?');"></li>
+                        <?php } 
+                    } ?>
+                </form>
+                <?php if($role['study_role'] == 2) { ?>
+                    <li><a href="edit_study"  class="dropdown-item">Edit</a></li>
+                <?php } ?>
+                
+                <div class="dropdown-divider"></div>
+                  <?php 
+                    $pi_sql = "SELECT COUNT(study_role) AS Count FROM Researcher_Study WHERE study_ID = " . Session::get("study_ID") . " AND study_role = 2 AND is_active = 1;";
+                    $pi_result = $pdo->query($pi_sql);
+                    $pi_count = $pi_result->fetch(PDO::FETCH_ASSOC);
+                    if (isset($role['study_role']) && ($role['study_role'] != 2 || $pi_count['Count'] > 1)){ ?>
+                        <form method="post" class="d-inline" action="">
+                            <li><input class="dropdown-item" type="submit" name="leave-btn" value="Leave" onclick="return confirm('Are you sure you want to leave the study? You will no longer have access to the study \'<?php echo $row_study['short_name']; ?>\' unless a researcher adds you back.');"></li>
+                        </form>
                     <?php } ?>
-                </div>
-                <a href="view_study" class="btn btn-primary backButton">Back</a>
-        </span>
-    </div>
+            </ul>
+          </li>
+          <li><a href="view_study" class="btn btn-primary backButton">Back</a></li>
+        </ul>
+      </div>
+    </nav>
+</div>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
     <div class="card-body pr-2 pl-2" style="display: flex; align-items: stretch;">
         <table class="table table-striped table-bordered" style="flex-basis: 100%;">
@@ -234,6 +256,21 @@ $role_sql = "SELECT study_role FROM Researcher_Study WHERE study_ID = " . Sessio
         </table>
     </div>
 </div>
+<script>
+    let dropped = false;
+    $(document).ready(() => {
+        $(document).on('click', (e) => {
+            if (e.target.id != 'navbarDropdownMenuLinkRight' && dropped) {
+                $('#navbarDropdownMenuLinkRight').dropdown('toggle');
+                dropped = false;
+            }
+        });
+        $('#navbarDropdownMenuLinkRight').on('click', () => {
+            $('#navbarDropdownMenuLinkRight').dropdown('toggle');
+            dropped = !dropped;
+        });
+    })
+</script>
 <?php
   include 'inc/footer.php';
 ?>

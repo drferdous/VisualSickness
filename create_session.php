@@ -24,7 +24,7 @@ if ($res->fetch(PDO::FETCH_ASSOC)['is_active'] == 0) {
     exit();
 }
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['insert_session'])){
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['insert_session']) && Session::CheckPostID($_POST)){
     $insertSessionMessage = $studies->insert_session($_POST); 
     if (isset($insertSessionMessage)){
         echo $insertSessionMessage; ?>
@@ -58,6 +58,11 @@ $role = $role_result->fetch(PDO::FETCH_ASSOC);
     </div>
         <div class="card-body">
             <form class="" action="" method="post">
+                <?php 
+                    $rand = bin2hex(openssl_random_pseudo_bytes(16));
+                    Session::set("post_ID", $rand);
+                ?>
+                <input type="hidden" name="randCheck" value="<?php echo $rand; ?>">
                 <div style="margin-block: 6px;">
                     <small style='color: red'>
                         * Required Field

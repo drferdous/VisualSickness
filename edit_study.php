@@ -13,7 +13,7 @@ if (Session::get('study_ID') == 0) {
 $study_ID = Session::get('study_ID');
 Session::requirePI($study_ID, $pdo);
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['updateStudy'])) {
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['updateStudy']) && Session::CheckPostID($_POST)) {
     $updateStudy = $studies->updateStudy($_POST);
     if (isset($updateStudy)){
         echo $updateStudy; ?>
@@ -54,7 +54,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['updateStudy'])) {
         }
     ?>
     <div class="card-body pr-2 pl-2">
-        <form class="" action="edit_study" method="POST", id="submit_form">
+        <form class="" action="" method="POST", id="submit_form">
+            <?php 
+                $rand = bin2hex(openssl_random_pseudo_bytes(16));
+                Session::set("post_ID", $rand);
+            ?>
+            <input type="hidden" name="randCheck" value="<?php echo $rand; ?>">
             <div style="margin-block: 6px;">
                 <small style='color: red'>
                     * Required Field

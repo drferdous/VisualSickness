@@ -4,7 +4,7 @@ Session::CheckLogin();
 ?>
 
 <?php 
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login']) && Session::CheckPostID($_POST)) {
     $userLog = $users->userLoginAuthentication($_POST);
     if (isset($userLog)){
         echo $userLog;
@@ -34,6 +34,11 @@ if (isset($logout)) {
         <div style="max-width:450px; margin:0px auto; border-radius: 25px;" class="shadow">
             <form class="" action="" method="post" style="margin: 10px; padding-top: 30px;">
                 <p class="d-flex justify-content-center"><i class="fas fa-sign-in-alt mr-2"></i>Login to Visual Sickness</p>
+                <?php 
+                    $rand = bin2hex(openssl_random_pseudo_bytes(16));
+                    Session::set("post_ID", $rand);
+                ?>
+                <input type="hidden" name="randCheck" value="<?php echo $rand; ?>">
                 <div style="margin-block: 6px;">
                     <small style='color: red'>
                         * Required Field
