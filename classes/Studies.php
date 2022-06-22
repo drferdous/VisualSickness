@@ -216,6 +216,20 @@ class Studies {
     $study_ID = Session::get("study_ID");
     $last_edited_by = Session::get('id'); 
     $currentDate = new DateTime();
+    
+    $sql = "SELECT roleid FROM tbl_users
+            WHERE id = :researcher_ID
+            LIMIT 1;";
+    $stmt = $this->db->pdo->prepare($sql);
+    $stmt->bindValue(':researcher_ID', $researcher_ID);
+    $result = $stmt->execute();
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    if (!isset($row['roleid'])){
+        return Util::generateErrorMessage("We could not verify this user's role.");
+    }
+    if ($study_role < $row['roleid'] || $study_role > 4){
+        return Util::generateErrorMessage("An invalid role was selected!");
+    }
       
     $sql = "INSERT INTO Researcher_Study (researcher_ID, study_ID, study_role) VALUES (:researcher_ID, :study_ID, :study_role)";
         $stmt = $this->db->pdo->prepare($sql);
@@ -294,6 +308,20 @@ class Studies {
     $study_ID = Session::get("study_ID");
     $last_edited_by = Session::get('id'); 
     $currentDate = new DateTime();
+    
+    $sql = "SELECT roleid FROM tbl_users
+            WHERE id = :researcher_ID
+            LIMIT 1;";
+    $stmt = $this->db->pdo->prepare($sql);
+    $stmt->bindValue('researcher_ID', $researcher_ID);
+    $result = $stmt->execute();
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    if (!isset($row["roleid"])){
+        return Util::generateErrorMessage("We could not verify this user's role.");
+    }
+    if ($study_role < $row["roleid"] || $study_role > 4){
+        return Util::generateErrorMessage("An invalid role was selected.");
+    }
       
     $sql = "UPDATE Researcher_Study SET study_role = :study_role WHERE study_ID = :study_ID AND researcher_ID = :researcher_ID";
     
