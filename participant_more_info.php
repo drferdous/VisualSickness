@@ -113,7 +113,7 @@
             if ($role_row['study_role'] == 2) { ?>
             <form class="text-center mt-2" action="" method="POST" onsubmit="return confirm('Are you sure you want to remove <?= $name ?> from the study \'<?= $study_name ?>\'? This action cannot be undone.');">
                 <input type="submit" name="removeParticipant" class="btn btn-danger" value="Remove Participant">
-                <input name="participant_ID" type="hidden" value="<?= $_POST['participant_ID'] ?> ?>">
+                <input name="participant_ID" type="hidden" value="<?= $_POST['participant_ID'] ?>">
                 <input name="iv" type="hidden" value="<?= $_POST['iv'] ?>">
             </form>
             <?php } ?>
