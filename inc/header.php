@@ -17,6 +17,8 @@ spl_autoload_register(function($classes){
 $users = new Users();
 $studies = new Studies();
 
+   
+$timezone = Session::get('time_offset');
 
 
 ?>
@@ -35,6 +37,26 @@ $studies = new Studies();
     <link rel="stylesheet" href="assets/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" href="assets/style.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    
+    <?php if($timezone == false) { ?>
+    <script type="text/javascript">
+    $(document).ready(function() {
+            var visitortime = new Date();
+            var visitortimezone = -visitortime.getTimezoneOffset();
+            $.ajax({
+                type: "POST",
+                url: "timezone",
+                data: {
+                    time: visitortimezone,
+                },
+                success: function(){
+                    location.reload();
+                }
+            });
+    });
+</script>
+<?php } ?>
+    
     <style type="text/css">
         /* VisualQuiz.php CSS
            HIDE RADIO           */

@@ -89,7 +89,7 @@ class Studies {
   // Add participant to Session table and Demographics table
   public function addNewParticipant($data){
   // Note: this function does not work because the function does not take into account the study_ID yet.
-    array_walk($data, function (&$val){
+    array_walk($data, function (&$val) {
         $val = trim($val);
     });
     $anonymous_name = $data['anonymous_name'];
@@ -329,12 +329,10 @@ class Studies {
         return Util::generateErrorMessage("Please select a participant to remove!");
     }
     
-    $study_ID = Session::get('study_ID');
       
-    $sql = "UPDATE Participants SET is_active = 0 WHERE participant_ID = :participant_ID AND study_ID = :study_ID";
+    $sql = "UPDATE Participants SET is_active = 0 WHERE participant_ID = :participant_ID";
     $stmt = $this->db->pdo->prepare($sql);
     $stmt->bindValue(':participant_ID', $participant_ID);
-    $stmt->bindValue(':study_ID', $study_ID);
     $result = $stmt->execute(); 
     
     $last_edited_by = Session::get('id'); 
@@ -347,7 +345,7 @@ class Studies {
         $stmt = $this->db->pdo->prepare($sql);
         $stmt->bindValue('last_edited_by', $last_edited_by);
         $stmt->bindValue(':last_edited_at', $currentDate->format('Y-m-d H:i:s'));
-        $stmt->bindValue(':study_ID', $study_ID);
+        $stmt->bindValue(':study_ID', Session::get("study_ID"));
         $result2 = $stmt->execute();
     
     if ($result && $result2) {
@@ -360,9 +358,7 @@ class Studies {
   
   // take SSQ quiz from Session
 public function takeSSQ($data){
-    array_walk($data, function (&$val){
-        $val = trim($val);
-    });
+    array_walk($data, function (&$val) {         $val = trim($val);     });
     if (!(isset($data['quiz_type']) && isset($data['ssq_time']))){
         return Util::generateErrorMessage("Please select a quiz type and a quiz time!");
     }
@@ -399,9 +395,7 @@ public function takeSSQ($data){
   
   // remove SSQ quiz from Session
   public function deleteQuiz($data){
-    array_walk($data, function (&$val){
-        $val = trim($val);
-    });
+    array_walk($data, function (&$val) {         $val = trim($val);     });
     $ssq_ID = Session::get('ssq_ID');          
       
     $sql = "UPDATE SSQ
@@ -435,17 +429,13 @@ public function takeSSQ($data){
     }// Insert user's study in Study table
     
  public function insert_study($data) {
-    array_walk($data, function (&$val){
-        $val = trim($val);
-    });
+    array_walk($data, function (&$val) {         $val = trim($val);     });
     $full_name = $data['full_name'];
     $short_name = $data['short_name'];
     $IRB = $data['IRB'];
     $description = $data['description']; 
     $ssq_times = explode(",", $data["ssq_times"]);
-    array_walk($ssq_times, function (&$val){
-        $val = ucwords(trim($val));
-    });
+    array_walk($ssq_times, function (&$val) {         $val = ucwords(trim($val));     });
     $ssq_times = array_filter($ssq_times, function ($time) { return $time != ''; });
     $created_by = Session::get('id');
     $last_edited_by = Session::get('id');    
@@ -491,9 +481,7 @@ public function takeSSQ($data){
 
     // Edit a user's study
     public function updateStudy($data){
-        array_walk($data, function (&$val){
-            $val = trim($val);
-        });
+        array_walk($data, function (&$val) {         $val = trim($val);     });
         $full_name = $data['full_name'];
         $short_name = $data['short_name'];
         $IRB = $data['IRB'];
@@ -537,10 +525,8 @@ public function takeSSQ($data){
         while ($row = $old_times_res->fetch(PDO::FETCH_ASSOC)) {
             array_push($old_times, $row['name']);
         }
-        array_walk($data, function (&$old_times){
-            $val = trim($old_times);
-        });
-        
+
+        array_walk($old_times, function (&$val) {         $val = trim($val);     });
         $added_ssq_times = array_filter($ssq_times, function ($time) use($old_times) {
             return !in_array($time, $old_times);
         });
@@ -707,9 +693,7 @@ public function takeSSQ($data){
     
     // inserts a session of a  study into DB
     public function insert_session($data){
-        array_walk($data, function (&$val){
-        $val = trim($val);
-    });
+        array_walk($data, function (&$val) {         $val = trim($val);     });
         $created_by = Session::get('id');
         
         if (empty($data["participant_ID"])){
