@@ -12,34 +12,34 @@ class Studies {
     }
     
     public function insertQuiz($data) {
-        if(isset($_POST['submitQuiz'])){    
+        if(isset($data['submitQuiz'])){    
             $ssq_ID = Session::get('ssq_ID');
-            $general_discomfort = $_POST['general_discomfort'];
-            $fatigue = $_POST['fatigue'];
-            $headache = $_POST['headache'];
-            $eye_strain = $_POST['eye_strain'];
-            $difficulty_focusing = $_POST['difficulty_focusing'];
-            $increased_salivation = $_POST['increased_salivation'];
-            $sweating = $_POST['sweating'];
-            $nausea = $_POST['nausea'];
-            $difficulty_concentrating = $_POST['difficulty_concentrating'];
-            $fullness_of_head = $_POST['fullness_of_head'];
-            $blurred_vision = $_POST['blurred_vision'];
-            $dizziness_with_eyes_open = $_POST['dizziness_with_eyes_open'];
-            $dizziness_with_eyes_closed = $_POST['dizziness_with_eyes_closed'];
-            $vertigo = $_POST['vertigo'];
-            $stomach_awareness = $_POST['stomach_awareness'];
-            $burping = $_POST['burping'];
-            $ssq_time = $_POST['ssq_time'];
-            $ssq_type = $_POST['ssq_type'];
+            $general_discomfort = $data['general_discomfort'];
+            $fatigue = $data['fatigue'];
+            $headache = $data['headache'];
+            $eye_strain = $data['eye_strain'];
+            $difficulty_focusing = $data['difficulty_focusing'];
+            $increased_salivation = $data['increased_salivation'];
+            $sweating = $data['sweating'];
+            $nausea = $data['nausea'];
+            $difficulty_concentrating = $data['difficulty_concentrating'];
+            $fullness_of_head = $data['fullness_of_head'];
+            $blurred_vision = $data['blurred_vision'];
+            $dizziness_with_eyes_open = $data['dizziness_with_eyes_open'];
+            $dizziness_with_eyes_closed = $data['dizziness_with_eyes_closed'];
+            $vertigo = $data['vertigo'];
+            $stomach_awareness = $data['stomach_awareness'];
+            $burping = $data['burping'];
+            $ssq_time = $data['ssq_time'];
+            $ssq_type = $data['ssq_type'];
             $session_ID = Session::get('session_ID');
-            $code = $_POST['code'];
+            $code = $data['code'];
         
             if (Session::get('login') === FALSE) { 
-                $age = $_POST['age'];
-                $gender = $_POST['gender'];
-                $race = $_POST['race'];
-                $education = $_POST['education'];
+                $age = $data['age'];
+                $gender = $data['gender'];
+                $race = $data['race'];
+                $education = $data['education'];
             }
             
             if ($ssq_ID > 0){
@@ -88,7 +88,6 @@ class Studies {
 
   // Add participant to Session table and Demographics table
   public function addNewParticipant($data){
-  // Note: this function does not work because the function does not take into account the study_ID yet.
     array_walk($data, function (&$val) {
         $val = trim($val);
     });

@@ -610,7 +610,7 @@ class Users{
     }
 
     // Change User pass By Id
-    public  function changePasswordBysingleUserId($userid, $data){
+    public function changePasswordBysingleUserId($userid, $data){
 
       $old_pass = $data['old_password'];
       $new_pass = $data['new_password'];
