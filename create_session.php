@@ -25,6 +25,11 @@ if ($res->fetch(PDO::FETCH_ASSOC)['is_active'] == 0) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['insert_session']) && Session::CheckPostID($_POST)){
+    $info = explode(';', $_POST['participant_ID']);
+    $participant_ID = $info[0];
+    $iv = $info[1];
+    $_POST["participant_ID"] = Crypto::decrypt($participant_ID, hex2bin($iv));
+    
     $insertSessionMessage = $studies->insert_session($_POST); 
     if (isset($insertSessionMessage)){
         echo $insertSessionMessage; ?>
@@ -82,13 +87,28 @@ $role = $role_result->fetch(PDO::FETCH_ASSOC);
                         $result = $pdo->query($sql);
                         while ($row = $result->fetch(PDO::FETCH_ASSOC)){
                             $iv = hex2bin($row['iv']);
-                            $name = Crypto::decrypt($row['anonymous_name'], $iv);
-                            //print_r($row);
-                            echo "<option value=\"" . $row['participant_id'] . "\">";
-                            echo $name . " - " . $row['dob'];
-                            echo "</option>";
-                        }
-                        ?>
+                            $name = Crypto::decrypt($row['anonymous_name'], $iv); ?>
+                            <option value="<?php echo Crypto::encrypt($row['participant_id'], $iv) . ";" . bin2hex($iv); ?>">
+                            <?php echo $name . " - " . $row['dob']; ?>
+                            </option>
+                  <?php } ?>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="session_time" class="required">Select a Session Time</label>
+                    <select class="form-control" name="session_time" id="session_time" required>
+                        <option value="" selected hidden disabled>Please Choose...</option>
+                        <?php
+                    
+                        $sql = "SELECT name, id
+                                FROM Session_times
+                                WHERE is_active = 1
+                                AND study_ID = " . Session::get('study_ID') . ";";
+                                    
+                        $result = $pdo->query($sql);
+                        while ($row = $result->fetch(PDO::FETCH_ASSOC)){ ?>
+                            <option value="<?=$row['id'] ?>"><?= $row['name'] ?></option>
+                        <?php } ?>
                     </select>
                 </div>
                     
@@ -96,7 +116,6 @@ $role = $role_result->fetch(PDO::FETCH_ASSOC);
                     <label for="comment">Comments</label>
                     <input type="text" class="form-control" id="comment" name="comment">
                 </div>
-                
                 <div class="form-group">
                      <button type="submit" name="insert_session" class="btn btn-success">Start Session</button>
                 </div>
