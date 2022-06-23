@@ -32,13 +32,15 @@ $timezone = Session::get('time_offset');
           rel="stylesheet" 
           integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" 
           crossorigin="anonymous">
-    <link rel="stylesheet" href="assets/bootstrap.min.css">
+    <!--<link rel="stylesheet" href="assets/bootstrap.min.css">-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.2.1/dist/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
     <link href="https://use.fontawesome.com/releases/v5.0.4/css/all.css" rel="stylesheet">
-    <link rel="stylesheet" href="assets/dataTables.bootstrap4.min.css">
+    <!--<link rel="stylesheet" href="assets/dataTables.bootstrap4.min.css">-->
     <link rel="stylesheet" href="assets/style.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css" integrity="sha384-V05SibXwq2x9UKqEnsL0EnGlGPdbHwwdJdMjmp/lw3ruUri9L34ioOghMTZ8IHiI" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     
-    <?php if($timezone == false) { ?>
+    <?php if($timezone === false) { ?>
     <script type="text/javascript">
     $(document).ready(function() {
             var visitortime = new Date();
@@ -57,7 +59,7 @@ $timezone = Session::get('time_offset');
 </script>
 <?php } ?>
     
-    <style type="text/css">
+    <style>
         /* VisualQuiz.php CSS
            HIDE RADIO           */
         .pictures [type=radio] { 
@@ -233,7 +235,6 @@ if (Session::get('roleid') == '1') {
     
           	    ?>"
                 >
-                    <a class="nav-link" href="index"><i class="fas fa-info-circle mr-2"></i>About Us</a>
                 </li>
             <?php } ?>
             
@@ -275,7 +276,24 @@ if (Session::get('roleid') == '1') {
 
         </div>
       </nav>
+<script>
+    $(document).ready(() => {
+        $('.navbar-toggler').on('click', function (e) {
+            $(`${e.target.dataset.target}`).collapse('toggle');
+        });
+        $('.navbar-toggler > span').on('click', function (e) {
+            $(`${e.target.parentElement.dataset.target}`).collapse('toggle');
+        });
+    });
+</script>
+<script src="assets/bootstrap-show-password.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" 
         integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" 
         crossorigin="anonymous">
 </script>
+<script
+  src="https://code.jquery.com/jquery-3.6.0.min.js"
+  integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+  crossorigin="anonymous"></script>
+<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js" integrity="sha384-ZuLbSl+Zt/ry1/xGxjZPkp9P5MEDotJcsuoHT0cM8oWr+e1Ide//SZLebdVrzb2X" crossorigin="anonymous"></script>
+<script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js" integrity="sha384-jIAE3P7Re8BgMkT0XOtfQ6lzZgbDw/02WeRMJvXK3WMHBNynEx5xofqia1OHuGh0" crossorigin="anonymous"></script>
