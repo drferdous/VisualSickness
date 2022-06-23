@@ -1,5 +1,6 @@
 <?php
 include 'inc/header.php';
+Session::CheckLogin();
 include_once 'lib/Database.php';
 
 $db = Database::getInstance();

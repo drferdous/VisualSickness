@@ -6,7 +6,7 @@ $db = Database::getInstance();
 $pdo = $db->pdo;
 
 if (Session::get("study_ID") == 0){
-    header("Location: view_study");
+    header("Location: study_list");
     exit();
 }
 Session::requirePI(Session::get('study_ID'), $pdo);
@@ -96,7 +96,7 @@ if (isset($editResearcher)) {
             const researcher_ID = info.split(';')[0];
             const iv = info.split(';')[1];
             $.ajax({
-                url: "researcherrole",
+                url: "researcher_role",
                 type: "POST",
                 cache: false,
                 data: {

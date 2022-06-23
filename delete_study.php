@@ -6,5 +6,5 @@ $sql = "DELETE FROM Study
         WHERE study_id = " . $id;
 
 Database::getInstance()->pdo->query($sql);
-header("Location: index");
+header("Location: study_list");
 ?>

@@ -4,7 +4,7 @@
     $db = Database::getInstance();
     $pdo = $db->pdo;
     if (Session::get('study_ID') == 0) {
-        header('Location: view_study');
+        header('Location: study_list');
     }
     $study_ID = Session::get('study_ID');
     $affil_sql = "SELECT users.affiliationid FROM tbl_users AS users
@@ -53,8 +53,8 @@
                             <td><?= $row["name"] ?></td>
                             <td><?= $row["role"] ?></td>
                             <td>
-                                <a href="mailto:<?= $row["email"] ?>"<i class="fa fa-envelope mr-2 text-decoration-none" style="color:#519AF8"></i></a>
-                                <a href="tel:<?= $row["mobile"] ?>"<i class="fa fa-phone mr-2 text-decoration-none" style="color:#D22B2B"></i></a>
+                                <a href="mailto:<?= $row["email"] ?>"<i class="fa fa-envelope mr-2 text-decoration-none"></i></a>
+                                <a href="tel:<?= $row["mobile"] ?>"<i class="fa fa-phone mr-2 text-decoration-none"></i></a>
                             </td>
                         </tr>
                 <?php }

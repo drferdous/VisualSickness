@@ -30,9 +30,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update']) && Session::
 }
 
 if (Session::get('roleid') == '1') {
-    $homepage = "userlist";
+    $homepage = "user_list";
 } else {
-    $homepage = "view_study";
+    $homepage = "study_list";
 }
 ?>
 
@@ -106,7 +106,7 @@ if (Session::get('roleid') == '1') {
                      <?php } ?>
                     <div class="form-group">
                       <button type="submit" name="update" class="btn btn-success">Update</button>
-                      <a class="btn btn-primary" href="changepass">Password Change</a>
+                      <a class="btn btn-primary" href="change_password">Password Change</a>
                     </div>
                   </form>
 </div>

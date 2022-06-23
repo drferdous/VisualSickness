@@ -14,7 +14,7 @@ if (isset($_POST['study_ID']) && isset($_POST['iv'])) {
     exit();
 }
 if (Session::get('study_ID') == 0) {
-    header('Location: view_study');
+    header('Location: study_list');
     exit();
 }
 $study_ID = Session::get('study_ID');
@@ -26,7 +26,7 @@ if (Session::get('roleid') == 1) {
                     AND users.affiliationid = " . Session::get('affiliationid');
     $affil_result = $pdo->query($affil_sql);
     if (!$affil_result->rowCount()) {
-        header('Location: view_study');
+        header('Location: study_list');
     }
 } else {
     Session::requireResearcherOrUser($study_ID, $pdo);
@@ -41,7 +41,7 @@ if (isset($_POST['deactivate-btn']) && Session::CheckPostID($_POST)){
 }
 
 
-if (isset($_POST["activate-btn"])){
+if (isset($_POST["activate-btn"]) && Session::CheckPostID($_POST)){
     $studyActivatedMessage = $studies->activateStudy($study_ID);
     if (isset($studyActivatedMessage)){
         echo $studyActivatedMessage;
@@ -57,7 +57,7 @@ if (isset($_POST['leave-btn']) && Session::CheckPostID($_POST)){
             const divMsg = document.getElementById("flash-msg");
             if (divMsg.classList.contains("alert-success")){
                 setTimeout(function() {
-                    location.href = "view_study";
+                    location.href = "study_list";
                 }, 1000);
             }
         </script>
@@ -70,147 +70,115 @@ $sql_study = "SELECT S.study_ID, S.is_active, S.full_name, S.short_name, S.IRB, 
 $result_study = $pdo->query($sql_study);
 $row_study = $result_study->fetch(PDO::FETCH_ASSOC);
 
-$sql_times = "SELECT SSQ.name
-              FROM SSQ_times as SSQ JOIN Study AS S ON(S.study_ID = SSQ.study_ID)
-              WHERE S.study_ID = " . $study_ID . " AND SSQ.is_active = 1;";
+$sql_times = "SELECT name FROM SSQ_times
+              WHERE study_ID = " . $study_ID . " AND is_active = 1;";
 $result_times = $pdo->query($sql_times);
-$row_times = $result_times->fetch(PDO::FETCH_ASSOC);
+
+$sql_session_times = "SELECT name FROM Session_times
+              WHERE study_ID = " . $study_ID . " AND is_active = 1;";
+$result_session_times = $pdo->query($sql_session_times);
                     
 $role_sql = "SELECT study_role FROM Researcher_Study WHERE study_ID = " . Session::get("study_ID") . " AND  researcher_ID = " . Session::get("id") . " AND is_active = 1;";
     
 $role_result = $pdo->query($role_sql);
 $role = $role_result->fetch(PDO::FETCH_ASSOC);
 
-?>
-
-<?php print_r($_POST); ?><br>
-<?php echo Session::get("post_ID"); ?><br>
-<?php
-    if (isset($message)){
-        echo $message;
-    }
-    else{
-        echo "This conditional is not working.";
-    }
-?>
-
-<?php
 $rand = bin2hex(openssl_random_pseudo_bytes(16));
 Session::set("post_ID", $rand);
+
+$timezone = Session::get('time_offset');
+$time_created = new DateTime($row_study['created_at']);
+$time_edited = new DateTime($row_study['last_edited_at']);
+if($timezone < 0) {
+    $time_created->sub(new DateInterval('PT' . abs($timezone) . 'M'));
+    $time_edited->sub(new DateInterval('PT' . abs($timezone) . 'M'));
+} else {
+    $time_created->add(new DateInterval('PT' . $timezone . 'M'));
+    $time_edited->add(new DateInterval('PT' . $timezone . 'M'));
+}
+
 ?>
 <div class="card">
     <nav class="navDropdown navbar navbar-expand-lg navbar-light bg-light justify-content-between">
         <a class="navbar-brand">Study Details</a>
-      <div class="container-fluid">
-        <ul class="navbar-nav ms-auto">
-          <li class="nav-item dropdown mr-2">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLinkRight" role="button"
-                data-mdb-toggle="dropdown" aria-expanded="false">
-                More Actions
-            </a>
-            <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLinkRight">
-              <?php if($row_study['is_active'] == 1) { ?>
-              <li class="dropdown-submenu">
-                <a href="javascript:void(0)" class="nested-dropdown dropdown-item">Researcher <i class="fas fa-caret-right ml-2"></i></a>
-                  <ul class="dropdown-menu dropdown-submenu">
-                      <li><a href="researcher_list" class="dropdown-item nested-dropdown-item">View Researchers</a></li>
-                      <?php 
-                        if(isset($role['study_role']) && $role['study_role'] != 4){ ?>
-                            <li><a href="edit_researchers" class="dropdown-item nested-dropdown-item">Edit Researchers</a></li>
-                      <?php }
-                      if($role['study_role'] == 2){ ?>
-                                <li><a href="remove_researcher" class="dropdown-item nested-dropdown-item">Remove A Researcher</a></li>
-                    <?php }
-                      if(isset($role['study_role']) && $role['study_role'] == 2){ ?>
-                        <li><a href="add_researcher" class="dropdown-item nested-dropdown-item">Add A Researcher</a></li>
-                            <?php
-                                $sql = "SELECT u.email FROM tbl_users AS u
-                                    JOIN Researcher_Study AS rs ON rs.researcher_ID = u.id
-                                    WHERE rs.study_ID = $study_ID
-                                    AND rs.is_active = 1
-                                    AND u.status = 1;";
-                                $email_result = $pdo->query($sql);
-                                $emails = array();
-                                while ($row = $email_result->fetch(PDO::FETCH_ASSOC)) {
-                                    array_push($emails, $row['email']);
-                                }
-                                $mailing_list = implode(',', $emails);
-                            ?>
-                        <li><a href="mailto:<?= $mailing_list ?>" class="dropdown-item nested-dropdown-item">Contact Researchers</a></li>
+        <div class="container-fluid">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item dropdown mr-2">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLinkRight" role="button" data-mdb-toggle="dropdown" aria-expanded="false">
+                        More Actions
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLinkRight">
+                        <?php if($row_study['is_active'] == 1) { ?>
+                            <li class="dropdown-submenu">
+                                <a href="javascript:void(0)" class="nested-dropdown dropdown-item">Researcher <i class="fas fa-caret-right ml-2"></i></a>
+                                <ul class="dropdown-menu dropdown-submenu">
+                                    <li><a href="researcher_list" class="dropdown-item nested-dropdown-item">View Researchers</a></li>
+                                    <?php if(isset($role['study_role']) && $role['study_role'] == 2){ ?>
+                                        <li><a href="edit_researchers" class="dropdown-item nested-dropdown-item">Edit Researchers</a></li>
+                                        <li><a href="remove_researcher" class="dropdown-item nested-dropdown-item">Remove A Researcher</a></li>
+                                        <li><a href="add_researcher" class="dropdown-item nested-dropdown-item">Add A Researcher</a></li>
+                                        <?php
+                                        $sql = "SELECT u.email FROM tbl_users AS u
+                                            JOIN Researcher_Study AS rs ON rs.researcher_ID = u.id
+                                            WHERE rs.study_ID = $study_ID
+                                            AND rs.is_active = 1
+                                            AND u.status = 1;";
+                                        $email_result = $pdo->query($sql);
+                                        $emails = array();
+                                        while ($row = $email_result->fetch(PDO::FETCH_ASSOC)) {
+                                            array_push($emails, $row['email']);
+                                        }
+                                        $mailing_list = implode(',', $emails);
+                                        ?>
+                                        <li><a href="mailto:<?= $mailing_list ?>" class="dropdown-item nested-dropdown-item">Contact Researchers</a></li>
+                                    <?php } ?>
+                                </ul>
+                            </li>
+                        <?php } if(isset($role['study_role'])) { ?>
+                            <li class="dropdown-submenu">
+                                <a href="javascript:void(0)" class="nested-dropdown dropdown-item">Participant <i class="fas fa-caret-right ml-2"></i></a>
+                                <ul class="dropdown-menu dropdown-submenu">
+                                    <li><a href="participant_list?forStudy=true" class="dropdown-item">View Participants</a></li>
+                                    <?php if($role['study_role'] != 4){ ?>
+                                        <li><a href="add_participant" class="dropdown-item">Add A Participant</a></li>
+                                        <li><a href="remove_participant" class="dropdown-item">Remove A Participant</a></li>
+                                    <?php } ?>
+                                </ul>
+                            </li>        
+                        <?php } if(isset($role['study_role']) && $role['study_role'] == 2) { ?>
+                            <li class="dropdown-submenu">
+                                <a href="javascript:void(0)" class="nested-dropdown dropdown-item">Manage <i class="fas fa-caret-right ml-2"></i></a>
+                                <ul class="dropdown-menu dropdown-submenu">
+                                    <li><a href="edit_study"  class="dropdown-item">Edit</a></li>
+                                    <form method="post" class="d-inline" action="">
+                                        <input type="hidden" name="randCheck" value="<?php echo $rand; ?>">
+                                        <?php if ($row_study["is_active"] === "1"){ ?>
+                                            <li><input class="dropdown-item" type="submit" name="deactivate-btn" value="Deactivate" onclick="return confirm('Are you sure you want to deactivate the study \'<?php echo $row_study['short_name']; ?>\'? You cannot edit the study if it is inactive.');"></li>
+                                        <?php } else { ?>
+                                            <li><input class="dropdown-item" type="submit" name="activate-btn" value="Activate" onclick="return confirm('Are you sure you want to activate the study \'<?php echo $row_study['short_name']; ?>\'?');"></li>
+                                        <?php } ?>
+                                    </form>
+                                </ul>
+                            </li>
                         <?php } ?>
-                      </ul>  
-                </li>
-                <?php
-                    if(isset($role['study_role'])) {?>
-                <li class="dropdown-submenu">
-                    <a href="javascript:void(0)" class="nested-dropdown dropdown-item">Participant <i class="fas fa-caret-right ml-2"></i></a>
-                      <ul class="dropdown-menu dropdown-submenu">
-                        <li><a href="participantList?forStudy=true" class="dropdown-item">View Participants</a></li>
-                <?php }
-                    if(isset($role['study_role']) && $role['study_role'] != 4){ ?>
-                        <li><a href="addParticipant" class="dropdown-item">Add A Participant</a></li>
-                <?php } 
-                    if(isset($role['study_role']) && $role['study_role'] != 4){ ?>
-                        <li><a href="remove_participant" class="dropdown-item">Remove A Participant</a></li>
-                    </ul>
-                </li>        
-                <?php } ?>
-                <?php if($role['study_role'] == 2) { ?>
-                <li class="dropdown-submenu">
-                    <a href="javascript:void(0)" class="nested-dropdown dropdown-item">Manage <i class="fas fa-caret-right ml-2"></i></a>
-                    <ul class="dropdown-menu dropdown-submenu">
-                            <li><a href="edit_study"  class="dropdown-item">Edit</a></li>
-                        <?php } 
-                        }?>
-                        <form method="post" class="d-inline" action="">
-                            <input type="hidden" name="randCheck" value="<?php echo $rand; ?>">
-                            <?php 
-                                if ($row_study["is_active"] === "1" && $role['study_role'] == 2){ ?>
-                                    <li><input class="dropdown-item" type="submit" name="deactivate-btn" value="Deactivate" onclick="return confirm('Are you sure you want to deactivate the study \'<?php echo $row_study['short_name']; ?>\'? You cannot edit the study if it is inactive.');"></li>
-                            <?php } else{ ?>
-                                <?php if($role['study_role'] == 2) { ?>
-                                    <li><input class="dropdown-item" type="submit" name="activate-btn" value="Activate" onclick="return confirm('Are you sure you want to activate the study \'<?php echo $row_study['short_name']; ?>\'?');"></li>
-                                <?php } 
-                            } ?>
-                        </form>
+                        
+                        <?php 
+                        $pi_sql = "SELECT COUNT(study_role) AS Count FROM Researcher_Study WHERE study_ID = " . Session::get("study_ID") . " AND study_role = 2 AND is_active = 1;";
+                        $pi_result = $pdo->query($pi_sql);
+                        $pi_count = $pi_result->fetch(PDO::FETCH_ASSOC);
+                        if ($row_study['is_active'] == 1 && isset($role['study_role']) && ($role['study_role'] != 2 || $pi_count['Count'] > 1)) { ?>
+                            <div class="dropdown-divider"></div>
+                            <form method="post" class="d-inline" action="">
+                                <input type="hidden" name="randCheck" value="<?php echo $rand; ?>">
+                                <li><input class="dropdown-item" type="submit" name="leave-btn" value="Leave" onclick="return confirm('Are you sure you want to leave the study? You will no longer have access to the study \'<?php echo $row_study['short_name']; ?>\' unless a researcher adds you back.');"></li>
+                            </form>
+                        <?php } ?>
                     </ul>
                 </li>
-                
-                  <?php 
-                    $pi_sql = "SELECT COUNT(study_role) AS Count FROM Researcher_Study WHERE study_ID = " . Session::get("study_ID") . " AND study_role = 2 AND is_active = 1;";
-                    $pi_result = $pdo->query($pi_sql);
-                    $pi_count = $pi_result->fetch(PDO::FETCH_ASSOC);
-                    if ($row_study['is_active'] == 1 && isset($role['study_role']) && ($role['study_role'] != 2 || $pi_count['Count'] > 1)){ ?>
-                        <div class="dropdown-divider"></div>
-                        <form method="post" class="d-inline" action="">
-                            <input type="hidden" name="randCheck" value="<?php echo $rand; ?>">
-                            <li><input class="dropdown-item" type="submit" name="leave-btn" value="Leave" onclick="return confirm('Are you sure you want to leave the study? You will no longer have access to the study \'<?php echo $row_study['short_name']; ?>\' unless a researcher adds you back.');"></li>
-                        </form>
-                    <?php } ?>
+                <a href="study_list" class="btn btn-primary backButton">Back</a>
             </ul>
-          </li>
-          <a href="view_study" class="btn btn-primary backButton">Back</a>
-        </ul>
-      </div>
+        </div>
     </nav>
-</div>
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-
     <div class="card-body pr-2 pl-2" style="display: flex; align-items: stretch;">
         <table class="table table-striped table-bordered" style="flex-basis: 100%;">
             <thead class="text-center">
@@ -233,13 +201,10 @@ Session::set("post_ID", $rand);
                 </tr> 
                 <tr>
                     <th class="align-middle">SSQ Times</th>
-                    <td class="align-middle"><?php          
-                    // show name for SSQ Times    
-                    if (isset($row_times['name'])){
+                    <td class="align-middle"><?php
+                        // show name for SSQ Times
                         
                         $times = [];
-                        
-                        array_push($times, $row_times["name"]);
                         
                         while ($row = $result_times->fetch(PDO::FETCH_ASSOC)) { 
                             array_push($times, $row["name"]);
@@ -249,7 +214,23 @@ Session::set("post_ID", $rand);
                         $final_times = implode(", ",$times);
                         
                         echo $final_times;
-                    }
+                    ?></td>
+                </tr> 
+                <tr>
+                    <th class="align-middle">Session Times</th>
+                    <td class="align-middle"><?php
+                        // show name for Session Times
+                        
+                        $session_times = [];
+                        
+                        while ($row = $result_session_times->fetch(PDO::FETCH_ASSOC)) { 
+                            array_push($session_times, $row["name"]);
+                        }
+                    
+                        
+                        $final_times = implode(", ",$session_times);
+                        
+                        echo $final_times;
                     ?></td>
                 </tr> 
                 <tr>
@@ -268,12 +249,12 @@ Session::set("post_ID", $rand);
                     
                 <tr>                    
                     <th class="align-middle">Time Created</th>
-                    <td class="align-middle"><?= $row_study['created_at'] ?></td>
+                    <td class="align-middle"><?= date_format($time_created,"M d, Y h:i A") ?></td>
                 </tr> 
                     
                 <tr>                    
                     <th class="align-middle">Time of Last Edit</th>
-                    <td class="align-middle"><?= $row_study['last_edited_at'] ?></td>
+                    <td class="align-middle"><?= date_format($time_edited,"M d, Y h:i A") ?></td>
                 </tr> 
                     
                 <tr>
@@ -292,7 +273,6 @@ Session::set("post_ID", $rand);
             </thead>
         </table>
     </div>
-</div>
 <style>
     
 .dropdown-submenu {
@@ -301,14 +281,20 @@ Session::set("post_ID", $rand);
 
 .dropdown-submenu .dropdown-menu {
   top: 0;
-  left: 100%;
+  transform: translateX(-100%);
   margin-top: -1px;
+}
+
+@media (min-width: 768px) {
+    #studyNavbar {
+        display: none!important;
+    }
 }
 </style>
 <script>
     let dropped = false;
     $(document).ready(() => {
-        $(document).on('click', (e) => {
+        $(document).on('click', function (e) {
             if (e.target.id != 'navbarDropdownMenuLinkRight' && !e.target.classList.contains('nested-dropdown') && dropped) {
                 $('#navbarDropdownMenuLinkRight').dropdown('toggle');
                 $('.dropdown-submenu a.nested-dropdown').next('ul').toggle(false);
@@ -320,18 +306,18 @@ Session::set("post_ID", $rand);
             dropped = !dropped;
         });
         $('.dropdown-submenu a.nested-dropdown').on("mouseover", function(e) {
+            $('.dropdown-submenu a.nested-dropdown').next('ul').toggle(false);
             $(this).next('ul').toggle(true);
             e.stopPropagation();
             e.preventDefault();
         });
         $('.dropdown-submenu a.nested-dropdown').on("mouseout", function(e) {
-            console.log(e);
             if (e.relatedTarget.classList.contains('dropdown-submenu') || e.relatedTarget.classList.contains('nested-dropdown-item')) return;
             $(this).next('ul').toggle(false);
             e.stopPropagation();
             e.preventDefault();
         });
-    })
+    });
 </script>
 <?php
   include 'inc/footer.php';

@@ -3,9 +3,14 @@ include 'inc/header.php';
 include_once 'lib/Database.php';
 Session::CheckLogin();
 
-
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
-   $userLog = $users->userLoginAuthentication($_POST);
+if(isset($_GET['success']) && $_GET['success'] === "true") {
+    echo Util::generateSuccessMessage("Please check your email for a password reset link.");
+}
+if(isset($_GET['success']) && $_GET['success'] === "bad_email") {
+    echo Util::generateErrorMessage('You do not have an account connected to this email!');
+}
+if(isset($_GET['success']) && $_GET['success'] === "false") {
+    echo Util::generateErrorMessage("There was an error in resetting your password.");
 }
 if (isset($userLog)) {
   echo $userLog;
@@ -30,7 +35,7 @@ if (isset($logout)) {
 
             <div style="max-width:450px; margin:0px auto">
 
-            <form class="" action="inc/reset-request.inc" method="post">
+            <form class="" action="inc/reset_request" method="post">
                 <div style="margin-block: 6px;">
                     <small style='color: red'>
                         * Required Field

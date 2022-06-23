@@ -3,7 +3,7 @@ include 'inc/header.php';
 include_once 'lib/Database.php';
 Session::CheckSession();
 if (Session::get('roleid') > 2) {
-    header('Location: view_study');
+    header('Location: study_list');
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['insert_study']) && Session::CheckPostID($_POST)) {
@@ -57,9 +57,14 @@ if (isset($insert_study)) {
                   <input type="text" value="<?= Util::getValueFromPost('description', $_POST); ?>" id="description" name="description"  class="form-control">
                 </div>
                 <div class="form-group">
+                  <label for="session_times" class="required">Input Session Times</label>
+                  <input type="text" value="<?= Util::getValueFromPost('session_times', $_POST); ?>" id="session_times" name="session_times" class="form-control" required>
+                  <small>Format: comma-separated (e.g., Session 1, Session 2)</small>
+                </div>
+                <div class="form-group">
                   <label for="ssq_times" class="required">Input SSQ Times</label>
                   <input type="text" value="<?= Util::getValueFromPost('ssq_times', $_POST); ?>" id="ssq_times" name="ssq_times" class="form-control" required>
-                  <small>Format: comma-separated</small>
+                  <small>Format: comma-separated (e.g., pre, post)</small>
                 </div>
                 <div class="form-group">
                  <button type="submit" name="insert_study" class="btn btn-success">Submit</button>

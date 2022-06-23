@@ -5,7 +5,7 @@ include_once 'lib/Database.php';
 $db = Database::getInstance();
 $pdo = $db->pdo;
 if (Session::get('study_ID') == 0) {
-    header('Location: view_study');
+    header('Location: study_list');
     exit();
 }
 
@@ -114,7 +114,7 @@ if (isset($_POST['delete-ssq-btn']) && Session::CheckPostID($_POST)){
                 $role = $role_result->fetch(PDO::FETCH_ASSOC);
         
                 if ($study_is_active && $isSessionActive && $areQuizTimesAvailable && ($id_row['created_by'] == Session::get('id') || $role['study_role'] == 2)){?>
-                    <a href="chooseQuiz" class="btn btn-primary">New SSQ</a>
+                    <a href="choose_quiz" class="btn btn-primary">New SSQ</a>
           <?php }?>
         </span>
     </div>
@@ -123,9 +123,23 @@ if (isset($_POST['delete-ssq-btn']) && Session::CheckPostID($_POST)){
         <table class="table table-striped table-bordered">
             <thead class="text-center">
                 <?php
-                    $sql_session = "SELECT * FROM Session WHERE session_ID = $session_ID";
+                    $sql_session = "SELECT * FROM Session WHERE session_ID = $session_ID LIMIT 1;";
                     $sql_result = $pdo->query($sql_session);
                     $row_session = $sql_result->fetch(PDO::FETCH_ASSOC);
+                    
+                    
+                    $timezone = Session::get('time_offset');
+                    $time_start = new DateTime($row_session['start_time']);
+                    $time_end = new DateTime($row_session['end_time']);
+                    if($timezone < 0) {
+                        $time_start->sub(new DateInterval('PT' . abs($timezone) . 'M'));
+                        if(isset($row_session['end_time'])) {
+                            $time_end->sub(new DateInterval('PT' . abs($timezone) . 'M')); 
+                        }
+                    } else {
+                        $time_start->add(new DateInterval('PT' . $timezone . 'M'));
+                        $time_end->add(new DateInterval('PT' . $timezone . 'M'));
+                    }
                 ?>
                 
                 <tr>
@@ -147,26 +161,34 @@ if (isset($_POST['delete-ssq-btn']) && Session::CheckPostID($_POST)){
                 
                 <tr>
                     <th>Participant Name</th>   
-                        <?php
-                        // show name for participant_ID, not id         
-                        if (isset($row_session['participant_ID'])){
-                            $sql_users = "SELECT anonymous_name, iv FROM Participants WHERE participant_id = " . $row_session['participant_ID'] . " LIMIT 1;";
-                            $result_users = $pdo->query($sql_users);
-                            $row_users = $result_users->fetch(PDO::FETCH_ASSOC);
+                    <?php
+                    // show name for participant_ID, not id         
+                    if (isset($row_session['participant_ID'])){
+                        $sql_users = "SELECT anonymous_name, iv FROM Participants WHERE participant_id = " . $row_session['participant_ID'] . " LIMIT 1;";
+                        $result_users = $pdo->query($sql_users);
+                        $row_users = $result_users->fetch(PDO::FETCH_ASSOC);
+                        
+                    $iv = hex2bin($row_users['iv']);
+                    $name = Crypto::decrypt($row_users['anonymous_name'], $iv); 
                             
-                        $iv = hex2bin($row_users['iv']);
-                        $name = Crypto::decrypt($row_users['anonymous_name'], $iv); 
-                                
-                            echo "<td>" . $name . "</td>";
-                        }
-                        else{
-                            echo "<td>-</td>";
-                        }     
-                        ?>
-                    </tr>
+                        echo "<td>" . $name . "</td>";
+                    }
+                    else{
+                        echo "<td>-</td>";
+                    }     
+                    ?>
+                </tr>
+                <tr>
+                    <th>Session Time</th>
+                    <?php
+                    $session_time_sql = "SELECT name FROM Session_times
+                                         WHERE id = " . $row_session['session_time'];
+                    $time = $pdo->query($session_time_sql)->fetch(PDO::FETCH_ASSOC)['name']; ?>
+                    <td><?= $time ?></td>
+                </tr>
                     
                 <tr>  
-                    <th>Quizzes Taken</th>
+                    <th class="align-middle">Quizzes Taken</th>
                     <td>
                     <?php
                     
@@ -187,7 +209,7 @@ if (isset($_POST['delete-ssq-btn']) && Session::CheckPostID($_POST)){
                         $ssq_type = $result_type->fetch(PDO::FETCH_ASSOC)["type"];
                         $encrypted_ssq_ID = Crypto::encrypt($row['ssq_ID'], $iv); ?>
                         <a style="margin-inline: 3px; margin-block: 2px;" class="btn btn-sm btn-success redirectUser" 
-                            href="<?= $ssq_type ?>Quiz"
+                            href="<?= strtolower($ssq_type) ?>_quiz"
                             data-ssq_ID="<?= $encrypted_ssq_ID ?>"
                             data-IV="<?= bin2hex($iv) ?>"
                         >
@@ -200,14 +222,17 @@ if (isset($_POST['delete-ssq-btn']) && Session::CheckPostID($_POST)){
                 <tr>
                     <th>Start Time</th>
                     <?php
-                    echo "<td>" .  $row_session['start_time']     . "</td>";       
+                    echo "<td>" .  date_format($time_start,"M d, Y h:i A")     . "</td>";       
                     ?>
                 </tr>
                 
                 <tr>
                     <th>End Time</th>
-                    <?php
-                    echo "<td>" .  $row_session['end_time'] . "</td>";
+                    <?php if(isset($row_session['end_time'])) {
+                    echo "<td>" . date_format($time_end,"M d, Y h:i A")  . "</td>";
+                    } else {
+                        echo "<td>" . $row_session['end_time']  . "</td>";
+                    }
                     ?>
                 </tr>
                 
@@ -297,7 +322,6 @@ if (isset($_POST['delete-ssq-btn']) && Session::CheckPostID($_POST)){
 <script>
     $(document).ready(() => {
         [...document.getElementsByClassName('redirectUser')].forEach(a => {
-            console.log(a);
             a.onclick = redirectUser;
         })
     });

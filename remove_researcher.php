@@ -8,14 +8,14 @@ $pdo = $db->pdo;
 
 
 if (Session::get('study_ID') == 0) {
-    header('Location: view_study');
+    header('Location: study_list');
     exit();
 }
 $study_ID = Session::get('study_ID');
 
 Session::requirePI($study_ID, $pdo);
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['removeResearcher'])) {
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['removeResearcher']) && Session::CheckPostID($_POST)) {
     $info = explode(';', $_POST['researcher_ID']);
     $researcher_ID = $info[0];
     $iv = $info[1];
@@ -39,6 +39,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['removeResearcher'])) {
     </div>
     <div class="card-body pr-2 pl-2">
         <form class="" action="" method="post">
+            <?php 
+                $rand = bin2hex(openssl_random_pseudo_bytes(16));
+                Session::set("post_ID", $rand);
+            ?>
+            <input type="hidden" name="randCheck" value="<?php echo $rand; ?>">
             <div style="margin-block: 6px;">
                 <small style='color: red'>
                     * Required Field

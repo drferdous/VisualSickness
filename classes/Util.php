@@ -69,7 +69,6 @@ class Util {
                     $('.modal').modal('toggle');
                     $('.modalClose').on('click', () => {
                         $('.modal').modal('toggle');
-                        location.href = 'session_details';
                     });
                 });
             </script>";
@@ -98,7 +97,6 @@ class Util {
                     $('.modal').modal('toggle');
                     $('.modalClose').on('click', () => {
                         $('.modal').modal('toggle');
-                        location.href = 'session_details';
                     });
                 });
             </script>";

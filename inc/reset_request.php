@@ -3,22 +3,38 @@
         $selector = bin2hex(random_bytes(8));
         $token = random_bytes(32);
         
-        $url = "https://visualsickness.000webhostapp.com/create-new-password.php?selector=" . $selector . "&validator=" . bin2hex($token); 
-        echo $url;
+        $url = "https://visualsickness.000webhostapp.com/create_new_password.php?selector=" . $selector . "&validator=" . bin2hex($token); 
         
         $expires = mktime(date("G") + 1, date("i"), date("s"), date("m"), date("d"), date("Y")); // G = hours
         
         include_once '../lib/Database.php';
         include "../mailer.php";
+        include_once "../classes/Util.php";
         
         $db = Database::getInstance();
         $pdo = $db->pdo;
         
         $userEmail = $_POST["email"];
+        $user_sql = "SELECT id FROM tbl_users
+                     WHERE email = ?
+                     AND status > 0;";
+        $stmt = $pdo->prepare($user_sql);
+        if (!$stmt) {
+            header('Location: ../forgot_password.php?success=false');
+            exit();
+        } else {
+            $stmt->bindValue(1, $userEmail, PDO::PARAM_STR);
+            $result = $stmt->execute();
+            if ($result && !$stmt->fetch(PDO::FETCH_ASSOC)['id']) {
+                header('Location: ../forgot_password.php?success=bad_email');
+                exit();
+            }
+        }
+                     
         $sql = "DELETE FROM pwdReset WHERE pwdResetEmail=?;";
         $stmt = $pdo->prepare($sql);
         if (!$stmt) {
-            echo "There was an error in resetting your password.";
+            header('Location: ../forgot_password.php?success=false');
             exit();
         } else {
             $stmt->bindValue(1, $userEmail, PDO::PARAM_STR);
@@ -28,7 +44,7 @@
         $sql = "INSERT INTO pwdReset (pwdResetEmail, pwdResetSelector, pwdResetToken, pwdResetExpires) VALUES (?, ?, ?, ?);";
         $stmt = $pdo->prepare($sql);
         if (!$stmt) {
-            echo "There was an error in resetting your password.";
+            header('Location: ../forgot_password.php?success=false');
             exit();
         } else {
             $hashedToken = password_hash($token, PASSWORD_DEFAULT);
@@ -48,5 +64,5 @@
         
         header("Location: ../forgot_password.php?success=true");
     } else {
-        header("Location: ../forgot_password.php");
+        header("Location: ../forgot_password.php?success=false");
     }

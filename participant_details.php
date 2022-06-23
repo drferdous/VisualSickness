@@ -15,6 +15,11 @@
     $result = $pdo->query($sql);
     $row = $result->fetch(PDO::FETCH_ASSOC);
     
+    if (!isset($_POST['referrer'])) {
+        if (isset($_SERVER['HTTP_REFERER'])) $referrer = ltrim(parse_url($_SERVER['HTTP_REFERER'], PHP_URL_PATH), '/') . '?' . parse_url($_SERVER['HTTP_REFERER'], PHP_URL_QUERY);
+    }
+    else $referrer = $_POST['referrer'];
+    
     Session::requireResearcherOrUser(intval($row['study_id']), $pdo);
     
     if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['removeParticipant'])) {
@@ -26,7 +31,7 @@
                 const divMsg = document.getElementById("flash-msg");
                 if (divMsg.classList.contains("alert-success")){
                     setTimeout(function(){
-                        let redirectURL = "participantList?<?= isset($_POST['forStudy']) ? 'forStudy=true' : '' ?>";
+                        let redirectURL = "<?= isset($referrer) ? $referrer : "participant_list" ?>";
                         location.href = redirectURL;
                     }, 1000);
                 }
@@ -45,12 +50,7 @@
 <div class="card">
     <div class="card-header">
         <span class="float-left"><h3><?= $name ?></h3></span>
-        <span class="float-right">
-            <a href="participantList?<?= isset($_POST['forStudy']) ? 'forStudy=true' : '' ?>"
-               class="btn btn-primary">
-               Back
-            </a>
-        </span>
+        <?php if (isset($referrer)) { ?><span class="float-right"> <a href='<?= $referrer ?>' class="btn btn-primary redirectUser">Back</a></span><?php } ?>
     </div>
     <div class="card-body">
         <div style="overflow-x: auto">
@@ -107,12 +107,13 @@
             $role_result = $pdo->query($role_sql);
             $role_row = $role_result->fetch(PDO::FETCH_ASSOC);
             if (!isset($role_row['study_role'])) {
-                header('Location: view_study');
+                header('Location: study_list');
                 exit();
             }
             if ($role_row['study_role'] == 2) { ?>
             <form class="text-center mt-2" action="" method="POST" onsubmit="return confirm('Are you sure you want to remove <?= $name ?> from the study \'<?= $study_name ?>\'? This action cannot be undone.');">
                 <input type="submit" name="removeParticipant" class="btn btn-danger" value="Remove Participant">
+                <?php if (isset($referrer)) { ?><input type="hidden" name="referrer" value="<?= $referrer ?>"><?php } ?>
                 <input name="participant_ID" type="hidden" value="<?= $_POST['participant_ID'] ?>">
                 <input name="iv" type="hidden" value="<?= $_POST['iv'] ?>">
             </form>

@@ -1,67 +1,56 @@
 <?php
-include "lib/Session.php";
-include_once 'lib/Database.php';
-include_once "classes/Users.php";
 include "inc/header.php";
-$users = new Users();
-$pdo = Database::getInstance()->pdo;
-Session::init();
-Session::CheckSession();
-
-$email = Session::get("email");
-
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["reset-submit"]) && Session::CheckPostID($_POST)) {
-    $changePass = $users->resetPass($email, $_POST["new_password"], $_POST["confirm_password"]);
+if ($_SERVER["REQUEST_METHOD"] != "POST" || !isset($_POST["email"])) {
+    header("Location: 404");
+    exit();
+}
+$email = $_POST["email"];
+if (isset($_POST["reset-submit"]) && Session::CheckPostID($_POST)) {
+    // Reset password here, then log in user and redirect to homepage
+    $new_password = $_POST["new_password"];
+    $confirm_password = $_POST["confirm_password"];
+    $changePass = $users->resetPass($email, $new_password, $confirm_password);
     if ($changePass) {
         echo $changePass;
-    } else if (Session::get('reg_stat') == 0) {
-        // Get comma-separated list of admin email addresses for the user's affiliation
-        $adminString = Util::getAdminsFromAffiliation($pdo, Session::get('affiliationid'));
-        $body = '<p>A new user has signed up for Visual Sickness Study under your affiliation: ' . Util::getAffiliationNameById($pdo, Session::get('affiliationid'));
-        if (!$adminString) {
-            $adminString = "visualsicknessstudy@gmail.com";
-            $body = '<p>A new user has signed up for Visual Sickness Study under an affiliation with no administrator: ' . Util::getAffiliationNameById($pdo, Session::get('affiliationid'));
+    } else {
+        $userLog = $users->userLoginAuthentication($email, $new_password);
+        if (isset($userLog)){
+            echo $userLog;
         }
         
-        $body .= "<br><br>The user has signed up with the name <strong>" . Session::get("name") . "</strong> and email <strong>" . Session::get('email') . '</strong>.<br>';
-        // send email here
-        sendEmail($adminString, 'Visual Sickness | New User Registration', $body);
-        $sql = 'UPDATE tbl_users SET reg_stat = 1 where id = ' . Session::get('id') . ';';
-        $result = Database::getInstance()->pdo->query($sql);
-        Session::set("reg_stat", 1);
-        if (!$result) {
-            echo 'An error occurred. Please try again.';
-            exit();
+        if (Session::get('login') == TRUE){
+            if (Session::get('roleid') == '1') {
+                $homepage = "user_list";
+            } else {
+                $homepage = "study_list";
+            }
+            header("Location: " . $homepage);
         }
-        echo Util::generateSuccessMessage("You will receive an email when your account is verfied by an administrator.");
     }
-    ?>
-    <script>
-        setTimeout(() => location.href='pending_verify', 2000);
-    </script>
-<?php } ?>
+}
+?>
 <div class="card">
     <div class="card-header">
         <h3 class='text-center'><i class="fas fa-sign-in-alt mr-2"></i>New Password</h3>
-        <p class='text-center'>Enter your new password here. An admin will view your request & approve it. Then, you will gain full access to the site</p>
+        <p class='text-center'>Enter a new password here. Make sure to remember this password for the future.</p>
     </div>
     <div class="card-body">
         <div style="width:450px; margin:0px auto">
             <form class="" action="" method="post">
-                <div style="margin-block: 6px;">
-                    <small style='color: red'>
-                        * Required Field
-                    </small>
-                </div>
                 <?php 
                     $rand = bin2hex(openssl_random_pseudo_bytes(16));
                     Session::set("post_ID", $rand);
                 ?>
                 <input type="hidden" name="randCheck" value="<?php echo $rand; ?>">
+                <div style="margin-block: 6px;">
+                    <small style='color: red'>
+                        * Required Field
+                    </small>
+                </div>
                 <div class="form-group">
                     <label for="new_password" class="required">New Password</label>
                     <div class="input-group">
-                        <input type="password" id="new_password" name="new_password" data-toggle="password" class="form-control" required>
+                        <input type="password" data-toggle="password" id="new_password" name="new_password"  class="form-control" required>
                         <div class="input-group-append">
                             <span class="input-group-text">
                                 <i class="fa fa-eye"></i>
@@ -73,7 +62,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["reset-submit"]) && Ses
                 <div class="form-group">
                     <label for="confirm_password" class="required">Confirm Password</label>
                     <div class="input-group">
-                        <input type="password" id="confirm_password" name="confirm_password" data-toggle="password" class="form-control" required>
+                        <input type="password" data-toggle="password" id="confirm_password" name="confirm_password"  class="form-control" required>
                         <div class="input-group-append">
                             <span class="input-group-text">
                                 <i class="fa fa-eye"></i>
@@ -82,8 +71,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["reset-submit"]) && Ses
                     </div>
                     <small class="text-danger error-text"></small>
                 </div>
+                <input type="hidden" name="email" value="<?=$email?>">
                 <div class="form-group">
-                    <button type="submit" name="reset-submit" class="btn btn-success">Change</button>
+                    <button type="submit" name="reset-submit" class="btn btn-success">Set Password</button>
                 </div>
             </form>
         </div>
@@ -165,8 +155,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["reset-submit"]) && Ses
         return passwordValid && passwordConfirm;
     });
 </script>
-
 <?php
-include 'inc/footer.php';
-
+include "inc/footer.php";
 ?>

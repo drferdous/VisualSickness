@@ -3,7 +3,7 @@ $filepath = realpath(dirname(__FILE__));
 include_once $filepath."/../lib/Session.php";
 include "check_verification.php";
 Session::init();
-if (Session::get("login") == true && $_SERVER['REQUEST_URI'] !== '/pending_verification' && $_SERVER['REQUEST_URI'] !== '/verify_password') {
+if (Session::get("login") == true && $_SERVER['REQUEST_URI'] !== '/pending_verify' && $_SERVER['REQUEST_URI'] !== '/verify_password') {
     checkVerification();
 }
 
@@ -117,9 +117,9 @@ if (isset($_GET['action']) && $_GET['action'] == 'logout') {
 }
 
 if (Session::get('roleid') == '1') {
-    $homepage = "userlist";
+    $homepage = "user_list";
 } else {
-    $homepage = "view_study";
+    $homepage = "study_list";
 }
 
  ?>
@@ -150,7 +150,7 @@ if (Session::get('roleid') == '1') {
                         </a>
                         <ul class="dropdown-menu"
                             aria-labelledby="study-dropdown">
-                            <li class="dropdown-item"><a href="view_study">Study List</a></li>
+                            <li class="dropdown-item"><a href="study_list">Study List</a></li>
                             <li class="dropdown-item"><a href="create_study">Add Study</a></li>
                         </ul>
                     </li>
@@ -161,7 +161,7 @@ if (Session::get('roleid') == '1') {
                 
                       				$path = $_SERVER['SCRIPT_FILENAME'];
                       				$current = basename($path, '.php');
-                      				if ($current == 'view_study') {
+                      				if ($current == 'study_list') {
                       					echo "active ";
                       				}
                 
@@ -169,7 +169,7 @@ if (Session::get('roleid') == '1') {
                 
                             ">
                             <a class="nav-link" 
-                               href="view_study">
+                               href="study_list">
                                <i class="fas fa-sticky-note mr-2"></i>Study List
                             </a>
                         </li>
@@ -179,7 +179,7 @@ if (Session::get('roleid') == '1') {
     
           				$path = $_SERVER['SCRIPT_FILENAME'];
           				$current = basename($path, '.php');
-          				if ($current == 'participantList' && !isset($_GET['forStudy'])) {
+          				if ($current == 'participan_list' && !isset($_GET['forStudy'])) {
           					echo "active ";
           				}
     
@@ -187,7 +187,7 @@ if (Session::get('roleid') == '1') {
     
                 ">
 
-                      <a class="nav-link" href="participantList"><i class="fas fa-user mr-2"></i>Participants</a>
+                      <a class="nav-link" href="participant_list"><i class="fas fa-user mr-2"></i>Participants</a>
                   </li>
                 <?php if (Session::get('roleid') == '1') { ?>
                       <li class="nav-item
@@ -195,7 +195,7 @@ if (Session::get('roleid') == '1') {
     
           				$path = $_SERVER['SCRIPT_FILENAME'];
           				$current = basename($path, '.php');
-          				if ($current == 'userlist') {
+          				if ($current == 'user_list') {
           					echo "active ";
           				}
     
@@ -203,7 +203,7 @@ if (Session::get('roleid') == '1') {
     
                 ">
     
-                          <a class="nav-link" href="userlist"><i class="fas fa-users mr-2"></i>User Lists</a>
+                          <a class="nav-link" href="user_list"><i class="fas fa-users mr-2"></i>User Lists</a>
                       </li>
                 <?php  } ?>
             <?php } ?>
@@ -222,19 +222,6 @@ if (Session::get('roleid') == '1') {
                 ">
     
                   <a class="nav-link" href="profile"><i class="fab fa-500px mr-2"></i>Profile <span class="sr-only">(current)</span></a>
-                </li>
-                
-                <li class="nav-item
-                <?php
-    
-          				$path = $_SERVER['SCRIPT_FILENAME'];
-          				$current = basename($path, '.php');
-          				if ($current == 'index') {
-          					echo "active";
-          				}
-    
-          	    ?>"
-                >
                 </li>
             <?php } ?>
             

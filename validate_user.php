@@ -35,6 +35,6 @@
     else{
         $body = "You have been verified for Visual Sickness Study under the affiliation " . Util::getAffiliationNameById($pdo, Session::get('affiliationid')) . ".<br><br>Log in now to access studies!";
         sendEmail(Util::getUserEmailById($pdo, $userid), "Visual Sickness | Verification Status Update", $body);
-        header("Location: userlist");
+        header("Location: user_list");
     }
 ?>

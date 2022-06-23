@@ -60,10 +60,10 @@ if (isset($activeId)) {
     alert("JS");
     if (quiz == "0") {
         alert("0");
-        window.location.replace("https://visualsickness.000webhostapp.com/VisualQuiz.php?code=" + code + "&?quiz=" + quiz + "&?age=" + age + "&gender=" + gender + "&?education=" + education + "&?race=" + race);
+        window.location.replace("https://visualsickness.000webhostapp.com/visual_quiz.php?code=" + code + "&?quiz=" + quiz + "&?age=" + age + "&gender=" + gender + "&?education=" + education + "&?race=" + race);
     } else if (quiz == "1") {
         alert("1");
-        window.location.replace("https://visualsickness.000webhostapp.com/TextQuiz.php?code=" + code + "&?quiz=" + quiz + "&?age=" + age + "&gender=" + gender + "&?education=" + education + "&?race=" + race);
+        window.location.replace("https://visualsickness.000webhostapp.com/text_quiz.php?code=" + code + "&?quiz=" + quiz + "&?age=" + age + "&gender=" + gender + "&?education=" + education + "&?race=" + race);
     }
   }
 

@@ -11,7 +11,7 @@
                     AND study_ID = $study_ID;";
         $access_result = $pdo->query($access_sql);
         if (!$access_result->rowCount()) {
-            header('Location: participantList');
+            header('Location: participant_list');
             exit();
         }
     }
@@ -37,7 +37,7 @@
                 WHERE P.is_active = 1 
                 AND P.study_id IN (SELECT study_ID
                                    FROM Researcher_Study
-                                   WHERE researcher_ID = " . Session::get("id") . (isset($study_ID) ? " AND study_ID = $study_ID" : "") . ");";
+                                   WHERE researcher_ID = " . Session::get("id") . (isset($study_ID) ? " AND study_ID = $study_ID" : "") . " AND is_active = 1);";
         $result = $pdo->query($sql);
         
         if (!$result){
@@ -51,7 +51,7 @@
             <thead class="text-center">
                 <tr>
                     <th>Name</th>
-                    <th>DOB</th>
+                    <th>DOB <small> (YYYY-MM-DD)</small></th>
                     <th>Study</th>
                 </tr>
             </thead>
@@ -64,7 +64,7 @@
                         $name = Crypto::decrypt($row['anonymous_name'], $iv); 
                         ?>
                         <tr>
-                            <td><a href="participant_more_info"
+                            <td><a href="participant_details"
                                    class="redirectUser link"
                                    data-participant_ID="<?php echo Crypto::encrypt($row["participant_ID"], $iv); ?>"
                                    data-iv="<?php echo bin2hex($iv); ?>">
@@ -108,14 +108,6 @@
         hiddenInput.setAttribute("name", "iv");
         hiddenInput.setAttribute("value", $(this).attr("data-iv"));
         form.appendChild(hiddenInput);
-        
-        <?php if (isset($study_ID)) {
-            echo 'console.log("ok");';?>
-            hiddenInput = document.createElement("input");
-            hiddenInput.setAttribute("type", "hidden");
-            hiddenInput.setAttribute("name", "forStudy");
-            form.appendChild(hiddenInput);
-        <?php } ?>
         
         document.body.appendChild(form);
         form.submit();

@@ -1,0 +1,37 @@
+<?php
+include_once 'lib/Database.php';
+include_once 'classes/Crypto.php';
+include_once 'lib/Session.php';
+Session::init();
+
+$db = Database::getInstance();
+$pdo = $db->pdo;
+
+if ($_SERVER["REQUEST_METHOD"] !== "POST" || !isset($_POST["iv"])){
+	header("Location: 404");
+	exit();
+}
+
+if (isset($_POST['participant_id']) && !empty($_POST['participant_id']) && isset($_POST['iv'])) {
+    $id = Crypto::decrypt($_POST['participant_id'], hex2bin($_POST['iv']));
+    
+	// Fetch session time choices after participant id is selected
+	$sql = "SELECT name, id
+            FROM Session_times
+            WHERE is_active = 1
+            AND study_ID = " . Session::get('study_ID') . " 
+            AND id NOT IN (SELECT session_time 
+                           FROM Session WHERE is_active = 1 
+                           AND study_ID = " . Session::get('study_ID') . " 
+                           AND participant_ID = " . $id . ");";
+	
+	$result = $pdo->query($sql);
+	if ($result->rowCount() > 0) { ?>
+	    <option value="" selected hidden disabled>Please Choose...</option> 
+	    <?php while ($row = $result->fetch(PDO::FETCH_ASSOC)) { ?>
+    	    <option value="<?=$row['id'] ?>"><?= $row['name'] ?></option>
+    	<?php }
+	} else { ?>
+	    <option class="timesNotFound" value="" selected hidden disabled>No remaining session timings available for this participant</option>
+	<?php }
+} ?>

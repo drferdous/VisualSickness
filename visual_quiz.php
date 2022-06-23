@@ -5,7 +5,7 @@ $db = Database::getInstance();
 $pdo = $db->pdo;
 
 if (Session::get('study_ID') == 0) {
-    header('Location: view_study');
+    header('Location: study_list');
     exit();
 }
 Session::requireResearcherOrUser(Session::get('study_ID'), $pdo);
@@ -27,7 +27,7 @@ if (isset($_POST['viewResults'])) {
     echo Util::getModalForSSQ($pdo, FALSE);
 }
 if(isset($_GET['code']) == "" && Session::get('login') === FALSE) {
-  header('Location: index');
+  header('Location: about');
   exit();
 }
 
@@ -78,9 +78,11 @@ Session::set("post_ID", $rand);
                         <button type="submit" name="deleteQuiz" class="btn btn-danger">Delete</button>
                     </form>
             <?php } ?>
-                <form class="float-right" action="" method="post">
-                    <button type="submit" name="viewResults" class="btn btn-success">Results</button>
-                </form>
+                <?php if ($ssq_ID !== -1) { ?>
+                    <form class="float-right" action="" method="post">
+                        <button type="submit" name="viewResults" class="btn btn-success">Results</button>
+                    </form>
+                <?php } ?>
             </h3>
     </div>
 <div class="card-body pr-2 pl-2">

@@ -168,7 +168,6 @@ class Users{
           Session::set('logMsg', Util::generateSuccessMessage("You logged in!"));
           Session::set('study_ID', 0);
           Session::set('ssq_ID', -1);
-        //   echo "<script>location.href='index';</script>";
 
         }
         else{
@@ -263,250 +262,7 @@ class Users{
     else{
         return Util::generateErrorMessage("Your profile could not be updated!");
     }
-}
-    
- // Insert user's study in Study table
- public function insert_study($data) {
-  array_walk($data, function (&$val) {         $val = trim($val);     });
-  $full_name = $data['full_name'];
-  $short_name = $data['short_name'];
-  $IRB = $data['IRB'];
-  $description = $data['description'];  
-  $created_by = Session::get('id');
-  $last_edited_by = Session::get('id');    
-
-   if ($full_name == "" || $short_name == "" || $IRB == "") {
-       return Util::generateErrorMessage("Study registration fields must not be empty!");
-   } 
-   else {
-      $sql = "INSERT INTO Study (full_name, short_name, IRB, description, created_by, last_edited_by)
-            VALUES ('$full_name', '$short_name', '$IRB', '$description', '$created_by', '$last_edited_by')";
-      $stmt = $this->db->pdo->prepare($sql);
-      $stmt->bindValue('full_name', $full_name);
-      $stmt->bindValue('short_name', $short_name);
-      $stmt->bindValue('IRB', $IRB);
-      $stmt->bindValue('description', $description);      
-      $stmt->bindValue('created_by', $created_by);
-      $stmt->bindValue('last_edited_by', $created_by);        
-      $result = $stmt->execute();        
-   }
-   
-  if ($result) {
-      return Util::generateSuccessMessage("You have created a study!");
-  } 
-  else {
-      return Util::generateErrorMessage("Something went wrong. Try creating a study again!");
-  }
-} 
-
-    // Edit a user's study
-    public function updateStudy($data){
-        array_walk($data, function (&$val) {         $val = trim($val);     });
-        $full_name = $data['full_name'];
-        $short_name = $data['short_name'];
-        $IRB = $data['IRB'];
-        $description = $data['$description'];  
-        $last_edited_by = Session::get('id');
-        $study_ID = $data['study_ID'];
-        
-          if ($full_name == "" || $short_name == ""|| $IRB == "") {
-              return Util::generateErrorMessage("You cannot leave study fields empty!");
-          } 
-          else {
-            $sql = "UPDATE Study SET full_name = :full_name, short_name = :short_name, IRB = :IRB, last_edited_by = :last_edited_by WHERE study_ID = $study_ID";
-                $stmt = $this->db->pdo->prepare($sql);
-                $stmt->bindValue(':full_name', $full_name);
-                $stmt->bindValue(':short_name', $short_name);
-                $stmt->bindValue(':description', $description);      
-                $stmt->bindValue(':IRB', $IRB);
-                $stmt->bindValue('last_edited_by', $last_edited_by);
-                $result = $stmt->execute();     
-                
-            if ($result) {
-                return Util::generateSuccessMessage("You have edited this study!");
-            } 
-            else {
-                return Util::generateErrorMessage("Something went wrong. Try editing again!");
-            }
-          }
-    }
-    
-    // Activates study based on the given study_ID.
-    public function activateStudy($study_ID){
-        $sql = "UPDATE Study
-                SET is_active = 1
-                WHERE study_ID = :study_ID;
-                LIMIT 1;";
-                
-        $stmt = $this->db->pdo->prepare($sql);
-        $stmt->bindValue(":study_ID", trim($study_ID));
-        $result = $stmt->execute();
-        
-        if ($result){
-            return Util::generateSuccessMessage("You activated this study!");
-        }
-        else{
-            return Util::generateErrorMessage("SOmething went wrong. Try activating again!");
-        }
-    }
-    
-    // Deactivates study based on the given study_ID.
-    public function deactivateStudy($study_ID){
-        $sql = "UPDATE Study
-                SET is_active = 0
-                WHERE study_ID = :study_ID
-                LIMIT 1;";
-        
-        $stmt = $this->db->pdo->prepare($sql);
-        $stmt->bindValue(':study_ID', trim($study_ID));
-        $result = $stmt->execute();
-        
-        if ($result){
-            return Util::generateSuccessMessage("You deactivated this study!");
-        }
-        else{
-            return Util::generateErrorMessage("Something went wrong. Try deactivating again!");
-        }
-    }
-    
-    // leaves the current study
-    public function leaveStudy($study_ID){
-        $sql = "DELETE FROM Researcher_Study
-                WHERE researcher_ID = :researcher_ID
-                AND study_ID = :study_ID
-                LIMIT 1;";
-        $stmt = $this->db->pdo->prepare($sql);
-        $stmt->bindValue(':researcher_ID', Session::get('id'));
-        $stmt->bindValue(':study_ID', trim($study_ID));
-        
-        $result = $stmt->execute();
-        if ($result){
-            return Util::generateSuccessMessage("You left this study!");
-        }
-        else{
-            return Util::generateErrorMessage("Something went wrong. Try leaving again!");
-        }
-    }
-    
-    // inserts a session of a  study into DB
-    public function insert_session($data){
-        array_walk($data, function (&$val) {         $val = trim($val);     });
-        $created_by = Session::get('id');
-        $last_edited_by = Session::get('id');    
-        
-        if (empty($data["participant_ID"])){
-            return Util::generateErrorMessage("Please select a participant!");
-        }
-        if (empty($data["comment"])){
-            $data["comment"] = NULL;
-        }
-        
-        $this->db->pdo->beginTransaction();
-        try{
-            $sql = "INSERT INTO Session (study_ID, participant_ID, comment, created_by, last_edited_by)
-                    VALUES (:study_ID, :participant_ID, :comment, :created_by, :last_edited_by);";
-            $stmt = $this->db->pdo->prepare($sql);
-            
-            $stmt->bindValue(':study_ID', $data["study_ID"]);
-            $stmt->bindValue(':participant_ID', $data["participant_ID"]);
-            $stmt->bindValue(':comment', $data["comment"]);
-            $stmt->bindValue(':created_by', $created_by);
-            $stmt->bindValue(':last_edited_by', $created_by);  
-            
-            $result = $stmt->execute();
-            if (!$result){
-                throw new Exception($stmt->error);
-            }
-            
-            $sql = "SELECT LAST_INSERT_ID();";
-            $stmt = $this->db->pdo->prepare($sql);
-            $result = $stmt->execute();
-            if (!$result){
-                throw new Exception($stmt->error);
-            }
-            
-            $result = $stmt->fetch(PDO::FETCH_ASSOC);
-            Session::set('session_ID', intval($result['LAST_INSERT_ID()']));
-            
-            $this->db->pdo->commit();
-            $msg = Util::generateSuccessMessage("You created a new session! You will not be redirected to the Session Details page for this study.");
-        }
-        catch (PDOException $excptn){
-            $this->db->pdo->rollBack();
-            $msg = Util::generateErrorMessage("Something went wrong. Try creating a session again!");
-        }
-        finally{
-            return $msg;
-        }
-    }
-    
-    // restarts the current session within a study by removing the end time of a session.
-    public function restart_session($session_ID) {
-        $last_edited_by = Session::get('id');        
-        
-        $sql = "UPDATE Session
-                SET end_time = NULL, 
-                    last_edited_by = :last_edited_by
-                WHERE session_ID = :session_ID
-                LIMIT 1;";
-                
-        $stmt = $this->db->pdo->prepare($sql);
-        $stmt->bindValue(':session_ID', trim($session_ID));
-        $stmt->bindValue('last_edited_by', $last_edited_by);
-        $result = $stmt->execute();
-        
-        if ($result){
-            Session::set('session_ID', intval($session_ID));
-            return Util::generateSuccessMessage("Session restarted!");
-        }
-        else{
-            return Util::generateErrorMessage("Something went wrong. Try restarting again!");
-        }
-    }
-    
-    // ends the current session within a study.
-    public function endSession($session_ID){
-        $currentDate = new DateTime();
-        $sql = "UPDATE Session
-                SET end_time = :end_time
-                WHERE session_ID = :session_ID
-                LIMIT 1;";
-        
-        $stmt = $this->db->pdo->prepare($sql);
-        $stmt->bindValue(':end_time', $currentDate->format('Y-m-d H:i:s'));
-        $stmt->bindValue(':session_ID', trim($session_ID));
-        
-        $result = $stmt->execute();
-        if ($result){
-            Session::set('session_ID', -1);
-            return Util::generateSuccessMessage("Session ended!");
-        }
-        else{
-            return Util::generateErrorMessage("Something went wrong. Try ending again!");
-        }
-    }
-    
-    // ends the current session within a study.
-    public function deleteSSQ($session_ID){
-        $currentDate = new DateTime();
-        $sql = "UPDATE Session
-                SET end_time = :end_time
-                WHERE session_ID = :session_ID
-                LIMIT 1;";
-        
-        $stmt = $this->db->pdo->prepare($sql);
-        $stmt->bindValue(':end_time', $currentDate->format('Y-m-d H:i:s'));
-        $stmt->bindValue(':session_ID', trim($session_ID));
-        
-        $result = $stmt->execute();
-        if ($result){
-            Session::set('session_ID', -1);
-            return Util::generateSuccessMessage('Session ended!');
-        }
-        else{
-            return Util::generateErrorMessage("Something went wrong. Try ending again!");
-        }
-    }    
+}    
 
     // Delete User by Id Method
     public function deleteUserById($remove){
@@ -535,13 +291,12 @@ class Users{
         $stmt = $this->db->pdo->prepare($sql);
         $stmt->bindValue(':status', 1);
         $stmt->bindValue(':id', trim($deactive));
+        $stmt->bindValue(":localId", $localId);
         $result =   $stmt->execute();
         if ($result) {
-            echo "<script>location.href='index';</script>";
             Session::set('msg', Util::generateSuccessMessage("User account is deactivated"));
         } 
         else {
-            echo "<script>location.href='index';</script>";
             Session::set('msg', Util::generateErrorMessage("Data was not deactivated!"));
         }
     }
@@ -561,11 +316,9 @@ class Users{
         $stmt->bindValue(':id', trim($active));
         $result =   $stmt->execute();
         if ($result) {
-            echo "<script>location.href='index';</script>";
             Session::set('msg', Util::generateSuccessMessage("User account activated!"));
         }
         else{
-            echo "<script>location.href='index';</script>";
             Session::set('msg', Util::generateErrorMessage("User account was not activated!"));
         }
     }

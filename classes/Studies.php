@@ -12,34 +12,34 @@ class Studies {
     }
     
     public function insertQuiz($data) {
-        if(isset($data['submitQuiz'])){    
+        if(isset($_POST['submitQuiz'])){    
             $ssq_ID = Session::get('ssq_ID');
-            $general_discomfort = $data['general_discomfort'];
-            $fatigue = $data['fatigue'];
-            $headache = $data['headache'];
-            $eye_strain = $data['eye_strain'];
-            $difficulty_focusing = $data['difficulty_focusing'];
-            $increased_salivation = $data['increased_salivation'];
-            $sweating = $data['sweating'];
-            $nausea = $data['nausea'];
-            $difficulty_concentrating = $data['difficulty_concentrating'];
-            $fullness_of_head = $data['fullness_of_head'];
-            $blurred_vision = $data['blurred_vision'];
-            $dizziness_with_eyes_open = $data['dizziness_with_eyes_open'];
-            $dizziness_with_eyes_closed = $data['dizziness_with_eyes_closed'];
-            $vertigo = $data['vertigo'];
-            $stomach_awareness = $data['stomach_awareness'];
-            $burping = $data['burping'];
-            $ssq_time = $data['ssq_time'];
-            $ssq_type = $data['ssq_type'];
+            $general_discomfort = $_POST['general_discomfort'];
+            $fatigue = $_POST['fatigue'];
+            $headache = $_POST['headache'];
+            $eye_strain = $_POST['eye_strain'];
+            $difficulty_focusing = $_POST['difficulty_focusing'];
+            $increased_salivation = $_POST['increased_salivation'];
+            $sweating = $_POST['sweating'];
+            $nausea = $_POST['nausea'];
+            $difficulty_concentrating = $_POST['difficulty_concentrating'];
+            $fullness_of_head = $_POST['fullness_of_head'];
+            $blurred_vision = $_POST['blurred_vision'];
+            $dizziness_with_eyes_open = $_POST['dizziness_with_eyes_open'];
+            $dizziness_with_eyes_closed = $_POST['dizziness_with_eyes_closed'];
+            $vertigo = $_POST['vertigo'];
+            $stomach_awareness = $_POST['stomach_awareness'];
+            $burping = $_POST['burping'];
+            $ssq_time = $_POST['ssq_time'];
+            $ssq_type = $_POST['ssq_type'];
             $session_ID = Session::get('session_ID');
-            $code = $data['code'];
+            $code = $_POST['code'];
         
             if (Session::get('login') === FALSE) { 
-                $age = $data['age'];
-                $gender = $data['gender'];
-                $race = $data['race'];
-                $education = $data['education'];
+                $age = $_POST['age'];
+                $gender = $_POST['gender'];
+                $race = $_POST['race'];
+                $education = $_POST['education'];
             }
             
             if ($ssq_ID > 0){
@@ -88,6 +88,7 @@ class Studies {
 
   // Add participant to Session table and Demographics table
   public function addNewParticipant($data){
+  // Note: this function does not work because the function does not take into account the study_ID yet.
     array_walk($data, function (&$val) {
         $val = trim($val);
     });
@@ -464,14 +465,20 @@ public function takeSSQ($data){
     $ssq_times = explode(",", $data["ssq_times"]);
     array_walk($ssq_times, function (&$val) {         $val = ucwords(trim($val));     });
     $ssq_times = array_filter($ssq_times, function ($time) { return $time != ''; });
+    $session_times = explode(",", $data["session_times"]);
+    array_walk($session_times, function (&$val) {         $val = ucwords(trim($val));     });
+    $session_times = array_filter($session_times, function ($time) { return $time != ''; });
     $created_by = Session::get('id');
-    $last_edited_by = Session::get('id');    
+    $last_edited_by = Session::get('id');
 
     if ($full_name == "" || $short_name == "" || $IRB == "") {
         return array(Util::generateErrorMessage("Study registration fields must not be empty!"));
-    } 
+    }
     if (count($ssq_times) !== count(array_unique($ssq_times))){
         return array(Util::generateErrorMessage("There should be no duplicate SSQ times!"));
+    }
+    if (count($session_times) !== count(array_unique($session_times))){
+        return array(Util::generateErrorMessage("There should be no duplicate Session times!"));
     }
   
     $sql = "INSERT INTO Study (full_name, short_name, IRB, description, created_by, last_edited_by)
@@ -497,6 +504,18 @@ public function takeSSQ($data){
     $sql = "INSERT INTO SSQ_times (name, study_id) 
             VALUES " . $insert;
     $result = $this->db->pdo->query($sql);
+    if (!$result){
+        return Util::generateErrorMessage("Something went wrong. Try again!");
+    }
+    $session_insert = implode(",", array_map(function($time) use($study_ID){
+        return "('" . ucwords($time) . "'," . $study_ID . ")"; 
+    }, $session_times));
+    
+    $sql = "INSERT INTO Session_times (name, study_ID) 
+            VALUES " . $session_insert;
+    $result = $this->db->pdo->query($sql);
+    
+    Session::set('study_ID', $study_ID);
     
     if ($result) {
         return array(Util::generateSuccessMessage("You have created a study!"), $study_ID);
@@ -514,13 +533,21 @@ public function takeSSQ($data){
         $IRB = $data['IRB'];
         $description = $data['description'];
         $ssq_times_str = $data['ssq_times'];
+        $session_times_str = $data['session_times'];
         $last_edited_by = Session::get('id');
         $study_ID = Session::get('study_ID');
+        
         $ssq_times = explode(',', $ssq_times_str);
         array_walk($ssq_times, function (&$time) {
             $time = ucwords(trim($time));
         });
         $ssq_times = array_filter($ssq_times, function ($time) { return $time !== ''; });
+        
+        $session_times = explode(',', $session_times_str);
+        array_walk($session_times, function (&$time) {
+            $time = ucwords(trim($time));
+        });
+        $session_times = array_filter($session_times, function ($time) { return $time !== ''; });
         
         $currentDate = new DateTime();
         
@@ -529,6 +556,9 @@ public function takeSSQ($data){
         }
         if ($ssq_times !== array_unique($ssq_times)) {
             return Util::generateErrorMessage("You cannot have multiple SSQ times of the same name!");
+        }
+        if ($session_times !== array_unique($session_times)) {
+            return Util::generateErrorMessage("You cannot have multiple Session times of the same name!");
         }
         $pdo = $this->db->pdo;
         $sql = "UPDATE Study SET full_name = :full_name, short_name = :short_name, IRB = :IRB, description = :description, last_edited_by = :last_edited_by, last_edited_at = :last_edited_at WHERE study_ID = :study_ID";
@@ -552,6 +582,13 @@ public function takeSSQ($data){
         while ($row = $old_times_res->fetch(PDO::FETCH_ASSOC)) {
             array_push($old_times, $row['name']);
         }
+        
+        $old_session_sql = "SELECT name FROM Session_times WHERE study_ID = $study_ID AND is_active = 1;";
+        $old_session_res = $pdo->query($old_session_sql);
+        $old_session = array();
+        while ($row = $old_session_res->fetch(PDO::FETCH_ASSOC)) {
+            array_push($old_session, $row['name']);
+        }
 
         array_walk($old_times, function (&$val) {         $val = trim($val);     });
         $added_ssq_times = array_filter($ssq_times, function ($time) use($old_times) {
@@ -560,6 +597,16 @@ public function takeSSQ($data){
         $removed_ssq_times = array_filter($old_times, function ($time) use($ssq_times) {
             return !in_array($time, $ssq_times);
         });
+        
+        array_walk($old_session, function (&$val) {         $val = trim($val);     });
+        $added_session_times = array_filter($session_times, function ($time) use($old_session) {
+            return !in_array($time, $old_session);
+        });
+        $removed_session_times = array_filter($old_session, function ($time) use($session_times) {
+            return !in_array($time, $session_times);
+        });
+        
+        
         
         if (count($added_ssq_times) > 0) {
             // added 1 or more time names
@@ -598,6 +645,44 @@ public function takeSSQ($data){
             }
         }
         
+        if (count($added_session_times) > 0) {
+            // added 1 or more time names
+            $added = implode(', ', array_map(function ($time) { return "'$time'"; }, $added_session_times));
+            $added_back_sql = "SELECT name FROM Session_times WHERE is_active = 0 AND study_ID = $study_ID AND name IN ($added)";
+            $added_back_res = $pdo->query($added_back_sql);
+            $added_back = array();
+            while ($row = $added_back_res->fetch(PDO::FETCH_ASSOC)) {
+                array_push($added_back, $row['name']);
+            }
+            if (count($added_back) > 0) {
+                // add back names
+                $added_back_str = implode(', ', array_map(function ($time) { return "'$time'"; }, $added_back));
+                $add_back_sql = "UPDATE Session_times SET is_active = 1 WHERE study_ID = $study_ID AND name IN ($added_back_str);";
+                $result = $pdo->query($add_back_sql);
+                
+                if (!$result) {
+                    return Util::generateErrorMessage("Something went wrong. Try editing again!");
+                }
+            }
+            // add new names
+            if (count(array_filter($added_session_times, function ($time) use($added_back) {
+                return !in_array($time, $added_back);
+            })) > 0) {
+                $insert = implode(', ', array_map(function ($time) use($study_ID) {
+                    return "('" . $time . "', " . $study_ID . ")";
+                }, array_filter($added_session_times, function ($time) use($added_back) {
+                    return !in_array($time, $added_back);
+                })));
+                $insert_sql = "INSERT INTO Session_times (name, study_ID) VALUES $insert;";
+                $result = $pdo->query($insert_sql);
+                
+                if (!$result) {
+                    return Util::generateErrorMessage("Something went wrong. Try editing again!");
+                }
+            }
+        }
+        
+        
         if (count($removed_ssq_times) > 0) {
             // removed 1 or more time names
             
@@ -612,19 +697,25 @@ public function takeSSQ($data){
                     $(document).ready(() => {
                         if (confirm('Deleting this SSQ Time will result in loss of previously created SSQs')) {
                             $.ajax({
-                                url: 'ssq_connect',
+                                url: 'ssq_time_remove',
                                 type: 'POST',
                                 cache: false,
                                 data:{
-                                    studyID: $study_ID,
                                     remove: \"$remove\"
                                 },
                             })
                             .done(function(data) {
-                                const div = document.createElement('div');
-                                $(div).html(data);
-                                $('.container').insertBefore(div.firstChild, $('.card'));
-                                location.reload();
+                                $(document).ready(() => {
+                                    const div = document.createElement('div');
+                                    div.innerHTML = data.slice(1);
+                                    document.querySelector('.container').insertBefore(div.firstChild, document.querySelector('.card'));
+                                    const divMsg = document.getElementById('flash-msg');
+                                    if (divMsg?.classList.contains('alert-success')){
+                                        setTimeout(function(){
+                                            location.href = 'study_details';
+                                        }, 1000);
+                                    }
+                                });
                             });
                         }
                     });
@@ -633,6 +724,55 @@ public function takeSSQ($data){
             } else {
             
                 $remove_sql = "UPDATE SSQ_times SET is_active = 0 WHERE study_id = $study_ID AND name IN ($remove)";
+                $result = $pdo->query($remove_sql);
+                    
+                if (!$result) {
+                    return Util::generateErrorMessage("Something went wrong. Try editing again!");
+                }
+            }
+        }
+        
+        if (count($removed_session_times) > 0) {
+            // removed 1 or more time names
+            
+            $remove = implode(', ', array_map(function ($time) { return "'$time'"; }, $removed_session_times));
+            
+            
+            $sql = "SELECT session_ID FROM Session WHERE session_time IN (SELECT id FROM Session_times WHERE study_ID = $study_ID AND name IN ($remove) AND is_active = 1)";
+            $result_ssq = $pdo->query($sql);
+            
+            if($result_ssq->fetch(PDO::FETCH_ASSOC)) {
+                return "<script type='text/javascript'>
+                    $(document).ready(() => {
+                        if (confirm('Deleting this Session Time will result in loss of previously created Sessions')) {
+                            $.ajax({
+                                url: 'session_time_remove',
+                                type: 'POST',
+                                cache: false,
+                                data:{
+                                    remove: \"$remove\"
+                                },
+                            })
+                            .done(function(data) {
+                                $(document).ready(() => {
+                                    const div = document.createElement('div');
+                                    div.innerHTML = data;
+                                    document.querySelector('.container').insertBefore(div.firstChild, document.querySelector('.card'));
+                                    const divMsg = document.getElementById('flash-msg');
+                                    if (divMsg?.classList.contains('alert-success')){
+                                        setTimeout(function(){
+                                            location.href = 'study_details';
+                                        }, 1000);
+                                    }
+                                });
+                            });
+                        }
+                    });
+                </script>";
+                // return "";
+            } else {
+            
+                $remove_sql = "UPDATE Session_times SET is_active = 0 WHERE study_ID = $study_ID AND name IN ($remove)";
                 $result = $pdo->query($remove_sql);
                     
                 if (!$result) {
@@ -726,21 +866,25 @@ public function takeSSQ($data){
         if (empty($data["participant_ID"])){
             return Util::generateErrorMessage("Please select a participant!");
         }
+        if (empty($data["session_time"])){
+            return Util::generateErrorMessage("Please select a Session time!");
+        }
         if (empty($data["comment"])){
             $data["comment"] = NULL;
         }
         
         $this->db->pdo->beginTransaction();
         try{
-            $sql = "INSERT INTO Session (study_ID, participant_ID, comment, created_by, last_edited_by)
-                    VALUES (:study_ID, :participant_ID, :comment, :created_by, :last_edited_by);";
+            $sql = "INSERT INTO Session (study_ID, participant_ID, comment, created_by, last_edited_by, session_time)
+                    VALUES (:study_ID, :participant_ID, :comment, :created_by, :last_edited_by, :session_time);";
             $stmt = $this->db->pdo->prepare($sql);
             
             $stmt->bindValue(':study_ID', Session::get('study_ID'));
             $stmt->bindValue(':participant_ID', $data["participant_ID"]);
             $stmt->bindValue(':comment', $data["comment"]);
             $stmt->bindValue(':created_by', $created_by);
-            $stmt->bindValue(':last_edited_by', $created_by);  
+            $stmt->bindValue(':last_edited_by', $created_by);
+            $stmt->bindValue(':session_time', $data['session_time']);
             
             $result = $stmt->execute();
             if (!$result){
@@ -817,13 +961,15 @@ public function takeSSQ($data){
     // removes current session within a study.
     public function removeSession($session_ID){
         $currentDate = new DateTime();
+        $last_edited_by = Session::get('id');
         $sql = "UPDATE Session
-                SET is_active = 0
+                SET is_active = 0, last_edited_by = :last_edited_by  
                 WHERE session_ID = :session_ID
                 LIMIT 1;";
         
         $stmt = $this->db->pdo->prepare($sql);
         $stmt->bindValue(':session_ID', $session_ID);
+        $stmt->bindValue(':last_edited_by', $last_edited_by);
         
         $result = $stmt->execute();
         if ($result){

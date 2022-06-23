@@ -6,7 +6,7 @@ $db = Database::getInstance();
 $pdo = $db->pdo;
 
 if (Session::get('study_ID') == 0) {
-    header('Location: view_study');
+    header('Location: study_list');
     exit();
 }
 Session::requireResearcherOrUser(Session::get('study_ID'), $pdo);
@@ -28,7 +28,7 @@ if (isset($_POST['viewResults'])) {
     echo Util::getModalForSSQ($pdo, FALSE);
 }
 if(empty($_GET['code']) && Session::get('login') === FALSE) {
-  header('Location: index');
+  header('Location: about');
   exit();
 }
 
@@ -70,16 +70,16 @@ $study_is_active = $study_result->fetch(PDO::FETCH_ASSOC)['is_active'] == 1;
 <div class="card">
     <div class="card-header">
             <h3>
-            <?php
-                if(($role['study_role'] == 2 || $id_row['created_by'] == Session::get('id')) && $study_is_active) {
-            ?>
+                <?php if(($role['study_role'] == 2 || $id_row['created_by'] == Session::get('id')) && $study_is_active) { ?>
                     <form class="float-right mx-1" onsubmit="return confirm('Are you sure you want to delete this SSQ? This action cannot be undone.');" action="delete_quiz" method="post">
                         <button type="submit" name="deleteQuiz" class="btn btn-danger">Delete</button>
                     </form>
-            <?php } ?>
-                <form class="float-right" action="" method="post">
-                    <button type="submit" name="viewResults" class="btn btn-success">Results</button>
-                </form>
+                <?php }
+                if ($ssq_ID !== -1) { ?>
+                    <form class="float-right" action="" method="post">
+                        <button type="submit" name="viewResults" class="btn btn-success">Results</button>
+                    </form>
+                <?php } ?>
             </h3>
     </div>
     <div class="card-body pr-2 pl-2">

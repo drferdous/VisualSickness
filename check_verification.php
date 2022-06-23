@@ -5,7 +5,7 @@ function checkVerification() {
             header("Location: verify_password");
             break;
         case 1:
-            header("Location: pending_verification");
+            header("Location: pending_verify");
             break;
         case 2:
             break;

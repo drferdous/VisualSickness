@@ -54,7 +54,7 @@ if ($_SERVER["REQUEST_METHOD"] === "GET") {
         let hiddenInput;
         
         form.setAttribute("method", "POST");
-        form.setAttribute("action", 'create-password');
+        form.setAttribute("action", 'create_password');
         form.setAttribute("style", "display: none");
         
         hiddenInput = document.createElement("input");

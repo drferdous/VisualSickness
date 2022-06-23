@@ -3,7 +3,7 @@ include 'inc/header.php';
 Session::CheckSession();
 
 if (Session::get('study_ID') == 0) {
-    header('Location: view_study');
+    header('Location: study_list');
     exit();
 }
 Session::requirePIorRA(Session::get('study_ID'), Database::getInstance()->pdo);
@@ -23,7 +23,7 @@ if (isset($userAdd)) {
         const divMsg = document.getElementById("flash-msg");
         if (divMsg.classList.contains("alert-success")){
             setTimeout(function(){
-                location.href = '<?= isset($referrer) ? $referrer : 'view_study'; ?>';
+                location.href = '<?= isset($referrer) ? $referrer : 'study_list'; ?>';
             }, 1000);
         }
     </script>
@@ -35,7 +35,7 @@ if (isset($userAdd)) {
     </div>
     <div class="card-body">
             <div style="max-width:600px; margin:0px auto">
-            <form class="" action="addParticipant" method="post">
+            <form class="" action="" method="post">
                 <?php 
                     $rand = bin2hex(openssl_random_pseudo_bytes(16));
                     Session::set("post_ID", $rand);

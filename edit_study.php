@@ -7,7 +7,7 @@ $pdo = $db->pdo;
 Session::CheckSession();
 
 if (Session::get('study_ID') == 0) {
-    header('Location: view_study');
+    header('Location: study_list');
     exit();
 }
 $study_ID = Session::get('study_ID');
@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['updateStudy']) && Sess
         echo $updateStudy; ?>
         <script type="text/javascript">
             const divMsg = document.getElementById("flash-msg");
-            if (divMsg.classList.contains("alert-success")){
+            if (divMsg?.classList.contains("alert-success")){
                 setTimeout(function(){
                     location.href = "study_details";
                 }, 1000);
@@ -52,6 +52,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['updateStudy']) && Sess
         while ($row = $ssq_times_result->fetch(PDO::FETCH_ASSOC)) {
             array_push($ssq_times, $row['name']);
         }
+        
+        $session_times = array();
+        $session_times_sql = "SELECT name FROM Session_times WHERE is_active = 1 AND study_ID = $study_ID;";
+        $session_times_result = $pdo->query($session_times_sql);
+        while ($row = $session_times_result->fetch(PDO::FETCH_ASSOC)) {
+            array_push($session_times, $row['name']);
+        }
     ?>
     <div class="card-body pr-2 pl-2">
         <form class="" action="" method="POST", id="submit_form">
@@ -82,8 +89,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['updateStudy']) && Sess
                 <input type="text" name="description" value="<?php echo $description;?>" class="form-control" id="description">
             </div>
             <div class="form-group">
-                <label for="ssq_times">SSQ times (comma-separated)</label>
+                <label for="session_times">Session Times</label>
+                <input type="text" name="session_times" value="<?= implode(', ', $session_times); ?>" class="form-control" id="session_times">
+                <small>Format: comma-separated (e.g., Session 1, Session 2)</small>
+            </div>
+            <div class="form-group">
+                <label for="ssq_times">SSQ Times</label>
                 <input type="text" name="ssq_times" value="<?= implode(', ', $ssq_times); ?>" class="form-control" id="ssq_times">
+                <small>Format: comma-separated (e.g., pre, post)</small>
             </div>
             <div class="form-group">
                  <button type="submit" name="updateStudy" class="btn btn-success">Submit</button>

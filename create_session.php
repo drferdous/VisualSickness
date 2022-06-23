@@ -12,7 +12,7 @@ if (isset($_POST['study_ID']) && isset($_POST['iv'])) {
 }
 
 if (Session::get('study_ID') == 0) {
-    header('Location: view_study');
+    header('Location: study_list');
     exit();
 }
     
@@ -20,7 +20,7 @@ Session::requireResearcherOrUser(Session::get('study_ID'), $pdo);
 $active_sql = "SELECT is_active FROM Study WHERE study_ID = " . Session::get('study_ID') . " LIMIT 1;";
 $res = $pdo->query($active_sql);
 if ($res->fetch(PDO::FETCH_ASSOC)['is_active'] == 0) {
-    header('Location: view_study');
+    header('Location: study_list');
     exit();
 }
 
@@ -57,9 +57,9 @@ $role = $role_result->fetch(PDO::FETCH_ASSOC);
             Create a Session
         </h3>
         <?php if(isset($role['study_role']) && $role['study_role'] != 4){ ?>
-        <a class="float-right btn btn-primary" href="addParticipant">Add Participant</a>
+        <a class="float-right btn btn-primary" href="add_participant">Add Participant</a>
         <?php } ?>
-        <a class="float-right btn btn-primary" href="view_study" style="transform: translateX(-10px)">Back </a>
+        <a class="float-right btn btn-primary" href="study_list" style="transform: translateX(-10px)">Back </a>
     </div>
         <div class="card-body">
             <form class="" action="" method="post">
@@ -96,19 +96,8 @@ $role = $role_result->fetch(PDO::FETCH_ASSOC);
                 </div>
                 <div class="form-group">
                     <label for="session_time" class="required">Select a Session Time</label>
-                    <select class="form-control" name="session_time" id="session_time" required>
+                    <select class="form-control" name="session_time" id="session_time" required disabled>
                         <option value="" selected hidden disabled>Please Choose...</option>
-                        <?php
-                    
-                        $sql = "SELECT name, id
-                                FROM Session_times
-                                WHERE is_active = 1
-                                AND study_ID = " . Session::get('study_ID') . ";";
-                                    
-                        $result = $pdo->query($sql);
-                        while ($row = $result->fetch(PDO::FETCH_ASSOC)){ ?>
-                            <option value="<?=$row['id'] ?>"><?= $row['name'] ?></option>
-                        <?php } ?>
                     </select>
                 </div>
                     
@@ -123,6 +112,31 @@ $role = $role_result->fetch(PDO::FETCH_ASSOC);
             
         </div>
 </div>
+
+<script type="text/javascript">
+     $(document).ready(function() {
+         $('#participant_name').change(function() {
+            const info = $(this).val();
+            const participant_id = info.split(';')[0];
+            const iv = info.split(';')[1];
+            $.ajax({
+                url: "session_times",
+                type: "POST",
+                cache: false,
+                data: {
+                    participant_id,
+                    iv
+                },
+                success:function(data){
+                    $('#session_time').html(data);
+                    $('#session_time').removeAttr("disabled");
+                    if ($('.timesNotFound')[0]) $('#session_time').attr('disabled', 'true');
+                }
+            });	
+         });
+     });
+ </script>
+
 <?php
   include 'inc/footer.php';
 ?>

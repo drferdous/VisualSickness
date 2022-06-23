@@ -62,7 +62,7 @@ $rand = bin2hex(openssl_random_pseudo_bytes(16));
 Session::set("post_ID", $rand);
 ?>
 
-<div class="card">
+<div class="card" style="overflow-x: hidden">
     <div class="card-header">
         <h3><i class="fas fa-users mr-2"></i>User list <span class="float-right">Welcome! <strong>
             <span class="badge badge-lg badge-secondary text-white">
@@ -172,7 +172,7 @@ Session::set("post_ID", $rand);
     
     function showUsers(isFirstTime=false) {
         $.ajax({
-            url: "loadCorrectUsers",
+            url: "load_users",
             method: "POST",
             cache: false,
             data:{
@@ -185,7 +185,10 @@ Session::set("post_ID", $rand);
                     $("#example").DataTable().destroy();
                 }
                 overrideDT = false;
-                if ($("#example td.notFound").length === 0) $('#example').DataTable();
+                if ($("#example td.notFound").length === 0) {
+                    $('#example').DataTable();
+                    $('#example').parent().css('overflow-x', 'auto');
+                }
                 else overrideDT = true;
                 $("#example a.profilePage[data-user_ID]").on("click", goToProfilePage);
                 $("#example a.userAction[data-user_ID]").on("click", doUserAction);

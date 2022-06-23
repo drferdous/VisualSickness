@@ -44,7 +44,7 @@ Session::CheckSession();
     
     function getData(isFirstTime = false) {
         $.ajax({
-           url: "loadCorrectStudies",
+           url: "load_studies",
            method: "POST",
            cache: false,
            data:{
@@ -57,7 +57,7 @@ Session::CheckSession();
                 }
                 overrideDT = false;
                 if ($("#example td.notFound").length === 0) {
-                    $('#example').DataTable();
+                    $('#example').DataTable({order:[]});
                     $('#example').parent().css('overflow-x', 'auto');
                 }
                 else overrideDT = true;

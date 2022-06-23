@@ -52,7 +52,12 @@ class Session{
     // Check Login Method
     public static function CheckLogin(){
         if (self::get("login") == TRUE) {
-            header('Location: index');
+            if (self::get('roleid') == '1') {
+                $homepage = "user_list";
+            } else {
+                $homepage = "study_list";
+            }
+            header("Location: " . $homepage);
         }
     }
     
@@ -104,7 +109,7 @@ class Session{
                 AND study_ID = $study_ID;";
         $result = $pdo->query($sql);
         if (!$result->rowCount()) {
-            header('Location: view_study');
+            header('Location: study_list');
             exit();
         }
     }

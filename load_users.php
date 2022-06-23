@@ -9,9 +9,8 @@
     
     Session::init();
 
-    if ($_SERVER["REQUEST_METHOD"] !== "POST" || !isset($_POST)){
-        // header("Location: 404");
-        var_dump($_POST);
+    if ($_SERVER["REQUEST_METHOD"] !== "POST" || !isset($_POST['showPendingUsers'])){
+        header("Location: 404");
         exit();
     }
     
@@ -39,6 +38,13 @@
                         $i = 0;
                         foreach ($allUser as $value) {
                             $i++;
+                            $timezone = Session::get('time_offset');
+                            $time_created = new DateTime($value->created_at);
+                            if($timezone < 0) {
+                                $time_created->sub(new DateInterval('PT' . abs($timezone) . 'M'));
+                            } else {
+                                $time_created->add(new DateInterval('PT' . $timezone . 'M'));
+                            }
 
                 ?>
                             <tr class="text-center"
@@ -76,7 +82,7 @@
                         <?php } ?>
 
                         </td>
-                        <td><span class="badge badge-lg badge-secondary text-white"><?php echo Util::formatDate($value->created_at);  ?></span></td>
+                        <td><span class="badge badge-lg badge-secondary text-white"><?php echo date_format($time_created,"M d, Y h:i A");  ?></span></td>
 
                         <td data-user_ID="<?php echo Crypto::encrypt($value->id, $iv); ?>"
                             data-iv="<?php echo bin2hex($iv); ?>">
@@ -108,7 +114,7 @@
                         <?php }
                               else{ ?>
                                 <a class="btn btn-danger btn-sm userAction removeUser"
-                                   href="userlist"
+                                   href="user_list"
                                    style="margin-bottom: 4px;">
                                 Remove
                                 </a>
@@ -118,19 +124,19 @@
                        <?php if ($value->roleid ==='1' || Session::get("id") == $value->id) {
                          echo "disabled";
                        } ?>
-                                btn-sm " href="userlist" style="margin-bottom: 4px;" ?>Deactivate</a>
+                                btn-sm " href="user_list" style="margin-bottom: 4px;" ?>Deactivate</a>
                         <?php }elseif ($value->status == '0'){?>
                             <a class="btn btn-success btn-sm userAction activateUser 
                        <?php if ($value->roleid === '1' || Session::get("id") == $value->id) {
                          echo "disabled ";
                        } ?>
-                                btn-sm" href="userlist" style="margin-bottom: 4px;">Activate</a>
+                                btn-sm" href="user_list" style="margin-bottom: 4px;">Activate</a>
                              <?php } ?>
                             
                         <?php if ($value->reg_stat === "1"){ ?>
                             <a class="btn btn-sm btn-success"
                                id="validateUser"
-                               href="validateUser" style="margin-bottom: 4px;">
+                               href="validate_user" style="margin-bottom: 4px;">
                                Validate
                             </a>
                         <?php } ?>
