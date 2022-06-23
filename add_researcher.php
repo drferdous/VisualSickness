@@ -41,7 +41,7 @@ if (isset($addResearcher)) {
         </a>
     </div>
     <div class="card-body pr-2 pl-2">
-        <form class="" action="" method="post">
+        <form class="" action="add_researcher" method="post">
             <?php 
                 $rand = bin2hex(openssl_random_pseudo_bytes(16));
                 Session::set("post_ID", $rand);
@@ -89,7 +89,7 @@ if (isset($addResearcher)) {
     </div>
 </div>
       
-<script type="text/javascript">
+<script>
      $(document).ready(function() {
          $('#researcher_ID').change(function() {
             const info = $(this).val();
