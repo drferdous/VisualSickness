@@ -1,4 +1,4 @@
-<div class="well card-footer"> <a class="nav-link" href="about"><i class="fas fa-info-circle mr-2"></i>About Us</a> </div>
+<div class="well card-footer"> <button class="shadow-none btn nav-link" onclick="location.href='about'"><i class="fas fa-info-circle mr-2"></i>About Us</button> </div>
 </div>
   <!-- Jquery script -->
 <!--<script src="assets/jquery.min.js"></script>-->

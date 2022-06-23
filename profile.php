@@ -44,6 +44,10 @@ if (Session::get('roleid') == '1') {
     <div class="card-body">
         <?php
             $getUinfo = $users->getUserInfoById($userid);
+            if ($getUinfo->roleid == 1 && Session::get("id") != $getUinfo->id && $purpose === 'edit') {
+                header("Location: $homepage");
+                exit();
+            }
             if ($getUinfo){ ?>
                 <div style="max-width:600px; margin:0px auto">
                   <form class="" action="" method="POST">
