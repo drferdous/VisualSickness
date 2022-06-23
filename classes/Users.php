@@ -234,9 +234,11 @@ class Users{
     if (Session::get("roleid") != 1 && isset($data["roleid"])){
         return Util::generateErrorMessage("You do not have permission to change your role!");
     }
-    $roleid = $data["roleid"];
-    if ($roleid < 2 || $roleid > 4){
-        return Util::generateErrorMessage("Please select a valid role!");
+    if (isset($data["roleid"])){
+        $roleid = intval($data["roleid"]);
+        if ($roleid < 2 || $roleid > 4){
+            return Util::generateErrorMessage("Please select a valid role!");
+        }
     }
     $sql = "UPDATE tbl_users SET
             name = :name,
