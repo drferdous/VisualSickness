@@ -99,9 +99,9 @@ if($timezone < 0) {
 
 ?>
 <div class="card">
-    <nav class="navDropdown navbar navbar-expand-lg navbar-light bg-light justify-content-between">
+    <nav class="navDropdown navbar navbar-expand-md navbar-light bg-light justify-content-between">
         <a class="navbar-brand">Study Details</a>
-        <div class="container-fluid">
+        <div class="navbar-collapse collapse">
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item dropdown mr-2">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLinkRight" role="button" data-mdb-toggle="dropdown" aria-expanded="false">
@@ -110,7 +110,7 @@ if($timezone < 0) {
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLinkRight">
                         <?php if($row_study['is_active'] == 1) { ?>
                             <li class="dropdown-submenu">
-                                <a href="javascript:void(0)" class="nested-dropdown dropdown-item">Researcher <i class="fas fa-caret-right ml-2"></i></a>
+                                <a href="javascript:void(0)" class="nested-dropdown dropdown-item">Researcher<i class="fas fa-caret-right ml-2"></i></a>
                                 <ul class="dropdown-menu dropdown-submenu">
                                     <li><a href="researcher_list" class="dropdown-item nested-dropdown-item">View Researchers</a></li>
                                     <?php if(isset($role['study_role']) && $role['study_role'] == 2){ ?>
@@ -136,7 +136,7 @@ if($timezone < 0) {
                             </li>
                         <?php } if(isset($role['study_role'])) { ?>
                             <li class="dropdown-submenu">
-                                <a href="javascript:void(0)" class="nested-dropdown dropdown-item">Participant <i class="fas fa-caret-right ml-2"></i></a>
+                                <a href="javascript:void(0)" class="nested-dropdown dropdown-item">Participant<i class="fas fa-caret-right ml-2"></i></a>
                                 <ul class="dropdown-menu dropdown-submenu">
                                     <li><a href="participant_list?forStudy=true" class="dropdown-item">View Participants</a></li>
                                     <?php if($role['study_role'] != 4){ ?>
@@ -147,7 +147,7 @@ if($timezone < 0) {
                             </li>        
                         <?php } if(isset($role['study_role']) && $role['study_role'] == 2) { ?>
                             <li class="dropdown-submenu">
-                                <a href="javascript:void(0)" class="nested-dropdown dropdown-item">Manage <i class="fas fa-caret-right ml-2"></i></a>
+                                <a href="javascript:void(0)" class="nested-dropdown dropdown-item">Manage<i class="fas fa-caret-right ml-2"></i></a>
                                 <ul class="dropdown-menu dropdown-submenu">
                                     <li><a href="edit_study"  class="dropdown-item">Edit</a></li>
                                     <form method="post" class="d-inline" action="">
@@ -175,7 +175,81 @@ if($timezone < 0) {
                         <?php } ?>
                     </ul>
                 </li>
-                <a href="study_list" class="btn btn-primary backButton">Back</a>
+                <a href="study_list" class="btn btn-primary">Back</a>
+            </ul>
+        </div>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#studyNavbar" aria-controls="studyNavbar" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="studyNavbar">
+            <ul class="navbar-nav ml-auto">
+ 
+                <?php if($row_study['is_active'] == 1) { ?>
+                    <li class="nav-item dropdown">
+                        <a href="javascript:void(0)" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false" id="researcherDropdown">Researcher</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="researcher_list" class="dropdown-item">View Researchers</a></li>
+                            <?php if(isset($role['study_role']) && $role['study_role'] == 2){ ?>
+                                <li><a href="edit_researchers" class="dropdown-item">Edit Researchers</a></li>
+                                <li><a href="remove_researcher" class="dropdown-item">Remove A Researcher</a></li>
+                                <li><a href="add_researcher" class="dropdown-item">Add A Researcher</a></li>
+                                <?php
+                                $sql = "SELECT u.email FROM tbl_users AS u
+                                    JOIN Researcher_Study AS rs ON rs.researcher_ID = u.id
+                                    WHERE rs.study_ID = $study_ID
+                                    AND rs.is_active = 1
+                                    AND u.status = 1;";
+                                $email_result = $pdo->query($sql);
+                                $emails = array();
+                                while ($row = $email_result->fetch(PDO::FETCH_ASSOC)) {
+                                    array_push($emails, $row['email']);
+                                }
+                                $mailing_list = implode(',', $emails);
+                                ?>
+                                <li><a href="mailto:<?= $mailing_list ?>" class="dropdown-item">Contact Researchers</a></li>
+                            <?php } ?>
+                        </ul>
+                    </li>
+                <?php } if(isset($role['study_role'])) { ?>
+                    <li class="nav-item dropdown">
+                        <a href="javascript:void(0)" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false" id="participantDropdown">Participant</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="participant_list?forStudy=true" class="dropdown-item">View Participants</a></li>
+                            <?php if($role['study_role'] != 4){ ?>
+                                <li><a href="add_participant" class="dropdown-item">Add A Participant</a></li>
+                                <li><a href="remove_participant" class="dropdown-item">Remove A Participant</a></li>
+                            <?php } ?>
+                        </ul>
+                    </li>
+                <?php } if(isset($role['study_role']) && $role['study_role'] == 2) { ?>
+                    <li class="nav-item dropdown">
+                        <a href="javascript:void(0)" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false" id="manageDropdown">Manage</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="edit_study"  class="dropdown-item">Edit</a></li>
+                            <form method="post" class="d-inline" action="">
+                                <input type="hidden" name="randCheck" value="<?php echo $rand; ?>">
+                                <?php if ($row_study["is_active"] === "1"){ ?>
+                                    <li><input class="dropdown-item" type="submit" name="deactivate-btn" value="Deactivate" onclick="return confirm('Are you sure you want to deactivate the study \'<?php echo $row_study['short_name']; ?>\'? You cannot edit the study if it is inactive.');"></li>
+                                <?php } else { ?>
+                                    <li><input class="dropdown-item" type="submit" name="activate-btn" value="Activate" onclick="return confirm('Are you sure you want to activate the study \'<?php echo $row_study['short_name']; ?>\'?');"></li>
+                                <?php } ?>
+                            </form>
+                        </ul>
+                <?php  }
+                $pi_sql = "SELECT COUNT(study_role) AS Count FROM Researcher_Study WHERE study_ID = " . Session::get("study_ID") . " AND study_role = 2 AND is_active = 1;";
+                $pi_result = $pdo->query($pi_sql);
+                $pi_count = $pi_result->fetch(PDO::FETCH_ASSOC);
+                if ($row_study['is_active'] == 1 && isset($role['study_role']) && ($role['study_role'] != 2 || $pi_count['Count'] > 1)) { ?>
+                    <li class="nav-item">
+                        <form method="post" class="d-inline" action="">
+                            <input type="hidden" name="randCheck" value="<?php echo $rand; ?>">
+                            <input style="background:none;width: 100%;border:none;text-align: start;" class="nav-link" type="submit" name="leave-btn" value="Leave" onclick="return confirm('Are you sure you want to leave the study? You will no longer have access to the study \'<?php echo $row_study['short_name']; ?>\' unless a researcher adds you back.');">
+                        </form>
+                    </li>
+                <?php } ?>
+                <li class="nav-item">
+                    <a href="study_list" class="nav-link">Back</a>
+                </li>
             </ul>
         </div>
     </nav>
