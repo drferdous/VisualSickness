@@ -8,7 +8,9 @@ if (Session::get('study_ID') == 0) {
 }
 Session::requirePIorRA(Session::get('study_ID'), Database::getInstance()->pdo);
 
-if (!isset($_POST['referrer'])) $referrer = ltrim(parse_url($_SERVER['HTTP_REFERER'], PHP_URL_PATH), '/');
+if (!isset($_POST['referrer'])) {
+    if (isset($_SERVER['HTTP_REFERER'])) $referrer = ltrim(parse_url($_SERVER['HTTP_REFERER'], PHP_URL_PATH), '/') . '?' . parse_url($_SERVER['HTTP_REFERER'], PHP_URL_QUERY);
+}
 else $referrer = $_POST['referrer'];
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['addNewParticipant']) && Session::CheckPostID($_POST)){
@@ -21,7 +23,7 @@ if (isset($userAdd)) {
         const divMsg = document.getElementById("flash-msg");
         if (divMsg.classList.contains("alert-success")){
             setTimeout(function(){
-                location.href = '<?php echo $referrer; ?>';
+                location.href = '<?= isset($referrer) ? $referrer : 'view_study'; ?>';
             }, 1000);
         }
     </script>
@@ -29,17 +31,17 @@ if (isset($userAdd)) {
 <div class="card">
     <div class="card-header">
           <h3 class="text-center float-left">Add New Participant</h3>
-          <span class="float-right"> <a href='<?= $referrer ?>' class="btn btn-primary redirectUser">Back</a></span>
+          <?php if (isset($referrer)) { ?><span class="float-right"> <a href='<?= $referrer ?>' class="btn btn-primary redirectUser">Back</a></span><?php } ?>
     </div>
     <div class="card-body">
             <div style="max-width:600px; margin:0px auto">
-            <form class="" action="" method="post">
+            <form class="" action="addParticipant" method="post">
                 <?php 
                     $rand = bin2hex(openssl_random_pseudo_bytes(16));
                     Session::set("post_ID", $rand);
                 ?>
                 <input type="hidden" name="randCheck" value="<?php echo $rand; ?>">
-                <input type="hidden" name="referrer" value="<?= $referrer ?>">
+                <?php if (isset($referrer)) { ?><input type="hidden" name="referrer" value="<?= $referrer ?>"><?php } ?>
                 <div style="margin-block: 6px;">
                     <small style='color: red'>
                         * Required Field
@@ -63,7 +65,7 @@ if (isset($userAdd)) {
                 </div>
                 <div class="form-group">
                   <label for="gender" class="required">Gender</label>
-                  <select class=form-control name="gender" id="gender" required>
+                  <select class=form-control name="gender" id="gender" required size="1">
                       <option <?= Util::getValueFromPost('gender', $_POST) === 'Male' ? 'selected' : '' ?> value="Male">Male</option>
                       <option <?= Util::getValueFromPost('gender', $_POST) === 'Female' ? 'selected' : '' ?> value="Female">Female</option>
                       <option <?= Util::getValueFromPost('gender', $_POST) === 'Other' ? 'selected' : '' ?> value="Other">Other</option>
@@ -72,13 +74,13 @@ if (isset($userAdd)) {
                 </div>
                 <div class="form-group">
                   <label for="ethnicity" class="required">Race/Ethnicity</label>
-                  <select class=form-control name="ethnicity" id="ethnicity" required>
-                      <option <?= Util::getValueFromPost('ethnicity', $_POST) === 'aian' ? 'selected' : '' ?> value="aian">American Indian or Alaska Native</option>
-                      <option <?= Util::getValueFromPost('ethnicity', $_POST) === 'asian' ? 'selected' : '' ?> value="asian">Asian</option>
-                      <option <?= Util::getValueFromPost('ethnicity', $_POST) === 'black' ? 'selected' : '' ?> value="black">Black or African American</option>
-                      <option <?= Util::getValueFromPost('ethnicity', $_POST) === 'nhopi' ? 'selected' : '' ?> value="nhopi">Native Hawaiian or Other Pacific Islander</option>
-                      <option <?= Util::getValueFromPost('ethnicity', $_POST) === 'white' ? 'selected' : '' ?> value="white">White</option>
-                      <option <?= Util::getValueFromPost('ethnicity', $_POST) === 'other' ? 'selected' : '' ?> value="other">Other</option>
+                  <select class=form-control name="ethnicity" id="ethnicity" required size="1">
+                      <option <?= Util::getValueFromPost('ethnicity', $_POST) === 'American Indian or Alaska Native' ? 'selected' : '' ?> value="American Indian or Alaska Native">American Indian or Alaska Native</option>
+                      <option <?= Util::getValueFromPost('ethnicity', $_POST) === 'Asian' ? 'selected' : '' ?> value="Asian">Asian</option>
+                      <option <?= Util::getValueFromPost('ethnicity', $_POST) === 'Black or African American' ? 'selected' : '' ?> value="Black or African American">Black or African American</option>
+                      <option <?= Util::getValueFromPost('ethnicity', $_POST) === 'Native Hawaiian or Other Pacific Islander' ? 'selected' : '' ?> value="Native Hawaiian or Other Pacific Islander">Native Hawaiian or Other Pacific Islander</option>
+                      <option <?= Util::getValueFromPost('ethnicity', $_POST) === 'White' ? 'selected' : '' ?> value="White">White</option>
+                      <option <?= Util::getValueFromPost('ethnicity', $_POST) === 'Other1' ? 'selected' : '' ?> value="Other">Other</option>
                       <option <?= Util::getValueFromPost('ethnicity', $_POST) === 'Prefer Not To Answer' || Util::getValueFromPost('ethnicity', $_POST) === '' ? 'selected' : '' ?> value="Prefer Not To Answer">Prefer Not To Answer</option> 
                   </select>      
                 </div>
@@ -88,12 +90,12 @@ if (isset($userAdd)) {
                 </div>
                 <div class="form-group">
                   <label for="education" class="required">Education</label>
-                  <select class=form-control name="education" id="education" required> 
-                      <option <?= Util::getValueFromPost('education', $_POST) === 'elementary' ? 'selected' : '' ?> value="elementary">Elementary School</option>
-                      <option <?= Util::getValueFromPost('education', $_POST) === 'middle' ? 'selected' : '' ?> value="middle">Middle School</option>
-                      <option <?= Util::getValueFromPost('education', $_POST) === 'high' ? 'selected' : '' ?> value="high">High School</option>
-                      <option <?= Util::getValueFromPost('education', $_POST) === 'twoYear' ? 'selected' : '' ?> value="twoYear">2 Year College</option>
-                      <option <?= Util::getValueFromPost('education', $_POST) === 'fourYear' ? 'selected' : '' ?> value="fourYear">4 Year College</option>
+                  <select class=form-control name="education" id="education" required size="1"> 
+                      <option <?= Util::getValueFromPost('education', $_POST) === 'Elementary School' ? 'selected' : '' ?> value="Elementary School">Elementary School</option>
+                      <option <?= Util::getValueFromPost('education', $_POST) === 'Middle School' ? 'selected' : '' ?> value="Middle School">Middle School</option>
+                      <option <?= Util::getValueFromPost('education', $_POST) === 'High School' ? 'selected' : '' ?> value="High School">High School</option>
+                      <option <?= Util::getValueFromPost('education', $_POST) === '2 Year College' ? 'selected' : '' ?> value="2 Year College">2 Year College</option>
+                      <option <?= Util::getValueFromPost('education', $_POST) === '4 Year College' ? 'selected' : '' ?> value="4 Year College">4 Year College</option>
                       <option <?= Util::getValueFromPost('education', $_POST) === 'Prefer Not To Answer' || Util::getValueFromPost('education', $_POST) === '' ? 'selected' : '' ?> value="Prefer Not To Answer">Prefer Not To Answer</option>
                   </select>
                 </div>
