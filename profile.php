@@ -104,10 +104,14 @@ if (Session::get('roleid') == '1') {
                         </div>
                       </div>
                      <?php } ?>
+                    <?php if (Session::get("roleid") == '1' && $purpose === "edit") { ?>
                     <div class="form-group">
                       <button type="submit" name="update" class="btn btn-success">Update</button>
-                      <a class="btn btn-primary" href="change_password">Password Change</a>
+                      <?php if (Session::get("id") == $getUinfo->id) { ?>
+                        <a class="btn btn-primary" href="change_password">Password Change</a>
+                        <?php } ?>
                     </div>
+                    <?php } ?>
                   </form>
 </div>
     <?php } ?>
