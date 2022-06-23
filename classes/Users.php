@@ -23,7 +23,7 @@ class Users{
     $email = $data['email'];
     $affiliationid = $data['affiliationid'];    
     $mobile = $data['mobile'];
-    $roleid = $data['roleid'];
+    $roleid = intval($data['roleid']);
       
     if (empty($name) || empty($email) || empty($roleid) || empty($affiliationid)){
         return Util::generateErrorMessage("User registration fields must not be empty!");
@@ -33,6 +33,9 @@ class Users{
     }
     if (Util::checkExistEmail($email, $this->db) !== FALSE) {
         return Util::generateErrorMessage("This email already exists. Try another email!");
+    }
+    if ($roleid < 2 || $roleid > 4){
+        return Util::generateErrorMessage("Invalid role was selected!");
     }
     $affil_sql = "SELECT domain from Affiliation WHERE id = $affiliationid;";
     $affil_result = $this->db->pdo->query($affil_sql);
@@ -579,34 +582,37 @@ class Users{
     }
     
     // update user password without old password
-    public function resetPass($email, $new_pass) {
-        if ($new_pass == "") {
+    public function resetPass($email, $new_pass, $confirm_pass) {
+        if ($new_pass == "" || $confirm_pass == "") {
             return Util::generateErrorMessage("Password field must not be empty!");
         }
         if (strlen($new_pass) < 6) {
             return Util::generateErrorMessage("New password must be at least 6 characters!");
         }
-        $new_pass = SHA1($new_pass);
-        $id_sql = "SELECT id FROM tbl_users WHERE email = :email LIMIT 1";
-        $stmt = $this->db->pdo->prepare($id_sql);
-        $stmt->bindValue(':email', trim($email));
-        $stmt->execute();
-        $id = $stmt->fetch(PDO::FETCH_ASSOC)['id'];
-        $sql = "UPDATE tbl_users SET
-            password=:password,
-            updated_by = $id,
-            updated_at = CURRENT_TIMESTAMP
-            WHERE email = :email";
-        
-        $stmt = $this->db->pdo->prepare($sql);
-        $stmt->bindValue(':password', $new_pass);
-        $stmt->bindValue(':email', trim($email));
-        $result = $stmt->execute();
-        
-        if (!$result) {
-            return Util::generateErrorMessage("Password did not change!");
+        if(strcmp($new_pass,$confirm_pass)!= 0) {
+            return Util::generateErrorMessage("Passwords do not match!");
+        } else {
+            $new_pass = SHA1($new_pass);
+            $id_sql = "SELECT id FROM tbl_users WHERE email = :email LIMIT 1";
+            $stmt = $this->db->pdo->prepare($id_sql);
+            $stmt->bindValue(':email', trim($email));
+            $stmt->execute();
+            $id = $stmt->fetch(PDO::FETCH_ASSOC)['id'];
+            $sql = "UPDATE tbl_users SET
+                password=:password,
+                updated_by = $id,
+                updated_at = CURRENT_TIMESTAMP
+                WHERE email = :email";
+            
+            $stmt = $this->db->pdo->prepare($sql);
+            $stmt->bindValue(':password', $new_pass);
+            $stmt->bindValue(':email', trim($email));
+            $result = $stmt->execute();
+            
+            if (!$result) {
+                return Util::generateErrorMessage("Password did not change!");
+            }
         }
-        
     }
 
     // Change User pass By Id
@@ -614,19 +620,25 @@ class Users{
 
       $old_pass = $data['old_password'];
       $new_pass = $data['new_password'];
+      $confirm_pass = $data['confirm_password'];
+      
 
 
-      if ($old_pass == "" || $new_pass == "" ) {
+      if ($old_pass == "" || $new_pass == "" || $confirm_pass == "") {
           return Util::generateErrorMessage("Password field must not be empty!");
       }
       elseif (strlen($new_pass) < 6) {
           return Util::generateErrorMessage("New password must be at least 6 characters!");
       }
-         $oldPass = $this->CheckOldPassword($userid, $old_pass);
-         if ($oldPass == FALSE) {
-            return Util::generateErrorMessage("Old password is not correct!");
-         }
-         else{
+      
+     $oldPass = $this->CheckOldPassword($userid, $old_pass);
+     if ($oldPass == FALSE) {
+        return Util::generateErrorMessage("Old password is not correct!");
+     }
+     else{
+        if(strcmp($new_pass, $confirm_pass) != 0) {
+            return Util::generateErrorMessage("Passwords do not match!");
+        } else {
             $new_pass = SHA1($new_pass);
             $sql = "UPDATE tbl_users SET
                 password=:password,
@@ -638,7 +650,7 @@ class Users{
             $stmt->bindValue(':localId', Session::get('id'));
             $stmt->bindValue(':id', $userid);
             $result =   $stmt->execute();
-
+    
           if ($result) {
             return Util::generateSuccessMessage("Password changed!");
             Session::set('msg', Util::generateSuccessMessage("Your password is now changed!"));
@@ -646,7 +658,8 @@ class Users{
           else {
             return Util::generateErrorMessage("Password did not change!");
           }
+        }
 
-         }
+     }
     }
 }

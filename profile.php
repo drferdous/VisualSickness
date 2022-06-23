@@ -28,12 +28,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update']) && Session::
         echo "updateUser is not set properly.";
     }
 }
+
+if (Session::get('roleid') == '1') {
+    $homepage = "userlist";
+} else {
+    $homepage = "view_study";
+}
 ?>
 
 <div class="card">
     <div class="card-header">
         <h3 class="float-left">User Profile</h3>
-        <span class="float-right"><a href="index" class="btn btn-primary">Back</a></span>
+        <span class="float-right"><a href="<?php echo $homepage; ?>" class="btn btn-primary">Back</a></span>
     </div>
     <div class="card-body">
         <?php
@@ -84,7 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update']) && Session::
                           <select class="form-control" name="roleid" id="roleid">
 
                           <?php 
-                            $sql = "SELECT role FROM tbl_roles ORDER BY id ASC;";
+                            $sql = "SELECT role FROM tbl_roles WHERE id > 1 ORDER BY id ASC;";
                             $result = $pdo->query($sql);
                             for ($i = 1; $i <= $result->rowCount(); ++$i){
                               $row = $result->fetch(PDO::FETCH_ASSOC);
