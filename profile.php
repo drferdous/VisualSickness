@@ -90,17 +90,16 @@ if (Session::get('roleid') == '1') {
                           <select class="form-control" name="roleid" id="roleid">
 
                           <?php 
-                            $sql = "SELECT role FROM tbl_roles WHERE id > 1 ORDER BY id ASC;";
+                            $sql = "SELECT id, role FROM tbl_roles WHERE id > 1 ORDER BY id ASC;";
                             $result = $pdo->query($sql);
-                            for ($i = 1; $i <= $result->rowCount(); ++$i){
-                              $row = $result->fetch(PDO::FETCH_ASSOC);
-                              if ($getUinfo->roleid == $i){ ?>
-                                <option value="<?php echo $i; ?>" selected><?php echo $row["role"]; ?></option>
-                        <?php } 
+                            while ($row = $result->fetch(PDO::FETCH_ASSOC)){
+                                if ($getUinfo->roleid == $row["id"]){ ?>
+                                <option value="<?php echo $row["id"]; ?>" selected><?php echo $row["role"]; ?></option>
+                          <?php } 
                               else{ ?>  
-                                <option value="<?php echo $i; ?>"><?php echo $row["role"]; ?></option>
-                        <?php } ?>
-                     <?php } ?>
+                                <option value="<?php echo $row["id"]; ?>"><?php echo $row["role"]; ?></option>
+                          <?php }
+                            } ?>
                         </select>
                         </div>
                       </div>

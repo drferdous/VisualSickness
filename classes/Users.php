@@ -127,9 +127,8 @@ class Users{
   }
 
     // User Login Authentication Method
-    public function userLoginAuthentication($data){
-      $email = trim($data['email']);
-      $password = $data['password'];
+    public function userLoginAuthentication($email, $password){
+      $email = trim($email);
 
 
       $checkEmail = Util::checkExistEmail($email, $this->db);
@@ -232,10 +231,13 @@ class Users{
     if (!empty($mobile) && filter_var($mobile,FILTER_SANITIZE_NUMBER_INT) !== $mobile) {
         return Util::generateErrorMessage("Please enter only numeric characters for phone number!");
     }
-    if (isset($data["roleid"])){
-        $roleid = $data["roleid"];
+    if (Session::get("roleid") != 1 && isset($data["roleid"])){
+        return Util::generateErrorMessage("You do not have permission to change your role!");
     }
-    
+    $roleid = $data["roleid"];
+    if ($roleid < 2 || $roleid > 4){
+        return Util::generateErrorMessage("Please select a valid role!");
+    }
     $sql = "UPDATE tbl_users SET
             name = :name,
             mobile = :mobile, "
@@ -583,6 +585,7 @@ class Users{
     
     // update user password without old password
     public function resetPass($email, $new_pass, $confirm_pass) {
+        $email = trim($email);
         if ($new_pass == "" || $confirm_pass == "") {
             return Util::generateErrorMessage("Password field must not be empty!");
         }
