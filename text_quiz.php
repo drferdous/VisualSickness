@@ -66,12 +66,14 @@ $study_is_active = $study_result->fetch(PDO::FETCH_ASSOC)['is_active'] == 1;
 <div class="card">
     <div class="card-header">
             <h3>
-                <?php if(($role['study_role'] == 2 || $id_row['created_by'] == Session::get('id')) && $study_is_active) { ?>
+                <span class="float-right"> <a href="session_details" class="btn btn-primary ml-2">Back</a></span>
+                <?php   
+                if ($ssq_ID !== -1) { ?>
+                    <?php if(($role['study_role'] == 2 || $id_row['created_by'] == Session::get('id')) && $study_is_active) { ?>
                     <form class="float-right ml-2" onsubmit="return confirm('Are you sure you want to delete this SSQ? This action cannot be undone.');" action="delete_quiz" method="post">
                         <button type="submit" name="deleteQuiz" class="btn btn-danger">Delete</button>
                     </form>
-                <?php }
-                if ($ssq_ID !== -1) { ?>
+                    <?php } ?>
                     <form class="float-right" action="" method="post">
                         <button type="submit" name="viewResults" class="btn btn-success">Results</button>
                     </form>
@@ -454,16 +456,16 @@ $study_is_active = $study_result->fetch(PDO::FETCH_ASSOC)['is_active'] == 1;
     else{ ?>
         <input type="hidden" id="code" name="code" value="">
     <?php } ?>
-    <span class="float-right"> <a href='session_details' class="btn btn-danger redirectUser ml-2 mr-2">Cancel</a></span>
     <?php if ($ssq_ID == -1){ ?>
-        <input type="submit" class="btn btn-success float-right" value="Submit" id="submitButton">
+        <center><input type="submit" class="btn btn-success justify-content-center" value="Submit"></center>
         <input type="hidden" name="submitQuiz" value="submitQuiz">
     <?php }
           else{ ?>
         <?php
             if(($role['study_role'] == 2 || $id_row['created_by'] == Session::get('id')) && $study_is_active) {
         ?>
-        <input type="submit" class="btn btn-success float-right" value="Update">
+        <br>
+        <center><input type="submit" class="btn btn-success justify-content-center" value="Update"></center>
         <input type="hidden" name="submitQuiz" value="submitQuiz">
     <?php }
         } ?>
@@ -489,6 +491,11 @@ $study_is_active = $study_result->fetch(PDO::FETCH_ASSOC)['is_active'] == 1;
                 for (let i = 0; i < radioButtons.length; ++i){
                     if (parseInt(radioButtons[i].getAttribute("value"), 10) === <?php echo $row[$colNum]; ?>){
                         radioButtons[i].setAttribute("checked", "checked");
+                    }
+                    else{
+                    <?php if (Session::get("id") != $id_row["created_by"] && $role["study_role"] != 2) {?>
+                        radioButtons[i].setAttribute("disabled", "");
+                    <?php } ?>
                     }
                 }
             <?php } ?>
