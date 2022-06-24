@@ -116,7 +116,7 @@ class Studies {
     $this->db->pdo->beginTransaction();
     $result2 = '';
     try {
-        $sql = "INSERT INTO Demographics (age, gender, education, race_ethnicity) 
+        $sql = "INSERT INTO demographics (age, gender, education, race_ethnicity) 
         VALUES(:age, :gender, :education, :race_ethnicity);";  
         $stmt = $this->db->pdo->prepare($sql);
         

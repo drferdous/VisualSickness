@@ -31,7 +31,7 @@
             }
         }
                      
-        $sql = "DELETE FROM pwdReset WHERE pwdResetEmail=?;";
+        $sql = "DELETE FROM password_reset WHERE password_reset_email=?;";
         $stmt = $pdo->prepare($sql);
         if (!$stmt) {
             header('Location: ../forgot_password.php?success=false');
@@ -41,7 +41,7 @@
             $stmt->execute();
         }
                 
-        $sql = "INSERT INTO pwdReset (pwdResetEmail, pwdResetSelector, pwdResetToken, pwdResetExpires) VALUES (?, ?, ?, ?);";
+        $sql = "INSERT INTO password_reset (password_reset_email, password_reset_selector, password_reset_token, password_reset_expires) VALUES (?, ?, ?, ?);";
         $stmt = $pdo->prepare($sql);
         if (!$stmt) {
             header('Location: ../forgot_password.php?success=false');

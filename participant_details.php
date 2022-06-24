@@ -7,10 +7,10 @@
     $iv = hex2bin($_POST["iv"]);
     $participant_ID = Crypto::decrypt($_POST["participant_ID"], $iv);
     
-    $sql = "SELECT * FROM Participants AS P
-            INNER JOIN Demographics AS D
-            ON P.demographics_id = D.ID
-            WHERE participant_ID = " . $participant_ID . "
+    $sql = "SELECT * FROM participants AS P
+            INNER JOIN demographics AS D
+            ON P.demographics_id = D.demographics_id
+            WHERE participant_id = " . $participant_ID . "
             LIMIT 1;";
     $result = $pdo->query($sql);
     $row = $result->fetch(PDO::FETCH_ASSOC);
@@ -62,7 +62,7 @@
                     </tr>
                     <tr>
                         <th>Age</th>
-                        <td><?= $row["Age"] ?></td>
+                        <td><?= $row["age"] ?></td>
                     </tr>
                     <tr>
                         <th>Weight</th>
@@ -70,15 +70,15 @@
                     </tr>
                     <tr>
                         <th>Gender</th>
-                        <td><?= $row["Gender"] ?></td>
+                        <td><?= $row["gender"] ?></td>
                     </tr>
                     <tr>
                         <th>Education</th>
-                        <td><?= $row["Education"] ?></td>
+                        <td><?= $row["education"] ?></td>
                     </tr>
                     <tr>
                         <th>Race Ethnicity</th>
-                        <td><?= $row["Race_Ethnicity"] ?></td>
+                        <td><?= $row["race_ethnicity"] ?></td>
                     </tr>
                     <tr>
                         <th>Occupation</th>
