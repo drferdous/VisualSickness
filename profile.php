@@ -93,7 +93,7 @@ if (Session::get('roleid') == '1') {
                           <select class="form-control" name="roleid" id="roleid">
 
                           <?php 
-                            $sql = "SELECT id, role FROM tbl_roles WHERE id > 1 ORDER BY id ASC;";
+                            $sql = "SELECT id, role FROM user_roles WHERE id > 1 ORDER BY id ASC;";
                             $result = $pdo->query($sql);
                             while ($row = $result->fetch(PDO::FETCH_ASSOC)){
                                 if ($getUinfo->roleid == $row["id"]){ ?>

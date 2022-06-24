@@ -97,7 +97,7 @@
                 <select class="form-control" name="quiz_type" id="quiz_type" required>
                     <option value="" disabled selected hidden>Choose Quiz Type...</option>
                     <?php
-                        $sql = "SELECT id, type FROM SSQ_type;";
+                        $sql = "SELECT id, type FROM ssq_type;";
                         $result = $pdo->query($sql);
                         while ($row = $result->fetch(PDO::FETCH_ASSOC)){
                             echo "<option value=\"" . $row['id'] . "\">";

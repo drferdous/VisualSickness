@@ -62,7 +62,7 @@ if (isset($userRegistration)) {
                     <label for="sel1" class="required">Select User Role</label>
                     <select class="form-control" name="roleid" id="sel1" required>
                       <?php 
-                          $sql = "SELECT id, role FROM tbl_roles WHERE id > 1;";
+                          $sql = "SELECT id, role FROM user_roles WHERE id > 1;";
                           $result = $pdo->query($sql);
                           while ($row = $result->fetch(PDO::FETCH_ASSOC)){ ?>
                             <option <?= Util::getValueFromPost('roleid', $_POST) == $row['id'] ? 'selected' : ''; ?> value='<?= $row['id'] ?>'><?= $row['role'] ?></option>

@@ -196,7 +196,7 @@ if (isset($_POST['remove-session-btn']) && Session::CheckPostID($_POST)){
                     
                     while ($row = $result->fetch(PDO::FETCH_ASSOC)){
                         $ssq_times = "SELECT name FROM SSQ_times WHERE id = " . $row["ssq_time"];
-                        $ssq_type = "SELECT type FROM SSQ_type WHERE id = " . $row["ssq_type"];
+                        $ssq_type = "SELECT type FROM ssq_type WHERE id = " . $row["ssq_type"];
                         $result_times = $pdo->query($ssq_times);
                         $ssq_name = $result_times->fetch(PDO::FETCH_ASSOC)["name"];
                         $result_type = $pdo->query($ssq_type);
