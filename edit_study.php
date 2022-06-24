@@ -89,7 +89,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['updateStudy']) && Sess
                 <input type="text" name="description" value="<?php echo $description;?>" class="form-control" id="description">
             </div>
             <div class="form-group">
-                <label for="session_times">Session Times</label>
+                <label for="session_times">Session Names</label>
                 <input type="text" name="session_times" value="<?= implode(', ', $session_times); ?>" class="form-control" id="session_times">
                 <small>Format: comma-separated (e.g., Session 1, Session 2)</small>
             </div>

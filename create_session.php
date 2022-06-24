@@ -56,10 +56,10 @@ $role = $role_result->fetch(PDO::FETCH_ASSOC);
         <h3 class="text-center float-left">
             Create a Session
         </h3>
+        <a class="float-right btn btn-primary" href="study_list">Back</a>
         <?php if(isset($role['study_role']) && $role['study_role'] != 4){ ?>
-        <a class="float-right btn btn-primary" href="add_participant">Add Participant</a>
+        <a class="float-right btn btn-primary mr-2" href="add_participant">Add Participant</a>
         <?php } ?>
-        <a class="float-right btn btn-primary" href="study_list" style="transform: translateX(-10px)">Back </a>
     </div>
         <div class="card-body">
             <form class="" action="" method="post">
@@ -80,9 +80,9 @@ $role = $role_result->fetch(PDO::FETCH_ASSOC);
                         <?php
                     
                         $sql = "SELECT participant_id,anonymous_name, dob, iv
-                    FROM Participants 
-                    WHERE is_active = 1
-                    AND study_id = " . Session::get('study_ID') . ";";
+                                FROM Participants 
+                                WHERE is_active = 1
+                                AND study_id = " . Session::get('study_ID') . ";";
                                     
                         $result = $pdo->query($sql);
                         while ($row = $result->fetch(PDO::FETCH_ASSOC)){
@@ -95,7 +95,7 @@ $role = $role_result->fetch(PDO::FETCH_ASSOC);
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="session_time" class="required">Select a Session Time</label>
+                    <label for="session_time" class="required">Select a Session Name</label>
                     <select class="form-control" name="session_time" id="session_time" required disabled>
                         <option value="" selected hidden disabled>Please Choose...</option>
                     </select>

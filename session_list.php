@@ -53,7 +53,7 @@ Session::requireResearcherOrUser(Session::get('study_ID'), $pdo);
                 <thead class="text-center">
                     <tr>
                         <th>Participant Name</th>
-                        <th>Session Timings</th>
+                        <th>Session Names</th>
                     </tr>
                 </thead>
                     

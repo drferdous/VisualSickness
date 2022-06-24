@@ -57,7 +57,7 @@ if (isset($insert_study)) {
                   <input type="text" value="<?= Util::getValueFromPost('description', $_POST); ?>" id="description" name="description"  class="form-control">
                 </div>
                 <div class="form-group">
-                  <label for="session_times" class="required">Input Session Times</label>
+                  <label for="session_times" class="required">Input Session Names</label>
                   <input type="text" value="<?= Util::getValueFromPost('session_times', $_POST); ?>" id="session_times" name="session_times" class="form-control" required>
                   <small>Format: comma-separated (e.g., Session 1, Session 2)</small>
                 </div>

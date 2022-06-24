@@ -73,7 +73,7 @@ if (isset($_POST['delete-ssq-btn']) && Session::CheckPostID($_POST)){
                 $result = $pdo->query($sql);
                 $row = $result->fetch(PDO::FETCH_ASSOC);
             ?>
-            <a href="session_list" style="transform: translateX(-10px)" class="btn btn-primary">Back</a>
+            <a href="session_list" class="float-right btn btn-primary">Back</a>
 
             <?php
                 $sql = "SELECT end_time
@@ -114,7 +114,7 @@ if (isset($_POST['delete-ssq-btn']) && Session::CheckPostID($_POST)){
                 $role = $role_result->fetch(PDO::FETCH_ASSOC);
         
                 if ($study_is_active && $isSessionActive && $areQuizTimesAvailable && ($id_row['created_by'] == Session::get('id') || $role['study_role'] == 2)){?>
-                    <a href="choose_quiz" class="btn btn-primary">New SSQ</a>
+                    <a href="choose_quiz" class="float-right btn btn-primary mr-2">New SSQ</a>
           <?php }?>
         </span>
     </div>
@@ -179,7 +179,7 @@ if (isset($_POST['delete-ssq-btn']) && Session::CheckPostID($_POST)){
                     ?>
                 </tr>
                 <tr>
-                    <th>Session Time</th>
+                    <th>Session Name</th>
                     <?php
                     $session_time_sql = "SELECT name FROM Session_times
                                          WHERE id = " . $row_session['session_time'];
