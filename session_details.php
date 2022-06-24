@@ -187,9 +187,9 @@ if (isset($_POST['remove-session-btn']) && Session::CheckPostID($_POST)){
                     <?php
                     
                     $sql = "SELECT ssq.ssq_id, ssq.ssq_time, ssq.ssq_type
-                            FROM ssq JOIN SSQ_times ON (ssq.ssq_time = SSQ_times.id)
+                            FROM ssq JOIN ssq_times ON (ssq.ssq_time = ssq_times.id)
                             WHERE ssq.session_id = $session_ID
-                            AND SSQ_times.is_active = 1
+                            AND ssq_times.is_active = 1
                             AND ssq.is_active = 1
                             ORDER BY ssq.ssq_time ASC;";
                     $result = $pdo->query($sql);

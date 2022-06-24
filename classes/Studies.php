@@ -625,7 +625,7 @@ public function takeSSQ($quiz_type, $ssq_time){
             $remove = implode(', ', array_map(function ($time) { return "'$time'"; }, $removed_ssq_times));
             
             
-            $sql = "SELECT ssq_id FROM ssq WHERE ssq_time IN (SELECT id FROM SSQ_times WHERE study_id = $study_ID AND name IN ($remove) AND is_active = 1)";
+            $sql = "SELECT ssq_id FROM ssq WHERE ssq_time IN (SELECT id FROM ssq_times WHERE study_id = $study_ID AND name IN ($remove) AND is_active = 1)";
             $result_ssq = $pdo->query($sql);
             
             if($result_ssq->fetch(PDO::FETCH_ASSOC)) {
