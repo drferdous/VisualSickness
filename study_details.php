@@ -74,7 +74,7 @@ $sql_times = "SELECT name FROM ssq_times
 $result_times = $pdo->query($sql_times);
 
 $sql_session_times = "SELECT name FROM session_times
-              WHERE study_ID = " . $study_ID . " AND is_active = 1;";
+              WHERE study_id = " . $study_ID . " AND is_active = 1;";
 $result_session_times = $pdo->query($sql_session_times);
                     
 $role_sql = "SELECT study_role FROM researchers WHERE study_id = " . Session::get("study_ID") . " AND  researcher_id = " . Session::get("id") . " AND is_active = 1;";
@@ -109,7 +109,7 @@ if($timezone < 0) {
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLinkRight">
                         <?php if($row_study['is_active'] == 1) { ?>
                             <li class="dropdown-submenu">
-                                <a href="javascript:void(0)" class="nested-dropdown dropdown-item">Researcher<i class="fas fa-caret-right ml-2"></i></a>
+                                <a href="javascript:void(0)" class="nested-dropdown dropdown-item"><i class="fas fa-caret-left mr-2"></i>Researcher</a>
                                 <ul class="dropdown-menu dropdown-submenu">
                                     <li><a href="researcher_list" class="dropdown-item nested-dropdown-item">View Researchers</a></li>
                                     <?php if(isset($role['study_role']) && $role['study_role'] == 2){ ?>
@@ -133,9 +133,9 @@ if($timezone < 0) {
                                     <?php } ?>
                                 </ul>
                             </li>
-                        <?php } if(isset($role['study_role'])) { ?>
+                        <?php if(isset($role['study_role'])) { ?>
                             <li class="dropdown-submenu">
-                                <a href="javascript:void(0)" class="nested-dropdown dropdown-item">Participant<i class="fas fa-caret-right ml-2"></i></a>
+                                <a href="javascript:void(0)" class="nested-dropdown dropdown-item"><i class="fas fa-caret-left mr-2"></i>Participant</a>
                                 <ul class="dropdown-menu dropdown-submenu">
                                     <li><a href="participant_list?forStudy=true" class="dropdown-item">View Participants</a></li>
                                     <?php if($role['study_role'] != 4){ ?>
@@ -144,9 +144,10 @@ if($timezone < 0) {
                                     <?php } ?>
                                 </ul>
                             </li>        
-                        <?php } if(isset($role['study_role']) && $role['study_role'] == 2) { ?>
+                        <?php }
+                        } if(isset($role['study_role']) && $role['study_role'] == 2) { ?>
                             <li class="dropdown-submenu">
-                                <a href="javascript:void(0)" class="nested-dropdown dropdown-item">Manage<i class="fas fa-caret-right ml-2"></i></a>
+                                <a href="javascript:void(0)" class="nested-dropdown dropdown-item"><i class="fas fa-caret-left mr-2"></i>Manage</a>
                                 <ul class="dropdown-menu dropdown-submenu">
                                     <li><a href="edit_study"  class="dropdown-item">Edit Study</a></li>
                                     <form method="post" class="d-inline" action="">
@@ -162,7 +163,7 @@ if($timezone < 0) {
                         <?php } ?>
                         
                         <?php 
-                        $pi_sql = "SELECT COUNT(study_role) AS Count FROM researcher WHERE study_id = " . Session::get("study_ID") . " AND study_role = 2 AND is_active = 1;";
+                        $pi_sql = "SELECT COUNT(study_role) AS Count FROM researchers WHERE study_id = " . Session::get("study_ID") . " AND study_role = 2 AND is_active = 1;";
                         $pi_result = $pdo->query($pi_sql);
                         $pi_count = $pi_result->fetch(PDO::FETCH_ASSOC);
                         if ($row_study['is_active'] == 1 && isset($role['study_role']) && ($role['study_role'] != 2 || $pi_count['Count'] > 1)) { ?>
@@ -209,7 +210,7 @@ if($timezone < 0) {
                             <?php } ?>
                         </ul>
                     </li>
-                <?php } if(isset($role['study_role'])) { ?>
+                <?php if(isset($role['study_role'])) { ?>
                     <li class="nav-item dropdown">
                         <a href="javascript:void(0)" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false" id="participantDropdown">Participant</a>
                         <ul class="dropdown-menu">
@@ -220,7 +221,8 @@ if($timezone < 0) {
                             <?php } ?>
                         </ul>
                     </li>
-                <?php } if(isset($role['study_role']) && $role['study_role'] == 2) { ?>
+                <?php } 
+                } if(isset($role['study_role']) && $role['study_role'] == 2) { ?>
                     <li class="nav-item dropdown">
                         <a href="javascript:void(0)" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false" id="manageDropdown">Manage</a>
                         <ul class="dropdown-menu">

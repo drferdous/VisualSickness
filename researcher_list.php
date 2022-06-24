@@ -8,7 +8,7 @@
     }
     $study_ID = Session::get('study_ID');
     $affil_sql = "SELECT users.affiliation_id FROM users
-                    JOIN Study AS study ON users.user_id = study.created_by
+                    JOIN study ON users.user_id = study.created_by
                     WHERE study.study_ID = $study_ID LIMIT 1;";
     $affil_result = $pdo->query($affil_sql);
     if (!(Session::get('roleid') == 1 && $affil_result->fetch(PDO::FETCH_ASSOC)['affiliation_id'] == Session::get('affiliationid'))) {
