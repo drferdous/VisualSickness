@@ -114,7 +114,7 @@
                     <?php
                         $session_ID = Session::get('session_ID'); 
                         $sql = "SELECT id, name
-                                FROM SSQ_times
+                                FROM ssq_times
                                 WHERE is_active = 1 AND study_id IN (SELECT study_ID
 									 FROM session
 			                         WHERE session_id = $session_ID) 

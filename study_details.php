@@ -70,7 +70,7 @@ $sql_study = "SELECT S.study_ID, S.is_active, S.full_name, S.short_name, S.IRB, 
 $result_study = $pdo->query($sql_study);
 $row_study = $result_study->fetch(PDO::FETCH_ASSOC);
 
-$sql_times = "SELECT name FROM SSQ_times
+$sql_times = "SELECT name FROM ssq_times
               WHERE study_ID = " . $study_ID . " AND is_active = 1;";
 $result_times = $pdo->query($sql_times);
 

@@ -437,7 +437,7 @@ public function takeSSQ($quiz_type, $ssq_time){
         return "('" . ucwords($time) . "'," . $study_ID . ")"; 
     }, $ssq_times));
     
-    $sql = "INSERT INTO SSQ_times (name, study_id) 
+    $sql = "INSERT INTO ssq_times (name, study_id) 
             VALUES " . $insert;
     $result = $this->db->pdo->query($sql);
     if (!$result){
@@ -512,7 +512,7 @@ public function takeSSQ($quiz_type, $ssq_time){
             return Util::generateErrorMessage("Something went wrong. Try editing again!");
         }
         
-        $old_times_sql = "SELECT name FROM SSQ_times WHERE study_id = $study_ID AND is_active = 1;";
+        $old_times_sql = "SELECT name FROM ssq_times WHERE study_id = $study_ID AND is_active = 1;";
         $old_times_res = $pdo->query($old_times_sql);
         $old_times = array();
         while ($row = $old_times_res->fetch(PDO::FETCH_ASSOC)) {
@@ -547,7 +547,7 @@ public function takeSSQ($quiz_type, $ssq_time){
         if (count($added_ssq_times) > 0) {
             // added 1 or more time names
             $added = implode(', ', array_map(function ($time) { return "'$time'"; }, $added_ssq_times));
-            $added_back_sql = "SELECT name FROM SSQ_times WHERE is_active = 0 AND study_id = $study_ID AND name IN ($added)";
+            $added_back_sql = "SELECT name FROM ssq_times WHERE is_active = 0 AND study_id = $study_ID AND name IN ($added)";
             $added_back_res = $pdo->query($added_back_sql);
             $added_back = array();
             while ($row = $added_back_res->fetch(PDO::FETCH_ASSOC)) {
@@ -556,7 +556,7 @@ public function takeSSQ($quiz_type, $ssq_time){
             if (count($added_back) > 0) {
                 // add back names
                 $added_back_str = implode(', ', array_map(function ($time) { return "'$time'"; }, $added_back));
-                $add_back_sql = "UPDATE SSQ_times SET is_active = 1 WHERE study_id = $study_ID AND name IN ($added_back_str);";
+                $add_back_sql = "UPDATE ssq_times SET is_active = 1 WHERE study_id = $study_ID AND name IN ($added_back_str);";
                 $result = $pdo->query($add_back_sql);
                 
                 if (!$result) {
@@ -572,7 +572,7 @@ public function takeSSQ($quiz_type, $ssq_time){
                 }, array_filter($added_ssq_times, function ($time) use($added_back) {
                     return !in_array($time, $added_back);
                 })));
-                $insert_sql = "INSERT INTO SSQ_times (name, study_id) VALUES $insert;";
+                $insert_sql = "INSERT INTO ssq_times (name, study_id) VALUES $insert;";
                 $result = $pdo->query($insert_sql);
                 
                 if (!$result) {
@@ -625,7 +625,7 @@ public function takeSSQ($quiz_type, $ssq_time){
             $remove = implode(', ', array_map(function ($time) { return "'$time'"; }, $removed_ssq_times));
             
             
-            $sql = "SELECT ssq_ID FROM SSQ WHERE ssq_time IN (SELECT id FROM SSQ_times WHERE study_id = $study_ID AND name IN ($remove) AND is_active = 1)";
+            $sql = "SELECT ssq_ID FROM SSQ WHERE ssq_time IN (SELECT id FROM ssq_times WHERE study_id = $study_ID AND name IN ($remove) AND is_active = 1)";
             $result_ssq = $pdo->query($sql);
             
             if($result_ssq->fetch(PDO::FETCH_ASSOC)) {
@@ -659,7 +659,7 @@ public function takeSSQ($quiz_type, $ssq_time){
                 // return "";
             } else {
             
-                $remove_sql = "UPDATE SSQ_times SET is_active = 0 WHERE study_id = $study_ID AND name IN ($remove)";
+                $remove_sql = "UPDATE ssq_times SET is_active = 0 WHERE study_id = $study_ID AND name IN ($remove)";
                 $result = $pdo->query($remove_sql);
                     
                 if (!$result) {

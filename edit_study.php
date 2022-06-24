@@ -47,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['updateStudy']) && Sess
             $description = $row['description'];
         }
         $ssq_times = array();
-        $ssq_times_sql = "SELECT name FROM SSQ_times WHERE is_active = 1 AND study_id = $study_ID;";
+        $ssq_times_sql = "SELECT name FROM ssq_times WHERE is_active = 1 AND study_id = $study_ID;";
         $ssq_times_result = $pdo->query($ssq_times_sql);
         while ($row = $ssq_times_result->fetch(PDO::FETCH_ASSOC)) {
             array_push($ssq_times, $row['name']);

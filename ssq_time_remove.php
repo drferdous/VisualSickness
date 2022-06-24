@@ -12,7 +12,7 @@
     $study_ID = $_POST["studyID"];
     $remove = $_POST["remove"];
     
-    $remove_sql = "UPDATE SSQ_times SET is_active = 0 WHERE study_id = $study_ID AND name IN ($remove)";
+    $remove_sql = "UPDATE ssq_times SET is_active = 0 WHERE study_id = $study_ID AND name IN ($remove)";
     $result = $pdo->query($remove_sql);
         
     if (!$result) {
@@ -21,7 +21,7 @@
         
     }
     
-    /*$inactive_sql = "UPDATE SSQ SET is_active = 0 WHERE ssq_time IN (SELECT id FROM SSQ_times WHERE study_id = $study_ID AND name IN ($remove))";
+    /*$inactive_sql = "UPDATE SSQ SET is_active = 0 WHERE ssq_time IN (SELECT id FROM ssq_times WHERE study_id = $study_ID AND name IN ($remove))";
     $result = $pdo->query($inactive_sql);
     
     if (!$result) {

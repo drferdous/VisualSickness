@@ -78,13 +78,13 @@ if (isset($_POST['remove-session-btn']) && Session::CheckPostID($_POST)){
                 $isSessionActive = !isset($result->fetch(PDO::FETCH_ASSOC)["end_time"]);
                 
                 $sql = "SELECT * 
-                        FROM SSQ_times 
+                        FROM ssq_times 
                         WHERE study_id = " . $row["study_ID"] . " 
                         AND is_active = 1;";
                 $result = $pdo->query($sql);
                 $totalQuizTimesAvailable = $result->rowCount();
                 
-                $sql = "SELECT * FROM SSQ_times 
+                $sql = "SELECT * FROM ssq_times 
                         WHERE id IN (SELECT ssq_time 
                                      FROM SSQ 
                                      WHERE session_ID = $session_ID
@@ -187,15 +187,15 @@ if (isset($_POST['remove-session-btn']) && Session::CheckPostID($_POST)){
                     <?php
                     
                     $sql = "SELECT SSQ.ssq_ID, SSQ.ssq_time, SSQ.ssq_type
-                            FROM SSQ JOIN SSQ_times ON (SSQ.ssq_time = SSQ_times.id)
+                            FROM SSQ JOIN ssq_times ON (SSQ.ssq_time = ssq_times.id)
                             WHERE SSQ.session_ID = $session_ID
-                            AND SSQ_times.is_active = 1
+                            AND ssq_times.is_active = 1
                             AND SSQ.is_active = 1
                             ORDER BY SSQ.ssq_time ASC;";
                     $result = $pdo->query($sql);
                     
                     while ($row = $result->fetch(PDO::FETCH_ASSOC)){
-                        $ssq_times = "SELECT name FROM SSQ_times WHERE id = " . $row["ssq_time"];
+                        $ssq_times = "SELECT name FROM ssq_times WHERE id = " . $row["ssq_time"];
                         $ssq_type = "SELECT type FROM SSQ_type WHERE id = " . $row["ssq_type"];
                         $result_times = $pdo->query($ssq_times);
                         $ssq_name = $result_times->fetch(PDO::FETCH_ASSOC)["name"];
