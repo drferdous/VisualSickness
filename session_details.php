@@ -73,7 +73,7 @@ if (isset($_POST['delete-ssq-btn']) && Session::CheckPostID($_POST)){
                 $result = $pdo->query($sql);
                 $row = $result->fetch(PDO::FETCH_ASSOC);
             ?>
-            <a href="session_list" class="float-right btn btn-primary">Back</a>
+            <a href="session_list" class="float-right btn btn-primary backBtn">Back</a>
 
             <?php
                 $sql = "SELECT end_time

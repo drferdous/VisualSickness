@@ -39,7 +39,7 @@ if (isset($editResearcher)) {
 <div class="card">
     <div class="card-header">
         <h3 class="float-left">Edit A Researcher</h3>
-          <span class="float-right"> <a href='<?= $referrer ?>' class="btn btn-primary">Back</a></span>
+        <span class="float-right"> <a href='<?= $referrer ?>' class="backBtn btn btn-primary">Back</a></span>
     </div>
     <div class="card-body pr-2 pl-2">
         <form class="" action="" method="post">
@@ -47,7 +47,8 @@ if (isset($editResearcher)) {
                 $rand = bin2hex(openssl_random_pseudo_bytes(16));
                 Session::set("post_ID", $rand);
             ?>
-            <input type="hidden" name="randCheck" value="<?php echo $rand; ?>">
+            <input type="hidden" name="randCheck" value="<?= $rand; ?>">
+            <input type="hidden" name="referrer" value="<?= $referrer ?>">
             <div style="margin-block: 6px;">
                 <small style='color: red'>
                     * Required Field

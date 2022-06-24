@@ -56,7 +56,7 @@ $role = $role_result->fetch(PDO::FETCH_ASSOC);
         <h3 class="text-center float-left">
             Create a Session
         </h3>
-        <a class="float-right btn btn-primary" href="study_list">Back</a>
+        <a class="float-right btn btn-primary backBtn" href="study_list">Back</a>
         <?php if(isset($role['study_role']) && $role['study_role'] != 4){ ?>
         <a class="float-right btn btn-primary mr-2" href="add_participant">Add Participant</a>
         <?php } ?>

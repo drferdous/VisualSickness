@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['removeResearcher']) &&
 <div class="card">
     <div class="card-header">
         <h3 class="float-left">Remove A Researcher</h3>
-        <span class="float-right"><a href="study_details" class="btn btn-primary">Back</a></span>
+        <span class="float-right"><a href="study_details" class="backBtn btn btn-primary">Back</a></span>
     </div>
     <div class="card-body pr-2 pl-2">
         <form class="" action="" method="post">

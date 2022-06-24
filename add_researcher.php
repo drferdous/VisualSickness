@@ -35,9 +35,9 @@ if (isset($addResearcher)) {
 <div class="card">
     <div class="card-header">
         <h3 class="float-left">Add A Researcher</h3>
-        <a href="study_details" 
-           class="btn btn-primary float-right redirectUser">
-           Back
+        <a href="study_details"
+            class="backBtn btn btn-primary float-right">
+            Back
         </a>
     </div>
     <div class="card-body pr-2 pl-2">

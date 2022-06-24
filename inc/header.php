@@ -273,6 +273,18 @@ if (Session::get('roleid') == '1') {
         $('.navbar-toggler > span').on('click', function (e) {
             $(`${e.target.parentElement.dataset.target}`).collapse('toggle');
         });
+        let startVals = [];
+        $(document).ready(() => {
+            startVals = Object.fromEntries($('form').serialize().split('&').map(r => r.split('=')).filter(r => !['randCheck', 'referrer'].includes(r[0])));
+            $('select').each(function () {
+                if (!$(this).val()) startVals[$(this).attr('name')] = '';
+            });
+        });
+        $('.backBtn').on('click', () => {
+            if ($('form')[0] && $('form').serialize().split('&').map(r => r.split('=')).filter(r => !['randCheck', 'referrer'].includes(r[0])).some((r, i) => r[1] != startVals[r[0]])) {
+                return confirm('Are you sure you want to go back? Your data will not be saved.');
+            }
+        });
     });
 </script>
 <script src="assets/bootstrap-show-password.min.js" defer></script>

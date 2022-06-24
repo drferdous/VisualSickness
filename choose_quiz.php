@@ -73,8 +73,7 @@
             Choose Quiz
         </h3>
         <span class="float-right">
-            <a href="session_details" 
-               class="btn btn-primary">
+            <a href="session_details" class="backBtn btn btn-primary">
                Back
             </a>
         </span>

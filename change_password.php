@@ -3,7 +3,6 @@
     Session::CheckSession();
 ?>
 <?php
-
     $userid = Session::get("id");
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['changepass']) && Session::CheckPostID($_POST)) {
@@ -28,7 +27,7 @@ if (isset($changePass)) {
 <div class="card">
     <div class="card-header">
         <h3 class="float-left">Change your password</h3>
-        <a href="profile" class="btn btn-primary float-right">Back</a> 
+        <a href="profile" class="backBtn btn btn-primary float-right">Back</a> 
     </div>
         <div class="card-body">
             <div style="max-width:600px; margin:0px auto">
@@ -103,8 +102,6 @@ if (isset($changePass)) {
     });
     const validation = () => {
         const val = $('#new_password').val();
-        $('#new_password').parent().next('.error-text').text('');
-        $('#confirm_password').parent().next('.error-text').text('');
         if (!val.length) {
             $('#new_password').parent().next('.error-text').text('');
             passwordValid = false;

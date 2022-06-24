@@ -23,7 +23,7 @@
         <?php if (isset($study_ID)) { ?>
             <span class='float-right'>
                 <a href='study_details' 
-                   class='btn btn-primary redirectUser'> 
+                   class='btn btn-primary backBtn'> 
                    Back
                 </a>
             </span>

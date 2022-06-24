@@ -10,6 +10,7 @@ Session::requirePIorRA(Session::get('study_ID'), Database::getInstance()->pdo);
 
 if (!isset($_POST['referrer'])) {
     if (isset($_SERVER['HTTP_REFERER'])) $referrer = ltrim(parse_url($_SERVER['HTTP_REFERER'], PHP_URL_PATH), '/') . '?' . parse_url($_SERVER['HTTP_REFERER'], PHP_URL_QUERY);
+    else $referrer = 'study_details';
 }
 else $referrer = $_POST['referrer'];
 
@@ -23,7 +24,7 @@ if (isset($userAdd)) {
         const divMsg = document.getElementById("flash-msg");
         if (divMsg.classList.contains("alert-success")){
             setTimeout(function(){
-                location.href = '<?= isset($referrer) ? $referrer : 'study_list'; ?>';
+                location.href = '<?= $referrer ?>';
             }, 1000);
         }
     </script>
@@ -31,7 +32,7 @@ if (isset($userAdd)) {
 <div class="card">
     <div class="card-header">
           <h3 class="text-center float-left">Add New Participant</h3>
-          <?php if (isset($referrer)) { ?><span class="float-right"> <a href='<?= $referrer ?>' class="btn btn-primary redirectUser">Back</a></span><?php } ?>
+          <span class="float-right"> <a href='<?= $referrer ?>' class="btn btn-primary backBtn">Back</a></span>
     </div>
     <div class="card-body">
             <div style="max-width:600px; margin:0px auto">
@@ -41,7 +42,7 @@ if (isset($userAdd)) {
                     Session::set("post_ID", $rand);
                 ?>
                 <input type="hidden" name="randCheck" value="<?php echo $rand; ?>">
-                <?php if (isset($referrer)) { ?><input type="hidden" name="referrer" value="<?= $referrer ?>"><?php } ?>
+                <input type="hidden" name="referrer" value="<?= $referrer ?>">
                 <div style="margin-block: 6px;">
                     <small style='color: red'>
                         * Required Field

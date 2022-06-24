@@ -66,7 +66,7 @@ $study_is_active = $study_result->fetch(PDO::FETCH_ASSOC)['is_active'] == 1;
 <div class="card">
     <div class="card-header">
             <h3>
-                <span class="float-right"> <a href="session_details" class="btn btn-primary ml-2">Back</a></span>
+                <span class="float-right"> <a href="session_details" class="backBtn btn btn-primary ml-2">Back</a></span>
                 <?php   
                 if ($ssq_ID !== -1) { ?>
                     <?php if(($role['study_role'] == 2 || $id_row['created_by'] == Session::get('id')) && $study_is_active) { ?>
