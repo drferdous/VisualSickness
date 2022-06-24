@@ -107,49 +107,50 @@ if($timezone < 0) {
                         More Actions
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLinkRight">
-                        <?php if($row_study['is_active'] == 1) { ?>
-                            <li class="dropdown-submenu">
-                                <a href="javascript:void(0)" class="nested-dropdown dropdown-item"><i class="fas fa-caret-left mr-2"></i>Researcher</a>
-                                <ul class="dropdown-menu dropdown-submenu">
-                                    <li><a href="researcher_list" class="dropdown-item nested-dropdown-item">View Researchers</a></li>
-                                    <?php if(isset($role['study_role']) && $role['study_role'] == 2){ ?>
+                        <li class="dropdown-submenu">
+                            <a href="javascript:void(0)" class="nested-dropdown dropdown-item"><i class="fas fa-caret-left mr-2"></i>Researcher</a>
+                            <ul class="dropdown-menu dropdown-submenu">
+                                <li><a href="researcher_list" class="dropdown-item nested-dropdown-item">View Researchers</a></li>
+                                <?php if(isset($role['study_role']) && $role['study_role'] == 2){
+                                    if ($row_study['is_active'] == 1) { ?>
                                         <li><a href="edit_researchers" class="dropdown-item nested-dropdown-item">Edit Researchers</a></li>
                                         <li><a href="remove_researcher" class="dropdown-item nested-dropdown-item">Remove A Researcher</a></li>
                                         <li><a href="add_researcher" class="dropdown-item nested-dropdown-item">Add A Researcher</a></li>
-                                        <?php
-                                        $sql = "SELECT u.email FROM users AS u
-                                            JOIN researchers AS researcher ON researcher.researcher_id = u.user_id
-                                            WHERE researcher.study_id = $study_ID
-                                            AND researcher.is_active = 1
-                                            AND u.status = 1;";
-                                        $email_result = $pdo->query($sql);
-                                        $emails = array();
-                                        while ($row = $email_result->fetch(PDO::FETCH_ASSOC)) {
-                                            array_push($emails, $row['email']);
-                                        }
-                                        $mailing_list = implode(',', $emails);
-                                        ?>
-                                        <li><a href="mailto:<?= $mailing_list ?>" class="dropdown-item nested-dropdown-item">Contact Researchers</a></li>
-                                    <?php } ?>
-                                </ul>
-                            </li>
+                                    <?php }
+                                    $sql = "SELECT u.email FROM users AS u
+                                        JOIN researchers AS researcher ON researcher.researcher_id = u.user_id
+                                        WHERE researcher.study_id = $study_ID
+                                        AND researcher.is_active = 1
+                                        AND u.status = 1;";
+                                    $email_result = $pdo->query($sql);
+                                    $emails = array();
+                                    while ($row = $email_result->fetch(PDO::FETCH_ASSOC)) {
+                                        array_push($emails, $row['email']);
+                                    }
+                                    $mailing_list = implode(',', $emails);
+                                    ?>
+                                    <li><a href="mailto:<?= $mailing_list ?>" class="dropdown-item nested-dropdown-item">Contact Researchers</a></li>
+                                <?php } ?>
+                            </ul>
+                        </li>
                         <?php if(isset($role['study_role'])) { ?>
                             <li class="dropdown-submenu">
                                 <a href="javascript:void(0)" class="nested-dropdown dropdown-item"><i class="fas fa-caret-left mr-2"></i>Participant</a>
                                 <ul class="dropdown-menu dropdown-submenu">
                                     <li><a href="participant_list?forStudy=true" class="dropdown-item">View Participants</a></li>
-                                    <?php if($role['study_role'] != 4){ ?>
+                                    <?php if($role['study_role'] != 4 && $row_study['is_active'] == 1){ ?>
                                         <li><a href="add_participant" class="dropdown-item">Add A Participant</a></li>
                                         <li><a href="remove_participant" class="dropdown-item">Remove A Participant</a></li>
                                     <?php } ?>
                                 </ul>
                             </li>        
-                        <?php }
-                        } if(isset($role['study_role']) && $role['study_role'] == 2) { ?>
+                        <?php } if(isset($role['study_role']) && $role['study_role'] == 2) { ?>
                             <li class="dropdown-submenu">
                                 <a href="javascript:void(0)" class="nested-dropdown dropdown-item"><i class="fas fa-caret-left mr-2"></i>Manage</a>
                                 <ul class="dropdown-menu dropdown-submenu">
-                                    <li><a href="edit_study"  class="dropdown-item">Edit Study</a></li>
+                                    <?php if ($row_study['is_active'] == 1) { ?>
+                                        <li><a href="edit_study"  class="dropdown-item">Edit Study</a></li>
+                                    <?php } ?>
                                     <form method="post" class="d-inline" action="">
                                         <input type="hidden" name="randCheck" value="<?php echo $rand; ?>">
                                         <?php if ($row_study["is_active"] === "1"){ ?>
