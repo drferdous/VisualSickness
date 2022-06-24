@@ -3,7 +3,8 @@ $filepath = realpath(dirname(__FILE__));
 include_once $filepath."/../lib/Session.php";
 include "check_verification.php";
 Session::init();
-if (Session::get("login") == true && $_SERVER['REQUEST_URI'] !== '/pending_verify' && $_SERVER['REQUEST_URI'] !== '/verify_password') {
+
+if (Session::get("login") == true && $_SERVER["REQUEST_URI"] !== "/404" && (Session::get('reg_stat') == 0 && $_SERVER['REQUEST_URI'] !== '/verify_password') || (Session::get('reg_stat') == 1 && $_SERVER['REQUEST_URI'] !== '/pending_verify' && $_SERVER['REQUEST_URI'] !== '/' && $_SERVER['REQUEST_URI'] !== '/about')) {
     checkVerification();
 }
 
@@ -179,7 +180,7 @@ if (Session::get('roleid') == '1') {
     
           				$path = $_SERVER['SCRIPT_FILENAME'];
           				$current = basename($path, '.php');
-          				if ($current == 'participan_list' && !isset($_GET['forStudy'])) {
+          				if ($current == 'participant_list' && !isset($_GET['forStudy'])) {
           					echo "active ";
           				}
     
@@ -223,6 +224,7 @@ if (Session::get('roleid') == '1') {
     
                   <a class="nav-link" href="profile"><i class="fab fa-500px mr-2"></i>Profile <span class="sr-only">(current)</span></a>
                 </li>
+                
             <?php } ?>
             
             <li class="nav-item">
@@ -284,3 +286,5 @@ if (Session::get('roleid') == '1') {
   crossorigin="anonymous"></script>
 <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js" integrity="sha384-ZuLbSl+Zt/ry1/xGxjZPkp9P5MEDotJcsuoHT0cM8oWr+e1Ide//SZLebdVrzb2X" crossorigin="anonymous"></script>
 <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js" integrity="sha384-jIAE3P7Re8BgMkT0XOtfQ6lzZgbDw/02WeRMJvXK3WMHBNynEx5xofqia1OHuGh0" crossorigin="anonymous"></script>
+
+<?php echo Session::get("POST_ID"); ?>

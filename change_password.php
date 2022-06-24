@@ -96,69 +96,66 @@ if (isset($changePass)) {
     const validCharsRegex = /^[a-zA-Z\d\x21-\x2F\x3A-\x40\x5B-\x60\x7B-\x7E]*$/;
     const lengthRegex = /^.{7,20}$/;
     $('#new_password').on('keyup', function () {
-        const val = $(this).val();
+        validation();
+    });
+    $('#confirm_password').on('keyup', function () {
+        validation();
+    });
+    const validation = () => {
+        const val = $('#new_password').val();
         if (!val.length) {
-            $(this).parent().next('.error-text').text('');
+            $('#new_password').parent().next('.error-text').text('');
             passwordValid = false;
             return;
         }
         if (!lengthRegex.test(val)) {
-            $(this).parent().next('.error-text').text('Password must be between 7 and 20 characters long.');
+            $('#new_password').parent().next('.error-text').text('Password must be between 7 and 20 characters long.');
             passwordValid = false;
             return;
         }
         if (!lowercaseRegex.test(val)) {
-            $(this).parent().next('.error-text').text('Password must contain at least one lowercase letter.');
+            $('#new_password').parent().next('.error-text').text('Password must contain at least one lowercase letter.');
             passwordValid = false;
             return;
         }
         if (!uppercaseRegex.test(val)) {
-            $(this).parent().next('.error-text').text('Password must contain at least one uppercase letter.');
+            $('#new_password').parent().next('.error-text').text('Password must contain at least one uppercase letter.');
             passwordValid = false;
             return;
         }
         if (!digitRegex.test(val)) {
-            $(this).parent().next('.error-text').text('Password must contain at least one digit.');
+            $('#new_password').parent().next('.error-text').text('Password must contain at least one digit.');
             passwordValid = false;
             return;
         }
         if (!symbolRegex.test(val)) {
-            $(this).parent().next('.error-text').text('Password must contain at least one non-alphanumeric symbol.');
+            $('#new_password').parent().next('.error-text').text('Password must contain at least one non-alphanumeric symbol.');
             passwordValid = false;
             return;
         }
         if (!validCharsRegex.test(val)) {
-            $(this).parent().next('.error-text').text('Password contains invalid character(s)! All characters must be alphanumeric or an ASCII symbol besides space.');
+            $('#new_password').parent().next('.error-text').text('Password contains invalid character(s)! All characters must be alphanumeric or an ASCII symbol besides space.');
             passwordValid = false;
             return;
         }
-        $(this).parent().next('.error-text').text('');
+        $('#new_password').parent().next('.error-text').text('');
         passwordValid = true;
-    });
-    $('#confirm_password').on('keyup', function () {
-        const val = $(this).val();
-        if (!passwordValid || !val.length) {
-            $(this).parent().next('.error-text').text('');
+        
+        const confVal = $('#confirm_password').val();
+        if (!confVal.length) {
+            $('#confirm_password').parent().next('.error-text').text('');
             passwordConfirm = false;
             return;
         }
-        if (val !== $('#new_password').val()) {
-            $(this).parent().next('.error-text').text('Passwords must match!');
+        if (confVal !== val) {
+            $('#confirm_password').parent().next('.error-text').text('Passwords must match!');
             passwordConfirm = false;
             return;
         }
-        $(this).parent().next('.error-text').text('');
+        $('#confirm_password').parent().next('.error-text').text('');
         passwordConfirm = true;
-    });
+    }
     $('form').submit(() => {
-        // if (!passwordValid) return false;
-        // const pass = $('#new_password');
-        // const confPass = $('#confirm_password');
-        // if (pass.val() !== confPass.val()) {
-        //     alert(`'New Password' and 'Confirm Password' fields must match!`);
-        //     return false;
-        // }
-        // return true;
         return passwordValid && passwordConfirm;
     });
 </script>
