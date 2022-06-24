@@ -8,7 +8,7 @@
     if (isset($study_ID)) {
         $access_sql = "SELECT study_role FROM researchers
                     WHERE researcher_id = " . Session::get("id") . "
-                    AND study_ID = $study_id;";
+                    AND study_id = $study_ID;";
         $access_result = $pdo->query($access_sql);
         if (!$access_result->rowCount()) {
             header('Location: participant_list');

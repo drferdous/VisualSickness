@@ -109,7 +109,7 @@ if($timezone < 0) {
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLinkRight">
                         <?php if($row_study['is_active'] == 1) { ?>
                             <li class="dropdown-submenu">
-                                <a href="javascript:void(0)" class="nested-dropdown dropdown-item">Researcher<i class="fas fa-caret-right ml-2"></i></a>
+                                <a href="javascript:void(0)" class="nested-dropdown dropdown-item"><i class="fas fa-caret-left mr-2"></i>Researcher</a>
                                 <ul class="dropdown-menu dropdown-submenu">
                                     <li><a href="researcher_list" class="dropdown-item nested-dropdown-item">View Researchers</a></li>
                                     <?php if(isset($role['study_role']) && $role['study_role'] == 2){ ?>
@@ -133,9 +133,9 @@ if($timezone < 0) {
                                     <?php } ?>
                                 </ul>
                             </li>
-                        <?php } if(isset($role['study_role'])) { ?>
+                        <?php if(isset($role['study_role'])) { ?>
                             <li class="dropdown-submenu">
-                                <a href="javascript:void(0)" class="nested-dropdown dropdown-item">Participant<i class="fas fa-caret-right ml-2"></i></a>
+                                <a href="javascript:void(0)" class="nested-dropdown dropdown-item"><i class="fas fa-caret-left mr-2"></i>Participant</a>
                                 <ul class="dropdown-menu dropdown-submenu">
                                     <li><a href="participant_list?forStudy=true" class="dropdown-item">View Participants</a></li>
                                     <?php if($role['study_role'] != 4){ ?>
@@ -144,9 +144,10 @@ if($timezone < 0) {
                                     <?php } ?>
                                 </ul>
                             </li>        
-                        <?php } if(isset($role['study_role']) && $role['study_role'] == 2) { ?>
+                        <?php }
+                        } if(isset($role['study_role']) && $role['study_role'] == 2) { ?>
                             <li class="dropdown-submenu">
-                                <a href="javascript:void(0)" class="nested-dropdown dropdown-item">Manage<i class="fas fa-caret-right ml-2"></i></a>
+                                <a href="javascript:void(0)" class="nested-dropdown dropdown-item"><i class="fas fa-caret-left mr-2"></i>Manage</a>
                                 <ul class="dropdown-menu dropdown-submenu">
                                     <li><a href="edit_study"  class="dropdown-item">Edit Study</a></li>
                                     <form method="post" class="d-inline" action="">
@@ -209,7 +210,7 @@ if($timezone < 0) {
                             <?php } ?>
                         </ul>
                     </li>
-                <?php } if(isset($role['study_role'])) { ?>
+                <?php if(isset($role['study_role'])) { ?>
                     <li class="nav-item dropdown">
                         <a href="javascript:void(0)" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false" id="participantDropdown">Participant</a>
                         <ul class="dropdown-menu">
@@ -220,7 +221,8 @@ if($timezone < 0) {
                             <?php } ?>
                         </ul>
                     </li>
-                <?php } if(isset($role['study_role']) && $role['study_role'] == 2) { ?>
+                <?php } 
+                } if(isset($role['study_role']) && $role['study_role'] == 2) { ?>
                     <li class="nav-item dropdown">
                         <a href="javascript:void(0)" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false" id="manageDropdown">Manage</a>
                         <ul class="dropdown-menu">
