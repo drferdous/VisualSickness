@@ -175,7 +175,7 @@ if (isset($_POST['remove-session-btn']) && Session::CheckPostID($_POST)){
                 <tr>
                     <th>Session Name</th>
                     <?php
-                    $session_time_sql = "SELECT name FROM Session_times
+                    $session_time_sql = "SELECT name FROM session_times
                                          WHERE id = " . $row_session['session_time'];
                     $time = $pdo->query($session_time_sql)->fetch(PDO::FETCH_ASSOC)['name']; ?>
                     <td><?= $time ?></td>

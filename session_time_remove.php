@@ -14,7 +14,7 @@
     $study_ID = Session::get('study_ID');
     $remove = $_POST["remove"];
     
-    $remove_sql = "UPDATE Session_times SET is_active = 0 WHERE study_ID = $study_ID AND name IN ($remove)";
+    $remove_sql = "UPDATE session_times SET is_active = 0 WHERE study_id = $study_ID AND name IN ($remove)";
     $result = $pdo->query($remove_sql);
         
     if (!$result) {

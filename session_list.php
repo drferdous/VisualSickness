@@ -32,7 +32,7 @@ Session::requireResearcherOrUser(Session::get('study_ID'), $pdo);
     <?php
         $sql = "SELECT UNIQUE(Session.participant_ID) FROM Session
                 JOIN participants ON Session.participant_ID = participants.participant_id
-                JOIN Session_times AS time ON time.id = Session.session_time
+                JOIN session_times AS time ON time.id = Session.session_time
                 WHERE Session.study_ID = " . Session::get('study_ID') . "
                 AND participants.is_active = 1
                 AND Session.is_active = 1
@@ -75,7 +75,7 @@ Session::requireResearcherOrUser(Session::get('study_ID'), $pdo);
                         <td>
                             <?php
                             $timings_sql = "SELECT time.name AS session_time, S.session_ID FROM Session AS S
-                                            JOIN Session_times AS time ON S.session_time = time.id
+                                            JOIN session_times AS time ON S.session_time = time.id
                                             WHERE S.participant_ID = " . $row['participant_ID'] . "
                                             AND S.is_active = 1
                                             AND time.is_active = 1

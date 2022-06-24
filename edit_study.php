@@ -54,7 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['updateStudy']) && Sess
         }
         
         $session_times = array();
-        $session_times_sql = "SELECT name FROM Session_times WHERE is_active = 1 AND study_ID = $study_ID;";
+        $session_times_sql = "SELECT name FROM session_times WHERE is_active = 1 AND study_id = $study_ID;";
         $session_times_result = $pdo->query($session_times_sql);
         while ($row = $session_times_result->fetch(PDO::FETCH_ASSOC)) {
             array_push($session_times, $row['name']);
