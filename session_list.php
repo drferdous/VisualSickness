@@ -53,7 +53,7 @@ Session::requireResearcherOrUser(Session::get('study_ID'), $pdo);
                 <thead class="text-center">
                     <tr>
                         <th>Participant Name</th>
-                        <th>Session Timings</th>
+                        <th>Session Names</th>
                     </tr>
                 </thead>
                     
@@ -85,7 +85,8 @@ Session::requireResearcherOrUser(Session::get('study_ID'), $pdo);
                                             JOIN Session_times AS time ON S.session_time = time.id
                                             WHERE S.participant_ID = " . $row['participant_ID'] . "
                                             AND S.is_active = 1
-                                            AND time.is_active = 1";
+                                            AND time.is_active = 1
+                                            ORDER BY S.start_time";
                             $timings_result = $pdo->query($timings_sql);
                             $first = true;
                             while ($session_row = $timings_result->fetch(PDO::FETCH_ASSOC)) {
