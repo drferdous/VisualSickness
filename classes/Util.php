@@ -186,4 +186,17 @@ class Util {
       $return = isset($post[$str]) ? htmlspecialchars($post[$str]) : '';
        return $return;
   }
+
+  public static function updateStudy($study_ID, $last_edited_by, $pdo){
+    $currentDate = new DateTime();
+    $sql2 = "UPDATE Study
+            SET last_edited_by = :last_edited_by, last_edited_at = :last_edited_at 
+            WHERE study_ID = :study_ID
+            LIMIT 1;";
+        $stmt = $pdo->prepare($sql2);
+        $stmt->bindValue('last_edited_by', $last_edited_by);
+        $stmt->bindValue(':last_edited_at', $currentDate->format('Y-m-d H:i:s'));
+        $stmt->bindValue(':study_ID', $study_ID);
+        return $stmt->execute();
+  }
 }

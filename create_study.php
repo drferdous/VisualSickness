@@ -8,7 +8,7 @@ if (Session::get('roleid') > 2) {
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['insert_study']) && Session::CheckPostID($_POST)) {
 
-  $insert_study = $studies->insert_study($_POST);
+  $insert_study = $studies->insertStudy($_POST);
 }
 
 if (isset($insert_study)) {

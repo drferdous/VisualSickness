@@ -3,7 +3,7 @@ include 'inc/header.php';
 include_once 'lib/Database.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['deleteQuiz'])) {
-    $deleteQuiz = $studies->deleteQuiz($_POST);
+    $deleteQuiz = $studies->deleteQuiz();
 }
 
 if (isset($deleteQuiz)) {

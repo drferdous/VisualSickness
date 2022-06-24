@@ -19,7 +19,7 @@
     }
     
     if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['take-ssq-btn']) && Session::CheckPostID($_POST)) {
-        $takeSSQMessage = $studies->takeSSQ($_POST);
+        $takeSSQMessage = $studies->takeSSQ($_POST["quiz_time"], $_POST["ssq_time"]);
         if (isset($takeSSQMessage)) {
             echo $takeSSQMessage;
             Session::set('ssq_ID', -1); ?>
