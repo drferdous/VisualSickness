@@ -141,7 +141,7 @@ class Users{
       }
       if ($checkEmail == FALSE) {
           return Util::generateErrorMessage("Email address is not found. Please register for an account!");
-      }else{
+      } else {
 
         $logResult = $this->userLoginAutho($email, $password);
         $isUserActive = $this->CheckActiveUser($email);
@@ -155,7 +155,7 @@ class Users{
             
             $errorMessage = "Sorry, your account is deactivated. Please contact an admin. (" . Util::getAdminsFromAffiliation($this->db->pdo, $affiliationid) . ")";
             return Util::generateErrorMessage($errorMessage);
-        }elseif ($logResult) {
+        } elseif ($logResult) {
           Session::init();
           Session::set('login', TRUE);
           Session::set('id', $logResult->id);
@@ -169,18 +169,11 @@ class Users{
           Session::set('study_ID', 0);
           Session::set('ssq_ID', -1);
 
-        }
-        else{
+        } else{
             return Util::generateErrorMessage("Email or password did not match!");
         }
-
       }
-
-
     }
-
-
-
 
     // Get Single User Information By Id Method
     public function getUserInfoById($userid){
@@ -314,15 +307,13 @@ class Users{
         }
     }
 
-    // Change User pass By Id
+    // Change User password By Id
     public function changePasswordById($userid, $data){
 
       $old_pass = $data['old_password'];
       $new_pass = $data['new_password'];
       $confirm_pass = $data['confirm_password'];
       
-
-
       if ($old_pass == "" || $new_pass == "" || $confirm_pass == "") {
           return Util::generateErrorMessage("Password field must not be empty!");
       }
