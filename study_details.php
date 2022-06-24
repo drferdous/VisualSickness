@@ -291,7 +291,7 @@ if($timezone < 0) {
                     ?></td>
                 </tr> 
                 <tr>
-                    <th class="align-middle">Session Times</th>
+                    <th class="align-middle">Session Names</th>
                     <td class="align-middle"><?php
                         // show name for Session Times
                         

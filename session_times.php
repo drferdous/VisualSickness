@@ -3,14 +3,13 @@ include_once 'lib/Database.php';
 include_once 'classes/Crypto.php';
 include_once 'lib/Session.php';
 Session::init();
+if ($_SERVER["REQUEST_METHOD"] !== "POST" || !isset($_POST['iv'])){
+    header("Location: 404");
+    exit();
+}
 
 $db = Database::getInstance();
 $pdo = $db->pdo;
-
-if ($_SERVER["REQUEST_METHOD"] !== "POST" || !isset($_POST["iv"])){
-	header("Location: 404");
-	exit();
-}
 
 if (isset($_POST['participant_id']) && !empty($_POST['participant_id']) && isset($_POST['iv'])) {
     $id = Crypto::decrypt($_POST['participant_id'], hex2bin($_POST['iv']));
@@ -32,6 +31,6 @@ if (isset($_POST['participant_id']) && !empty($_POST['participant_id']) && isset
     	    <option value="<?=$row['id'] ?>"><?= $row['name'] ?></option>
     	<?php }
 	} else { ?>
-	    <option class="timesNotFound" value="" selected hidden disabled>No remaining session timings available for this participant</option>
+	    <option class="timesNotFound" value="" selected hidden disabled>No remaining sessions available for this participant</option>
 	<?php }
 } ?>

@@ -27,10 +27,6 @@ if (isset($_POST['submitQuiz']) && Session::CheckPostID($_POST)) {
 if (isset($_POST['viewResults'])) {
     echo Util::getModalForSSQ($pdo, FALSE);
 }
-if(empty($_GET['code']) && Session::get('login') === FALSE) {
-  header('Location: index');
-  exit();
-}
 
 if (isset($_POST['ssq_ID']) && isset($_POST['iv'])) {
     $iv = hex2bin($_POST['iv']);
@@ -89,71 +85,10 @@ $study_is_active = $study_result->fetch(PDO::FETCH_ASSOC)['is_active'] == 1;
         Session::set("post_ID", $rand);
     ?>
     <input type="hidden" name="randCheck" value="<?php echo $rand; ?>">
-    <center>
-    <div class="symptoms">
-        <?php if (Session::get('login') === FALSE) { ?>
-            <div style="margin-block: 6px;">
-                <small style='color: red'>
-                    * Required Field
-                </small>
-            </div>
-            <h1>Please Enter Your Demographic Data</h1>
-                <label for="age" class="required">Age</label>
-                <input type="text" id="age" name="age" required />
-                <br>
-                <br>
-    
-                <h2>Gender</h2>
-                <input type="radio" id="male" name="gender" value="Male">
-                <label for="male">Male</label><br>
-                <input type="radio" id="female" name="gender" value="Female">
-                <label for="female">Female</label><br>
-                <input type="radio" id="other" name="gender" value="Other">
-                <label for="other">Other</label><br>
-                <input type="radio" id="no" name="gender" value="Prefer Not To Answer" checked>
-                <label for="other">Prefer Not To Answer</label>
-    
-                <br/>
-                
-                <h2>Education</h2>
-                <input type="radio" id="elementary" name="education" value="Elementary School"> 
-                <label for="elementary">Elementary School</label><br>
-                <input type="radio" id="middle" name="education" value="Middle School">
-                <label for="middle">Middle School</label><br>
-                <input type="radio" id="high" name="education" value="High School">
-                <label for="high">High School</label><br>
-                <input type="radio" id="twoYear" name="education" value="2 Year College">
-                <label for="twoYear">2 Year College</label><br>
-                <input type="radio" id="fourYear" name="education" value="4 Year College">
-                <label for="fourYear">4 Year College</label><br>
-                <input type="radio" id="no" name="education" value="Prefer Not To Answer" checked>
-                <label for="other">Prefer Not To Answer</label>
-    
-                <br/>
-    
-                <h2>Race/Ethnicity</h2>
-                <input type="radio" id="aian" name="race" value="American Indian or Alaska Native">
-                <label for="aian">American Indian or Alaska Native</label><br>
-                <input type="radio" id="asian" name="race" value="Asian">
-                <label for="asian">Asian</label><br>
-                <input type="radio" id="black" name="race" value="Black or African American">
-                <label for="black">Black or African American</label><br>
-                <input type="radio" id="nhopi" name="race" value="Native Hawaiian or Other Pacific Islander">
-                <label for="nhopi">Native Hawaiian or Other Pacific Islander</label><br>
-                <input type="radio" id="white" name="race" value="White">
-                <label for="white">White</label><br>
-                <input type="radio" id="other" name="race" value="Other">
-                <label for="other">Other</label><br>
-                <input type="radio" id="no" name="race" value="Prefer Not To Answer" checked>
-                <label for="other">Prefer Not To Answer</label>
-                <br/>
-    <?php  } ?>
-    </div>
-    </center>
 
-  <hr>
-  <h1 class="text-center">Cybersickness Online Questionnaire</h1>
-  <p class="text-center">Please pick your current discomfort level on the categories mentioned below. If you do not understand the meaning of the symptom, pick "Do not Understand".</p>
+    <hr>
+    <h1 class="text-center">Cybersickness Online Questionnaire</h1>
+    <p class="text-center">Please pick your current discomfort level on the categories mentioned below. If you do not understand the meaning of the symptom, pick "Do not Understand".</p>
 
 <center>
 <div class="symptoms">

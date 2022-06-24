@@ -198,130 +198,71 @@ class Users{
     
     // Get Study Information By Study Id
     public function getStudyInfo($study_ID){
-      $sql = "SELECT * FROM Study WHERE study_ID = :study_ID LIMIT 1";
-      $stmt = $this->db->pdo->prepare($sql);
-      $stmt->bindValue(':study_ID', trim($study_ID));
-      $stmt->execute();
-      $result = $stmt->fetch(PDO::FETCH_OBJ);
-      if ($result) {
-        return $result;
-      }else{
-        return false;
-      }
+        $sql = "SELECT * FROM Study WHERE study_ID = :study_ID LIMIT 1";
+        $stmt = $this->db->pdo->prepare($sql);
+        $stmt->bindValue(':study_ID', trim($study_ID));
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_OBJ);
+        if ($result) {
+            return $result;
+        } else {
+            return false;
+        }
     }
     
 
   //   Update user profile info
     public function updateUserByIdInfo($data){
-    if (!isset($data["user_ID"]) || !isset($data["iv"])){
-        return Util::generateErrorMessage("Invalid user ID!");
-    }
-    
-    array_walk($data, function (&$val) {         $val = trim($val);     });
-    $iv = hex2bin($data["iv"]);
-    $encryptedUserID = $data["user_ID"];
-    $name = $data['name'];
-    $mobile = $data['mobile'];
-    $userid = Crypto::decrypt($encryptedUserID, $iv);
-    
-    if ($name == ""){
-        return Util::generateErrorMessage("Name field should not be empty!");
-    }
-    if (!empty($mobile) && filter_var($mobile,FILTER_SANITIZE_NUMBER_INT) !== $mobile) {
-        return Util::generateErrorMessage("Please enter only numeric characters for phone number!");
-    }
-    if (Session::get("roleid") != 1 && isset($data["roleid"])){
-        return Util::generateErrorMessage("You do not have permission to change your role!");
-    }
-    if (isset($data["roleid"])){
-        $roleid = intval($data["roleid"]);
-        if ($roleid < 2 || $roleid > 4){
-            return Util::generateErrorMessage("Please select a valid role!");
+        if (!isset($data["user_ID"]) || !isset($data["iv"])){
+            return Util::generateErrorMessage("Invalid user ID!");
         }
-    }
-    $sql = "UPDATE tbl_users SET
-            name = :name,
-            mobile = :mobile, "
-            . (isset($roleid) ? "roleid = :roleid," : "") . "
-            updated_by = :updated_by,
-            updated_at = CURRENT_TIMESTAMP
-            WHERE id = :id";
-    $stmt= $this->db->pdo->prepare($sql);
-    $stmt->bindValue(':name', $name);
-    $stmt->bindValue(':mobile', $mobile);
-    if (isset($roleid)){
-        $stmt->bindValue(":roleid", $roleid);
-    }
-    $stmt->bindValue(':id', trim($userid));
-    $stmt->bindValue(':updated_by', Session::get('id'));
-    $result =   $stmt->execute();
-
-    if ($result){ 
-        return Util::generateSuccessMessage("you have updated your information!");
-    } 
-    else{
-        return Util::generateErrorMessage("Your profile could not be updated!");
-    }
-}    
-
-    // Delete User by Id Method
-    public function deleteUserById($remove){
-        $localId = Session::get('id');
-        $sql = "UPDATE tbl_users SET status = 2, updated_by = :localId, updated_at = CURRENT_TIMESTAMP WHERE id = :id ";
-        $stmt = $this->db->pdo->prepare($sql);
-        $stmt->bindValue(':localId', $localId);
-        $stmt->bindValue(':id', trim($remove));
-        $result =$stmt->execute();
-        if ($result) {
-            return Util::generateSuccessMessage("User account deleted!");
+        
+        array_walk($data, function (&$val) {         $val = trim($val);     });
+        $iv = hex2bin($data["iv"]);
+        $encryptedUserID = $data["user_ID"];
+        $name = $data['name'];
+        $mobile = $data['mobile'];
+        $userid = Crypto::decrypt($encryptedUserID, $iv);
+        
+        if ($name == ""){
+            return Util::generateErrorMessage("Name field should not be empty!");
         }
-        else{
-            return Util::generateErrorMessage("Data was not deleted for some reason.");
+        if (!empty($mobile) && filter_var($mobile,FILTER_SANITIZE_NUMBER_INT) !== $mobile) {
+            return Util::generateErrorMessage("Please enter only numeric characters for phone number!");
         }
-    }
-
-    // User Deactivated By Admin
-    public function userDeactiveByAdmin($deactive){
-        $localId = Session::get('id');
+        if (Session::get("roleid") != 1 && isset($data["roleid"])){
+            return Util::generateErrorMessage("You do not have permission to change your role!");
+        }
+        if (isset($data["roleid"])){
+            $roleid = intval($data["roleid"]);
+            if ($roleid < 2 || $roleid > 4){
+                return Util::generateErrorMessage("Please select a valid role!");
+            }
+        }
         $sql = "UPDATE tbl_users SET
-            status=:status,
-            updated_by = :localId,
-            updated_at = CURRENT_TIMESTAMP
-            WHERE id = :id";
-        $stmt = $this->db->pdo->prepare($sql);
-        $stmt->bindValue(':status', 1);
-        $stmt->bindValue(':id', trim($deactive));
-        $stmt->bindValue(":localId", $localId);
+                name = :name,
+                mobile = :mobile, "
+                . (isset($roleid) ? "roleid = :roleid," : "") . "
+                updated_by = :updated_by,
+                updated_at = CURRENT_TIMESTAMP
+                WHERE id = :id";
+        $stmt= $this->db->pdo->prepare($sql);
+        $stmt->bindValue(':name', $name);
+        $stmt->bindValue(':mobile', $mobile);
+        if (isset($roleid)){
+            $stmt->bindValue(":roleid", $roleid);
+        }
+        $stmt->bindValue(':id', trim($userid));
+        $stmt->bindValue(':updated_by', Session::get('id'));
         $result =   $stmt->execute();
-        if ($result) {
-            Session::set('msg', Util::generateSuccessMessage("User account is deactivated"));
+
+        if ($result){ 
+            return Util::generateSuccessMessage("you have updated your information!");
         } 
-        else {
-            Session::set('msg', Util::generateErrorMessage("Data was not deactivated!"));
-        }
-    }
-
-
-    // User Activated By Admin
-    public function userActiveByAdmin($active){
-        $localId = Session::get('id');
-        $sql = "UPDATE tbl_users SET
-            status=:status,
-            updated_by = :localId,
-            updated_at = CURRENT_TIMESTAMP
-            WHERE id = :id";
-        $stmt = $this->db->pdo->prepare($sql);
-        $stmt->bindValue(':status', 0);
-        $stmt->bindValue(':localId', $localId);
-        $stmt->bindValue(':id', trim($active));
-        $result =   $stmt->execute();
-        if ($result) {
-            Session::set('msg', Util::generateSuccessMessage("User account activated!"));
-        }
         else{
-            Session::set('msg', Util::generateErrorMessage("User account was not activated!"));
+            return Util::generateErrorMessage("Your profile could not be updated!");
         }
-    }
+    }  
 
     // Check Old password method
     public function CheckOldPassword($userid, $old_pass){
