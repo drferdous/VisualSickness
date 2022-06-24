@@ -71,14 +71,13 @@ Session::set("post_ID", $rand);
 <div class="card">
     <div class="card-header">
             <h3>
-            <?php
-                if(($role['study_role'] == 2 || $id_row['created_by'] == Session::get('id')) && $study_is_active) {
-            ?>
+                <span class="float-right"> <a href="session_details" class="btn btn-primary">Back</a></span>
+                <?php if ($ssq_ID !== -1) { 
+                if(($role['study_role'] == 2 || $id_row['created_by'] == Session::get('id')) && $study_is_active) { ?>
                     <form class="float-right ml-2" onsubmit="return confirm('Are you sure you want to delete this SSQ? This action cannot be undone.');" action="delete_quiz" method="post">
-                        <button type="submit" name="deleteQuiz" class="btn btn-danger">Delete</button>
+                        <button type="submit" name="deleteQuiz" class="btn btn-danger mr-2">Delete</button>
                     </form>
             <?php } ?>
-                <?php if ($ssq_ID !== -1) { ?>
                     <form class="float-right" action="" method="post">
                         <button type="submit" name="viewResults" class="btn btn-success">Results</button>
                     </form>
@@ -172,12 +171,12 @@ Session::set("post_ID", $rand);
         <label>
             <input type="radio" id="discomfort2" name="general_discomfort" value="2">
             <img src="images/discomfort2.png" alt="Basic">
-            <p>Moderate</p>
+              <p>Moderate</p>
         </label>
         <label>
             <input type="radio" id="discomfort3" name="general_discomfort" value="3">
             <img src="images/discomfort3.png" alt="Basic">
-            <p>Severe</p>
+              <p>Severe</p>
         </label>
     </div>
 
@@ -188,22 +187,22 @@ Session::set("post_ID", $rand);
         <label>
             <input type="radio" id="fatigue0" name="fatigue" value="0">
             <img src="images/base0.png" alt="Basic">
-            <p>None</p>
+              <p>None</p>
         </label>
         <label>
             <input type="radio" id="fatigue1" name="fatigue" value="1">
             <img src="images/fatigue1.gif" alt="Basic">
-            <p>Slight</p>
+              <p>Slight</p>
         </label>
         <label>
             <input type="radio" id="fatigue2" name="fatigue" value="2">
             <img src="images/fatigue2.gif" alt="Basic">
-            <p>Moderate</p>
+              <p>Moderate</p>
         </label>
         <label>
             <input type="radio" id="fatigue3" name="fatigue" value="3">
             <img src="images/fatigue3.gif" alt="Basic">
-            <p>Severe</p>
+              <p>Severe</p>
         </label>
     </div>
 
@@ -215,22 +214,22 @@ Session::set("post_ID", $rand);
         <label>
             <input type="radio" id="headache0" name="headache" value="0">
             <img src="images/base0.png" alt="Basic">
-            <p>None</p>
+              <p>None</p>
         </label>
         <label>
             <input type="radio" id="headache1" name="headache" value="1">
             <img src="images/headache1.gif" alt="Basic">
-            <p>Slight</p>
+              <p>Slight</p>
         </label>
         <label>
             <input type="radio" id="headache2" name="headache" value="2">
             <img src="images/headache2.gif" alt="Basic">
-            <p>Moderate</p>
+              <p>Moderate</p>
         </label>
         <label>
             <input type="radio" id="headache3" name="headache" value="3">
             <img src="images/headache3.gif" alt="Basic">
-            <p>Severe</p>
+              <p>Severe</p>
         </label>
     </div>
 
@@ -241,22 +240,22 @@ Session::set("post_ID", $rand);
         <label>
             <input type="radio" id="eyestrain0" name="eye_strain" value="0">
             <img src="images/base0.png" alt="Basic">
-            <p>None</p>
+              <p>None</p>
         </label>
         <label>
             <input type="radio" id="eyestrain1" name="eye_strain" value="1">
             <img src="images/eyeStrain1.gif" alt="Basic">
-            <p>Slight</p>
+              <p>Slight</p>
         </label>
         <label>
             <input type="radio" id="eyestrain2" name="eye_strain" value="2">
             <img src="images/eyeStrain2.gif" alt="Basic">
-            <p>Moderate</p>
+              <p>Moderate</p>
         </label>
         <label>
             <input type="radio" id="eyestrain3" name="eye_strain" value="3">
             <img src="images/eyeStrain3.gif" alt="Basic">
-            <p>Severe</p>
+              <p>Severe</p>
         </label>
     </div>
 
@@ -267,22 +266,22 @@ Session::set("post_ID", $rand);
         <label>
             <input type="radio" id="difficulty_focusing0" name="difficulty_focusing" value="0">
             <img src="images/base0.png" alt="Basic">
-            <p>None</p>
+              <p>None</p>
         </label>
         <label>
             <input type="radio" id="difficulty_focusing1" name="difficulty_focusing" value="1">
             <img src="images/difficultyfocusing1.gif" alt="Basic">
-            <p>Slight</p>
+              <p>Slight</p>
         </label>
         <label>
             <input type="radio" id="difficulty_focusing2" name="difficulty_focusing" value="2">
             <img src="images/difficultyfocusing2.gif" alt="Basic">
-            <p>Moderate</p>
+              <p>Moderate</p>
         </label>
         <label>
             <input type="radio" id="difficulty_focusing3" name="difficulty_focusing" value="3">
             <img src="images/difficultyfocusing3.gif" alt="Basic">
-            <p>Severe</p>
+              <p>Severe</p>
         </label>
     </div>
 
@@ -293,22 +292,22 @@ Session::set("post_ID", $rand);
         <label>
             <input type="radio" id="saliva0" name="increased_salivation" value="0">
             <img src="images/base0.png" alt="Basic">
-            <p>None</p>
+              <p>None</p>
         </label>
         <label>
             <input type="radio" id="saliva1" name="increased_salivation" value="1">
             <img src="images/saliva1.gif" alt="Basic">
-            <p>Slight</p>
+              <p>Slight</p>
         </label>
         <label>
             <input type="radio" id="saliva2" name="increased_salivation" value="2">
             <img src="images/saliva2.gif" alt="Basic">
-            <p>Moderate</p>
+              <p>Moderate</p>
         </label>
         <label>
             <input type="radio" id="saliva3" name="increased_salivation" value="3">
             <img src="images/saliva3.gif" alt="Basic">
-            <p>Severe</p>
+              <p>Severe</p>
         </label>
     </div>
 
@@ -319,22 +318,22 @@ Session::set("post_ID", $rand);
         <label>
             <input type="radio" id="sweat0" name="sweating" value="0">
             <img src="images/base0.png" alt="Basic">
-            <p>None</p>
+              <p>None</p>
         </label>
         <label>
             <input type="radio" id="sweat1" name="sweating" value="1">
             <img src="images/sweat1.gif" alt="Basic">
-            <p>Slight</p>
+              <p>Slight</p>
         </label>
         <label>
             <input type="radio" id="sweat2" name="sweating" value="2">
             <img src="images/sweat2.gif" alt="Basic">
-            <p>Moderate</p>
+              <p>Moderate</p>
         </label>
         <label>
             <input type="radio" id="sweat3" name="sweating" value="3">
             <img src="images/sweat3.gif" alt="Basic">
-            <p>Severe</p>
+              <p>Severe</p>
         </label>
     </div>
 
@@ -345,22 +344,22 @@ Session::set("post_ID", $rand);
         <label>
             <input type="radio" id="nausea0" name="nausea" value="0">
             <img src="images/base0.png" alt="Basic">
-            <p>None</p>
+              <p>None</p>
         </label>
         <label>
             <input type="radio" id="nausea1" name="nausea" value="1">        
             <img src="images/nausea1.png" alt="Basic">
-            <p>Slight</p>
+              <p>Slight</p>
         </label>
         <label>
             <input type="radio" id="nausea2" name="nausea" value="2">
             <img src="images/nausea2.png" alt="Basic">
-            <p>Moderate</p>
+              <p>Moderate</p>
         </label>
         <label>
             <input type="radio" id="nausea3" name="nausea" value="3">
             <img src="images/nausea3.png" alt="Basic">
-            <p>Severe</p>
+              <p>Severe</p>
         </label>
     </div>
 
@@ -371,22 +370,22 @@ Session::set("post_ID", $rand);
         <label>
             <input type="radio" id="focus0" name="difficulty_concentrating" value="0">
             <img src="images/base0.png" alt="Basic">
-            <p>None</p>
+              <p>None</p>
         </label>
         <label>
             <input type="radio" id="focus1" name="difficulty_concentrating" value="1">
             <img src="images/focus1.gif" alt="Basic">
-            <p>Slight</p>
+              <p>Slight</p>
         </label>
         <label>
             <input type="radio" id="focus2" name="difficulty_concentrating" value="2">
             <img src="images/focus2.gif" alt="Basic">
-            <p>Moderate</p>
+              <p>Moderate</p>
         </label>
         <label>
             <input type="radio" id="focus3" name="difficulty_concentrating" value="3">
             <img src="images/focus3.gif" alt="Basic">
-            <p>Severe</p>
+              <p>Severe</p>
         </label>
     </div>
 
@@ -397,22 +396,22 @@ Session::set("post_ID", $rand);
         <label>
             <input type="radio" id="fullness0" name="fullness_of_head" value="0">
             <img src="images/base0.png" alt="Basic">
-            <p>None</p>
+              <p>None</p>
         </label>
         <label>
             <input type="radio" id="fullness1" name="fullness_of_head" value="1">
             <img src="images/fulness1.gif" alt="Basic">
-            <p>Slight</p>
+              <p>Slight</p>
         </label>
         <label>
             <input type="radio" id="fullness2" name="fullness_of_head" value="2">
             <img src="images/fulness2.gif" alt="Basic">
-            <p>Moderate</p>
+              <p>Moderate</p>
         </label>
         <label>
             <input type="radio" id="fullness3" name="fullness_of_head" value="3">
             <img src="images/fulness3.gif" alt="Basic">
-            <p>Severe</p>
+              <p>Severe</p>
         </label>
     </div>
 
@@ -423,22 +422,22 @@ Session::set("post_ID", $rand);
         <label>
             <input type="radio" id="blurred0" name="blurred_vision" value="0">
             <img src="images/base0.png" alt="Basic">
-            <p>None</p>
+              <p>None</p>
         </label>
         <label>
             <input type="radio" id="blurred1" name="blurred_vision" value="1">
             <img src="images/blur1.png" alt="Basic">
-            <p>Slight</p>
+              <p>Slight</p>
         </label>
         <label>
             <input type="radio" id="blurred2" name="blurred_vision" value="2">
             <img src="images/blur2.png" alt="Basic">
-            <p>Moderate</p>
+              <p>Moderate</p>
         </label>
         <label>
             <input type="radio" id="blurred3" name="blurred_vision" value="3">
             <img src="images/blur3.png" alt="Basic">
-            <p>Severe</p>
+              <p>Severe</p>
         </label>
     </div>
 
@@ -449,22 +448,22 @@ Session::set("post_ID", $rand);
         <label>
             <input type="radio" id="dizzinessEyes0" name="dizziness_with_eyes_open" value="0">
             <img src="images/base0.png" alt="Basic">
-            <p>None</p>
+              <p>None</p>
         </label>
         <label>
             <input type="radio" id="dizzinessEyes1" name="dizziness_with_eyes_open" value="1">
             <img src="images/dizzy1.gif" alt="Basic">
-            <p>Slight</p>
+              <p>Slight</p>
         </label>
         <label>
             <input type="radio" id="dizzinessEyes2" name="dizziness_with_eyes_open" value="2">
             <img src="images/dizzy2.gif" alt="Basic">
-            <p>Moderate</p>
+              <p>Moderate</p>
         </label>
         <label>
             <input type="radio" id="dizzinessEyes3" name="dizziness_with_eyes_open" value="3">
             <img src="images/dizzy3.gif" alt="Basic">
-            <p>Severe</p>
+              <p>Severe</p>
         </label>
     </div>
 
@@ -476,22 +475,22 @@ Session::set("post_ID", $rand);
         <label>
             <input type="radio" id="dizzyclose0" name="dizziness_with_eyes_closed" value="0">
             <img src="images/base0.png" alt="Basic">
-            <p>None</p>
+              <p>None</p>
         </label>
         <label>
             <input type="radio" id="dizzyclose1" name="dizziness_with_eyes_closed" value="1">
             <img src="images/dizzyClose1.gif" alt="Basic">
-            <p>Slight</p>
+              <p>Slight</p>
         </label>
         <label>
             <input type="radio" id="dizzyclose2" name="dizziness_with_eyes_closed" value="2">
             <img src="images/dizzyClose2.gif" alt="Basic">
-            <p>Moderate</p>
+              <p>Moderate</p>
         </label>
         <label>
             <input type="radio" id="dizzyclose3" name="dizziness_with_eyes_closed" value="3">
             <img src="images/dizzyClose3.gif" alt="Basic">
-            <p>Severe</p>
+              <p>Severe</p>
         </label>
     </div>
 
@@ -503,22 +502,22 @@ Session::set("post_ID", $rand);
         <label>
             <input type="radio" id="vertigo0" name="vertigo" value="0">
             <img src="images/base0.png" alt="Basic">
-            <p>None</p>
+              <p>None</p>
         </label>
         <label>
             <input type="radio" id="vertigo1" name="vertigo" value="1">
             <img src="images/vertigo1.gif" alt="Basic">
-            <p>Slight</p>
+              <p>Slight</p>
         </label>
         <label>
             <input type="radio" id="vertigo2" name="vertigo" value="2">
             <img src="images/vertigo2.gif" alt="Basic">
-            <p>Moderate</p>
+              <p>Moderate</p>
         </label>
         <label>
             <input type="radio" id="vertigo3" name="vertigo" value="3">
             <img src="images/vertigo3.gif" alt="Basic">
-            <p>Severe</p>
+              <p>Severe</p>
         </label>
     </div>
 
@@ -530,22 +529,24 @@ Session::set("post_ID", $rand);
         <label>
             <input type="radio" id="stomach0" name="stomach_awareness" value="0">
             <img src="images/base0.png" alt="Basic">
-            <p>None</p>
+              <p>None</p>
         </label>
         <label>
             <input type="radio" id="stomach1" name="stomach_awareness" value="1">
             <img src="images/stomach1.png" alt="Basic">
-            <p>Slight</p>
+              <p>Slight</p>
         </label>
         <label>
             <input type="radio" id="stomach2" name="stomach_awareness" value="2">
             <img src="images/stomach2.png" alt="Basic">
-            <p>Moderate</p>
+    
+                <p>Moderate</p>
+    
         </label>
         <label>
             <input type="radio" id="stomach3" name="stomach_awareness" value="3">
             <img src="images/stomach3.png" alt="Basic">
-            <p>Severe</p>
+              <p>Severe</p>
         </label>
     </div>
 
@@ -557,22 +558,22 @@ Session::set("post_ID", $rand);
         <label>
             <input type="radio" id="burp0" name="burping" value="0">
             <img src="images/base0.png" alt="Basic">
-            <p>None</p>
+              <p>None</p>
         </label>
         <label>
             <input type="radio" id="burp1" name="burping" value="1">
             <img src="images/burp1.gif" alt="Basic">
-            <p>Slight</p>
+              <p>Slight</p>
         </label>
         <label>
             <input type="radio" id="burp2" name="burping" value="2">
             <img src="images/burp2.gif" alt="Basic">
-            <p>Moderate</p>
+              <p>Moderate</p>
         </label>
         <label>
             <input type="radio" id="burp3" name="burping" value="3">
             <img src="images/burp3.gif" alt="Basic">
-            <p>Severe</p>
+              <p>Severe</p>
         </label>
     </div>
     
@@ -588,18 +589,16 @@ Session::set("post_ID", $rand);
     else{ ?>
         <input type="hidden" id="code" name="code" value="">
     <?php } ?>
-    
-    <span class="float-right"> <a href='session_details' class="btn btn-danger redirectUser ml-2 mr-2">Cancel</a></span>
 
     <?php if (Session::get('ssq_ID') == -1){?>
-        <input type="submit" class="btn btn-success float-right" value="Submit">
+        <input type="submit" class="btn btn-success justify-content-center" value="Submit">
         <input type="hidden" name="submitQuiz" value="submitQuiz">
     <?php }
           else{ ?>
         <?php
             if(($role['study_role'] == 2 || $id_row['created_by'] == Session::get('id')) && $study_is_active) {
         ?>
-        <input type="submit" class="btn btn-success float-right" value="Update">
+        <input type="submit" class="btn btn-success justify-content-center" value="Update">
         <input type="hidden" name="submitQuiz" value="submitQuiz">
     <?php }
         } ?>
