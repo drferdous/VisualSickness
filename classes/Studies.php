@@ -674,7 +674,7 @@ public function takeSSQ($quiz_type, $ssq_time){
             $remove = implode(', ', array_map(function ($time) { return "'$time'"; }, $removed_session_times));
             
             
-            $sql = "SELECT session_ID FROM Session WHERE session_time IN (SELECT id FROM Session_times WHERE study_ID = $study_ID AND name IN ($remove) AND is_active = 1)";
+            $sql = "SELECT session_id FROM session WHERE session_time IN (SELECT id FROM Session_times WHERE study_ID = $study_ID AND name IN ($remove) AND is_active = 1)";
             $result_ssq = $pdo->query($sql);
             
             if($result_ssq->fetch(PDO::FETCH_ASSOC)) {
@@ -811,7 +811,7 @@ public function takeSSQ($quiz_type, $ssq_time){
         
         $this->db->pdo->beginTransaction();
         try{
-            $sql = "INSERT INTO Session (study_ID, participant_ID, comment, created_by, last_edited_by, session_time)
+            $sql = "INSERT INTO session (study_id, participant_id, comment, created_by, last_edited_by, session_time)
                     VALUES (:study_ID, :participant_ID, :comment, :created_by, :last_edited_by, :session_time);";
             $stmt = $this->db->pdo->prepare($sql);
             
@@ -853,10 +853,10 @@ public function takeSSQ($quiz_type, $ssq_time){
     public function restartSession($session_ID) {
         $last_edited_by = Session::get('id');        
         
-        $sql = "UPDATE Session
+        $sql = "UPDATE session
                 SET end_time = NULL, 
                     last_edited_by = :last_edited_by
-                WHERE session_ID = :session_ID
+                WHERE session_id = :session_ID
                 LIMIT 1;";
                 
         $stmt = $this->db->pdo->prepare($sql);
@@ -876,9 +876,9 @@ public function takeSSQ($quiz_type, $ssq_time){
     // ends the current session within a study.
     public function endSession($session_ID){
         $currentDate = new DateTime();
-        $sql = "UPDATE Session
+        $sql = "UPDATE session
                 SET end_time = :end_time
-                WHERE session_ID = :session_ID
+                WHERE session_id = :session_ID
                 LIMIT 1;";
         
         $stmt = $this->db->pdo->prepare($sql);
@@ -897,9 +897,9 @@ public function takeSSQ($quiz_type, $ssq_time){
     // removes current session within a study.
     public function removeSession($session_ID){
         $last_edited_by = Session::get('id');
-        $sql = "UPDATE Session
+        $sql = "UPDATE session
                 SET is_active = 0, last_edited_by = :last_edited_by  
-                WHERE session_ID = :session_ID
+                WHERE session_id = :session_ID
                 LIMIT 1;";
         
         $stmt = $this->db->pdo->prepare($sql);

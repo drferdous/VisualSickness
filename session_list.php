@@ -30,13 +30,6 @@ Session::requireResearcherOrUser(Session::get('study_ID'), $pdo);
         
     <div class="card-body pr-2 pl-2">
     <?php
-        // $sql = "SELECT S.session_ID, S.start_time, S.participant_ID, time.name AS session_time FROM Session as S
-        //         JOIN Session_times as time ON time.id = S.session_time
-        //         Join Participants AS P ON P.participant_ID = S.participant_ID
-        //         WHERE P.is_active = 1
-        //         AND S.is_active = 1
-        //         AND time.is_active = 1
-        //         AND S.study_ID = " . Session::get("study_ID");
         $sql = "SELECT UNIQUE(Session.participant_ID) FROM Session
                 JOIN Participants ON Session.participant_ID = Participants.participant_ID
                 JOIN Session_times AS time ON time.id = Session.session_time
@@ -81,16 +74,16 @@ Session::requireResearcherOrUser(Session::get('study_ID'), $pdo);
                         <?php } ?>
                         <td>
                             <?php
-                            $timings_sql = "SELECT time.name AS session_time, S.session_ID FROM Session AS S
+                            $timings_sql = "SELECT time.name AS session_time, S.session_id FROM session AS S
                                             JOIN Session_times AS time ON S.session_time = time.id
-                                            WHERE S.participant_ID = " . $row['participant_ID'] . "
+                                            WHERE S.participant_id = " . $row['participant_id'] . "
                                             AND S.is_active = 1
                                             AND time.is_active = 1
                                             ORDER BY S.start_time";
                             $timings_result = $pdo->query($timings_sql);
                             $first = true;
                             while ($session_row = $timings_result->fetch(PDO::FETCH_ASSOC)) {
-                                if (!$first) echo ', '; ?><a class="redirectUser" href="session_details" data-session_ID="<?= Crypto::encrypt($session_row['session_ID'], $session_iv) ?>" data-IV="<?= bin2hex($session_iv) ?>"><?= $session_row['session_time'] ?></a><?php $first = false;
+                                if (!$first) echo ', '; ?><a class="redirectUser" href="session_details" data-session_ID="<?= Crypto::encrypt($session_row['session_id'], $session_iv) ?>" data-IV="<?= bin2hex($session_iv) ?>"><?= $session_row['session_time'] ?></a><?php $first = false;
                             } ?>
                         </td>
                     </tr>

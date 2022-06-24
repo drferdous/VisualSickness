@@ -16,13 +16,13 @@ if (isset($_POST['participant_id']) && !empty($_POST['participant_id']) && isset
     
 	// Fetch session time choices after participant id is selected
 	$sql = "SELECT name, id
-            FROM Session_times
+            FROM session_times
             WHERE is_active = 1
-            AND study_ID = " . Session::get('study_ID') . " 
+            AND study_id = " . Session::get('study_ID') . " 
             AND id NOT IN (SELECT session_time 
-                           FROM Session WHERE is_active = 1 
-                           AND study_ID = " . Session::get('study_ID') . " 
-                           AND participant_ID = " . $id . ");";
+                           FROM session WHERE is_active = 1 
+                           AND study_id = " . Session::get('study_ID') . " 
+                           AND participant_id = " . $id . ");";
 	
 	$result = $pdo->query($sql);
 	if ($result->rowCount() > 0) { ?>

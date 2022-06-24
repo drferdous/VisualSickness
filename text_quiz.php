@@ -43,8 +43,8 @@ $role_sql = "SELECT study_role FROM Researcher_Study WHERE study_ID = " . Sessio
 $role_result = $pdo->query($role_sql);
 $role = $role_result->fetch(PDO::FETCH_ASSOC);
 
-$id_sql = "SELECT created_by FROM Session 
-           WHERE session_ID = " . Session::get('session_ID') . "
+$id_sql = "SELECT created_by FROM session 
+           WHERE session_id = " . Session::get('session_id') . "
            AND is_active = 1;";
 $id_result = $pdo->query($id_sql);
 $id_row = $id_result->fetch(PDO::FETCH_ASSOC);

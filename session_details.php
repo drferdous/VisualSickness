@@ -94,8 +94,8 @@ if (isset($_POST['remove-session-btn']) && Session::CheckPostID($_POST)){
                 $numQuizTimesTaken = $result->rowCount();
                 $areQuizTimesAvailable = $totalQuizTimesAvailable - $numQuizTimesTaken > 0;
                 
-                $id_sql = "SELECT created_by FROM Session 
-                        WHERE session_ID = $session_ID
+                $id_sql = "SELECT created_by FROM session 
+                        WHERE session_ID = $session_id
                         AND is_active = 1;";
                 $id_result = $pdo->query($id_sql);
                 $id_row = $id_result->fetch(PDO::FETCH_ASSOC);
@@ -117,7 +117,7 @@ if (isset($_POST['remove-session-btn']) && Session::CheckPostID($_POST)){
         <table class="table table-striped table-bordered">
             <thead class="text-center">
                 <?php
-                    $sql_session = "SELECT * FROM Session WHERE session_ID = $session_ID LIMIT 1;";
+                    $sql_session = "SELECT * FROM session WHERE session_id = $session_ID LIMIT 1;";
                     $sql_result = $pdo->query($sql_session);
                     $row_session = $sql_result->fetch(PDO::FETCH_ASSOC);
                     
@@ -140,8 +140,8 @@ if (isset($_POST['remove-session-btn']) && Session::CheckPostID($_POST)){
                     <th>Study Name</th>
                         <?php
                         // show name for study_ID, not id         
-                        if (isset($row_session['study_ID'])){
-                            $sql_users = "SELECT full_name FROM Study WHERE study_id = " . $row_session['study_ID'] . " LIMIT 1;";
+                        if (isset($row_session['study_id'])){
+                            $sql_users = "SELECT full_name FROM Study WHERE study_id = " . $row_session['study_id'] . " LIMIT 1;";
                             $result_users = $pdo->query($sql_users);
                             $row_users = $result_users->fetch(PDO::FETCH_ASSOC);
                                 
@@ -157,8 +157,8 @@ if (isset($_POST['remove-session-btn']) && Session::CheckPostID($_POST)){
                     <th>Participant Name</th>   
                     <?php
                     // show name for participant_ID, not id         
-                    if (isset($row_session['participant_ID'])){
-                        $sql_users = "SELECT anonymous_name, iv FROM Participants WHERE participant_id = " . $row_session['participant_ID'] . " LIMIT 1;";
+                    if (isset($row_session['participant_id'])){
+                        $sql_users = "SELECT anonymous_name, iv FROM Participants WHERE participant_id = " . $row_session['participant_id'] . " LIMIT 1;";
                         $result_users = $pdo->query($sql_users);
                         $row_users = $result_users->fetch(PDO::FETCH_ASSOC);
                         
@@ -271,7 +271,7 @@ if (isset($_POST['remove-session-btn']) && Session::CheckPostID($_POST)){
                 <tr>
                     <th class='align-middle'>Action</th>
                     <?php
-                        $remove_sql = "SELECT is_active, created_by FROM Session WHERE session_ID = $session_ID;";
+                        $remove_sql = "SELECT is_active, created_by FROM session WHERE session_ID = $session_ID;";
                         $remove_result = $pdo->query($remove_sql);
                         $remove_row = $remove_result->fetch(PDO::FETCH_ASSOC); 
                         
