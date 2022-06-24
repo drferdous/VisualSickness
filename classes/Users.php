@@ -37,15 +37,14 @@ class Users{
     if ($roleid < 2 || $roleid > 4){
         return Util::generateErrorMessage("Invalid role was selected!");
     }
-    $affil_sql = "SELECT domain from Affiliation WHERE id = $affiliationid;";
+    $affil_sql = "SELECT domain, domain_required from Affiliation WHERE id = $affiliationid;";
     $affil_result = $this->db->pdo->query($affil_sql);
-    $affil_domain = $affil_result->fetch(PDO::FETCH_ASSOC)['domain'];
-    // print_r($affil_domain);
-    if (!is_null($affil_domain)) {
+    $affil_domain = $affil_result->fetch(PDO::FETCH_ASSOC);
+    if ($affil_domain['domain_required'] == 1) {
         $arr = explode('@', $email);
         $register_domain = array_pop($arr);
         if ($affil_domain != $register_domain) {
-            return Util::generateErrorMessage("This affiliation requires the use of a $affil_domain email account during registration.");
+            return Util::generateErrorMessage("This affiliation requires the use of a " . $affil_domain['domain'] . " email account during registration.");
         }
     }
     
