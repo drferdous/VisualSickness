@@ -44,7 +44,7 @@ if (Session::get('roleid') == '1') {
     <div class="card-body">
         <?php
             $getUinfo = $users->getUserInfoById($userid);
-            if ($getUinfo->roleid == 1 && Session::get("id") != $getUinfo->id && $purpose === 'edit') {
+            if ($getUinfo->role_id == 1 && Session::get("id") != $getUinfo->user_id && $purpose === 'edit') {
                 Session::CheckLogin();
             }
             if ($getUinfo){ ?>
@@ -74,7 +74,7 @@ if (Session::get('roleid') == '1') {
                     </div>
                     <?php $sql = "SELECT name
                                   FROM affiliation
-                                  WHERE affiliation_id = " . $getUinfo->affiliationid . "  
+                                  WHERE affiliation_id = " . $getUinfo->affiliation_id . "  
                                   LIMIT 1;";
                           $result = $pdo->query($sql);
                           if ($result){
@@ -86,7 +86,7 @@ if (Session::get('roleid') == '1') {
                     <div class="form-group">
                       <label for="affilation">Affilation: <?php echo $row["name"]; ?></label>
                     </div>
-                    <?php if (Session::get("roleid") == '1' && $purpose === "edit" && Session::get("id") != $getUinfo->id) { ?>
+                    <?php if (Session::get("roleid") == '1' && $purpose === "edit" && Session::get("id") != $getUinfo->user_id) { ?>
                       <div class="form-group">
                         <div class="form-group">
                           <label for="roleid">Select user Role</label>
@@ -96,7 +96,7 @@ if (Session::get('roleid') == '1') {
                             $sql = "SELECT id, role FROM user_roles WHERE id > 1 ORDER BY id ASC;";
                             $result = $pdo->query($sql);
                             while ($row = $result->fetch(PDO::FETCH_ASSOC)){
-                                if ($getUinfo->roleid == $row["id"]){ ?>
+                                if ($getUinfo->role_id == $row["id"]){ ?>
                                 <option value="<?php echo $row["id"]; ?>" selected><?php echo $row["role"]; ?></option>
                           <?php } 
                               else{ ?>  
@@ -110,7 +110,7 @@ if (Session::get('roleid') == '1') {
                     <?php if (Session::get("roleid") == '1' && $purpose === "edit") { ?>
                     <div class="form-group">
                       <button type="submit" name="update" class="btn btn-success">Update</button>
-                      <?php if (Session::get("id") == $getUinfo->id) { ?>
+                      <?php if (Session::get("id") == $getUinfo->user_id) { ?>
                         <a class="btn btn-primary" href="change_password">Password Change</a>
                         <?php } ?>
                     </div>

@@ -49,7 +49,7 @@ class Users{
     }
     
     // if everything is sucessful, insert into DB
-    $sql = "INSERT INTO tbl_users(name, email, affiliationid, password, mobile, roleid) 
+    $sql = "INSERT INTO users(name, email, affiliation_id, password, mobile, role_id) 
             VALUES(:name, :email, :affiliationid, :password, :mobile, :roleid)";
 
     $stmt = $this->db->pdo->prepare($sql);
@@ -64,7 +64,7 @@ class Users{
     if ($result){
         $pdo = $this->db->pdo;
         $id = $pdo->lastInsertId();
-        $update_sql = "UPDATE tbl_users SET updated_by=$id WHERE id=$id;";
+        $update_sql = "UPDATE users SET updated_by=$id WHERE user_id=$id;";
         $pdo->query($update_sql);
         $body = "<p>This email was recently used to sign up with the account $name. Below is a temporary password to use for your first login. If this is not your account, please ignore this email.<br><br>Temporary password: $password</p>";
         sendEmail($email, "Temporary Password | Visual Sickness", $body);
@@ -89,8 +89,8 @@ class Users{
     foreach ($args as $key => $value) {
         $argsString .= "AND $key = $value ";
     }
-    $sql = "SELECT * FROM tbl_users WHERE affiliationid = $affiliationid AND status != 2 $argsString
-            ORDER BY id ASC;";
+    $sql = "SELECT * FROM users WHERE affiliation_id = $affiliationid AND status != 2 $argsString
+            ORDER BY user_id ASC;";
     $stmt = $this->db->pdo->prepare($sql);
     $stmt->execute();
     return $stmt->fetchAll(PDO::FETCH_OBJ);
@@ -100,7 +100,7 @@ class Users{
   // User login Autho Method 
   public function userLoginAutho($email, $password){
     $password = SHA1($password);
-    $sql = "SELECT * FROM tbl_users 
+    $sql = "SELECT * FROM users 
             WHERE email = :email 
             AND password = :password 
             AND status < 2 
@@ -114,7 +114,7 @@ class Users{
   
   // Check User Account Status
   public function CheckActiveUser($email){
-    $sql = "SELECT * FROM tbl_users 
+    $sql = "SELECT * FROM users 
             WHERE email = :email 
             AND status = :status 
             LIMIT 1";
@@ -146,23 +146,23 @@ class Users{
         $isUserActive = $this->CheckActiveUser($email);
 
         if (! ($isUserActive == TRUE)) {
-            $affiliationid_sql = "SELECT affiliationid FROM tbl_users WHERE email = :email AND status = 0 OR status = 1;";
+            $affiliationid_sql = "SELECT affiliation_id FROM users WHERE email = :email AND status = 0 OR status = 1;";
             $stmt = $this->db->pdo->prepare($affiliationid_sql);
             $stmt->bindValue(':email', $email);
             $stmt->execute();
-            $affiliationid = $stmt->fetch(PDO::FETCH_ASSOC)['affiliationid'];
+            $affiliationid = $stmt->fetch(PDO::FETCH_ASSOC)['affiliation_id'];
             
             $errorMessage = "Sorry, your account is deactivated. Please contact an admin. (" . Util::getAdminsFromAffiliation($this->db->pdo, $affiliationid) . ")";
             return Util::generateErrorMessage($errorMessage);
         } elseif ($logResult) {
           Session::init();
           Session::set('login', TRUE);
-          Session::set('id', $logResult->id);
-          Session::set('roleid', $logResult->roleid);
+          Session::set('id', $logResult->user_id);
+          Session::set('roleid', $logResult->role_id);
           Session::set('name', $logResult->name);
           Session::set('email', $logResult->email);
-          Session::set('affiliationid', $logResult->affiliationid);
-          Session::set('reg_stat', $logResult->reg_stat);
+          Session::set('affiliationid', $logResult->affiliation_id);
+          Session::set('reg_stat', $logResult->registration_status);
           Session::set('session_ID', 0);
           Session::set('logMsg', Util::generateSuccessMessage("You logged in!"));
           Session::set('study_ID', 0);
@@ -176,7 +176,7 @@ class Users{
 
     // Get Single User Information By Id Method
     public function getUserInfoById($userid){
-      $sql = "SELECT * FROM tbl_users WHERE id = :id LIMIT 1";
+      $sql = "SELECT * FROM users WHERE user_id = :id LIMIT 1";
       $stmt = $this->db->pdo->prepare($sql);
       $stmt->bindValue(':id', trim($userid));
       $stmt->execute();
@@ -231,13 +231,13 @@ class Users{
                 return Util::generateErrorMessage("Please select a valid role!");
             }
         }
-        $sql = "UPDATE tbl_users SET
+        $sql = "UPDATE users SET
                 name = :name,
                 mobile = :mobile, "
-                . (isset($roleid) ? "roleid = :roleid," : "") . "
+                . (isset($roleid) ? "role_id = :roleid," : "") . "
                 updated_by = :updated_by,
                 updated_at = CURRENT_TIMESTAMP
-                WHERE id = :id";
+                WHERE user_id = :id";
         $stmt= $this->db->pdo->prepare($sql);
         $stmt->bindValue(':name', $name);
         $stmt->bindValue(':mobile', $mobile);
@@ -259,7 +259,7 @@ class Users{
     // Check Old password method
     public function checkOldPassword($userid, $old_pass){
       $old_pass = SHA1($old_pass);
-      $sql = "SELECT password FROM tbl_users WHERE password = :password AND id =:id";
+      $sql = "SELECT password FROM users WHERE password = :password AND user_id =:id";
       $stmt = $this->db->pdo->prepare($sql);
       $stmt->bindValue(':password', $old_pass);
       $stmt->bindValue(':id', trim($userid));
@@ -284,12 +284,12 @@ class Users{
             return Util::generateErrorMessage("Passwords do not match!");
         } else {
             $new_pass = SHA1($new_pass);
-            $id_sql = "SELECT id FROM tbl_users WHERE email = :email LIMIT 1";
+            $id_sql = "SELECT user_id FROM users WHERE email = :email LIMIT 1";
             $stmt = $this->db->pdo->prepare($id_sql);
             $stmt->bindValue(':email', trim($email));
             $stmt->execute();
-            $id = $stmt->fetch(PDO::FETCH_ASSOC)['id'];
-            $sql = "UPDATE tbl_users SET
+            $id = $stmt->fetch(PDO::FETCH_ASSOC)['user_id'];
+            $sql = "UPDATE users SET
                 password=:password,
                 updated_by = $id,
                 updated_at = CURRENT_TIMESTAMP
@@ -329,11 +329,11 @@ class Users{
             return Util::generateErrorMessage("Passwords do not match!");
         } else {
             $new_pass = SHA1($new_pass);
-            $sql = "UPDATE tbl_users SET
+            $sql = "UPDATE users SET
                 password=:password,
                 updated_by = :localId,
                 updated_at = CURRENT_TIMESTAMP
-                WHERE id = :id";
+                WHERE user_id = :id";
             $stmt = $this->db->pdo->prepare($sql);
             $stmt->bindValue(':password', $new_pass);
             $stmt->bindValue(':localId', Session::get('id'));

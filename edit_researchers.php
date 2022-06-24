@@ -58,20 +58,20 @@ if (isset($editResearcher)) {
                 <div class="form-group">
                     <label for="researcher_ID" class="required">Edit A Researcher</label>
                     <?php
-                    $sql = "SELECT id, name, email
-                            FROM tbl_users
-                            WHERE id IN (SELECT researcher_ID 
+                    $sql = "SELECT user_id, name, email
+                            FROM users
+                            WHERE user_id IN (SELECT researcher_id 
                                              FROM researchers
                                              WHERE study_id = " . Session::get("study_ID") . 
                                              " AND is_active = 1 AND study_role != 2)
                             AND status = 1
-                            AND affiliationid = " . Session::get("affiliationid") . ";";
+                            AND affiliation_id = " . Session::get("affiliationid") . ";";
                     $result = $pdo->query($sql); ?>
                     <select class="form-control" name="researcher_ID" id="researcher_ID" required <?= $result->rowCount() === 0 ? 'disabled' : '' ?>>
                         <option value="" disabled hidden selected><?= $result->rowCount() === 0 ? 'There are no other researchers in this study!' : 'Researcher Name' ?></option>
                         <?php
                         while ($row = $result->fetch(PDO::FETCH_ASSOC)){
-                                $enc_id = Crypto::encrypt($row['id'], $iv); ?>
+                                $enc_id = Crypto::encrypt($row['user_id'], $iv); ?>
                                 <option value="<?= $enc_id ?>;<?= bin2hex($iv) ?>"><?= $row["name"] . " (" . $row["email"] . ")" ?></option>
                         <?php } ?>
                     </select>

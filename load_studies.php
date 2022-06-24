@@ -28,9 +28,9 @@
     $sql = "SELECT Study.study_ID, Study.full_name, Study.created_at, Study.is_active, researcher.study_role, researcher.researcher_id 
                 FROM researchers AS researcher
                 JOIN Study ON (researcher.study_id = Study.study_ID) 
-                WHERE Study.created_by IN (SELECT id 
-                                           FROM tbl_users 
-                                           WHERE affiliationid = ". Session::get('affiliationid') .")
+                WHERE Study.created_by IN (SELECT user_id 
+                                           FROM users 
+                                           WHERE affiliation_id = ". Session::get('affiliationid') .")
                 AND researcher.researcher_ID = ".  $idToSearch . "
                 AND Study.is_active = 1 
                 AND researcher.is_active = 1
@@ -54,7 +54,7 @@
         $sql = "SELECT DISTINCT Study.study_ID, Study.full_name, Study.created_at, Study.is_active
                 FROM researchers AS researcher
                 JOIN Study ON (researcher.study_id = Study.study_ID) 
-                WHERE Study.created_by IN (SELECT id FROM tbl_users WHERE affiliationid = ". Session::get('affiliationid') .")
+                WHERE Study.created_by IN (SELECT user_id FROM users WHERE affiliation_id = ". Session::get('affiliationid') .")
                 AND researcher.study_id NOT IN (SELECT study_id FROM researchers WHERE is_active = 1 AND researcher_id = ".  $idToSearch . ")
                 AND Study.is_active = 1 
                 AND researcher.is_active = 1";

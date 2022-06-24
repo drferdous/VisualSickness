@@ -192,17 +192,17 @@ class Studies {
     $study_ID = Session::get("study_ID");
     $last_edited_by = Session::get('id'); 
     
-    $sql = "SELECT roleid FROM tbl_users
-            WHERE id = :researcher_ID
+    $sql = "SELECT role_id FROM users
+            WHERE user_id = :researcher_ID
             LIMIT 1;";
     $stmt = $this->db->pdo->prepare($sql);
     $stmt->bindValue(':researcher_ID', $researcher_ID);
     $result = $stmt->execute();
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
-    if (!isset($row['roleid'])){
+    if (!isset($row['role_id'])){
         return Util::generateErrorMessage("We could not verify this user's role.");
     }
-    if ($study_role < $row['roleid'] || $study_role > 4){
+    if ($study_role < $row['role_id'] || $study_role > 4){
         return Util::generateErrorMessage("An invalid role was selected!");
     }
       
@@ -266,17 +266,17 @@ class Studies {
     $study_ID = Session::get("study_ID");
     $last_edited_by = Session::get('id');
     
-    $sql = "SELECT roleid FROM tbl_users
-            WHERE id = :researcher_ID
+    $sql = "SELECT role_id FROM users
+            WHERE user_id = :researcher_ID
             LIMIT 1;";
     $stmt = $this->db->pdo->prepare($sql);
     $stmt->bindValue('researcher_ID', $researcher_ID);
     $result = $stmt->execute();
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
-    if (!isset($row["roleid"])){
+    if (!isset($row["role_id"])){
         return Util::generateErrorMessage("We could not verify this user's role.");
     }
-    if ($study_role < $row["roleid"] || $study_role > 4){
+    if ($study_role < $row["role_id"] || $study_role > 4){
         return Util::generateErrorMessage("An invalid role was selected.");
     }
       

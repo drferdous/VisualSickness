@@ -78,14 +78,14 @@ class Session{
     public static function setStudyID($study_ID, $pdo) {
         if (self::get('roleid') == 1) {
             $sql = "SELECT study_ID FROM Study
-                    WHERE created_by IN (SELECT user.id FROM tbl_users AS user WHERE affiliationid = " . self::get("affiliationid") . ")
+                    WHERE created_by IN (SELECT user_id FROM users WHERE affiliation_id = " . self::get("affiliationid") . ")
                     AND study_ID = $study_ID
                     LIMIT 1;";
         } else {
-            $sql = "SELECT user.id FROM tbl_users as user
+            $sql = "SELECT users.id FROM users
                 JOIN researchers as researcher
-                ON (user.id =  researcher.researcher_id)
-                WHERE user.id = " . self::get("id") . "
+                ON (users.id =  researcher.researcher_id)
+                WHERE users.id = " . self::get("id") . "
                 AND researcher.study_id = $study_ID LIMIT 1;";
         }
         $result = $pdo->query($sql);

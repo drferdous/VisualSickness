@@ -18,11 +18,11 @@
     }
     
     if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["removeUser"]) && Session::CheckPostID($_POST)){
-        $sql = "UPDATE tbl_users
+        $sql = "UPDATE users
                 SET status = 2,
-                updated_by = $localId,
-                updated_at = CURRENT_TIMESTAMP
-                WHERE id = " . $user_ID . ";";
+                    updated_by = $localId,
+                    updated_at = CURRENT_TIMESTAMP
+                WHERE user_id = " . $user_ID . ";";
         $result = $pdo->query($sql);
         if (!$result){
             echo $pdo->errorInfo();
@@ -31,11 +31,11 @@
     }
     
     if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["deactivateUser"]) && Session::CheckPostID($_POST)){
-        $sql = "UPDATE tbl_users
+        $sql = "UPDATE users
                 SET status = 0,
-                updated_by = $localId,
-                updated_at = CURRENT_TIMESTAMP
-                WHERE id = " . $user_ID . "
+                    updated_by = $localId,
+                    updated_at = CURRENT_TIMESTAMP
+                WHERE user_id = " . $user_ID . "
                 LIMIT 1;";
         $result = $pdo->query($sql);
         if (!$result){
@@ -45,11 +45,11 @@
     }
     
     if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["activateUser"]) && Session::CheckPostID($_POST)){
-        $sql = "UPDATE tbl_users
+        $sql = "UPDATE users
                 SET status = 1,
-                updated_by = $localId,
-                updated_at = CURRENT_TIMESTAMP
-                WHERE id = " . $user_ID . "
+                    updated_by = $localId,
+                    updated_at = CURRENT_TIMESTAMP
+                WHERE user_id = " . $user_ID . "
                 LIMIT 1;";
         $result = $pdo->query($sql);
         if (!$result){

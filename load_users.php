@@ -48,23 +48,23 @@
 
                 ?>
                             <tr class="text-center"
-                            <?php if (Session::get("id") == $value->id) { ?>
+                            <?php if (Session::get("id") == $value->user_id) { ?>
                                 style="background:#d9edf7"
                             <?php } ?>
                             >
 
                         <td><?= $value->name; ?>
                         <br>
-                        <?php if ($value->roleid  == '1'){ //admin ?>
+                        <?php if ($value->role_id  == '1'){ //admin ?>
                                 <span class='badge badge-lg badge-info text-white'>Admin</span>
                         <?php } 
-                              elseif ($value->roleid == '2') { // PI ?>
+                              elseif ($value->role_id == '2') { // PI ?>
                                 <span class='badge badge-lg badge-dark text-white'>Primary Investigator</span>
                         <?php }
-                              elseif ($value->roleid == '3') { // RA ?>
+                              elseif ($value->role_id == '3') { // RA ?>
                                 <span class='badge badge-lg badge-dark text-white'>Research Assistant</span>
                         <?php }
-                              elseif ($value->roleid == '4') { // only users! ?>
+                              elseif ($value->role_id == '4') { // only users! ?>
                                 <span class='badge badge-lg badge-dark text-white'>User Only</span>
                         <?php } ?>
                         </td>
@@ -73,9 +73,9 @@
                         <td>
                         <?php if ($value->status == 0) { ?>
                             <span class="badge badge-lg badge-danger text-white">Inactive</span>
-                        <?php } else if ($value->reg_stat == 0) { ?>
+                        <?php } else if ($value->registration_status == 0) { ?>
                             <span class="badge badge-lg badge-secondary text-white">Pending Email</span>
-                        <?php } else if ($value->reg_stat == 1) { ?>
+                        <?php } else if ($value->registration_status == 1) { ?>
                             <span class="badge badge-lg badge-warning text-black">Pending Validation</span>
                         <?php } else { ?>
                             <span class="badge badge-lg badge-info text-white">Active</span>
@@ -84,7 +84,7 @@
                         </td>
                         <td><span class="badge badge-lg badge-secondary text-white"><?php echo date_format($time_created,"M d, Y h:i A");  ?></span></td>
 
-                        <td data-user_ID="<?php echo Crypto::encrypt($value->id, $iv); ?>"
+                        <td data-user_ID="<?php echo Crypto::encrypt($value->user_id, $iv); ?>"
                             data-iv="<?php echo bin2hex($iv); ?>">
                             <div>
                           <?php if ( Session::get("roleid") == '1') {?>
@@ -93,7 +93,7 @@
                                 data-purpose="view" style="margin-bottom: 4px;">
                                 View
                             </a>
-                        <?php if ($value->roleid === '1' && $value->id !== Session::get('id')){ ?>
+                        <?php if ($value->role_id === '1' && $value->user_id !== Session::get('id')){ ?>
                                 <a class="btn btn-info btn-sm disabled"
                                     href="javascript:void(0);" style="margin-bottom: 4px;">
                                     Edit
@@ -106,7 +106,7 @@
                                     Edit
                                 </a>
                         <?php } ?></div><div><?php
-                              if ($value->roleid === '1' || Session::get("id") == $value->id){ ?>
+                              if ($value->role_id === '1' || Session::get("id") == $value->user_id){ ?>
                                 <a class="btn btn-danger btn-sm disabled"
                                    href="javascript:void(0);" style="margin-bottom: 4px;">
                                 Remove
@@ -121,19 +121,19 @@
                         <?php }
                               if ($value->status == '1'){ ?> 
                                <a class="btn btn-outline-dark userAction deactivateUser
-                       <?php if ($value->roleid ==='1' || Session::get("id") == $value->id) {
+                       <?php if ($value->role_id ==='1' || Session::get("id") == $value->user_id) {
                          echo "disabled";
                        } ?>
                                 btn-sm " href="user_list" style="margin-bottom: 4px;" ?>Deactivate</a>
                         <?php }elseif ($value->status == '0'){?>
                             <a class="btn btn-success btn-sm userAction activateUser 
-                       <?php if ($value->roleid === '1' || Session::get("id") == $value->id) {
+                       <?php if ($value->role_id === '1' || Session::get("id") == $value->user_id) {
                          echo "disabled ";
                        } ?>
                                 btn-sm" href="user_list" style="margin-bottom: 4px;">Activate</a>
                              <?php } ?>
                             
-                        <?php if ($value->reg_stat === "1"){ ?>
+                        <?php if ($value->registration_status === "1"){ ?>
                             <a class="btn btn-sm btn-success"
                                id="validateUser"
                                href="validate_user" style="margin-bottom: 4px;">

@@ -16,7 +16,7 @@ $pdo = $db->pdo;
 if (isset($_POST['researcher_ID']) && !empty($_POST['researcher_ID']) && isset($_POST['iv'])) {
     $id = Crypto::decrypt($_POST['researcher_ID'], hex2bin($_POST['iv']));
 	// Fetch user role choices after researcher id is selected
-	$sql = "SELECT id, role FROM user_roles WHERE id >= (SELECT roleid from tbl_users where id = $id)";
+	$sql = "SELECT id, role FROM user_roles WHERE id >= (SELECT role_id from users where user_id = $id)";
 	$result = $pdo->query($sql);
 	if ($result->rowCount() > 0) {
 	    $sql_study_role = "SELECT study_role FROM researchers 

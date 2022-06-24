@@ -242,7 +242,7 @@ if (isset($_POST['remove-session-btn']) && Session::CheckPostID($_POST)){
                     <?php
                     // show name for created_by, not id         
                     if (isset($row_session['created_by'])){
-                        $sql_users = "SELECT name FROM tbl_users WHERE id = " . $row_session['created_by'] . " LIMIT 1;";
+                        $sql_users = "SELECT name FROM users WHERE user_id = " . $row_session['created_by'] . " LIMIT 1;";
                         $result_users = $pdo->query($sql_users);
                         $row_users = $result_users->fetch(PDO::FETCH_ASSOC);
                             
@@ -258,7 +258,7 @@ if (isset($_POST['remove-session-btn']) && Session::CheckPostID($_POST)){
                     <?php
                     // show name for last_edited_by, not id    
                     if (isset($row_session['last_edited_by'])){
-                        $sql_users = "SELECT name FROM tbl_users WHERE id = " . $row_session['last_edited_by'] . " LIMIT 1;";
+                        $sql_users = "SELECT name FROM users WHERE user_id = " . $row_session['last_edited_by'] . " LIMIT 1;";
                         $result_users = $pdo->query($sql_users);
                         $row_users = $result_users->fetch(PDO::FETCH_ASSOC);
                         echo "<td>" . $row_users['name'] . "</td>";

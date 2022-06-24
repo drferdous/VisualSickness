@@ -25,7 +25,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["reset-submit"]) && Ses
         $body .= "<br><br>The user has signed up with the name <strong>" . Session::get("name") . "</strong> and email <strong>" . Session::get('email') . '</strong>.<br>';
         // send email here
         sendEmail($adminString, 'Visual Sickness | New User Registration', $body);
-        $sql = 'UPDATE tbl_users SET reg_stat = 1 where id = ' . Session::get('id') . ';';
+        $sql = 'UPDATE users SET registraction_status = 1 where user_id = ' . Session::get('id') . ';';
         $result = Database::getInstance()->pdo->query($sql);
         Session::set("reg_stat", 1);
         if (!$result) {

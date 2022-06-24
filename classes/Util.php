@@ -119,7 +119,7 @@ class Util {
 
   // Check Exist Email Address Method
   public static function checkExistEmail($email, $db){
-    $sql = "SELECT email FROM tbl_users 
+    $sql = "SELECT email FROM users 
             WHERE email = :email AND status < 2
             LIMIT 1";
     $stmt = $db->pdo->prepare($sql);
@@ -133,7 +133,7 @@ class Util {
   }
   
   public static function getUserEmailById($pdo, $id) {
-      $sql = "SELECT email FROM tbl_users WHERE id = $id";
+      $sql = "SELECT email FROM users WHERE user_id = $id";
       $result = $pdo->query($sql);
       if (!$result) {
           echo $pdo->errorInfo();
@@ -159,7 +159,7 @@ class Util {
   }
   
   public static function getAdminsFromAffiliation($pdo, $affiliationid) {
-      $sql = "SELECT email FROM tbl_users WHERE roleid = 1 AND affiliationid = $affiliationid";
+      $sql = "SELECT email FROM users WHERE role_id = 1 AND affiliation_id = $affiliationid";
       $result = $pdo->query($sql);
       if (!$result) {
           echo $pdo->errorInfo();
