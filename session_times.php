@@ -19,8 +19,8 @@ if (isset($_POST['participant_id']) && !empty($_POST['participant_id']) && isset
             FROM session_times
             WHERE is_active = 1
             AND study_id = " . Session::get('study_ID') . " 
-            AND id NOT IN (SELECT session_time 
-                           FROM session WHERE is_active = 1 
+            AND id NOT IN (SELECT session_time
+                           FROM session WHERE is_active = 1
                            AND study_id = " . Session::get('study_ID') . " 
                            AND participant_id = " . $id . ");";
 	

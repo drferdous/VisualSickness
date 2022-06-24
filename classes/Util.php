@@ -10,7 +10,7 @@ class Util {
    }
    
    public static function getModalForSSQ($pdo, $new=TRUE) {
-        $ssq_sql = "SELECT * FROM SSQ WHERE ssq_ID = " . Session::get('ssq_ID');
+        $ssq_sql = "SELECT * FROM ssq WHERE ssq_id = " . Session::get('ssq_ID');
         $ssq_result = $pdo->query($ssq_sql);
         $row = $ssq_result->fetch(PDO::FETCH_ASSOC);
         if ($row) {
@@ -119,7 +119,7 @@ class Util {
 
   // Check Exist Email Address Method
   public static function checkExistEmail($email, $db){
-    $sql = "SELECT email FROM tbl_users 
+    $sql = "SELECT email FROM users 
             WHERE email = :email AND status < 2
             LIMIT 1";
     $stmt = $db->pdo->prepare($sql);
@@ -133,7 +133,7 @@ class Util {
   }
   
   public static function getUserEmailById($pdo, $id) {
-      $sql = "SELECT email FROM tbl_users WHERE id = $id";
+      $sql = "SELECT email FROM users WHERE user_id = $id";
       $result = $pdo->query($sql);
       if (!$result) {
           echo $pdo->errorInfo();
@@ -159,7 +159,7 @@ class Util {
   }
   
   public static function getAdminsFromAffiliation($pdo, $affiliationid) {
-      $sql = "SELECT email FROM tbl_users WHERE roleid = 1 AND affiliationid = $affiliationid";
+      $sql = "SELECT email FROM users WHERE role_id = 1 AND affiliation_id = $affiliationid";
       $result = $pdo->query($sql);
       if (!$result) {
           echo $pdo->errorInfo();
@@ -173,13 +173,13 @@ class Util {
   }
   
   public static function getAffiliationNameById($pdo, $affiliationId) {
-      $sql = "SELECT Name FROM Affiliation WHERE id = $affiliationId";
+      $sql = "SELECT name FROM affiliation WHERE affiliation_id = $affiliationId";
       $result = $pdo->query($sql);
       if (!$result) {
           echo $pdo->errorInfo();
           return null;
       }
-      return $result->fetch(PDO::FETCH_ASSOC)['Name'];
+      return $result->fetch(PDO::FETCH_ASSOC)['name'];
   }
   
   public static function getValueFromPost($str, $post) {

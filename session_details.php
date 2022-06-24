@@ -86,8 +86,8 @@ if (isset($_POST['remove-session-btn']) && Session::CheckPostID($_POST)){
                 
                 $sql = "SELECT * FROM ssq_times 
                         WHERE id IN (SELECT ssq_time 
-                                     FROM SSQ 
-                                     WHERE session_ID = $session_ID
+                                     FROM ssq 
+                                     WHERE session_id = $session_ID
                                      AND is_active = 1) 
                         AND is_active = 1;";
                 $result = $pdo->query($sql);
@@ -100,7 +100,7 @@ if (isset($_POST['remove-session-btn']) && Session::CheckPostID($_POST)){
                 $id_result = $pdo->query($id_sql);
                 $id_row = $id_result->fetch(PDO::FETCH_ASSOC);
                 
-                $role_sql = "SELECT study_role FROM Researcher_Study WHERE study_ID = " . Session::get('study_ID') . "
+                $role_sql = "SELECT study_role FROM researchers WHERE study_id = " . Session::get('study_ID') . "
                  AND  researcher_ID = " . Session::get("id") . " 
                  AND is_active = 1;";
                 
@@ -158,7 +158,7 @@ if (isset($_POST['remove-session-btn']) && Session::CheckPostID($_POST)){
                     <?php
                     // show name for participant_ID, not id         
                     if (isset($row_session['participant_id'])){
-                        $sql_users = "SELECT anonymous_name, iv FROM Participants WHERE participant_id = " . $row_session['participant_id'] . " LIMIT 1;";
+                        $sql_users = "SELECT anonymous_name, iv FROM participants WHERE participant_id = " . $row_session['participant_id'] . " LIMIT 1;";
                         $result_users = $pdo->query($sql_users);
                         $row_users = $result_users->fetch(PDO::FETCH_ASSOC);
                         
@@ -175,7 +175,7 @@ if (isset($_POST['remove-session-btn']) && Session::CheckPostID($_POST)){
                 <tr>
                     <th>Session Name</th>
                     <?php
-                    $session_time_sql = "SELECT name FROM Session_times
+                    $session_time_sql = "SELECT name FROM session_times
                                          WHERE id = " . $row_session['session_time'];
                     $time = $pdo->query($session_time_sql)->fetch(PDO::FETCH_ASSOC)['name']; ?>
                     <td><?= $time ?></td>
@@ -186,17 +186,17 @@ if (isset($_POST['remove-session-btn']) && Session::CheckPostID($_POST)){
                     <td>
                     <?php
                     
-                    $sql = "SELECT SSQ.ssq_ID, SSQ.ssq_time, SSQ.ssq_type
-                            FROM SSQ JOIN ssq_times ON (SSQ.ssq_time = ssq_times.id)
-                            WHERE SSQ.session_ID = $session_ID
+                    $sql = "SELECT ssq.ssq_id, ssq.ssq_time, ssq.ssq_type
+                            FROM ssq JOIN ssq_times ON (ssq.ssq_time = ssq_times.id)
+                            WHERE ssq.session_id = $session_ID
                             AND ssq_times.is_active = 1
-                            AND SSQ.is_active = 1
-                            ORDER BY SSQ.ssq_time ASC;";
+                            AND ssq.is_active = 1
+                            ORDER BY ssq.ssq_time ASC;";
                     $result = $pdo->query($sql);
                     
                     while ($row = $result->fetch(PDO::FETCH_ASSOC)){
                         $ssq_times = "SELECT name FROM ssq_times WHERE id = " . $row["ssq_time"];
-                        $ssq_type = "SELECT type FROM SSQ_type WHERE id = " . $row["ssq_type"];
+                        $ssq_type = "SELECT type FROM ssq_type WHERE id = " . $row["ssq_type"];
                         $result_times = $pdo->query($ssq_times);
                         $ssq_name = $result_times->fetch(PDO::FETCH_ASSOC)["name"];
                         $result_type = $pdo->query($ssq_type);
@@ -242,7 +242,7 @@ if (isset($_POST['remove-session-btn']) && Session::CheckPostID($_POST)){
                     <?php
                     // show name for created_by, not id         
                     if (isset($row_session['created_by'])){
-                        $sql_users = "SELECT name FROM tbl_users WHERE id = " . $row_session['created_by'] . " LIMIT 1;";
+                        $sql_users = "SELECT name FROM users WHERE user_id = " . $row_session['created_by'] . " LIMIT 1;";
                         $result_users = $pdo->query($sql_users);
                         $row_users = $result_users->fetch(PDO::FETCH_ASSOC);
                             
@@ -258,7 +258,7 @@ if (isset($_POST['remove-session-btn']) && Session::CheckPostID($_POST)){
                     <?php
                     // show name for last_edited_by, not id    
                     if (isset($row_session['last_edited_by'])){
-                        $sql_users = "SELECT name FROM tbl_users WHERE id = " . $row_session['last_edited_by'] . " LIMIT 1;";
+                        $sql_users = "SELECT name FROM users WHERE user_id = " . $row_session['last_edited_by'] . " LIMIT 1;";
                         $result_users = $pdo->query($sql_users);
                         $row_users = $result_users->fetch(PDO::FETCH_ASSOC);
                         echo "<td>" . $row_users['name'] . "</td>";
@@ -275,7 +275,7 @@ if (isset($_POST['remove-session-btn']) && Session::CheckPostID($_POST)){
                         $remove_result = $pdo->query($remove_sql);
                         $remove_row = $remove_result->fetch(PDO::FETCH_ASSOC); 
                         
-                        $role_sql = "SELECT study_role FROM Researcher_Study WHERE study_ID = " . Session::get("study_ID") . " AND  researcher_ID = " . Session::get("id") . " AND is_active = 1;";
+                        $role_sql = "SELECT study_role FROM researchers WHERE study_id = " . Session::get("study_ID") . " AND  researcher_id = " . Session::get("id") . " AND is_active = 1;";
                         $role_result = $pdo->query($role_sql);
                         $role_row = $role_result->fetch(PDO::FETCH_ASSOC);
                         

@@ -97,7 +97,7 @@
                 <select class="form-control" name="quiz_type" id="quiz_type" required>
                     <option value="" disabled selected hidden>Choose Quiz Type...</option>
                     <?php
-                        $sql = "SELECT id, type FROM SSQ_type;";
+                        $sql = "SELECT id, type FROM ssq_type;";
                         $result = $pdo->query($sql);
                         while ($row = $result->fetch(PDO::FETCH_ASSOC)){
                             echo "<option value=\"" . $row['id'] . "\">";
@@ -119,7 +119,11 @@
 									 FROM session
 			                         WHERE session_id = $session_ID) 
 			                         AND id NOT IN (SELECT ssq_time
+<<<<<<< HEAD
 			                                        FROM SSQ
+=======
+			                                        FROM ssq
+>>>>>>> cb70a77b0ec65460398fab91c283b9fd8635d61c
 			                                        WHERE session_id = $session_ID and is_active = 1);";
                         $result = $pdo->query($sql);
                         while ($row = $result->fetch(PDO::FETCH_ASSOC)){

@@ -21,7 +21,7 @@
         
     }
     
-    /*$inactive_sql = "UPDATE SSQ SET is_active = 0 WHERE ssq_time IN (SELECT id FROM ssq_times WHERE study_id = $study_ID AND name IN ($remove))";
+    /*$inactive_sql = "UPDATE ssq SET is_active = 0 WHERE ssq_time IN (SELECT id FROM ssq_times WHERE study_id = $study_ID AND name IN ($remove))";
     $result = $pdo->query($inactive_sql);
     
     if (!$result) {

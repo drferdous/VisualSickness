@@ -36,8 +36,8 @@ if (isset($_POST['ssq_ID']) && isset($_POST['iv'])) {
 
 $ssq_ID = Session::get('ssq_ID');
 
-$role_sql = "SELECT study_role FROM Researcher_Study WHERE study_ID = " . Session::get('study_ID') . "
-             AND  researcher_ID = " . Session::get("id") . " 
+$role_sql = "SELECT study_role FROM researchers WHERE study_id = " . Session::get('study_ID') . "
+             AND researcher_id = " . Session::get("id") . " 
              AND is_active = 1;";
                     
 $role_result = $pdo->query($role_sql);
@@ -441,8 +441,8 @@ $study_is_active = $study_result->fetch(PDO::FETCH_ASSOC)['is_active'] == 1;
 
 <?php
     $sql = "SELECT general_discomfort, fatigue, headache, eye_strain, difficulty_focusing, increased_salivation, sweating, nausea, difficulty_concentrating, fullness_of_head, blurred_vision, dizziness_with_eyes_open, dizziness_with_eyes_closed, vertigo, stomach_awareness, burping
-        FROM SSQ 
-        WHERE ssq_ID = " . $ssq_ID . "
+        FROM ssq 
+        WHERE ssq_id = " . $ssq_ID . "
         LIMIT 1;";
             
     $result = $pdo->query($sql);

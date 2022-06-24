@@ -15,7 +15,7 @@
         $pdo = $db->pdo;
         
         $userEmail = $_POST["email"];
-        $user_sql = "SELECT id FROM tbl_users
+        $user_sql = "SELECT user_id FROM users
                      WHERE email = ?
                      AND status > 0;";
         $stmt = $pdo->prepare($user_sql);

@@ -7,11 +7,11 @@
         header('Location: study_list');
     }
     $study_ID = Session::get('study_ID');
-    $affil_sql = "SELECT users.affiliationid FROM tbl_users AS users
-                    JOIN Study AS study ON users.id = study.created_by
+    $affil_sql = "SELECT users.affiliation_id FROM users
+                    JOIN Study AS study ON users.user_id = study.created_by
                     WHERE study.study_ID = $study_ID LIMIT 1;";
     $affil_result = $pdo->query($affil_sql);
-    if (!(Session::get('roleid') == 1 && $affil_result->fetch(PDO::FETCH_ASSOC)['affiliationid'] == Session::get('affiliationid'))) {
+    if (!(Session::get('roleid') == 1 && $affil_result->fetch(PDO::FETCH_ASSOC)['affiliation_id'] == Session::get('affiliationid'))) {
         Session::requireResearcherOrUser($study_ID, $pdo);
     }
 ?>
@@ -24,7 +24,7 @@
     </div>
     <?php
     
-        $sql = "SELECT user.name, user.email, user.mobile, role.role FROM tbl_users as user JOIN Researcher_Study as study ON (user.id = study.researcher_ID) JOIN tbl_roles as role ON (role.id = study.study_role) WHERE study.is_active = 1 AND study.study_ID = $study_ID;";
+        $sql = "SELECT name, email, mobile, role.role FROM users JOIN researchers as researcher ON (user_id = researcher.researcher_id) JOIN user_roles as role ON (role.id = researcher.study_role) WHERE researcher.is_active = 1 AND researcher.study_id = $study_ID;";
                 
         $result = $pdo->query($sql);
         

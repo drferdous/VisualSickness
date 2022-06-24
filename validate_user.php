@@ -21,9 +21,9 @@
     
     echo print_r($_POST);
     
-    $sql = "UPDATE tbl_users
-            SET reg_stat = 2
-            WHERE id = " . $userid . ";";
+    $sql = "UPDATE users
+            SET registration_status = 2
+            WHERE user_id = " . $userid . ";";
     $result = $pdo->query($sql);
     
     if (!$result){

@@ -31,10 +31,10 @@ Session::requireResearcherOrUser(Session::get('study_ID'), $pdo);
     <div class="card-body pr-2 pl-2">
     <?php
         $sql = "SELECT UNIQUE(Session.participant_ID) FROM Session
-                JOIN Participants ON Session.participant_ID = Participants.participant_ID
-                JOIN Session_times AS time ON time.id = Session.session_time
+                JOIN participants ON Session.participant_ID = participants.participant_id
+                JOIN session_times AS time ON time.id = Session.session_time
                 WHERE Session.study_ID = " . Session::get('study_ID') . "
-                AND Participants.is_active = 1
+                AND participants.is_active = 1
                 AND Session.is_active = 1
                 AND time.is_active = 1";
         $result = $pdo->query($sql);
@@ -56,7 +56,7 @@ Session::requireResearcherOrUser(Session::get('study_ID'), $pdo);
                 while ($row = $result->fetch(PDO::FETCH_ASSOC)) { ?>
                     <tr>
                         <?php if (isset($row['participant_ID'])) {
-                            $sql_users = "SELECT anonymous_name, iv, participant_id FROM Participants WHERE participant_id = " . $row['participant_ID'] . " LIMIT 1;";
+                            $sql_users = "SELECT anonymous_name, iv, participant_id FROM participants WHERE participant_id = " . $row['participant_ID'] . " LIMIT 1;";
                             $result_users = $pdo->query($sql_users);
                             
                             if (!$result_users){
@@ -74,9 +74,9 @@ Session::requireResearcherOrUser(Session::get('study_ID'), $pdo);
                         <?php } ?>
                         <td>
                             <?php
-                            $timings_sql = "SELECT time.name AS session_time, S.session_id FROM session AS S
-                                            JOIN Session_times AS time ON S.session_time = time.id
-                                            WHERE S.participant_id = " . $row['participant_id'] . "
+                            $timings_sql = "SELECT time.name AS session_time, S.session_ID FROM Session AS S
+                                            JOIN session_times AS time ON S.session_time = time.id
+                                            WHERE S.participant_ID = " . $row['participant_ID'] . "
                                             AND S.is_active = 1
                                             AND time.is_active = 1
                                             ORDER BY S.start_time";

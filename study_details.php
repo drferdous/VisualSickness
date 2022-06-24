@@ -19,11 +19,10 @@ if (Session::get('study_ID') == 0) {
 }
 $study_ID = Session::get('study_ID');
 if (Session::get('roleid') == 1) {
-    $affil_sql = "SELECT users.affiliationid FROM study
-                    JOIN tbl_users AS users
-                    ON study.created_by = users.id
+    $affil_sql = "SELECT users.affiliation_id FROM study
+                    JOIN users ON study.created_by = users.user_id
                     WHERE study.study_id = $study_ID
-                    AND users.affiliationid = " . Session::get('affiliationid');
+                    AND users.affiliation_id = " . Session::get('affiliationid');
     $affil_result = $pdo->query($affil_sql);
     if (!$affil_result->rowCount()) {
         header('Location: study_list');
@@ -74,11 +73,11 @@ $sql_times = "SELECT name FROM ssq_times
               WHERE study_id = " . $study_ID . " AND is_active = 1;";
 $result_times = $pdo->query($sql_times);
 
-$sql_session_times = "SELECT name FROM Session_times
+$sql_session_times = "SELECT name FROM session_times
               WHERE study_ID = " . $study_ID . " AND is_active = 1;";
 $result_session_times = $pdo->query($sql_session_times);
                     
-$role_sql = "SELECT study_role FROM Researcher_Study WHERE study_ID = " . Session::get("study_ID") . " AND  researcher_ID = " . Session::get("id") . " AND is_active = 1;";
+$role_sql = "SELECT study_role FROM researchers WHERE study_id = " . Session::get("study_ID") . " AND  researcher_id = " . Session::get("id") . " AND is_active = 1;";
     
 $role_result = $pdo->query($role_sql);
 $role = $role_result->fetch(PDO::FETCH_ASSOC);
@@ -118,10 +117,10 @@ if($timezone < 0) {
                                         <li><a href="remove_researcher" class="dropdown-item nested-dropdown-item">Remove A Researcher</a></li>
                                         <li><a href="add_researcher" class="dropdown-item nested-dropdown-item">Add A Researcher</a></li>
                                         <?php
-                                        $sql = "SELECT u.email FROM tbl_users AS u
-                                            JOIN Researcher_Study AS rs ON rs.researcher_ID = u.id
-                                            WHERE rs.study_ID = $study_ID
-                                            AND rs.is_active = 1
+                                        $sql = "SELECT u.email FROM users AS u
+                                            JOIN researchers AS researcher ON researcher.researcher_id = u.user_id
+                                            WHERE researcher.study_id = $study_ID
+                                            AND researcher.is_active = 1
                                             AND u.status = 1;";
                                         $email_result = $pdo->query($sql);
                                         $emails = array();
@@ -163,7 +162,7 @@ if($timezone < 0) {
                         <?php } ?>
                         
                         <?php 
-                        $pi_sql = "SELECT COUNT(study_role) AS Count FROM Researcher_Study WHERE study_ID = " . Session::get("study_ID") . " AND study_role = 2 AND is_active = 1;";
+                        $pi_sql = "SELECT COUNT(study_role) AS Count FROM researcher WHERE study_id = " . Session::get("study_ID") . " AND study_role = 2 AND is_active = 1;";
                         $pi_result = $pdo->query($pi_sql);
                         $pi_count = $pi_result->fetch(PDO::FETCH_ASSOC);
                         if ($row_study['is_active'] == 1 && isset($role['study_role']) && ($role['study_role'] != 2 || $pi_count['Count'] > 1)) { ?>
@@ -194,10 +193,10 @@ if($timezone < 0) {
                                 <li><a href="remove_researcher" class="dropdown-item">Remove A Researcher</a></li>
                                 <li><a href="add_researcher" class="dropdown-item">Add A Researcher</a></li>
                                 <?php
-                                $sql = "SELECT u.email FROM tbl_users AS u
-                                    JOIN Researcher_Study AS rs ON rs.researcher_ID = u.id
-                                    WHERE rs.study_ID = $study_ID
-                                    AND rs.is_active = 1
+                                $sql = "SELECT u.email FROM users AS u
+                                    JOIN researchers AS researcher ON researcher.researcher_id = u.user_id
+                                    WHERE researcher.study_id = $study_ID
+                                    AND researcher.is_active = 1
                                     AND u.status = 1;";
                                 $email_result = $pdo->query($sql);
                                 $emails = array();
@@ -236,7 +235,7 @@ if($timezone < 0) {
                             </form>
                         </ul>
                 <?php  }
-                $pi_sql = "SELECT COUNT(study_role) AS Count FROM Researcher_Study WHERE study_ID = " . Session::get("study_ID") . " AND study_role = 2 AND is_active = 1;";
+                $pi_sql = "SELECT COUNT(study_role) AS Count FROM researchers WHERE study_id = " . Session::get("study_ID") . " AND study_role = 2 AND is_active = 1;";
                 $pi_result = $pdo->query($pi_sql);
                 $pi_count = $pi_result->fetch(PDO::FETCH_ASSOC);
                 if ($row_study['is_active'] == 1 && isset($role['study_role']) && ($role['study_role'] != 2 || $pi_count['Count'] > 1)) { ?>
@@ -312,7 +311,7 @@ if($timezone < 0) {
                     <td class="align-middle"><?php
                     // show name for created_by, not id                  
                     if (isset($row_study['created_by'])){
-                        $sql_users = "SELECT name FROM tbl_users WHERE id = " . $row_study['created_by'] . " LIMIT 1;";
+                        $sql_users = "SELECT name FROM users WHERE user_id = " . $row_study['created_by'] . " LIMIT 1;";
                         $result_users = $pdo->query($sql_users);
                         $row_users = $result_users->fetch(PDO::FETCH_ASSOC);
                         
@@ -336,7 +335,7 @@ if($timezone < 0) {
                     <td class="align-middle"><?php          
                     // show name for last_edited_by, not id    
                     if (isset($row_study['last_edited_by'])){
-                        $sql_users = "SELECT name FROM tbl_users WHERE id = " . $row_study['last_edited_by'] . " LIMIT 1;";
+                        $sql_users = "SELECT name FROM users WHERE user_id = " . $row_study['last_edited_by'] . " LIMIT 1;";
                         $result_users = $pdo->query($sql_users);
                         $row_users = $result_users->fetch(PDO::FETCH_ASSOC);
                         echo $row_users['name'];

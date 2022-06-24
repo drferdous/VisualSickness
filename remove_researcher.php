@@ -54,19 +54,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['removeResearcher']) &&
                     <label for="researcher_ID" class="required">Remove a Researcher</label>
                     <?php
                     
-                    $sql = "SELECT id, name
-                            FROM tbl_users
-                            WHERE id IN (SELECT researcher_ID
-                                         FROM Researcher_Study
-                                         WHERE study_ID = $study_ID
+                    $sql = "SELECT user_id, name
+                            FROM users
+                            WHERE user_id IN (SELECT researcher_id
+                                         FROM researchers
+                                         WHERE study_id = $study_ID
                                          AND is_active = 1
-                                         AND NOT researcher_ID = " . Session::get('id') . ");";
+                                         AND NOT researcher_id = " . Session::get('id') . ");";
                     $result = $pdo->query($sql); ?>
                     <select class="form-control" name="researcher_ID" id="researcher_ID" required <?= $result->rowCount() === 0 ? 'disabled' : '' ?>>
                         <option value="" disabled hidden selected><?= $result->rowCount() === 0 ? 'There are no researchers you can remove from this study!' : 'Researcher Name' ?></option>
                         <?php
                         while ($row = $result->fetch(PDO::FETCH_ASSOC)){
-                            $enc_id = Crypto::encrypt($row['id'], $iv); ?>
+                            $enc_id = Crypto::encrypt($row['user_id'], $iv); ?>
                             <option value="<?= $enc_id ?>;<?= bin2hex($iv) ?>"><?= $row['name']; ?></option>
                         <?php } ?>
                     </select>

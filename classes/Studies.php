@@ -35,7 +35,7 @@ class Studies {
             $session_ID = Session::get('session_ID');
             
             if ($ssq_ID > 0){
-                $sql = "UPDATE SSQ
+                $sql = "UPDATE ssq
                         SET general_discomfort = " . $general_discomfort . ",
                             fatigue = " . $fatigue . ",
                             headache = " . $headache . ",
@@ -52,11 +52,11 @@ class Studies {
                             vertigo = " . $vertigo . ",
                             stomach_awareness = " . $stomach_awareness . ",
                             burping = " . $burping . "
-                        WHERE ssq_ID = " . $ssq_ID . "
+                        WHERE ssq_id = " . $ssq_ID . "
                         LIMIT 1;";
             }
             else{
-                $sql = "INSERT INTO SSQ (general_discomfort, fatigue, headache, difficulty_focusing, eye_strain, increased_salivation, sweating, nausea, difficulty_concentrating, fullness_of_head, blurred_vision, dizziness_with_eyes_open, dizziness_with_eyes_closed, vertigo, stomach_awareness, burping, ssq_time, ssq_type, session_ID)
+                $sql = "INSERT INTO ssq (general_discomfort, fatigue, headache, difficulty_focusing, eye_strain, increased_salivation, sweating, nausea, difficulty_concentrating, fullness_of_head, blurred_vision, dizziness_with_eyes_open, dizziness_with_eyes_closed, vertigo, stomach_awareness, burping, ssq_time, ssq_type, session_id)
                     VALUES ('$general_discomfort', '$fatigue', '$headache', '$difficulty_focusing', '$eye_strain', '$increased_salivation', '$sweating', '$nausea', '$difficulty_concentrating', '$fullness_of_head', '$blurred_vision', '$dizziness_with_eyes_open', '$dizziness_with_eyes_closed', '$vertigo', '$stomach_awareness', '$burping', '$ssq_time', '$ssq_type', '$session_ID')";
             }
             $result = $this->db->pdo->query($sql);
@@ -192,24 +192,24 @@ class Studies {
     $study_ID = Session::get("study_ID");
     $last_edited_by = Session::get('id'); 
     
-    $sql = "SELECT roleid FROM tbl_users
-            WHERE id = :researcher_ID
+    $sql = "SELECT role_id FROM users
+            WHERE user_id = :researcher_ID
             LIMIT 1;";
     $stmt = $this->db->pdo->prepare($sql);
     $stmt->bindValue(':researcher_ID', $researcher_ID);
     $result = $stmt->execute();
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
-    if (!isset($row['roleid'])){
+    if (!isset($row['role_id'])){
         return Util::generateErrorMessage("We could not verify this user's role.");
     }
-    if ($study_role < $row['roleid'] || $study_role > 4){
+    if ($study_role < $row['role_id'] || $study_role > 4){
         return Util::generateErrorMessage("An invalid role was selected!");
     }
       
-    $sql = "INSERT INTO Researcher_Study (researcher_ID, study_ID, study_role) VALUES (:researcher_ID, :study_ID, :study_role)";
+    $sql = "INSERT INTO researchers (researcher_id, study_id, study_role) VALUES (:researcher_id, :study_id, :study_role)";
         $stmt = $this->db->pdo->prepare($sql);
-        $stmt->bindValue(':researcher_ID', $researcher_ID);
-        $stmt->bindValue(':study_ID', $study_ID);
+        $stmt->bindValue(':researcher_id', $researcher_);
+        $stmt->bindValue(':study_id', $study_);
         $stmt->bindValue(':study_role', $study_role); 
         $result = $stmt->execute(); 
         
@@ -233,10 +233,10 @@ class Studies {
     $study_ID = Session::get('study_ID');  
     $last_edited_by = Session::get('id'); 
       
-    $sql = "UPDATE Researcher_Study SET is_active = 0 WHERE researcher_ID = :researcher_ID AND study_ID = :study_ID";
+    $sql = "UPDATE researchers SET is_active = 0 WHERE researcher_id = :researcher_id AND study_id = :study_id";
     $stmt = $this->db->pdo->prepare($sql);
-    $stmt->bindValue(':researcher_ID', $researcher_ID);
-    $stmt->bindValue(':study_ID', $study_ID);
+    $stmt->bindValue(':researcher_id', $researcher_ID);
+    $stmt->bindValue(':study_id', $study_ID);
     $result = $stmt->execute(); 
     
     $result2 = Util::updateStudy($study_ID, $last_edited_by, $this->db->pdo);
@@ -266,26 +266,26 @@ class Studies {
     $study_ID = Session::get("study_ID");
     $last_edited_by = Session::get('id');
     
-    $sql = "SELECT roleid FROM tbl_users
-            WHERE id = :researcher_ID
+    $sql = "SELECT role_id FROM users
+            WHERE user_id = :researcher_ID
             LIMIT 1;";
     $stmt = $this->db->pdo->prepare($sql);
     $stmt->bindValue('researcher_ID', $researcher_ID);
     $result = $stmt->execute();
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
-    if (!isset($row["roleid"])){
+    if (!isset($row["role_id"])){
         return Util::generateErrorMessage("We could not verify this user's role.");
     }
-    if ($study_role < $row["roleid"] || $study_role > 4){
+    if ($study_role < $row["role_id"] || $study_role > 4){
         return Util::generateErrorMessage("An invalid role was selected.");
     }
       
-    $sql = "UPDATE Researcher_Study SET study_role = :study_role WHERE study_ID = :study_ID AND researcher_ID = :researcher_ID";
+    $sql = "UPDATE researchers SET study_role = :study_role WHERE study_id = :study_id AND researcher_id = :researcher_ID";
     
     
         $stmt = $this->db->pdo->prepare($sql);
-        $stmt->bindValue(':researcher_ID', $researcher_ID);
-        $stmt->bindValue(':study_ID', $study_ID);
+        $stmt->bindValue(':researcher_id', $researcher_ID);
+        $stmt->bindValue(':study_id', $study_ID);
         $stmt->bindValue(':study_role', $study_role);   
         $result = $stmt->execute(); 
 
@@ -307,9 +307,9 @@ class Studies {
     }
     
       
-    $sql = "UPDATE Participants SET is_active = 0 WHERE participant_ID = :participant_ID";
+    $sql = "UPDATE participants SET is_active = 0 WHERE participant_id = :participant_id";
     $stmt = $this->db->pdo->prepare($sql);
-    $stmt->bindValue(':participant_ID', $participant_ID);
+    $stmt->bindValue(':participant_id', $participant_ID);
     $result = $stmt->execute(); 
     
     $last_edited_by = Session::get('id'); 
@@ -334,15 +334,15 @@ public function takeSSQ($quiz_type, $ssq_time){
     $session_ID = Session::get('session_ID');
     
     $sql = "SELECT *
-            FROM SSQ
-            WHERE session_ID = :session_ID
+            FROM ssq
+            WHERE session_id = :session_id
             AND ssq_time = :ssq_time
             AND ssq_type = :quiz_type
             AND is_active = 1
             LIMIT 1;";
     
     $stmt = $this->db->pdo->prepare($sql);
-    $stmt->bindValue(":session_ID", $session_ID);
+    $stmt->bindValue(":session_id", $session_ID);
     $stmt->bindValue(":ssq_time", $ssq_time);
     $stmt->bindValue(":quiz_type", $quiz_type);
     $result = $stmt->execute();
@@ -363,9 +363,9 @@ public function takeSSQ($quiz_type, $ssq_time){
   public function deleteQuiz(){
     $ssq_ID = Session::get('ssq_ID');          
       
-    $sql = "UPDATE SSQ
+    $sql = "UPDATE ssq
             SET is_active = 0
-            WHERE ssq_ID = :ssq_ID
+            WHERE ssq_id = :ssq_ID
             LIMIT 1;";
     $stmt = $this->db->pdo->prepare($sql);
     $stmt->bindValue(':ssq_ID', $ssq_ID);
@@ -447,7 +447,7 @@ public function takeSSQ($quiz_type, $ssq_time){
         return "('" . ucwords($time) . "'," . $study_ID . ")"; 
     }, $session_times));
     
-    $sql = "INSERT INTO Session_times (name, study_ID) 
+    $sql = "INSERT INTO session_times (name, study_id) 
             VALUES " . $session_insert;
     $result = $this->db->pdo->query($sql);
     
@@ -519,7 +519,7 @@ public function takeSSQ($quiz_type, $ssq_time){
             array_push($old_times, $row['name']);
         }
         
-        $old_session_sql = "SELECT name FROM Session_times WHERE study_ID = $study_ID AND is_active = 1;";
+        $old_session_sql = "SELECT name FROM session_times WHERE study_id = $study_ID AND is_active = 1;";
         $old_session_res = $pdo->query($old_session_sql);
         $old_session = array();
         while ($row = $old_session_res->fetch(PDO::FETCH_ASSOC)) {
@@ -584,7 +584,7 @@ public function takeSSQ($quiz_type, $ssq_time){
         if (count($added_session_times) > 0) {
             // added 1 or more time names
             $added = implode(', ', array_map(function ($time) { return "'$time'"; }, $added_session_times));
-            $added_back_sql = "SELECT name FROM Session_times WHERE is_active = 0 AND study_ID = $study_ID AND name IN ($added)";
+            $added_back_sql = "SELECT name FROM session_times WHERE is_active = 0 AND study_id = $study_ID AND name IN ($added)";
             $added_back_res = $pdo->query($added_back_sql);
             $added_back = array();
             while ($row = $added_back_res->fetch(PDO::FETCH_ASSOC)) {
@@ -593,7 +593,7 @@ public function takeSSQ($quiz_type, $ssq_time){
             if (count($added_back) > 0) {
                 // add back names
                 $added_back_str = implode(', ', array_map(function ($time) { return "'$time'"; }, $added_back));
-                $add_back_sql = "UPDATE Session_times SET is_active = 1 WHERE study_ID = $study_ID AND name IN ($added_back_str);";
+                $add_back_sql = "UPDATE session_times SET is_active = 1 WHERE study_id = $study_ID AND name IN ($added_back_str);";
                 $result = $pdo->query($add_back_sql);
                 
                 if (!$result) {
@@ -609,7 +609,7 @@ public function takeSSQ($quiz_type, $ssq_time){
                 }, array_filter($added_session_times, function ($time) use($added_back) {
                     return !in_array($time, $added_back);
                 })));
-                $insert_sql = "INSERT INTO Session_times (name, study_ID) VALUES $insert;";
+                $insert_sql = "INSERT INTO session_times (name, study_Id) VALUES $insert;";
                 $result = $pdo->query($insert_sql);
                 
                 if (!$result) {
@@ -625,7 +625,7 @@ public function takeSSQ($quiz_type, $ssq_time){
             $remove = implode(', ', array_map(function ($time) { return "'$time'"; }, $removed_ssq_times));
             
             
-            $sql = "SELECT ssq_ID FROM ssq WHERE ssq_time IN (SELECT id FROM ssq_times WHERE study_id = $study_ID AND name IN ($remove) AND is_active = 1)";
+            $sql = "SELECT ssq_id FROM ssq WHERE ssq_time IN (SELECT id FROM ssq_times WHERE study_id = $study_ID AND name IN ($remove) AND is_active = 1)";
             $result_ssq = $pdo->query($sql);
             
             if($result_ssq->fetch(PDO::FETCH_ASSOC)) {
@@ -708,7 +708,7 @@ public function takeSSQ($quiz_type, $ssq_time){
                 // return "";
             } else {
             
-                $remove_sql = "UPDATE Session_times SET is_active = 0 WHERE study_ID = $study_ID AND name IN ($remove)";
+                $remove_sql = "UPDATE session_times SET is_active = 0 WHERE study_id = $study_ID AND name IN ($remove)";
                 $result = $pdo->query($remove_sql);
                     
                 if (!$result) {
@@ -770,19 +770,19 @@ public function takeSSQ($quiz_type, $ssq_time){
     
     // leaves the current study
     public function leaveStudy($study_ID){
-        $pi_sql = "SELECT COUNT(study_role) AS Count FROM Researcher_Study WHERE study_ID = " . Session::get("study_ID") . " AND study_role = 2 AND is_active = 1;";
+        $pi_sql = "SELECT COUNT(study_role) AS Count FROM researchers WHERE study_id = " . Session::get("study_ID") . " AND study_role = 2 AND is_active = 1;";
         $pi_result = $this->db->pdo->query($pi_sql);
         $pi_count = $pi_result->fetch(PDO::FETCH_ASSOC);
         if ($pi_count['Count'] > 1){
-            $sql = "UPDATE Researcher_Study
+            $sql = "UPDATE researchers
                     SET is_active = 0
-                    WHERE researcher_ID = :researcher_ID
-                    AND study_ID = :study_ID
+                    WHERE researcher_id = :researcher_ID
+                    AND study_id = :study_ID
                     AND is_active = 1
                     LIMIT 1;";
             $stmt = $this->db->pdo->prepare($sql);
-            $stmt->bindValue(':researcher_ID', Session::get('id'));
-            $stmt->bindValue(':study_ID', $study_ID);
+            $stmt->bindValue(':researcher_id', Session::get('id'));
+            $stmt->bindValue(':study_id', $study_ID);
             
             $result = $stmt->execute();
             if ($result){

@@ -45,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['insert_session']) && S
 <?php
     }
 } 
-$role_sql = "SELECT study_role FROM Researcher_Study WHERE study_ID = " . Session::get("study_ID") . " AND  researcher_ID = " . Session::get("id") . " AND is_active = 1;";
+$role_sql = "SELECT study_role FROM researchers WHERE study_id = " . Session::get("study_ID") . " AND  researcher_id = " . Session::get("id") . " AND is_active = 1;";
                     
 $role_result = $pdo->query($role_sql);
 $role = $role_result->fetch(PDO::FETCH_ASSOC);
@@ -79,8 +79,8 @@ $role = $role_result->fetch(PDO::FETCH_ASSOC);
                         <option value="" selected hidden disabled>Please Choose...</option>
                         <?php
                     
-                        $sql = "SELECT participant_id,anonymous_name, dob, iv
-                                FROM Participants 
+                        $sql = "SELECT participant_id, anonymous_name, dob, iv
+                                FROM participants 
                                 WHERE is_active = 1
                                 AND study_id = " . Session::get('study_ID') . ";";
                                     
