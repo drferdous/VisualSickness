@@ -74,7 +74,7 @@ $sql_times = "SELECT name FROM ssq_times
 $result_times = $pdo->query($sql_times);
 
 $sql_session_times = "SELECT name FROM session_times
-              WHERE study_ID = " . $study_ID . " AND is_active = 1;";
+              WHERE study_id = " . $study_ID . " AND is_active = 1;";
 $result_session_times = $pdo->query($sql_session_times);
                     
 $role_sql = "SELECT study_role FROM researchers WHERE study_id = " . Session::get("study_ID") . " AND  researcher_id = " . Session::get("id") . " AND is_active = 1;";
@@ -162,7 +162,7 @@ if($timezone < 0) {
                         <?php } ?>
                         
                         <?php 
-                        $pi_sql = "SELECT COUNT(study_role) AS Count FROM researcher WHERE study_id = " . Session::get("study_ID") . " AND study_role = 2 AND is_active = 1;";
+                        $pi_sql = "SELECT COUNT(study_role) AS Count FROM researchers WHERE study_id = " . Session::get("study_ID") . " AND study_role = 2 AND is_active = 1;";
                         $pi_result = $pdo->query($pi_sql);
                         $pi_count = $pi_result->fetch(PDO::FETCH_ASSOC);
                         if ($row_study['is_active'] == 1 && isset($role['study_role']) && ($role['study_role'] != 2 || $pi_count['Count'] > 1)) { ?>
