@@ -716,16 +716,18 @@ Session::set("post_ID", $rand);
     else{ ?>
         <input type="hidden" id="code" name="code" value="">
     <?php } ?>
+    
+    <span class="float-right"> <a href='session_details' class="btn btn-danger redirectUser ml-2 mr-2">Cancel</a></span>
 
     <?php if (Session::get('ssq_ID') == -1){?>
-        <input type="submit" class="btn btn-success" value="Submit">
+        <input type="submit" class="btn btn-success float-right" value="Submit">
         <input type="hidden" name="submitQuiz" value="submitQuiz">
     <?php }
           else{ ?>
         <?php
             if(($role['study_role'] == 2 || $id_row['created_by'] == Session::get('id')) && $study_is_active) {
         ?>
-        <input type="submit" class="btn btn-success" value="Update">
+        <input type="submit" class="btn btn-success float-right" value="Update">
         <input type="hidden" name="submitQuiz" value="submitQuiz">
     <?php }
         } ?>
@@ -733,9 +735,6 @@ Session::set("post_ID", $rand);
 
 <form action="session_details" method="POST">
     <input type="hidden" name="randCheck" value="<?php echo $rand; ?>">
-    <div>
-        <input type="submit" class="btn btn-danger" name="Cancel" value="Cancel">
-    </div>
 </form>
 
 <?php

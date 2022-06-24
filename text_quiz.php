@@ -28,7 +28,7 @@ if (isset($_POST['viewResults'])) {
     echo Util::getModalForSSQ($pdo, FALSE);
 }
 if(empty($_GET['code']) && Session::get('login') === FALSE) {
-  header('Location: about');
+  header('Location: index');
   exit();
 }
 
@@ -519,26 +519,20 @@ $study_is_active = $study_result->fetch(PDO::FETCH_ASSOC)['is_active'] == 1;
     else{ ?>
         <input type="hidden" id="code" name="code" value="">
     <?php } ?>
-    
+    <span class="float-right"> <a href='session_details' class="btn btn-danger redirectUser ml-2 mr-2">Cancel</a></span>
     <?php if ($ssq_ID == -1){ ?>
-        <input type="submit" class="btn btn-success float-left" value="Submit" id="submitButton">
+        <input type="submit" class="btn btn-success float-right" value="Submit" id="submitButton">
         <input type="hidden" name="submitQuiz" value="submitQuiz">
     <?php }
           else{ ?>
         <?php
             if(($role['study_role'] == 2 || $id_row['created_by'] == Session::get('id')) && $study_is_active) {
         ?>
-        <input type="submit" class="btn btn-success float-left" value="Update">
+        <input type="submit" class="btn btn-success float-right" value="Update">
         <input type="hidden" name="submitQuiz" value="submitQuiz">
     <?php }
         } ?>
 </form>
-<br>
-<br>
-<form action="session_details" method="POST">
-    <input type="submit" class="btn btn-danger float-left" name="Cancel" value="Cancel">
-</form>
-</div>
 </div>
 
 <?php
