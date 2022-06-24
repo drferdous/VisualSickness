@@ -81,7 +81,7 @@ $study_is_active = $study_result->fetch(PDO::FETCH_ASSOC)['is_active'] == 1;
             </h3>
     </div>
     <div class="card-body pr-2 pl-2">
-<form action="" method="post" id="quizForm">
+<form action="" method="post" id="quizForm" class="text-center">
     <?php 
         $rand = bin2hex(openssl_random_pseudo_bytes(16));
         Session::set("post_ID", $rand);
@@ -92,7 +92,6 @@ $study_is_active = $study_result->fetch(PDO::FETCH_ASSOC)['is_active'] == 1;
     <h1 class="text-center">Cybersickness Online Questionnaire</h1>
     <p class="text-center">Please pick your current discomfort level on the categories mentioned below. If you do not understand the meaning of the symptom, pick "Do not Understand".</p>
 
-<center>
 <div class="symptoms">
   <h2>General Discomfort</h2>
   <hr>
@@ -111,9 +110,7 @@ $study_is_active = $study_result->fetch(PDO::FETCH_ASSOC)['is_active'] == 1;
         </label>
     </div>
 </div>
-</center>
 
-<center>
 <div class="symptoms">
   <h2>Fatigue</h2>
   <hr>
@@ -134,9 +131,6 @@ $study_is_active = $study_result->fetch(PDO::FETCH_ASSOC)['is_active'] == 1;
     </div>
 </div>
 
-</center>
-
-<center>
 <div class="symptoms">
   <h2>Headache</h2>
   <hr>
@@ -156,9 +150,7 @@ $study_is_active = $study_result->fetch(PDO::FETCH_ASSOC)['is_active'] == 1;
         </label>
     </div>
 </div>
-</center>
 
-<center>
 <div class="symptoms">
   <h2>Eye Strain</h2>
   <hr>
@@ -178,9 +170,7 @@ $study_is_active = $study_result->fetch(PDO::FETCH_ASSOC)['is_active'] == 1;
         </label>
     </div>
 </div>
-</center>
 
-<center>
 <div class="symptoms">
   <h2>Difficulty Focusing</h2>
   <hr>
@@ -200,9 +190,7 @@ $study_is_active = $study_result->fetch(PDO::FETCH_ASSOC)['is_active'] == 1;
         </label>
     </div>
 </div>
-</center>
 
-<center>
 <div class="symptoms">
   <h2>Increased Salivation</h2>
   <hr>
@@ -222,9 +210,7 @@ $study_is_active = $study_result->fetch(PDO::FETCH_ASSOC)['is_active'] == 1;
         </label>
     </div>
 </div>
-</center>
 
-<center>
 <div class="symptoms">
   <h2>Sweating</h2>
   <hr>
@@ -244,9 +230,7 @@ $study_is_active = $study_result->fetch(PDO::FETCH_ASSOC)['is_active'] == 1;
         </label>
     </div>
 </div>
-</center>
 
-<center>
 <div class="symptoms">
   <h2>Nausea</h2>
   <hr>
@@ -266,9 +250,7 @@ $study_is_active = $study_result->fetch(PDO::FETCH_ASSOC)['is_active'] == 1;
         </label>
     </div>
 </div>
-</center>
 
-<center>
 <div class="symptoms">
   <h2>Difficulty Concentrating</h2>
   <hr>
@@ -290,9 +272,7 @@ $study_is_active = $study_result->fetch(PDO::FETCH_ASSOC)['is_active'] == 1;
             
     </div>
 </div>
-</center>
 
-<center>
 <div class="symptoms">
   <h2>Fullness of the Head</h2>
   <hr>
@@ -312,9 +292,7 @@ $study_is_active = $study_result->fetch(PDO::FETCH_ASSOC)['is_active'] == 1;
         </label>
     </div>
 </div>
-</center>
 
-<center>
 <div class="symptoms">
   <h2>Blurred Vision</h2>
   <hr>
@@ -334,9 +312,7 @@ $study_is_active = $study_result->fetch(PDO::FETCH_ASSOC)['is_active'] == 1;
         </label>
     </div>
 </div>
-</center>
 
-<center>
 <div class="symptoms">
   <h2>Dizziness with Eyes Open</h2>
   <hr>
@@ -356,9 +332,7 @@ $study_is_active = $study_result->fetch(PDO::FETCH_ASSOC)['is_active'] == 1;
         </label>
     </div>
 </div>
-</center>
 
-<center>
 <div class="symptoms">
   <h2>Dizziness with Eyes Closed</h2>
   <hr>
@@ -378,9 +352,7 @@ $study_is_active = $study_result->fetch(PDO::FETCH_ASSOC)['is_active'] == 1;
         </label>
     </div>
 </div>
-</center>
 
-<center>
 <div class="symptoms">
   <h2>Vertigo</h2>
   <hr>
@@ -400,9 +372,7 @@ $study_is_active = $study_result->fetch(PDO::FETCH_ASSOC)['is_active'] == 1;
         </label>
     </div>
 </div>
-</center>
 
-<center>
 <div class="symptoms">
   <h2>Stomach Awareness</h2>
   <hr>
@@ -422,9 +392,7 @@ $study_is_active = $study_result->fetch(PDO::FETCH_ASSOC)['is_active'] == 1;
         </label>
     </div>
 </div>
-</center>
 
-<center>
 <div class="symptoms">
   <h2>Burping</h2>
   <hr>
@@ -444,7 +412,6 @@ $study_is_active = $study_result->fetch(PDO::FETCH_ASSOC)['is_active'] == 1;
         </label>
     </div>
 </div>
-</center>
     
     <input type="hidden" id="ssq_type" name="ssq_type" value="0">
     <input type="hidden" id="ssq_time" name="ssq_time" value="<?= $_POST['ssq_time'] ?>">
@@ -457,7 +424,7 @@ $study_is_active = $study_result->fetch(PDO::FETCH_ASSOC)['is_active'] == 1;
         <input type="hidden" id="code" name="code" value="">
     <?php } ?>
     <?php if ($ssq_ID == -1){ ?>
-        <center><input type="submit" class="btn btn-success justify-content-center" value="Submit"></center>
+        <input type="submit" class="btn btn-success float-right" value="Submit">
         <input type="hidden" name="submitQuiz" value="submitQuiz">
     <?php }
           else{ ?>
@@ -465,7 +432,7 @@ $study_is_active = $study_result->fetch(PDO::FETCH_ASSOC)['is_active'] == 1;
             if(($role['study_role'] == 2 || $id_row['created_by'] == Session::get('id')) && $study_is_active) {
         ?>
         <br>
-        <center><input type="submit" class="btn btn-success justify-content-center" value="Update"></center>
+        <input type="submit" class="btn btn-success float-right" value="Update">
         <input type="hidden" name="submitQuiz" value="submitQuiz">
     <?php }
         } ?>
