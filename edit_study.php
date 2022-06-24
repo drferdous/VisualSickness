@@ -37,10 +37,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['updateStudy']) && Sess
     </div>
     
     <?php
-        $sql = "SELECT study_ID, full_name, short_name, IRB, description FROM Study WHERE study_ID = $study_ID LIMIT 1;";
+        $sql = "SELECT study_id, full_name, short_name, IRB, description FROM study WHERE study_id = $study_ID LIMIT 1;";
         $result = $pdo->query($sql);
         while($row = $result->fetch(PDO::FETCH_ASSOC)) {
-            $study_ID = $row['study_ID'];
+            $study_ID = $row['study_id'];
             $full_name = $row['full_name'];
             $short_name = $row['short_name'];      
             $IRB = trim($row['IRB']);

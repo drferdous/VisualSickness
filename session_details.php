@@ -20,7 +20,7 @@ if (isset($_POST['session_ID']) && isset($_POST['iv'])) {
 
 $session_ID = Session::get('session_ID');
 Session::requireResearcherOrUser(Session::get('study_ID'), $pdo);
-$study_sql = "SELECT is_active FROM Study WHERE study_ID = " . Session::get('study_ID') . " LIMIT 1;";
+$study_sql = "SELECT is_active FROM study WHERE study_id = " . Session::get('study_ID') . " LIMIT 1;";
 $study_result = $pdo->query($study_sql);
 $study_is_active = $study_result->fetch(PDO::FETCH_ASSOC)['is_active'] == 1;
 
@@ -60,9 +60,9 @@ if (isset($_POST['remove-session-btn']) && Session::CheckPostID($_POST)){
         <h3 class="float-left">Session Details</h3>
         <span class="float-right"> 
             <?php
-                $sql = "SELECT study_ID
-                        FROM Session
-                        WHERE session_ID = $session_ID
+                $sql = "SELECT study_id
+                        FROM session
+                        WHERE session_id = $session_ID
                         LIMIT 1;";
                 $result = $pdo->query($sql);
                 $row = $result->fetch(PDO::FETCH_ASSOC);
@@ -79,7 +79,7 @@ if (isset($_POST['remove-session-btn']) && Session::CheckPostID($_POST)){
                 
                 $sql = "SELECT * 
                         FROM ssq_times 
-                        WHERE study_id = " . $row["study_ID"] . " 
+                        WHERE study_id = " . $row["study_id"] . " 
                         AND is_active = 1;";
                 $result = $pdo->query($sql);
                 $totalQuizTimesAvailable = $result->rowCount();
@@ -141,7 +141,7 @@ if (isset($_POST['remove-session-btn']) && Session::CheckPostID($_POST)){
                         <?php
                         // show name for study_ID, not id         
                         if (isset($row_session['study_id'])){
-                            $sql_users = "SELECT full_name FROM Study WHERE study_id = " . $row_session['study_id'] . " LIMIT 1;";
+                            $sql_users = "SELECT full_name FROM study WHERE study_id = " . $row_session['study_id'] . " LIMIT 1;";
                             $result_users = $pdo->query($sql_users);
                             $row_users = $result_users->fetch(PDO::FETCH_ASSOC);
                                 

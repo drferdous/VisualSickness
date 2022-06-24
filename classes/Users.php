@@ -190,7 +190,7 @@ class Users{
     
     // Get Study Information By Study Id
     public function getStudyInfo($study_ID){
-        $sql = "SELECT * FROM Study WHERE study_ID = :study_ID LIMIT 1";
+        $sql = "SELECT * FROM study WHERE study_id = :study_ID LIMIT 1";
         $stmt = $this->db->pdo->prepare($sql);
         $stmt->bindValue(':study_ID', trim($study_ID));
         $stmt->execute();

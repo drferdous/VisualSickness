@@ -39,8 +39,8 @@
         <?php }
     }
     
-    $study_sql = "SELECT short_name FROM Study
-                    WHERE study_ID = " . $row['study_id'] . " LIMIT 1;";
+    $study_sql = "SELECT short_name FROM study
+                    WHERE study_id = " . $row['study_id'] . " LIMIT 1;";
     $study_name_result = $pdo->query($study_sql);
     $study_row = $study_name_result->fetch(PDO::FETCH_ASSOC);
     $study_name = $study_row['short_name'];

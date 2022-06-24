@@ -11,7 +11,7 @@
     
     Session::CheckSession();
     Session::requireResearcherOrUser(Session::get('study_ID'), $pdo);
-    $active_sql = "SELECT is_active FROM Study WHERE study_ID = " . Session::get('study_ID') . " LIMIT 1;";
+    $active_sql = "SELECT is_active FROM study WHERE study_id = " . Session::get('study_ID') . " LIMIT 1;";
     $res = $pdo->query($active_sql);
     if ($res->fetch(PDO::FETCH_ASSOC)['is_active'] == 0) {
         header('Location: study_list');
@@ -115,7 +115,7 @@
                         $session_ID = Session::get('session_ID'); 
                         $sql = "SELECT id, name
                                 FROM ssq_times
-                                WHERE is_active = 1 AND study_id IN (SELECT study_ID
+                                WHERE is_active = 1 AND study_id IN (SELECT study_id
 									 FROM session
 			                         WHERE session_id = $session_ID) 
 			                         AND id NOT IN (SELECT ssq_time

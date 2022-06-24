@@ -33,7 +33,7 @@
     
         $sql = "SELECT P.participant_ID, P.anonymous_name, P.dob, P.email, P.phone_no, S.full_name, P.iv
                 FROM Participants AS P 
-                JOIN Study AS S ON (P.study_id = S.study_ID)
+                JOIN study AS S ON (P.study_id = S.study_id)
                 WHERE P.is_active = 1 
                 AND P.study_id IN (SELECT study_ID
                                    FROM Researcher_Study

@@ -189,9 +189,9 @@ class Util {
 
   public static function updateStudy($study_ID, $last_edited_by, $pdo){
     $currentDate = new DateTime();
-    $sql2 = "UPDATE Study
+    $sql2 = "UPDATE study
             SET last_edited_by = :last_edited_by, last_edited_at = :last_edited_at 
-            WHERE study_ID = :study_ID
+            WHERE study_id = :study_ID
             LIMIT 1;";
         $stmt = $pdo->prepare($sql2);
         $stmt->bindValue('last_edited_by', $last_edited_by);

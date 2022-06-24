@@ -133,7 +133,7 @@ class Studies {
         $result_id = $this->db->pdo->lastInsertId();
         
         
-        $sql2 = "INSERT INTO Participants (demographics_id, anonymous_name, dob, weight, occupation, phone_no, email, comments, study_id, iv) 
+        $sql2 = "INSERT INTO participants (demographics_id, anonymous_name, dob, weight, occupation, phone_no, email, comments, study_id, iv) 
         VALUES(:demographics_id, :anonymous_name, :dob, :weight, :occupation, :phone_no, :email, :comments, :study_ID, :iv);";
         
         $stmt2 = $this->db->pdo->prepare($sql2);
@@ -381,7 +381,7 @@ public function takeSSQ($quiz_type, $ssq_time){
   
   // Get Study Information By Study Id
   public function getStudyInfo($study_ID){
-      $sql = "SELECT * FROM Study WHERE study_ID = :study_ID LIMIT 1";
+      $sql = "SELECT * FROM study WHERE study_id = :study_ID LIMIT 1";
       $stmt = $this->db->pdo->prepare($sql);
       $stmt->bindValue(':study_ID', $study_ID);
       $stmt->execute();
@@ -497,7 +497,7 @@ public function takeSSQ($quiz_type, $ssq_time){
             return Util::generateErrorMessage("You cannot have multiple Session times of the same name!");
         }
         $pdo = $this->db->pdo;
-        $sql = "UPDATE Study SET full_name = :full_name, short_name = :short_name, IRB = :IRB, description = :description, last_edited_by = :last_edited_by, last_edited_at = :last_edited_at WHERE study_ID = :study_ID";
+        $sql = "UPDATE study SET full_name = :full_name, short_name = :short_name, IRB = :IRB, description = :description, last_edited_by = :last_edited_by, last_edited_at = :last_edited_at WHERE study_id = :study_ID";
         $stmt = $pdo->prepare($sql);
         $stmt->bindValue(':full_name', $full_name);
         $stmt->bindValue(':short_name', $short_name);  
@@ -625,7 +625,7 @@ public function takeSSQ($quiz_type, $ssq_time){
             $remove = implode(', ', array_map(function ($time) { return "'$time'"; }, $removed_ssq_times));
             
             
-            $sql = "SELECT ssq_ID FROM SSQ WHERE ssq_time IN (SELECT id FROM ssq_times WHERE study_id = $study_ID AND name IN ($remove) AND is_active = 1)";
+            $sql = "SELECT ssq_ID FROM ssq WHERE ssq_time IN (SELECT id FROM ssq_times WHERE study_id = $study_ID AND name IN ($remove) AND is_active = 1)";
             $result_ssq = $pdo->query($sql);
             
             if($result_ssq->fetch(PDO::FETCH_ASSOC)) {
@@ -674,7 +674,7 @@ public function takeSSQ($quiz_type, $ssq_time){
             $remove = implode(', ', array_map(function ($time) { return "'$time'"; }, $removed_session_times));
             
             
-            $sql = "SELECT session_id FROM session WHERE session_time IN (SELECT id FROM Session_times WHERE study_ID = $study_ID AND name IN ($remove) AND is_active = 1)";
+            $sql = "SELECT session_id FROM session WHERE session_time IN (SELECT id FROM session_times WHERE study_id = $study_ID AND name IN ($remove) AND is_active = 1)";
             $result_ssq = $pdo->query($sql);
             
             if($result_ssq->fetch(PDO::FETCH_ASSOC)) {
@@ -725,9 +725,9 @@ public function takeSSQ($quiz_type, $ssq_time){
         $last_edited_by = Session::get('id'); 
         $currentDate = new DateTime();
         
-        $sql = "UPDATE Study
+        $sql = "UPDATE study
                 SET is_active = 1, last_edited_by = :last_edited_by, last_edited_at = :last_edited_at
-                WHERE study_ID = :study_ID;
+                WHERE study_id = :study_ID;
                 LIMIT 1;";
                 
         $stmt = $this->db->pdo->prepare($sql);
@@ -748,9 +748,9 @@ public function takeSSQ($quiz_type, $ssq_time){
     public function deactivateStudy($study_ID){
         $last_edited_by = Session::get('id'); 
         $currentDate = new DateTime();
-        $sql = "UPDATE Study
+        $sql = "UPDATE study
                 SET is_active = 0, last_edited_by = :last_edited_by, last_edited_at = :last_edited_at 
-                WHERE study_ID = :study_ID
+                WHERE study_id = :study_ID
                 LIMIT 1;";
         
         $stmt = $this->db->pdo->prepare($sql);

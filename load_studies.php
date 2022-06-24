@@ -25,14 +25,14 @@
         $sqlActiveStatus = ";";
     }
     
-    $sql = "SELECT Study.study_ID, Study.full_name, Study.created_at, Study.is_active, RS.study_role,RS.researcher_ID 
+    $sql = "SELECT Study.study_id, Study.full_name, Study.created_at, Study.is_active, RS.study_role,RS.researcher_ID 
                 FROM Researcher_Study AS RS 
-                JOIN Study ON (RS.study_ID = Study.study_ID) 
+                JOIN study ON (RS.study_ID = study.study_id) 
                 WHERE Study.created_by IN (SELECT id 
                                            FROM tbl_users 
                                            WHERE affiliationid = ". Session::get('affiliationid') .")
                 AND RS.researcher_ID = ".  $idToSearch . "
-                AND Study.is_active = 1 
+                AND study.is_active = 1 
                 AND RS.is_active = 1
                 AND RS.researcher_ID IN(SELECT researcher_ID 
                                         FROM Researcher_Study 
@@ -51,12 +51,12 @@
     echo "hi";
     
     if (Session::get("roleid") === '1'){
-        $sql = "SELECT DISTINCT Study.study_ID, Study.full_name, Study.created_at, Study.is_active
+        $sql = "SELECT DISTINCT study.study_id, study.full_name, study.created_at, study.is_active
                 FROM Researcher_Study AS RS 
-                JOIN Study ON (RS.study_ID = Study.study_ID) 
+                JOIN study ON (RS.study_ID = Study.study_id) 
                 WHERE Study.created_by IN (SELECT id FROM tbl_users WHERE affiliationid = ". Session::get('affiliationid') .")
                 AND RS.study_ID NOT IN(SELECT study_ID FROM Researcher_Study WHERE is_active = 1 AND researcher_ID = ".  $idToSearch . ")
-                AND Study.is_active = 1 
+                AND study.is_active = 1 
                 AND RS.is_active = 1";
                 
         $result = $pdo->query($sql);

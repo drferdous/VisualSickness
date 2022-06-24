@@ -52,7 +52,7 @@ $id_sql = "SELECT created_by FROM session
 $id_result = $pdo->query($id_sql);
 $id_row = $id_result->fetch(PDO::FETCH_ASSOC);
 
-$study_sql = "SELECT is_active FROM Study WHERE study_ID = " . Session::get('study_ID') . " LIMIT 1;";
+$study_sql = "SELECT is_active FROM study WHERE study_id = " . Session::get('study_ID') . " LIMIT 1;";
 $study_result = $pdo->query($study_sql);
 $study_is_active = $study_result->fetch(PDO::FETCH_ASSOC)['is_active'] == 1;
 

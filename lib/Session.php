@@ -77,16 +77,16 @@ class Session{
   
     public static function setStudyID($study_ID, $pdo) {
         if (self::get('roleid') == 1) {
-            $sql = "SELECT study_ID FROM Study
+            $sql = "SELECT study_id FROM study
                     WHERE created_by IN (SELECT user.id FROM tbl_users AS user WHERE affiliationid = " . self::get("affiliationid") . ")
-                    AND study_ID = $study_ID
+                    AND study_id = $study_ID
                     LIMIT 1;";
         } else {
             $sql = "SELECT user.id FROM tbl_users as user
                 JOIN Researcher_Study as study
                 ON (user.id = study.researcher_ID)
                 WHERE user.id = " . self::get("id") . "
-                AND study.study_ID = $study_ID LIMIT 1;";
+                AND study.study_id = $study_ID LIMIT 1;";
         }
         $result = $pdo->query($sql);
         if ($result->rowCount() === 1) {
@@ -117,7 +117,7 @@ class Session{
     
     public static function requirePI($study_ID, $pdo) {
         $sql = "SELECT rs.researcher_ID FROM Researcher_Study AS rs
-                JOIN Study AS s ON rs.study_ID = s.study_ID
+                JOIN study AS s ON rs.study_ID = s.study_id
                 WHERE rs.researcher_ID = " . self::get('id') . "
                 AND rs.is_active = 1
                 AND s.is_active = 1
@@ -132,7 +132,7 @@ class Session{
     
     public static function requirePIorRA($study_ID, $pdo) {
         $sql = "SELECT rs.researcher_ID FROM Researcher_Study AS rs
-                JOIN Study AS s ON rs.study_ID = s.study_ID
+                JOIN study AS s ON rs.study_ID = s.study_id
                 WHERE rs.researcher_ID = " . self::get('id') . "
                 AND rs.is_active = 1
                 AND s.is_active = 1
@@ -146,9 +146,9 @@ class Session{
     }
     
     public static function requireCreator($study_ID, $pdo) {
-        $sql = "SELECT created_by FROM Study
+        $sql = "SELECT created_by FROM study
                 WHERE is_active = 1
-                AND study_ID = $study_ID;";
+                AND study_id = $study_ID;";
         $result = $pdo->query($sql);
         if ($result->fetch(PDO::FETCH_ASSOC)['created_by'] != Session::get('id')) {
             header('Location: study_details');

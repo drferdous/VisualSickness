@@ -19,10 +19,10 @@ if (Session::get('study_ID') == 0) {
 }
 $study_ID = Session::get('study_ID');
 if (Session::get('roleid') == 1) {
-    $affil_sql = "SELECT users.affiliationid FROM Study
+    $affil_sql = "SELECT users.affiliationid FROM study
                     JOIN tbl_users AS users
-                    ON Study.created_by = users.id
-                    WHERE Study.study_ID = $study_ID
+                    ON study.created_by = users.id
+                    WHERE study.study_id = $study_ID
                     AND users.affiliationid = " . Session::get('affiliationid');
     $affil_result = $pdo->query($affil_sql);
     if (!$affil_result->rowCount()) {
@@ -64,14 +64,14 @@ if (isset($_POST['leave-btn']) && Session::CheckPostID($_POST)){
 <?php }
 }
 
-$sql_study = "SELECT S.study_ID, S.is_active, S.full_name, S.short_name, S.IRB, S.description, S.created_by, S.created_at, S.last_edited_at, S.last_edited_by 
-              FROM Study AS S 
-              WHERE S.study_ID = " . $study_ID . ";";
+$sql_study = "SELECT S.study_id, S.is_active, S.full_name, S.short_name, S.IRB, S.description, S.created_by, S.created_at, S.last_edited_at, S.last_edited_by 
+              FROM study AS S 
+              WHERE S.study_id = " . $study_ID . ";";
 $result_study = $pdo->query($sql_study);
 $row_study = $result_study->fetch(PDO::FETCH_ASSOC);
 
 $sql_times = "SELECT name FROM ssq_times
-              WHERE study_ID = " . $study_ID . " AND is_active = 1;";
+              WHERE study_id = " . $study_ID . " AND is_active = 1;";
 $result_times = $pdo->query($sql_times);
 
 $sql_session_times = "SELECT name FROM Session_times

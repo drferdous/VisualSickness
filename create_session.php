@@ -17,7 +17,7 @@ if (Session::get('study_ID') == 0) {
 }
     
 Session::requireResearcherOrUser(Session::get('study_ID'), $pdo);
-$active_sql = "SELECT is_active FROM Study WHERE study_ID = " . Session::get('study_ID') . " LIMIT 1;";
+$active_sql = "SELECT is_active FROM study WHERE study_id = " . Session::get('study_ID') . " LIMIT 1;";
 $res = $pdo->query($active_sql);
 if ($res->fetch(PDO::FETCH_ASSOC)['is_active'] == 0) {
     header('Location: study_list');
