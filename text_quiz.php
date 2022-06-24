@@ -66,12 +66,14 @@ $study_is_active = $study_result->fetch(PDO::FETCH_ASSOC)['is_active'] == 1;
 <div class="card">
     <div class="card-header">
             <h3>
-                <?php if(($role['study_role'] == 2 || $id_row['created_by'] == Session::get('id')) && $study_is_active) { ?>
+                <span class="float-right"> <a href="session_details" class="btn btn-primary ml-2">Back</a></span>
+                <?php   
+                if ($ssq_ID !== -1) { ?>
+                    <?php if(($role['study_role'] == 2 || $id_row['created_by'] == Session::get('id')) && $study_is_active) { ?>
                     <form class="float-right ml-2" onsubmit="return confirm('Are you sure you want to delete this SSQ? This action cannot be undone.');" action="delete_quiz" method="post">
                         <button type="submit" name="deleteQuiz" class="btn btn-danger">Delete</button>
                     </form>
-                <?php }
-                if ($ssq_ID !== -1) { ?>
+                    <?php } ?>
                     <form class="float-right" action="" method="post">
                         <button type="submit" name="viewResults" class="btn btn-success">Results</button>
                     </form>
@@ -79,7 +81,7 @@ $study_is_active = $study_result->fetch(PDO::FETCH_ASSOC)['is_active'] == 1;
             </h3>
     </div>
     <div class="card-body pr-2 pl-2">
-<form action="" method="post" id="quizForm">
+<form action="" method="post" id="quizForm" class="text-center">
     <?php 
         $rand = bin2hex(openssl_random_pseudo_bytes(16));
         Session::set("post_ID", $rand);
@@ -90,7 +92,6 @@ $study_is_active = $study_result->fetch(PDO::FETCH_ASSOC)['is_active'] == 1;
     <h1 class="text-center">Cybersickness Online Questionnaire</h1>
     <p class="text-center">Please pick your current discomfort level on the categories mentioned below. If you do not understand the meaning of the symptom, pick "Do not Understand".</p>
 
-<center>
 <div class="symptoms">
   <h2>General Discomfort</h2>
   <hr>
@@ -109,9 +110,7 @@ $study_is_active = $study_result->fetch(PDO::FETCH_ASSOC)['is_active'] == 1;
         </label>
     </div>
 </div>
-</center>
 
-<center>
 <div class="symptoms">
   <h2>Fatigue</h2>
   <hr>
@@ -132,9 +131,6 @@ $study_is_active = $study_result->fetch(PDO::FETCH_ASSOC)['is_active'] == 1;
     </div>
 </div>
 
-</center>
-
-<center>
 <div class="symptoms">
   <h2>Headache</h2>
   <hr>
@@ -154,9 +150,7 @@ $study_is_active = $study_result->fetch(PDO::FETCH_ASSOC)['is_active'] == 1;
         </label>
     </div>
 </div>
-</center>
 
-<center>
 <div class="symptoms">
   <h2>Eye Strain</h2>
   <hr>
@@ -176,9 +170,7 @@ $study_is_active = $study_result->fetch(PDO::FETCH_ASSOC)['is_active'] == 1;
         </label>
     </div>
 </div>
-</center>
 
-<center>
 <div class="symptoms">
   <h2>Difficulty Focusing</h2>
   <hr>
@@ -198,9 +190,7 @@ $study_is_active = $study_result->fetch(PDO::FETCH_ASSOC)['is_active'] == 1;
         </label>
     </div>
 </div>
-</center>
 
-<center>
 <div class="symptoms">
   <h2>Increased Salivation</h2>
   <hr>
@@ -220,9 +210,7 @@ $study_is_active = $study_result->fetch(PDO::FETCH_ASSOC)['is_active'] == 1;
         </label>
     </div>
 </div>
-</center>
 
-<center>
 <div class="symptoms">
   <h2>Sweating</h2>
   <hr>
@@ -242,9 +230,7 @@ $study_is_active = $study_result->fetch(PDO::FETCH_ASSOC)['is_active'] == 1;
         </label>
     </div>
 </div>
-</center>
 
-<center>
 <div class="symptoms">
   <h2>Nausea</h2>
   <hr>
@@ -264,9 +250,7 @@ $study_is_active = $study_result->fetch(PDO::FETCH_ASSOC)['is_active'] == 1;
         </label>
     </div>
 </div>
-</center>
 
-<center>
 <div class="symptoms">
   <h2>Difficulty Concentrating</h2>
   <hr>
@@ -288,9 +272,7 @@ $study_is_active = $study_result->fetch(PDO::FETCH_ASSOC)['is_active'] == 1;
             
     </div>
 </div>
-</center>
 
-<center>
 <div class="symptoms">
   <h2>Fullness of the Head</h2>
   <hr>
@@ -310,9 +292,7 @@ $study_is_active = $study_result->fetch(PDO::FETCH_ASSOC)['is_active'] == 1;
         </label>
     </div>
 </div>
-</center>
 
-<center>
 <div class="symptoms">
   <h2>Blurred Vision</h2>
   <hr>
@@ -332,9 +312,7 @@ $study_is_active = $study_result->fetch(PDO::FETCH_ASSOC)['is_active'] == 1;
         </label>
     </div>
 </div>
-</center>
 
-<center>
 <div class="symptoms">
   <h2>Dizziness with Eyes Open</h2>
   <hr>
@@ -354,9 +332,7 @@ $study_is_active = $study_result->fetch(PDO::FETCH_ASSOC)['is_active'] == 1;
         </label>
     </div>
 </div>
-</center>
 
-<center>
 <div class="symptoms">
   <h2>Dizziness with Eyes Closed</h2>
   <hr>
@@ -376,9 +352,7 @@ $study_is_active = $study_result->fetch(PDO::FETCH_ASSOC)['is_active'] == 1;
         </label>
     </div>
 </div>
-</center>
 
-<center>
 <div class="symptoms">
   <h2>Vertigo</h2>
   <hr>
@@ -398,9 +372,7 @@ $study_is_active = $study_result->fetch(PDO::FETCH_ASSOC)['is_active'] == 1;
         </label>
     </div>
 </div>
-</center>
 
-<center>
 <div class="symptoms">
   <h2>Stomach Awareness</h2>
   <hr>
@@ -420,9 +392,7 @@ $study_is_active = $study_result->fetch(PDO::FETCH_ASSOC)['is_active'] == 1;
         </label>
     </div>
 </div>
-</center>
 
-<center>
 <div class="symptoms">
   <h2>Burping</h2>
   <hr>
@@ -442,7 +412,6 @@ $study_is_active = $study_result->fetch(PDO::FETCH_ASSOC)['is_active'] == 1;
         </label>
     </div>
 </div>
-</center>
     
     <input type="hidden" id="ssq_type" name="ssq_type" value="0">
     <input type="hidden" id="ssq_time" name="ssq_time" value="<?= $_POST['ssq_time'] ?>">
@@ -454,15 +423,15 @@ $study_is_active = $study_result->fetch(PDO::FETCH_ASSOC)['is_active'] == 1;
     else{ ?>
         <input type="hidden" id="code" name="code" value="">
     <?php } ?>
-    <span class="float-right"> <a href='session_details' class="btn btn-danger redirectUser ml-2 mr-2">Cancel</a></span>
     <?php if ($ssq_ID == -1){ ?>
-        <input type="submit" class="btn btn-success float-right" value="Submit" id="submitButton">
+        <input type="submit" class="btn btn-success float-right" value="Submit">
         <input type="hidden" name="submitQuiz" value="submitQuiz">
     <?php }
           else{ ?>
         <?php
             if(($role['study_role'] == 2 || $id_row['created_by'] == Session::get('id')) && $study_is_active) {
         ?>
+        <br>
         <input type="submit" class="btn btn-success float-right" value="Update">
         <input type="hidden" name="submitQuiz" value="submitQuiz">
     <?php }
@@ -489,6 +458,11 @@ $study_is_active = $study_result->fetch(PDO::FETCH_ASSOC)['is_active'] == 1;
                 for (let i = 0; i < radioButtons.length; ++i){
                     if (parseInt(radioButtons[i].getAttribute("value"), 10) === <?php echo $row[$colNum]; ?>){
                         radioButtons[i].setAttribute("checked", "checked");
+                    }
+                    else{
+                    <?php if (Session::get("id") != $id_row["created_by"] && $role["study_role"] != 2) {?>
+                        radioButtons[i].setAttribute("disabled", "");
+                    <?php } ?>
                     }
                 }
             <?php } ?>
