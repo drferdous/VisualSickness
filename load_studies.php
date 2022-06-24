@@ -15,14 +15,11 @@
     
     $idToSearch = Session::get('id');
     $activeStatus = $_POST["activeStatus"];
-    $sqlActiveStatus;
+    $sqlActiveStatus = "";
     $sql;
     
     if ($activeStatus === "active"){
-        $sqlActiveStatus = " AND Study.is_active = 1;";
-    }
-    else{
-        $sqlActiveStatus = ";";
+        $sqlActiveStatus = " AND study.is_active = 1";
     }
     
     $sql = "SELECT study.study_id, study.full_name, study.created_at, study.is_active, researcher.study_role, researcher.researcher_id 
@@ -31,13 +28,14 @@
                 WHERE study.created_by IN (SELECT user_id 
                                            FROM users 
                                            WHERE affiliation_id = ". Session::get('affiliationid') .")
-                AND researcher.researcher_ID = ".  $idToSearch . "
-                AND study.is_active = 1 
+                AND researcher.researcher_id = ".  $idToSearch . "
                 AND researcher.is_active = 1
                 AND researcher.researcher_id IN (SELECT researcher_id 
                                         FROM researchers 
-                                        WHERE is_active = 1)  
-                ORDER BY researcher.study_role";
+                                        WHERE is_active = 1)";
+                                        
+    $sqlOrder = " ORDER BY researcher.study_role;";
+    $sql = $sql.$sqlActiveStatus.$sqlOrder;
                 
     $result = $pdo->query($sql);
     $studies = array();
@@ -48,16 +46,15 @@
         }
     }
     
-    echo "hi";
-    
     if (Session::get("roleid") === '1'){
         $sql = "SELECT DISTINCT study.study_id, study.full_name, study.created_at, study.is_active
                 FROM researchers AS researcher
                 JOIN study ON (researcher.study_id = study.study_id) 
                 WHERE study.created_by IN (SELECT user_id FROM users WHERE affiliation_id = ". Session::get('affiliationid') .")
                 AND researcher.study_id NOT IN (SELECT study_id FROM researchers WHERE is_active = 1 AND researcher_id = ".  $idToSearch . ")
-                AND study.is_active = 1 
                 AND researcher.is_active = 1";
+                
+        $sql = $sql.$sqlActiveStatus;
                 
         $result = $pdo->query($sql);
         
@@ -83,8 +80,8 @@
         foreach ($studies as $study){ ?>
             <tr>
                 <?php
-                    $encrypted = Crypto::encrypt($study['study_ID'], $iv);
-                    $role_sql = "SELECT study_role FROM researchers WHERE study_id = " . $study['study_ID'] . " AND  researcher_id = " . Session::get("id") . " AND is_active = 1;";
+                    $encrypted = Crypto::encrypt($study['study_id'], $iv);
+                    $role_sql = "SELECT study_role FROM researchers WHERE study_id = " . $study['study_id'] . " AND  researcher_id = " . Session::get("id") . " AND is_active = 1;";
                 
                     $role_result = $pdo->query($role_sql);
                     $role = $role_result->fetch(PDO::FETCH_ASSOC);
