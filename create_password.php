@@ -96,6 +96,8 @@ if (isset($_POST["reset-submit"]) && Session::CheckPostID($_POST)) {
     });
     const validation = () => {
         const val = $('#new_password').val();
+        $('#new_password').parent().next('.error-text').text('');
+        $('#confirm_password').parent().next('.error-text').text('');
         if (!val.length) {
             $('#new_password').parent().next('.error-text').text('');
             passwordValid = false;
