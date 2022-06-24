@@ -79,7 +79,7 @@ Session::set("post_ID", $rand);
                     </form>
             <?php } ?>
                     <form class="float-right" action="" method="post">
-                        <button type="submit" name="viewResults" class="btn btn-success">Results</button>
+                        <button type="submit" name="viewResults" class="btn btn-success mr-2">Results</button>
                     </form>
                 <?php } ?>
             </h3>
@@ -609,6 +609,8 @@ Session::set("post_ID", $rand);
 </form>
 
 <?php
+
+    echo $role["study_role"];
     $sql = "SELECT general_discomfort, fatigue, headache, eye_strain, difficulty_focusing, increased_salivation, sweating, nausea, difficulty_concentrating, fullness_of_head, blurred_vision, dizziness_with_eyes_open, dizziness_with_eyes_closed, vertigo, stomach_awareness, burping
         FROM SSQ 
         WHERE ssq_ID = " . $ssq_ID . "
@@ -628,6 +630,9 @@ Session::set("post_ID", $rand);
                         if (parseInt(pictures[j].getAttribute("value"), 10) === <?php echo $row[$i]; ?>){
                             pictures[j].setAttribute("checked", "checked");
                         }
+                        <?php if (Session::get("id") != $id_row["created_by"] && $role["study_role"] != 2){ ?>
+                            pictures[j].setAttribute("disabled", "disabled");
+                        <?php } ?>
                     }
                 <?php } ?>
             });
