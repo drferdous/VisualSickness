@@ -173,13 +173,13 @@ class Util {
   }
   
   public static function getAffiliationNameById($pdo, $affiliationId) {
-      $sql = "SELECT Name FROM Affiliation WHERE id = $affiliationId";
+      $sql = "SELECT name FROM affiliation WHERE affiliation_id = $affiliationId";
       $result = $pdo->query($sql);
       if (!$result) {
           echo $pdo->errorInfo();
           return null;
       }
-      return $result->fetch(PDO::FETCH_ASSOC)['Name'];
+      return $result->fetch(PDO::FETCH_ASSOC)['name'];
   }
   
   public static function getValueFromPost($str, $post) {

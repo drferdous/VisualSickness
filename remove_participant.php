@@ -54,8 +54,8 @@ if (isset($removeParticipant)) {
                 <div class="form-group">
                     <label for="researcher_ID" class="required">Remove a Participant</label>
                     <?php
-                        $sql = "SELECT participant_ID, anonymous_name, iv, dob
-                                FROM Participants
+                        $sql = "SELECT participant_id, anonymous_name, iv, dob
+                                FROM participants
                                 WHERE is_active = 1 AND study_id = $study_ID;";
                         $result = $pdo->query($sql); ?>
                     <select class="form-control" name="participant_ID" id="participant_ID" required <?= $result->rowCount() === 0 ? 'disabled' : '' ?>>
@@ -64,7 +64,7 @@ if (isset($removeParticipant)) {
                         while ($row = $result->fetch(PDO::FETCH_ASSOC)){ 
                             $iv = hex2bin($row['iv']);
                             $name = Crypto::decrypt($row['anonymous_name'], $iv);
-                            $participant_ID = Crypto::encrypt($row['participant_ID'], $id_IV); ?>
+                            $participant_ID = Crypto::encrypt($row['participant_id'], $id_IV); ?>
                                 <option value="<?= $participant_ID ?>;<?= bin2hex($id_IV) ?>">
                                     <?= $name . " - " . $row['dob'] ?>
                                 </option>

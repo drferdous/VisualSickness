@@ -31,8 +31,8 @@
     </div>
     <?php
     
-        $sql = "SELECT P.participant_ID, P.anonymous_name, P.dob, P.email, P.phone_no, S.full_name, P.iv
-                FROM Participants AS P 
+        $sql = "SELECT P.participant_id, P.anonymous_name, P.dob, P.email, P.phone_no, S.full_name, P.iv
+                FROM participants AS P 
                 JOIN Study AS S ON (P.study_id = S.study_ID)
                 WHERE P.is_active = 1 
                 AND P.study_id IN (SELECT study_ID
@@ -66,7 +66,7 @@
                         <tr>
                             <td><a href="participant_details"
                                    class="redirectUser link"
-                                   data-participant_ID="<?php echo Crypto::encrypt($row["participant_ID"], $iv); ?>"
+                                   data-participant_ID="<?php echo Crypto::encrypt($row["participant_id"], $iv); ?>"
                                    data-iv="<?php echo bin2hex($iv); ?>">
                                    <?php echo $name; ?>
                             </a></td>

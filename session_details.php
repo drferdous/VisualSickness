@@ -158,7 +158,7 @@ if (isset($_POST['remove-session-btn']) && Session::CheckPostID($_POST)){
                     <?php
                     // show name for participant_ID, not id         
                     if (isset($row_session['participant_ID'])){
-                        $sql_users = "SELECT anonymous_name, iv FROM Participants WHERE participant_id = " . $row_session['participant_ID'] . " LIMIT 1;";
+                        $sql_users = "SELECT anonymous_name, iv FROM participants WHERE participant_id = " . $row_session['participant_ID'] . " LIMIT 1;";
                         $result_users = $pdo->query($sql_users);
                         $row_users = $result_users->fetch(PDO::FETCH_ASSOC);
                         

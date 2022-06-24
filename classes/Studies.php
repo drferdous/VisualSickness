@@ -133,7 +133,7 @@ class Studies {
         $result_id = $this->db->pdo->lastInsertId();
         
         
-        $sql2 = "INSERT INTO Participants (demographics_id, anonymous_name, dob, weight, occupation, phone_no, email, comments, study_id, iv) 
+        $sql2 = "INSERT INTO participants (demographics_id, anonymous_name, dob, weight, occupation, phone_no, email, comments, study_id, iv) 
         VALUES(:demographics_id, :anonymous_name, :dob, :weight, :occupation, :phone_no, :email, :comments, :study_ID, :iv);";
         
         $stmt2 = $this->db->pdo->prepare($sql2);
@@ -307,9 +307,9 @@ class Studies {
     }
     
       
-    $sql = "UPDATE Participants SET is_active = 0 WHERE participant_ID = :participant_ID";
+    $sql = "UPDATE participants SET is_active = 0 WHERE participant_id = :participant_id";
     $stmt = $this->db->pdo->prepare($sql);
-    $stmt->bindValue(':participant_ID', $participant_ID);
+    $stmt->bindValue(':participant_id', $participant_ID);
     $result = $stmt->execute(); 
     
     $last_edited_by = Session::get('id'); 

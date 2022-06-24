@@ -72,9 +72,9 @@ if (Session::get('roleid') == '1') {
                       <label for="mobile">Mobile Number</label>
                       <input type="text" id="mobile" name="mobile" value="<?php echo $getUinfo->mobile; ?>" <?= $purpose === "edit" ? "" : "disabled"?> class="form-control">
                     </div>
-                    <?php $sql = "SELECT Name
-                                  FROM Affiliation
-                                  WHERE id = " . $getUinfo->affiliationid . "  
+                    <?php $sql = "SELECT name
+                                  FROM affiliation
+                                  WHERE affiliation_id = " . $getUinfo->affiliationid . "  
                                   LIMIT 1;";
                           $result = $pdo->query($sql);
                           if ($result){
@@ -84,7 +84,7 @@ if (Session::get('roleid') == '1') {
                             $row = array("Name" => "-");
                           } ?>
                     <div class="form-group">
-                      <label for="affilation">Affilation: <?php echo $row["Name"]; ?></label>
+                      <label for="affilation">Affilation: <?php echo $row["name"]; ?></label>
                     </div>
                     <?php if (Session::get("roleid") == '1' && $purpose === "edit" && Session::get("id") != $getUinfo->id) { ?>
                       <div class="form-group">

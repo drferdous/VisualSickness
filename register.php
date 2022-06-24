@@ -76,10 +76,10 @@ if (isset($userRegistration)) {
                     <label for="selAffil" class="required">Select Affiliation</label>
                     <select class="form-control" name="affiliationid" id="selAffil" required>
                       <?php 
-                          $sql = "SELECT id, name FROM Affiliation;";
+                          $sql = "SELECT affiliation_id, name FROM affiliation;";
                           $result = $pdo->query($sql);
                           while ($row = $result->fetch(PDO::FETCH_ASSOC)){ ?>
-                              <option <?= Util::getValueFromPost('affiliationid', $_POST) == $row['id'] ? 'selected' : ''; ?> value='<?= $row['id'] ?>'><?= $row['name'] ?></option>
+                              <option <?= Util::getValueFromPost('affiliationid', $_POST) == $row['affiliation_id'] ? 'selected' : ''; ?> value='<?= $row['affiliation_id'] ?>'><?= $row['name'] ?></option>
                           <?php }
                       ?>
                     </select>

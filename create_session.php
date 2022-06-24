@@ -79,8 +79,8 @@ $role = $role_result->fetch(PDO::FETCH_ASSOC);
                         <option value="" selected hidden disabled>Please Choose...</option>
                         <?php
                     
-                        $sql = "SELECT participant_id,anonymous_name, dob, iv
-                                FROM Participants 
+                        $sql = "SELECT participant_id, anonymous_name, dob, iv
+                                FROM participants 
                                 WHERE is_active = 1
                                 AND study_id = " . Session::get('study_ID') . ";";
                                     
