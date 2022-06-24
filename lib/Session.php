@@ -83,10 +83,10 @@ class Session{
                     LIMIT 1;";
         } else {
             $sql = "SELECT user.id FROM tbl_users as user
-                JOIN Researcher_Study as study
-                ON (user.id = study.researcher_ID)
+                JOIN researchers as researcher
+                ON (user.id =  researcher.researcher_id)
                 WHERE user.id = " . self::get("id") . "
-                AND study.study_ID = $study_ID LIMIT 1;";
+                AND researcher.study_id = $study_ID LIMIT 1;";
         }
         $result = $pdo->query($sql);
         if ($result->rowCount() === 1) {
@@ -104,10 +104,10 @@ class Session{
     }
     
     public static function requireResearcherOrUser($study_ID, $pdo) {
-        $sql = "SELECT researcher_ID FROM Researcher_Study
-                WHERE researcher_ID = " . self::get('id') . "
+        $sql = "SELECT researcher_id FROM researchers
+                WHERE researcher_id = " . self::get('id') . "
                 AND is_active = 1
-                AND study_ID = $study_ID;";
+                AND study_id = $study_ID;";
         $result = $pdo->query($sql);
         if (!$result->rowCount()) {
             header('Location: study_list');
@@ -116,13 +116,13 @@ class Session{
     }
     
     public static function requirePI($study_ID, $pdo) {
-        $sql = "SELECT rs.researcher_ID FROM Researcher_Study AS rs
-                JOIN Study AS s ON rs.study_ID = s.study_ID
-                WHERE rs.researcher_ID = " . self::get('id') . "
-                AND rs.is_active = 1
+        $sql = "SELECT researcher.researcher_id FROM researchers AS researcher
+                JOIN Study AS s ON researcher.study_id = s.study_ID
+                WHERE researcher.researcher_id = " . self::get('id') . "
+                AND researcher.is_active = 1
                 AND s.is_active = 1
-                AND rs.study_ID = $study_ID
-                AND rs.study_role = 2;";
+                AND researcher.study_id = $study_ID
+                AND researcher.study_role = 2;";
         $result = $pdo->query($sql);
         if (!$result->rowCount()) {
             header('Location: study_details');
@@ -131,13 +131,13 @@ class Session{
     }
     
     public static function requirePIorRA($study_ID, $pdo) {
-        $sql = "SELECT rs.researcher_ID FROM Researcher_Study AS rs
-                JOIN Study AS s ON rs.study_ID = s.study_ID
-                WHERE rs.researcher_ID = " . self::get('id') . "
-                AND rs.is_active = 1
+        $sql = "SELECT researcher.researcher_id FROM researchers AS researcher
+                JOIN Study AS s ON researcher.study_id = s.study_ID
+                WHERE researcher.researcher_id = " . self::get('id') . "
+                AND researcher.is_active = 1
                 AND s.is_active = 1
-                AND rs.study_ID = $study_ID
-                AND rs.study_role = 2 OR study_role = 3;";
+                AND researcher.study_id = $study_ID
+                AND researcher.study_role = 2 OR study_role = 3;";
         $result = $pdo->query($sql);
         if (!$result->rowCount()) {
             header('Location: study_details');

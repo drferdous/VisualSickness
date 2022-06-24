@@ -61,8 +61,8 @@ if (isset($editResearcher)) {
                     $sql = "SELECT id, name, email
                             FROM tbl_users
                             WHERE id IN (SELECT researcher_ID 
-                                             FROM Researcher_Study
-                                             WHERE study_ID = " . Session::get("study_ID") . 
+                                             FROM researchers
+                                             WHERE study_id = " . Session::get("study_ID") . 
                                              " AND is_active = 1 AND study_role != 2)
                             AND status = 1
                             AND affiliationid = " . Session::get("affiliationid") . ";";

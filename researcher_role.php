@@ -19,9 +19,9 @@ if (isset($_POST['researcher_ID']) && !empty($_POST['researcher_ID']) && isset($
 	$sql = "SELECT id, role FROM tbl_roles WHERE id >= (SELECT roleid from tbl_users where id = $id)";
 	$result = $pdo->query($sql);
 	if ($result->rowCount() > 0) {
-	    $sql_study_role = "SELECT study_role FROM Researcher_Study 
-	            WHERE researcher_ID = " . $id . "
-	            AND study_ID = " . Session::get("study_ID") . "
+	    $sql_study_role = "SELECT study_role FROM researchers 
+	            WHERE researcher_id = " . $id . "
+	            AND study_id = " . Session::get("study_ID") . "
 	            AND is_active = 1
 	            LIMIT 1;";
 	    $result_study_role = $pdo->query($sql_study_role);

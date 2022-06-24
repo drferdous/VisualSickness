@@ -39,8 +39,8 @@ if (isset($_POST['ssq_ID']) && isset($_POST['iv'])) {
 
 $ssq_ID = Session::get('ssq_ID');
 
-$role_sql = "SELECT study_role FROM Researcher_Study WHERE study_ID = " . Session::get('study_ID') . "
-             AND  researcher_ID = " . Session::get("id") . " 
+$role_sql = "SELECT study_role FROM researchers WHERE study_id = " . Session::get('study_ID') . "
+             AND researcher_id = " . Session::get("id") . " 
              AND is_active = 1;";
                     
 $role_result = $pdo->query($role_sql);

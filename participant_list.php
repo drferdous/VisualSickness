@@ -6,9 +6,9 @@
     if (isset($_GET['forStudy']) && $_GET['forStudy'] && Session::get('study_ID') != 0) $study_ID = Session::get('study_ID');
     
     if (isset($study_ID)) {
-        $access_sql = "SELECT study_role FROM Researcher_Study
-                    WHERE researcher_ID = " . Session::get("id") . "
-                    AND study_ID = $study_ID;";
+        $access_sql = "SELECT study_role FROM researchers
+                    WHERE researcher_id = " . Session::get("id") . "
+                    AND study_ID = $study_id;";
         $access_result = $pdo->query($access_sql);
         if (!$access_result->rowCount()) {
             header('Location: participant_list');
@@ -35,9 +35,9 @@
                 FROM participants AS P 
                 JOIN Study AS S ON (P.study_id = S.study_ID)
                 WHERE P.is_active = 1 
-                AND P.study_id IN (SELECT study_ID
-                                   FROM Researcher_Study
-                                   WHERE researcher_ID = " . Session::get("id") . (isset($study_ID) ? " AND study_ID = $study_ID" : "") . " AND is_active = 1);";
+                AND P.study_id IN (SELECT study_id
+                                   FROM researchers
+                                   WHERE researcher_id = " . Session::get("id") . (isset($study_ID) ? " AND study_id = $study_ID" : "") . " AND is_active = 1);";
         $result = $pdo->query($sql);
         
         if (!$result){

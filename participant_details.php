@@ -99,9 +99,9 @@
                 </tbody>
             </table>
             <?php
-            $role_sql = "SELECT study_role FROM Researcher_Study
-                        WHERE researcher_ID = " . Session::get('id') . "
-                        AND study_ID = " . $row['study_id'] . "
+            $role_sql = "SELECT study_role FROM researchers
+                        WHERE researcher_id = " . Session::get('id') . "
+                        AND study_id = " . $row['study_id'] . "
                         AND is_active = 1
                         LIMIT 1;";
             $role_result = $pdo->query($role_sql);

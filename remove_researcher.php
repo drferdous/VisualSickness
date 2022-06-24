@@ -57,10 +57,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['removeResearcher']) &&
                     $sql = "SELECT id, name
                             FROM tbl_users
                             WHERE id IN (SELECT researcher_ID
-                                         FROM Researcher_Study
-                                         WHERE study_ID = $study_ID
+                                         FROM researchers
+                                         WHERE study_id = $study_ID
                                          AND is_active = 1
-                                         AND NOT researcher_ID = " . Session::get('id') . ");";
+                                         AND NOT researcher_id = " . Session::get('id') . ");";
                     $result = $pdo->query($sql); ?>
                     <select class="form-control" name="researcher_ID" id="researcher_ID" required <?= $result->rowCount() === 0 ? 'disabled' : '' ?>>
                         <option value="" disabled hidden selected><?= $result->rowCount() === 0 ? 'There are no researchers you can remove from this study!' : 'Researcher Name' ?></option>

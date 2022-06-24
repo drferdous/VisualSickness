@@ -24,7 +24,7 @@
     </div>
     <?php
     
-        $sql = "SELECT user.name, user.email, user.mobile, role.role FROM tbl_users as user JOIN Researcher_Study as study ON (user.id = study.researcher_ID) JOIN tbl_roles as role ON (role.id = study.study_role) WHERE study.is_active = 1 AND study.study_ID = $study_ID;";
+        $sql = "SELECT user.name, user.email, user.mobile, role.role FROM tbl_users as user JOIN researchers as researcher ON (user.id = researcher.researcher_id) JOIN tbl_roles as role ON (role.id = researcher.study_role) WHERE researcher.is_active = 1 AND researcher.study_id = $study_ID;";
                 
         $result = $pdo->query($sql);
         

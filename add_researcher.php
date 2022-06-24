@@ -58,9 +58,9 @@ if (isset($addResearcher)) {
                     <?php
                     $sql = "SELECT id, name, email
                             FROM tbl_users
-                            WHERE NOT id IN (SELECT researcher_ID 
-                                             FROM Researcher_Study
-                                             WHERE study_ID = " . Session::get("study_ID") . 
+                            WHERE NOT id IN (SELECT researcher_id 
+                                             FROM researchers
+                                             WHERE study_id = " . Session::get("study_ID") . 
                                              " AND is_active = 1)
                             AND status = 1
                             AND affiliationid = " . Session::get("affiliationid") . ";";
