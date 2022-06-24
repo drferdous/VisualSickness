@@ -71,7 +71,7 @@ Session::set("post_ID", $rand);
 <div class="card">
     <div class="card-header">
             <h3>
-                <span class="float-right"> <a href="session_details" class="backBtn btn btn-primary">Back</a></span>
+                <span class="float-right"> <a href="session_details" class="btn btn-primary">Back</a></span>
                 <?php if ($ssq_ID !== -1) { 
                 if(($role['study_role'] == 2 || $id_row['created_by'] == Session::get('id')) && $study_is_active) { ?>
                     <form class="float-right" onsubmit="return confirm('Are you sure you want to delete this SSQ? This action cannot be undone.');" action="delete_quiz" method="post">

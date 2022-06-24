@@ -18,14 +18,7 @@ if (isset($_POST["reset-submit"]) && Session::CheckPostID($_POST)) {
             echo $userLog;
         }
         
-        if (Session::get('login') == TRUE){
-            if (Session::get('roleid') == '1') {
-                $homepage = "user_list";
-            } else {
-                $homepage = "study_list";
-            }
-            header("Location: " . $homepage);
-        }
+        Session::CheckLogin();
     }
 }
 ?>

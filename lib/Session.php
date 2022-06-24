@@ -58,6 +58,7 @@ class Session{
                 $homepage = "study_list";
             }
             header("Location: " . $homepage);
+            exit();
         }
     }
     
