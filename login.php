@@ -10,14 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login']) && Session::C
         echo $userLog;
     }
     
-    if (Session::get('login') == TRUE){
-        if (Session::get('roleid') == '1') {
-            $homepage = "user_list";
-        } else {
-            $homepage = "study_list";
-        }
-        header("Location: " . $homepage);
-    }
+    Session::CheckLogin();
 }
 
 $logout = Session::get('logout');
