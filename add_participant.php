@@ -89,7 +89,7 @@ if (isset($userAdd)) {
                   <input type="text" name="occupation" class="form-control" id="occupation">
                 </div>
                 <div class="form-group">
-                  <label for="education" class="required">Education</label>
+                  <label for="education" class="required">Highest Level of Education</label>
                   <select class=form-control name="education" id="education" required size="1"> 
                       <option <?= Util::getValueFromPost('education', $_POST) === 'Elementary School' ? 'selected' : '' ?> value="Elementary School">Elementary School</option>
                       <option <?= Util::getValueFromPost('education', $_POST) === 'Middle School' ? 'selected' : '' ?> value="Middle School">Middle School</option>

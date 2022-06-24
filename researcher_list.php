@@ -19,10 +19,8 @@
 <div class="card">
     <div class="card-header">
         <h3 class="float-left">Researcher List</h3>
-        <?php
-        if (isset($study_ID)) {
-            echo "<span class='float-right'><a href='study_details' class='btn btn-primary'>Back</a></span>";
-        }?>
+        <span class='float-right'><a href='study_details' class='btn btn-primary'>Back</a></span>
+        <span class='float-right mr-2'><a href='edit_researchers' class='btn btn-primary'>Edit Researchers</a></span>
     </div>
     <?php
     

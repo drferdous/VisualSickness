@@ -18,6 +18,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['editResearcher']) && S
     $researcher_ID = Crypto::decrypt($researcher_ID, hex2bin($iv));
     $editResearcher = $studies->editResearcher($researcher_ID, $_POST['study_role']);
 }
+if (!isset($_POST['referrer'])) {
+    if (isset($_SERVER['HTTP_REFERER'])) $referrer = ltrim(parse_url($_SERVER['HTTP_REFERER'], PHP_URL_PATH), '/') . '?' . parse_url($_SERVER['HTTP_REFERER'], PHP_URL_QUERY);
+    else $referrer = 'study_details';
+}
+else $referrer = $_POST['referrer'];
 
 if (isset($editResearcher)) {
     echo $editResearcher;?>
@@ -25,8 +30,7 @@ if (isset($editResearcher)) {
         const divMsg = document.getElementById("flash-msg");
         if (divMsg.classList.contains("alert-success")){
             setTimeout(function(){
-                let redirectURL = "study_details";
-                location.href = redirectURL;
+                location.href = '<?= $referrer ?>';
             }, 1000);
         }
     </script>
@@ -35,10 +39,7 @@ if (isset($editResearcher)) {
 <div class="card">
     <div class="card-header">
         <h3 class="float-left">Edit A Researcher</h3>
-        <a href="study_details" 
-           class="btn btn-primary float-right redirectUser">
-           Back
-        </a>
+          <span class="float-right"> <a href='<?= $referrer ?>' class="btn btn-primary">Back</a></span>
     </div>
     <div class="card-body pr-2 pl-2">
         <form class="" action="" method="post">
