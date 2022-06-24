@@ -149,7 +149,7 @@ if($timezone < 0) {
                             <li class="dropdown-submenu">
                                 <a href="javascript:void(0)" class="nested-dropdown dropdown-item">Manage<i class="fas fa-caret-right ml-2"></i></a>
                                 <ul class="dropdown-menu dropdown-submenu">
-                                    <li><a href="edit_study"  class="dropdown-item">Edit</a></li>
+                                    <li><a href="edit_study"  class="dropdown-item">Edit Study</a></li>
                                     <form method="post" class="d-inline" action="">
                                         <input type="hidden" name="randCheck" value="<?php echo $rand; ?>">
                                         <?php if ($row_study["is_active"] === "1"){ ?>
