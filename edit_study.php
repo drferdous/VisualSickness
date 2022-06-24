@@ -32,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['updateStudy']) && Sess
 <div class="card ">
     <div class="card-header">
         <h3 class="text-center">Edit a Study
-            <a href="study_details" class="btn btn-primary float-right">Back</a>
+            <a href="study_details" class="backBtn btn btn-primary float-right">Back</a>
         </h3>
     </div>
     

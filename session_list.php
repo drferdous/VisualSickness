@@ -25,7 +25,7 @@ Session::requireResearcherOrUser(Session::get('study_ID'), $pdo);
 <div class="card">
     <div class="card-header">
         <h3 class="float-left">Session List</h3> 
-        <span class="float-right"> <a href="study_list" class="btn btn-primary">Back</a></span>
+        <span class="float-right"> <a href="study_list" class="backBtn btn btn-primary">Back</a></span>
     </div>
         
     <div class="card-body pr-2 pl-2">

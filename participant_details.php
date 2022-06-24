@@ -50,7 +50,7 @@
 <div class="card">
     <div class="card-header">
         <span class="float-left"><h3><?= $name ?></h3></span>
-        <?php if (isset($referrer)) { ?><span class="float-right"> <a href='<?= $referrer ?>' class="btn btn-primary redirectUser">Back</a></span><?php } ?>
+        <?php if (isset($referrer)) { ?><span class="float-right"> <a href='<?= $referrer ?>' class="btn btn-primary backBtn">Back</a></span><?php } ?>
     </div>
     <div class="card-body">
         <div style="overflow-x: auto">

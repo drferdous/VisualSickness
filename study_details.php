@@ -104,7 +104,7 @@ if($timezone < 0) {
         <div class="navbar-collapse collapse">
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item dropdown mr-2">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLinkRight" role="button" data-mdb-toggle="dropdown" aria-expanded="false">
+                    <a class="nav-link dropdown-toggle font-weight-bold" href="#" id="navbarDropdownMenuLinkRight" role="button" data-mdb-toggle="dropdown" aria-expanded="false" style="color: black; background-color: rgba(0, 98, 204, 0.32); border-radius: 4px;">
                         More Actions
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLinkRight">
@@ -175,7 +175,7 @@ if($timezone < 0) {
                         <?php } ?>
                     </ul>
                 </li>
-                <a href="study_list" class="btn btn-primary">Back</a>
+                <a href="study_list" class="backBtn btn btn-primary">Back</a>
             </ul>
         </div>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#studyNavbar" aria-controls="studyNavbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -248,7 +248,7 @@ if($timezone < 0) {
                     </li>
                 <?php } ?>
                 <li class="nav-item">
-                    <a href="study_list" class="nav-link">Back</a>
+                    <a href="study_list" class="backBtn nav-link">Back</a>
                 </li>
             </ul>
         </div>
