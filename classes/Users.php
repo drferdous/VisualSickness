@@ -98,7 +98,7 @@ class Users{
   }
 
 
-  // User login Autho Method
+  // User login Autho Method 
   public function userLoginAutho($email, $password){
     $password = SHA1($password);
     $sql = "SELECT * FROM tbl_users 
@@ -265,7 +265,7 @@ class Users{
     }  
 
     // Check Old password method
-    public function CheckOldPassword($userid, $old_pass){
+    public function checkOldPassword($userid, $old_pass){
       $old_pass = SHA1($old_pass);
       $sql = "SELECT password FROM tbl_users WHERE password = :password AND id =:id";
       $stmt = $this->db->pdo->prepare($sql);
@@ -315,7 +315,7 @@ class Users{
     }
 
     // Change User pass By Id
-    public function changePasswordBysingleUserId($userid, $data){
+    public function changePasswordById($userid, $data){
 
       $old_pass = $data['old_password'];
       $new_pass = $data['new_password'];
@@ -330,7 +330,7 @@ class Users{
           return Util::generateErrorMessage("New password must be at least 6 characters!");
       }
       
-     $oldPass = $this->CheckOldPassword($userid, $old_pass);
+     $oldPass = $this->checkOldPassword($userid, $old_pass);
      if ($oldPass == FALSE) {
         return Util::generateErrorMessage("Old password is not correct!");
      }

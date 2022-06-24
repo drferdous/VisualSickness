@@ -11,36 +11,28 @@ class Studies {
         $this->db = Database::getInstance();
     }
     
-    public function insertQuiz($data) {
-        if(isset($_POST['submitQuiz'])){    
+    public function insertQuiz($ssq) {
+        if(isset($ssq['submitQuiz'])){    
             $ssq_ID = Session::get('ssq_ID');
-            $general_discomfort = $_POST['general_discomfort'];
-            $fatigue = $_POST['fatigue'];
-            $headache = $_POST['headache'];
-            $eye_strain = $_POST['eye_strain'];
-            $difficulty_focusing = $_POST['difficulty_focusing'];
-            $increased_salivation = $_POST['increased_salivation'];
-            $sweating = $_POST['sweating'];
-            $nausea = $_POST['nausea'];
-            $difficulty_concentrating = $_POST['difficulty_concentrating'];
-            $fullness_of_head = $_POST['fullness_of_head'];
-            $blurred_vision = $_POST['blurred_vision'];
-            $dizziness_with_eyes_open = $_POST['dizziness_with_eyes_open'];
-            $dizziness_with_eyes_closed = $_POST['dizziness_with_eyes_closed'];
-            $vertigo = $_POST['vertigo'];
-            $stomach_awareness = $_POST['stomach_awareness'];
-            $burping = $_POST['burping'];
-            $ssq_time = $_POST['ssq_time'];
-            $ssq_type = $_POST['ssq_type'];
+            $general_discomfort = $ssq['general_discomfort'];
+            $fatigue = $ssq['fatigue'];
+            $headache = $ssq['headache'];
+            $eye_strain = $ssq['eye_strain'];
+            $difficulty_focusing = $ssq['difficulty_focusing'];
+            $increased_salivation = $ssq['increased_salivation'];
+            $sweating = $ssq['sweating'];
+            $nausea = $ssq['nausea'];
+            $difficulty_concentrating = $ssq['difficulty_concentrating'];
+            $fullness_of_head = $ssq['fullness_of_head'];
+            $blurred_vision = $ssq['blurred_vision'];
+            $dizziness_with_eyes_open = $ssq['dizziness_with_eyes_open'];
+            $dizziness_with_eyes_closed = $ssq['dizziness_with_eyes_closed'];
+            $vertigo = $ssq['vertigo'];
+            $stomach_awareness = $ssq['stomach_awareness'];
+            $burping = $ssq['burping'];
+            $ssq_time = $ssq['ssq_time'];
+            $ssq_type = $ssq['ssq_type'];
             $session_ID = Session::get('session_ID');
-            $code = $_POST['code'];
-        
-            if (Session::get('login') === FALSE) { 
-                $age = $_POST['age'];
-                $gender = $_POST['gender'];
-                $race = $_POST['race'];
-                $education = $_POST['education'];
-            }
             
             if ($ssq_ID > 0){
                 $sql = "UPDATE SSQ
@@ -64,8 +56,8 @@ class Studies {
                         LIMIT 1;";
             }
             else{
-                $sql = "INSERT INTO SSQ (general_discomfort, fatigue, headache, difficulty_focusing, eye_strain,              increased_salivation, sweating, nausea, difficulty_concentrating, fullness_of_head, blurred_vision, dizziness_with_eyes_open, dizziness_with_eyes_closed, vertigo, stomach_awareness, burping, ssq_time, ssq_type, session_ID, code)
-                    VALUES ('$general_discomfort', '$fatigue', '$headache', '$difficulty_focusing', '$eye_strain', '$increased_salivation', '$sweating', '$nausea', '$difficulty_concentrating', '$fullness_of_head', '$blurred_vision', '$dizziness_with_eyes_open', '$dizziness_with_eyes_closed', '$vertigo', '$stomach_awareness', '$burping', '$ssq_time', '$ssq_type', '$session_ID', '$code')";
+                $sql = "INSERT INTO SSQ (general_discomfort, fatigue, headache, difficulty_focusing, eye_strain, increased_salivation, sweating, nausea, difficulty_concentrating, fullness_of_head, blurred_vision, dizziness_with_eyes_open, dizziness_with_eyes_closed, vertigo, stomach_awareness, burping, ssq_time, ssq_type, session_ID)
+                    VALUES ('$general_discomfort', '$fatigue', '$headache', '$difficulty_focusing', '$eye_strain', '$increased_salivation', '$sweating', '$nausea', '$difficulty_concentrating', '$fullness_of_head', '$blurred_vision', '$dizziness_with_eyes_open', '$dizziness_with_eyes_closed', '$vertigo', '$stomach_awareness', '$burping', '$ssq_time', '$ssq_type', '$session_ID')";
             }
             $result = $this->db->pdo->query($sql);
             if ($result) {
@@ -76,33 +68,27 @@ class Studies {
                 $message = "Error: " . $sql;
                 $message .= $this->db->pdo->errorInfo();
             }
-            
-            if (Session::get('login') === FALSE) {     
-                $sql2 = "INSERT INTO Demographics (Age, Race_Ethnicity, Gender, Education, Quiz)
-                        VALUES ('$age', '$race', '$gender', '$education')";
-                $this->db->pdo->query($sql2);
-            }
             return $message;
         }
     }
 
   // Add participant to Session table and Demographics table
-  public function addNewParticipant($data){
+  public function addNewParticipant($participantInfo){
   // Note: this function does not work because the function does not take into account the study_ID yet.
-    array_walk($data, function (&$val) {
+    array_walk($participantInfo, function (&$val) {
         $val = trim($val);
     });
-    $anonymous_name = $data['anonymous_name'];
-    $dob = $data['dob'];
-    $age = $data['age'];    
-    $weight = $data['weight'];
-    $gender = $data['gender'];
-    $race_ethnicity = $data['ethnicity'];
-    $occupation = $data['occupation'];
-    $education = $data['education'];
-    $phone_no = $data['phone_no'];
-    $email = $data['email'];
-    $comments = $data['comments'];
+    $anonymous_name = $participantInfo['anonymous_name'];
+    $dob = $participantInfo['dob'];
+    $age = $participantInfo['age'];    
+    $weight = $participantInfo['weight'];
+    $gender = $participantInfo['gender'];
+    $race_ethnicity = $participantInfo['ethnicity'];
+    $occupation = $participantInfo['occupation'];
+    $education = $participantInfo['education'];
+    $phone_no = $participantInfo['phone_no'];
+    $email = $participantInfo['email'];
+    $comments = $participantInfo['comments'];
     $study_ID = Session::get('study_ID');
     
     $checkEmail = Util::checkExistEmail($email, $this->db);
@@ -123,7 +109,7 @@ class Studies {
         $weight = NULL;
     }
     
-    $anonymous_name = Crypto::encrypt($data['anonymous_name'], $iv);
+    $anonymous_name = Crypto::encrypt($participantInfo['anonymous_name'], $iv);
     $iv = bin2hex($iv);
     
         
@@ -175,17 +161,7 @@ class Studies {
     }
     
     $last_edited_by = Session::get('id'); 
-    $currentDate = new DateTime();
-        
-        $sql3 = "UPDATE Study
-                SET last_edited_by = :last_edited_by, last_edited_at = :last_edited_at 
-                WHERE study_ID = :study_ID
-                LIMIT 1;";
-        $stmt = $this->db->pdo->prepare($sql3);
-        $stmt->bindValue(':last_edited_by', $last_edited_by);
-        $stmt->bindValue(':last_edited_at', $currentDate->format('Y-m-d H:i:s'));
-        $stmt->bindValue(':study_ID', $study_ID);
-        $result_edit = $stmt->execute();
+    $result_edit = Util::updateStudy($study_ID, $last_edited_by, $this->db->pdo);
         
     if (!$result_edit){
         throw new Exception($stmt->error);
@@ -215,7 +191,6 @@ class Studies {
     
     $study_ID = Session::get("study_ID");
     $last_edited_by = Session::get('id'); 
-    $currentDate = new DateTime();
     
     $sql = "SELECT roleid FROM tbl_users
             WHERE id = :researcher_ID
@@ -238,15 +213,7 @@ class Studies {
         $stmt->bindValue(':study_role', $study_role); 
         $result = $stmt->execute(); 
         
-    $sql = "UPDATE Study
-                SET last_edited_by = :last_edited_by, last_edited_at = :last_edited_at 
-                WHERE study_ID = :study_ID
-                LIMIT 1;";
-        $stmt = $this->db->pdo->prepare($sql);
-        $stmt->bindValue('last_edited_by', $last_edited_by);
-        $stmt->bindValue(':last_edited_at', $currentDate->format('Y-m-d H:i:s'));
-        $stmt->bindValue(':study_ID', $study_ID);
-        $result2 = $stmt->execute();
+    $result2 = Util::updateStudy($study_ID, $last_edited_by, $this->db->pdo);
     
         if ($result && $result2){ 
             return Util::generateSuccessMessage("You have added a researcher!");
@@ -265,7 +232,6 @@ class Studies {
            
     $study_ID = Session::get('study_ID');  
     $last_edited_by = Session::get('id'); 
-    $currentDate = new DateTime();
       
     $sql = "UPDATE Researcher_Study SET is_active = 0 WHERE researcher_ID = :researcher_ID AND study_ID = :study_ID";
     $stmt = $this->db->pdo->prepare($sql);
@@ -273,15 +239,7 @@ class Studies {
     $stmt->bindValue(':study_ID', $study_ID);
     $result = $stmt->execute(); 
     
-    $sql = "UPDATE Study
-                SET last_edited_by = :last_edited_by, last_edited_at = :last_edited_at 
-                WHERE study_ID = :study_ID
-                LIMIT 1;";
-        $stmt = $this->db->pdo->prepare($sql);
-        $stmt->bindValue(':last_edited_by', $last_edited_by);
-        $stmt->bindValue(':last_edited_at', $currentDate->format('Y-m-d H:i:s'));
-        $stmt->bindValue(':study_ID', $study_ID);
-        $result2 = $stmt->execute();
+    $result2 = Util::updateStudy($study_ID, $last_edited_by, $this->db->pdo);
     
     if ($result && $result2){
         return Util::generateSuccessMessage("You have removed a researcher!");
@@ -306,8 +264,7 @@ class Studies {
     }
     
     $study_ID = Session::get("study_ID");
-    $last_edited_by = Session::get('id'); 
-    $currentDate = new DateTime();
+    $last_edited_by = Session::get('id');
     
     $sql = "SELECT roleid FROM tbl_users
             WHERE id = :researcher_ID
@@ -331,16 +288,8 @@ class Studies {
         $stmt->bindValue(':study_ID', $study_ID);
         $stmt->bindValue(':study_role', $study_role);   
         $result = $stmt->execute(); 
-    
-    $sql2 = "UPDATE Study
-            SET last_edited_by = :last_edited_by, last_edited_at = :last_edited_at 
-            WHERE study_ID = :study_ID
-            LIMIT 1;";
-        $stmt = $this->db->pdo->prepare($sql2);
-        $stmt->bindValue('last_edited_by', $last_edited_by);
-        $stmt->bindValue(':last_edited_at', $currentDate->format('Y-m-d H:i:s'));
-        $stmt->bindValue(':study_ID', $study_ID);
-        $result2 = $stmt->execute();
+
+        $result2 = Util::updateStudy($study_ID, $last_edited_by, $this->db->pdo);
     
         if ($result && $result2){ 
             return Util::generateSuccessMessage("You have edited a researcher!");
@@ -364,17 +313,7 @@ class Studies {
     $result = $stmt->execute(); 
     
     $last_edited_by = Session::get('id'); 
-    $currentDate = new DateTime();
-    
-    $sql = "UPDATE Study
-                SET last_edited_by = :last_edited_by, last_edited_at = :last_edited_at 
-                WHERE study_ID = :study_ID
-                LIMIT 1;";
-        $stmt = $this->db->pdo->prepare($sql);
-        $stmt->bindValue('last_edited_by', $last_edited_by);
-        $stmt->bindValue(':last_edited_at', $currentDate->format('Y-m-d H:i:s'));
-        $stmt->bindValue(':study_ID', Session::get("study_ID"));
-        $result2 = $stmt->execute();
+    $result2 = Util::updateStudy(Session::get('study_ID'), $last_edited_by, $this->db->pdo);
     
     if ($result && $result2) {
         return Util::generateSuccessMessage("You have removed a participant!");
@@ -385,14 +324,13 @@ class Studies {
   }
   
   // take SSQ quiz from Session
-public function takeSSQ($data){
-    array_walk($data, function (&$val) {         $val = trim($val);     });
-    if (!(isset($data['quiz_type']) && isset($data['ssq_time']))){
+public function takeSSQ($quiz_type, $ssq_time){
+    $quiz_type = trim($quiz_type);
+    $ssq_time = trim($ssq_time);
+    if (!$quiz_type || !$ssq_time){
         return Util::generateErrorMessage("Please select a quiz type and a quiz time!");
     }
-    
-    $quiz_type = $data['quiz_type'];
-    $ssq_time = $data['ssq_time'];
+
     $session_ID = Session::get('session_ID');
     
     $sql = "SELECT *
@@ -422,8 +360,7 @@ public function takeSSQ($data){
 }
   
   // remove SSQ quiz from Session
-  public function deleteQuiz($data){
-    array_walk($data, function (&$val) {         $val = trim($val);     });
+  public function deleteQuiz(){
     $ssq_ID = Session::get('ssq_ID');          
       
     $sql = "UPDATE SSQ
@@ -456,7 +393,7 @@ public function takeSSQ($data){
       }
     }// Insert user's study in Study table
     
- public function insert_study($data) {
+ public function insertStudy($data) {
     array_walk($data, function (&$val) {         $val = trim($val);     });
     $full_name = $data['full_name'];
     $short_name = $data['short_name'];
@@ -469,7 +406,6 @@ public function takeSSQ($data){
     array_walk($session_times, function (&$val) {         $val = ucwords(trim($val));     });
     $session_times = array_filter($session_times, function ($time) { return $time != ''; });
     $created_by = Session::get('id');
-    $last_edited_by = Session::get('id');
 
     if ($full_name == "" || $short_name == "" || $IRB == "") {
         return array(Util::generateErrorMessage("Study registration fields must not be empty!"));
@@ -859,18 +795,18 @@ public function takeSSQ($data){
     }
     
     // inserts a session of a  study into DB
-    public function insert_session($data){
-        array_walk($data, function (&$val) {         $val = trim($val);     });
+    public function insertSession($session_data){
+        array_walk($session_data, function (&$val) {         $val = trim($val);     });
         $created_by = Session::get('id');
         
-        if (empty($data["participant_ID"])){
+        if (empty($session_data["participant_ID"])){
             return Util::generateErrorMessage("Please select a participant!");
         }
-        if (empty($data["session_time"])){
+        if (empty($session_data["session_time"])){
             return Util::generateErrorMessage("Please select a Session time!");
         }
-        if (empty($data["comment"])){
-            $data["comment"] = NULL;
+        if (empty($session_data["comment"])){
+            $session_data["comment"] = NULL;
         }
         
         $this->db->pdo->beginTransaction();
@@ -880,11 +816,11 @@ public function takeSSQ($data){
             $stmt = $this->db->pdo->prepare($sql);
             
             $stmt->bindValue(':study_ID', Session::get('study_ID'));
-            $stmt->bindValue(':participant_ID', $data["participant_ID"]);
-            $stmt->bindValue(':comment', $data["comment"]);
+            $stmt->bindValue(':participant_ID', $session_data["participant_ID"]);
+            $stmt->bindValue(':comment', $session_data["comment"]);
             $stmt->bindValue(':created_by', $created_by);
             $stmt->bindValue(':last_edited_by', $created_by);
-            $stmt->bindValue(':session_time', $data['session_time']);
+            $stmt->bindValue(':session_time', $session_data['session_time']);
             
             $result = $stmt->execute();
             if (!$result){
@@ -914,7 +850,7 @@ public function takeSSQ($data){
     }
     
     // restarts the current session within a study by removing the end time of a session.
-    public function restart_session($session_ID) {
+    public function restartSession($session_ID) {
         $last_edited_by = Session::get('id');        
         
         $sql = "UPDATE Session
@@ -960,7 +896,6 @@ public function takeSSQ($data){
     
     // removes current session within a study.
     public function removeSession($session_ID){
-        $currentDate = new DateTime();
         $last_edited_by = Session::get('id');
         $sql = "UPDATE Session
                 SET is_active = 0, last_edited_by = :last_edited_by  
@@ -978,27 +913,5 @@ public function takeSSQ($data){
         else{
             return Util::generateSuccessMessage("Something went wrong. Try ending again!");
         }
-    }
-    
-    // ends the current session within a study.
-    public function deleteSSQ($session_ID){
-        $currentDate = new DateTime();
-        $sql = "UPDATE Session
-                SET end_time = :end_time
-                WHERE session_ID = :session_ID
-                LIMIT 1;";
-        
-        $stmt = $this->db->pdo->prepare($sql);
-        $stmt->bindValue(':end_time', $currentDate->format('Y-m-d H:i:s'));
-        $stmt->bindValue(':session_ID', $session_ID);
-        
-        $result = $stmt->execute();
-        if ($result){
-            Session::set('session_ID', -1);
-            return Util::generateSuccessMessage("Session ended!");
-        }
-        else{
-            return Util::generateErrorMessage("Something went wrong. Try ending again!");
-        }
-    }    
+    }   
 }

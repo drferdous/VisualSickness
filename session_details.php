@@ -25,7 +25,7 @@ $study_result = $pdo->query($study_sql);
 $study_is_active = $study_result->fetch(PDO::FETCH_ASSOC)['is_active'] == 1;
 
 if (isset($_POST['restart-session-btn']) && Session::CheckPostId($_POST)){
-    $startSessionMessage = $studies->restart_session($session_ID);
+    $startSessionMessage = $studies->restartSession($session_ID);
     if (isset($startSessionMessage)){
         echo $startSessionMessage;
     }
@@ -53,12 +53,6 @@ if (isset($_POST['remove-session-btn']) && Session::CheckPostID($_POST)){
     }
 }
 
-if (isset($_POST['delete-ssq-btn']) && Session::CheckPostID($_POST)){
-    $deleteSSQmessage = $studies->deleteSSQ($session_ID);
-    if (isset($deleteSSQmessage)){
-        echo $deleteSSQmessage ;
-    }
-}
 ?>
 
 <div class="card">

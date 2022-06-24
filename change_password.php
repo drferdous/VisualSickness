@@ -6,7 +6,7 @@
     $userid = Session::get("id");
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['changepass']) && Session::CheckPostID($_POST)) {
-        $changePass = $users->changePasswordBysingleUserId($userid, $_POST);
+        $changePass = $users->changePasswordById($userid, $_POST);
     }
 
 

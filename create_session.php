@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['insert_session']) && S
     $iv = $info[1];
     $_POST["participant_ID"] = Crypto::decrypt($participant_ID, hex2bin($iv));
     
-    $insertSessionMessage = $studies->insert_session($_POST); 
+    $insertSessionMessage = $studies->insertSession($_POST); 
     if (isset($insertSessionMessage)){
         echo $insertSessionMessage; ?>
         
