@@ -74,7 +74,7 @@ $sql_times = "SELECT name FROM SSQ_times
               WHERE study_ID = " . $study_ID . " AND is_active = 1;";
 $result_times = $pdo->query($sql_times);
 
-$sql_session_times = "SELECT name FROM Session_times
+$sql_session_times = "SELECT name FROM session_times
               WHERE study_ID = " . $study_ID . " AND is_active = 1;";
 $result_session_times = $pdo->query($sql_session_times);
                     

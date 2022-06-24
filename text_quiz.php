@@ -441,8 +441,8 @@ $study_is_active = $study_result->fetch(PDO::FETCH_ASSOC)['is_active'] == 1;
 
 <?php
     $sql = "SELECT general_discomfort, fatigue, headache, eye_strain, difficulty_focusing, increased_salivation, sweating, nausea, difficulty_concentrating, fullness_of_head, blurred_vision, dizziness_with_eyes_open, dizziness_with_eyes_closed, vertigo, stomach_awareness, burping
-        FROM SSQ 
-        WHERE ssq_ID = " . $ssq_ID . "
+        FROM ssq 
+        WHERE ssq_id = " . $ssq_ID . "
         LIMIT 1;";
             
     $result = $pdo->query($sql);

@@ -35,7 +35,7 @@ class Studies {
             $session_ID = Session::get('session_ID');
             
             if ($ssq_ID > 0){
-                $sql = "UPDATE SSQ
+                $sql = "UPDATE ssq
                         SET general_discomfort = " . $general_discomfort . ",
                             fatigue = " . $fatigue . ",
                             headache = " . $headache . ",
@@ -52,11 +52,11 @@ class Studies {
                             vertigo = " . $vertigo . ",
                             stomach_awareness = " . $stomach_awareness . ",
                             burping = " . $burping . "
-                        WHERE ssq_ID = " . $ssq_ID . "
+                        WHERE ssq_id = " . $ssq_ID . "
                         LIMIT 1;";
             }
             else{
-                $sql = "INSERT INTO SSQ (general_discomfort, fatigue, headache, difficulty_focusing, eye_strain, increased_salivation, sweating, nausea, difficulty_concentrating, fullness_of_head, blurred_vision, dizziness_with_eyes_open, dizziness_with_eyes_closed, vertigo, stomach_awareness, burping, ssq_time, ssq_type, session_ID)
+                $sql = "INSERT INTO ssq (general_discomfort, fatigue, headache, difficulty_focusing, eye_strain, increased_salivation, sweating, nausea, difficulty_concentrating, fullness_of_head, blurred_vision, dizziness_with_eyes_open, dizziness_with_eyes_closed, vertigo, stomach_awareness, burping, ssq_time, ssq_type, session_id)
                     VALUES ('$general_discomfort', '$fatigue', '$headache', '$difficulty_focusing', '$eye_strain', '$increased_salivation', '$sweating', '$nausea', '$difficulty_concentrating', '$fullness_of_head', '$blurred_vision', '$dizziness_with_eyes_open', '$dizziness_with_eyes_closed', '$vertigo', '$stomach_awareness', '$burping', '$ssq_time', '$ssq_type', '$session_ID')";
             }
             $result = $this->db->pdo->query($sql);
@@ -334,15 +334,15 @@ public function takeSSQ($quiz_type, $ssq_time){
     $session_ID = Session::get('session_ID');
     
     $sql = "SELECT *
-            FROM SSQ
-            WHERE session_ID = :session_ID
+            FROM ssq
+            WHERE session_id = :session_id
             AND ssq_time = :ssq_time
             AND ssq_type = :quiz_type
             AND is_active = 1
             LIMIT 1;";
     
     $stmt = $this->db->pdo->prepare($sql);
-    $stmt->bindValue(":session_ID", $session_ID);
+    $stmt->bindValue(":session_id", $session_ID);
     $stmt->bindValue(":ssq_time", $ssq_time);
     $stmt->bindValue(":quiz_type", $quiz_type);
     $result = $stmt->execute();
@@ -363,9 +363,9 @@ public function takeSSQ($quiz_type, $ssq_time){
   public function deleteQuiz(){
     $ssq_ID = Session::get('ssq_ID');          
       
-    $sql = "UPDATE SSQ
+    $sql = "UPDATE ssq
             SET is_active = 0
-            WHERE ssq_ID = :ssq_ID
+            WHERE ssq_id = :ssq_ID
             LIMIT 1;";
     $stmt = $this->db->pdo->prepare($sql);
     $stmt->bindValue(':ssq_ID', $ssq_ID);
@@ -625,7 +625,7 @@ public function takeSSQ($quiz_type, $ssq_time){
             $remove = implode(', ', array_map(function ($time) { return "'$time'"; }, $removed_ssq_times));
             
             
-            $sql = "SELECT ssq_ID FROM SSQ WHERE ssq_time IN (SELECT id FROM SSQ_times WHERE study_id = $study_ID AND name IN ($remove) AND is_active = 1)";
+            $sql = "SELECT ssq_id FROM ssq WHERE ssq_time IN (SELECT id FROM SSQ_times WHERE study_id = $study_ID AND name IN ($remove) AND is_active = 1)";
             $result_ssq = $pdo->query($sql);
             
             if($result_ssq->fetch(PDO::FETCH_ASSOC)) {

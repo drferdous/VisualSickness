@@ -10,7 +10,7 @@ class Util {
    }
    
    public static function getModalForSSQ($pdo, $new=TRUE) {
-        $ssq_sql = "SELECT * FROM SSQ WHERE ssq_ID = " . Session::get('ssq_ID');
+        $ssq_sql = "SELECT * FROM ssq WHERE ssq_id = " . Session::get('ssq_ID');
         $ssq_result = $pdo->query($ssq_sql);
         $row = $ssq_result->fetch(PDO::FETCH_ASSOC);
         if ($row) {

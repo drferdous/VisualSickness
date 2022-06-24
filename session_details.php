@@ -86,8 +86,8 @@ if (isset($_POST['remove-session-btn']) && Session::CheckPostID($_POST)){
                 
                 $sql = "SELECT * FROM SSQ_times 
                         WHERE id IN (SELECT ssq_time 
-                                     FROM SSQ 
-                                     WHERE session_ID = $session_ID
+                                     FROM ssq 
+                                     WHERE session_id = $session_ID
                                      AND is_active = 1) 
                         AND is_active = 1;";
                 $result = $pdo->query($sql);
@@ -186,12 +186,12 @@ if (isset($_POST['remove-session-btn']) && Session::CheckPostID($_POST)){
                     <td>
                     <?php
                     
-                    $sql = "SELECT SSQ.ssq_ID, SSQ.ssq_time, SSQ.ssq_type
-                            FROM SSQ JOIN SSQ_times ON (SSQ.ssq_time = SSQ_times.id)
-                            WHERE SSQ.session_ID = $session_ID
+                    $sql = "SELECT ssq.ssq_id, ssq.ssq_time, ssq.ssq_type
+                            FROM ssq JOIN SSQ_times ON (ssq.ssq_time = SSQ_times.id)
+                            WHERE ssq.session_id = $session_ID
                             AND SSQ_times.is_active = 1
-                            AND SSQ.is_active = 1
-                            ORDER BY SSQ.ssq_time ASC;";
+                            AND ssq.is_active = 1
+                            ORDER BY ssq.ssq_time ASC;";
                     $result = $pdo->query($sql);
                     
                     while ($row = $result->fetch(PDO::FETCH_ASSOC)){

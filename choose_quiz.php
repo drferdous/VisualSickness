@@ -119,8 +119,8 @@
 									 FROM Session
 			                         WHERE session_ID = $session_ID) 
 			                         AND id NOT IN (SELECT ssq_time
-			                                        FROM SSQ
-			                                        WHERE session_ID = $session_ID and is_active = 1);";
+			                                        FROM ssq
+			                                        WHERE session_id = $session_ID and is_active = 1);";
                         $result = $pdo->query($sql);
                         while ($row = $result->fetch(PDO::FETCH_ASSOC)){
                             echo "<option value=\"" . $row['id'] . "\">";
