@@ -137,14 +137,14 @@ if($timezone < 0) {
                             <li class="dropdown-submenu">
                                 <a href="javascript:void(0)" class="nested-dropdown dropdown-item"><i class="fas fa-caret-left mr-2"></i>Participant</a>
                                 <ul class="dropdown-menu dropdown-submenu">
-                                    <li><a href="participant_list?forStudy=true" class="dropdown-item">View Participants</a></li>
+                                    <li><a href="participant_list?forStudy=true" class="dropdown-item nested-dropdown-item">View Participants</a></li>
                                     <?php if($role['study_role'] != 4 && $row_study['is_active'] == 1){ ?>
-                                        <li><a href="add_participant" class="dropdown-item">Add A Participant</a></li>
-                                        <li><a href="remove_participant" class="dropdown-item">Remove A Participant</a></li>
+                                        <li><a href="add_participant" class="dropdown-item nested-dropdown-item">Add A Participant</a></li>
+                                        <li><a href="remove_participant" class="dropdown-item nested-dropdown-item">Remove A Participant</a></li>
                                         <li>
                                             <form method="post" class="d-inline" action="edit_participants">
                                                 <input type="hidden" name="forStudy" value="true">
-                                                <input href="edit_participants" class="dropdown-item" value="Edit A Participant" type="submit">
+                                                <input href="edit_participants" class="dropdown-item nested-dropdown-item" value="Edit A Participant" type="submit">
                                             </form>
                                         </li>
                                     <?php } ?>
