@@ -82,10 +82,10 @@ class Session{
                     AND study_id = $study_ID
                     LIMIT 1;";
         } else {
-            $sql = "SELECT users.id FROM users
+            $sql = "SELECT users.user_id FROM users
                 JOIN researchers as researcher
-                ON (users.id =  researcher.researcher_id)
-                WHERE users.id = " . self::get("id") . "
+                ON (users.user_id =  researcher.researcher_id)
+                WHERE users.user_id = " . self::get("id") . "
                 AND researcher.study_id = $study_ID LIMIT 1;";
         }
         $result = $pdo->query($sql);

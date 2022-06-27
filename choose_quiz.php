@@ -19,7 +19,7 @@
     }
     
     if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['take-ssq-btn']) && Session::CheckPostID($_POST)) {
-        $takeSSQMessage = $studies->takeSSQ($_POST["quiz_time"], $_POST["ssq_time"]);
+        $takeSSQMessage = $studies->takeSSQ($_POST["quiz_type"], $_POST["ssq_time"]);
         if (isset($takeSSQMessage)) {
             echo $takeSSQMessage;
             Session::set('ssq_ID', -1); ?>
@@ -119,11 +119,7 @@
 									 FROM session
 			                         WHERE session_id = $session_ID) 
 			                         AND id NOT IN (SELECT ssq_time
-<<<<<<< HEAD
-			                                        FROM SSQ
-=======
 			                                        FROM ssq
->>>>>>> cb70a77b0ec65460398fab91c283b9fd8635d61c
 			                                        WHERE session_id = $session_ID and is_active = 1);";
                         $result = $pdo->query($sql);
                         while ($row = $result->fetch(PDO::FETCH_ASSOC)){

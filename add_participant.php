@@ -53,10 +53,6 @@ if (isset($userAdd)) {
                   <input type="text" name="anonymous_name" value="<?= Util::getValueFromPost('anonymous_name', $_POST); ?>" class="form-control" id="anonymous_name" required>
                 </div>
                 <div class="form-group">
-                  <label for="age" class="required">Age</label>
-                  <input type="number" name="age" value="<?= Util::getValueFromPost('age', $_POST); ?>" class="form-control" id="age" min="1" step="1">
-                </div>                
-                <div class="form-group">
                   <label for="dob" class="required">Date of Birth</label>
                   <input type="date" name="dob" value="<?= Util::getValueFromPost('dob', $_POST); ?>" class="form-control" id="dob" required>
                 </div>

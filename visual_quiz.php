@@ -26,10 +26,6 @@ if (isset($_POST['submitQuiz']) && Session::CheckPostID($_POST)) {
 if (isset($_POST['viewResults'])) {
     echo Util::getModalForSSQ($pdo, FALSE);
 }
-if(isset($_GET['code']) == "" && Session::get('login') === FALSE) {
-  header('Location: about');
-  exit();
-}
 
 if (isset($_POST['ssq_ID']) && isset($_POST['iv'])) {
     $iv = hex2bin($_POST['iv']);
@@ -47,7 +43,7 @@ $role_result = $pdo->query($role_sql);
 $role = $role_result->fetch(PDO::FETCH_ASSOC);
 
 $id_sql = "SELECT created_by FROM session 
-           WHERE session_id = " . Session::get('session_id') . "
+           WHERE session_id = " . Session::get('session_ID') . "
            AND is_active = 1;";
 $id_result = $pdo->query($id_sql);
 $id_row = $id_result->fetch(PDO::FETCH_ASSOC);
@@ -580,15 +576,6 @@ Session::set("post_ID", $rand);
     <input type="hidden" id="ssq_time" name="ssq_time" value="<?php echo $_POST['ssq_time']; ?>">
     <input type="hidden" id="ssq_type" name="ssq_type" value="1">
     <input type="hidden" name="randCheck" value="<?php echo $rand; ?>">
-    
-    <?php
-    // Ask professor how to deal with code in URL.
-    if (isset($_GET['code'])){?>
-        <input type="hidden" id="code" name="code" value=" <?php echo $_GET['code'] ?>">
-    <?php }
-    else{ ?>
-        <input type="hidden" id="code" name="code" value="">
-    <?php } ?>
 
     <?php if (Session::get('ssq_ID') == -1){?>
         <input type="submit" class="btn btn-success justify-content-center" value="Submit">

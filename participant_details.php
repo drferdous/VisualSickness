@@ -49,7 +49,7 @@
     $name = Crypto::decrypt($row["anonymous_name"], $iv); ?>
 <div class="card">
     <div class="card-header">
-        <span class="float-left"><h3><?= $name ?></h3></span>
+        <span class="float-left d-flex align-items-center"><h3><?= $name ?></h3></span>
         <?php if (isset($referrer)) { ?><span class="float-right"> <a href='<?= $referrer ?>' class="btn btn-primary backBtn">Back</a></span><?php } ?>
     </div>
     <div class="card-body">
@@ -110,13 +110,13 @@
                 header('Location: study_list');
                 exit();
             }
-            if ($role_row['study_role'] == 2) { ?>
-            <form class="text-center mt-2" action="" method="POST" onsubmit="return confirm('Are you sure you want to remove <?= $name ?> from the study \'<?= $study_name ?>\'? This action cannot be undone.');">
-                <input type="submit" name="removeParticipant" class="btn btn-danger" value="Remove Participant">
-                <?php if (isset($referrer)) { ?><input type="hidden" name="referrer" value="<?= $referrer ?>"><?php } ?>
-                <input name="participant_ID" type="hidden" value="<?= $_POST['participant_ID'] ?>">
-                <input name="iv" type="hidden" value="<?= $_POST['iv'] ?>">
-            </form>
+            if ($role_row['study_role'] == 2 || $role_row['study_role'] == 3) { ?>
+                <form class="text-center mt-2" action="" method="POST" onsubmit="return confirm('Are you sure you want to remove <?= $name ?> from the study \'<?= $study_name ?>\'? This action cannot be undone.');">
+                    <input type="submit" name="removeParticipant" class="btn btn-danger" value="Remove Participant">
+                    <?php if (isset($referrer)) { ?><input type="hidden" name="referrer" value="<?= $referrer ?>"><?php } ?>
+                    <input name="participant_ID" type="hidden" value="<?= $_POST['participant_ID'] ?>">
+                    <input name="iv" type="hidden" value="<?= $_POST['iv'] ?>">
+                </form>
             <?php } ?>
         </div>
     </div>

@@ -139,7 +139,7 @@ if (Session::get('roleid') == '1') {
  
         <?php if (Session::get('login') === TRUE) { ?>
             <?php if (Session::get("reg_stat") == 2) { ?>
-                <?php if (intval(Session::get("roleid")) <= 3){ ?>
+                <?php if (intval(Session::get("roleid")) <= 2){ ?>
                     <li class="nav-item dropdown">
                         <a href="#"
                         class="nav-link dropdown-toggle"
