@@ -412,9 +412,17 @@ $study_is_active = $study_result->fetch(PDO::FETCH_ASSOC)['is_active'] == 1;
         </label>
     </div>
 </div>
+
+    <?php
+        $sql = "SELECT ssq_time FROM ssq
+                WHERE ssq_ID = " . Session::get("ssq_ID") . "
+                LIMIT 1;";
+        $result = $pdo->query($sql);
+        $row = $result->fetch(PDO::FETCH_ASSOC);
+    ?>
     
     <input type="hidden" id="ssq_type" name="ssq_type" value="0">
-    <input type="hidden" id="ssq_time" name="ssq_time" value="<?= $_POST['ssq_time'] ?>">
+    <input type="hidden" id="ssq_time" name="ssq_time" value="<?php echo $row["ssq_time"]; ?>">
     <?php if ($ssq_ID == -1){ ?>
         <input type="submit" class="btn btn-success float-right" value="Submit">
         <input type="hidden" name="submitQuiz" value="submitQuiz">

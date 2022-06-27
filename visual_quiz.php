@@ -573,19 +573,26 @@ Session::set("post_ID", $rand);
         </label>
     </div>
     
-    <input type="hidden" id="ssq_time" name="ssq_time" value="<?php echo $_POST['ssq_time']; ?>">
+    <?php
+        $sql = "SELECT ssq_time, ssq_type FROM ssq
+                WHERE ssq_id = " . Session::get("ssq_ID") . "
+                LIMIT 1;";
+        $result = $pdo->query($sql);
+        $row = $result->fetch(PDO::FETCH_ASSOC);
+    ?>
+    <input type="hidden" id="ssq_time" name="ssq_time" value="<?php echo $row["ssq_time"]; ?>">
     <input type="hidden" id="ssq_type" name="ssq_type" value="1">
     <input type="hidden" name="randCheck" value="<?php echo $rand; ?>">
 
     <?php if (Session::get('ssq_ID') == -1){?>
-        <input type="submit" class="btn btn-success justify-content-center" value="Submit">
+        <input type="submit" class="btn btn-success float-right" value="Submit">
         <input type="hidden" name="submitQuiz" value="submitQuiz">
     <?php }
           else{ ?>
         <?php
             if(($role['study_role'] == 2 || $id_row['created_by'] == Session::get('id')) && $study_is_active) {
         ?>
-        <input type="submit" class="btn btn-success justify-content-center" value="Update">
+        <input type="submit" class="btn btn-success float-right" value="Update">
         <input type="hidden" name="submitQuiz" value="submitQuiz">
     <?php }
         } ?>
