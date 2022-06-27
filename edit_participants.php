@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['editParticipant']) && 
             const divMsg = document.getElementById("flash-msg");
             if (divMsg?.classList.contains("alert-success")){
                 setTimeout(function(){
-                    location.href = '<?= $referrer ?>';
+                    location.href = 'participant_list';
                 }, 1000);
             }
         </script>
