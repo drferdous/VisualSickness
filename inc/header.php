@@ -152,7 +152,7 @@ if (Session::get('roleid') == '1') {
                         <ul class="dropdown-menu"
                             aria-labelledby="study-dropdown">
                             <li class="dropdown-item"><a href="study_list">Study List</a></li>
-                            <li class="dropdown-item"><a href="create_study">Add Study</a></li>
+                            <li class="dropdown-item"><a href="create_study">Create Study</a></li>
                         </ul>
                     </li>
                 <?php } 
