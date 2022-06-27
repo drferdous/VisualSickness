@@ -287,24 +287,18 @@ if (isset($_POST['remove-session-btn']) && Session::CheckPostID($_POST)){
                                 Session::set("post_ID", $rand);
                             ?>
                             <input type="hidden" name="randCheck" value="<?php echo $rand; ?>">
-                            <?php if (isset($row_session['end_time']) && $remove_row['is_active'] == 1){ ?>
-                                <input class="btn btn-warning" type="submit" name="restart-session-btn" value="Restart Session">
+                            
                                 <?php if($role_row['study_role'] == 2 || $remove_row['created_by'] == Session::get("id")) {
                                 ?>
+                                    <?php if (isset($row_session['end_time']) && $remove_row['is_active'] == 1){ ?>
+                                        <input class="btn btn-warning" type="submit" name="restart-session-btn" value="Restart Session">
+                                        <?php }  else {
+                                    if ($remove_row['is_active'] == 1) { ?>
+                                        <input class="btn btn-warning" type="submit" name="end-session-btn" value="End Session">
+                                        <?php } 
+                                        } ?>
                                         <input onclick="return confirm('Are you sure you want to remove this session? This action cannot be undone.');" class="btn btn-danger" type="submit" name="remove-session-btn" value="Remove Session">
-                                <?php }
-                                    
-                                }
-                            else {
-                                if ($remove_row['is_active'] == 1) { ?>
-                                    <input class="btn btn-warning" type="submit" name="end-session-btn" value="End Session">
-                                    <?php if($role_row['study_role'] == 2 || $remove_row['created_by'] == Session::get("id")) {
-                                     ?>
-                                    <input onclick="return confirm('Are you sure you want to remove this session? This action cannot be undone.');" class="btn btn-danger" type="submit"  name="remove-session-btn" value="Remove Session">
-                                <?php 
-                                    }
-                                 }
-                            } ?>
+                                <?php } ?>
                         </form>
                     </td>                 
                 </tr>
