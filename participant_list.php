@@ -31,7 +31,7 @@
     </div>
     <?php
     
-        $sql = "SELECT P.participant_id, P.anonymous_name, P.dob, P.email, P.phone_no, S.full_name, P.iv
+        $sql = "SELECT P.participant_id, P.anonymous_name, P.dob, P.email, P.phone_no, S.full_name, P.iv, P.study_id
                 FROM participants AS P 
                 JOIN study AS S ON (P.study_id = S.study_id)
                 WHERE P.is_active = 1 
@@ -64,12 +64,26 @@
                         $name = Crypto::decrypt($row['anonymous_name'], $iv); 
                         ?>
                         <tr>
-                            <td><a href="participant_details"
+                            <td>
+                                <?php
+                                $role_sql = "SELECT study_role FROM researchers
+                                            WHERE researcher_id = " . Session::get('id') . "
+                                            AND study_id = " . $row['study_id'] . "
+                                            AND is_active = 1
+                                            LIMIT 1;";
+                                $role_result = $pdo->query($role_sql);
+                                $role_row = $role_result->fetch(PDO::FETCH_ASSOC);
+                                if ($role_row['study_role'] == 2 || $role_row['study_role'] == 3) { ?>
+                                    <a class="redirectUser text-decoration-none" href="edit_participants" data-participant_ID="<?php echo Crypto::encrypt($row["participant_id"], $iv); ?>" data-iv="<?php echo bin2hex($iv); ?>"><i class="fa fa-edit ml-2" aria-hidden="true"></i>
+                                    </a>
+                                <?php } ?>
+                                <a href="participant_details"
                                    class="redirectUser link"
                                    data-participant_ID="<?php echo Crypto::encrypt($row["participant_id"], $iv); ?>"
                                    data-iv="<?php echo bin2hex($iv); ?>">
                                    <?php echo $name; ?>
-                            </a></td>
+                                </a>
+                            </td>
                             <td><?php echo $row["dob"]; ?></td>
                             <td><?php echo $row["full_name"]; ?></td>
                         </tr>

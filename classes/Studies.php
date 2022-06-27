@@ -71,16 +71,124 @@ class Studies {
             return $message;
         }
     }
+    
+    public function editParticipant($participant_ID, $participantInfo) {
+        array_walk($participantInfo, function (&$val) {
+            $val = trim($val);
+        });
+        $anonymous_name = $participantInfo['name'];
+        $dob = $participantInfo['dob'];  
+        $weight = $participantInfo['weight'];
+        $gender = $participantInfo['gender'];
+        $race_ethnicity = $participantInfo['race_ethnicity'];
+        $occupation = $participantInfo['occupation'];
+        $education = $participantInfo['education'];
+        $phone_no = $participantInfo['phone_no'];
+        $email = $participantInfo['email'];
+        $comments = $participantInfo['comments'];
+        $study_ID = Session::get('study_ID');
+        
+        $checkEmail = Util::checkExistEmail($email, $this->db);
+    
+        if (empty($anonymous_name)){
+            return Util::generateErrorMessage("Name of participant must not be empty!");
+        }
+        if (empty($dob)){
+            return Util::generateErrorMessage("Date of birth field must not be empty!");
+        }
+        if (filter_var($email, FILTER_VALIDATE_EMAIL === FALSE)) {
+            return Util::generateErrorMessage("Invalid email address!");
+        }
+        if ($checkEmail == TRUE) {
+            return Util::generateErrorMessage("Email already exists. Try another email!");
+        }
+        if (empty($weight)){
+            $weight = NULL;
+        }
+        
+        $anonymous_name = Crypto::encrypt($anonymous_name, $iv);
+        $iv = bin2hex($iv);
+        
+        $currentDate = new DateTime();
+        $object_dob = new DateTime($dob);
+        $age = $currentDate->diff($object_dob)->y;
+        
+            
+        $demo_id_sql = "SELECT demographics_id FROM participants
+                        WHERE participant_id = $participant_ID";
+        $demo_result = $this->db->pdo->query($demo_id_sql);
+        $this->db->pdo->beginTransaction();
+        $result2 = '';
+        try {
+            $sql = "UPDATE demographics SET age = :age, gender = :gender, education = :education, race_ethnicity = :race_ethnicity WHERE demographics_id = " . $demo_result->fetch(PDO::FETCH_ASSOC)['demographics_id'];  
+            $stmt = $this->db->pdo->prepare($sql);
+            
+            $stmt->bindValue(':age', $age);
+            $stmt->bindValue(':gender', $gender);
+            $stmt->bindValue(':education', $education);    
+            $stmt->bindValue(':race_ethnicity', $race_ethnicity);
+            
+            $result = $stmt->execute(); 
+            if (!$result){
+                throw new Exception($stmt->error);
+            }
+            
+            
+            $sql2 = "UPDATE participants SET
+                     anonymous_name = :anonymous_name,
+                     dob = :dob,
+                     weight = :weight,
+                     occupation = :occupation,
+                     phone_no = :phone_no,
+                     email = :email,
+                     comments = :comments,
+                     iv = :iv
+                     WHERE participant_id = $participant_ID;";
+            
+            $stmt2 = $this->db->pdo->prepare($sql2);
+            $stmt2->bindValue(':anonymous_name', $anonymous_name);
+            $stmt2->bindValue(':dob', $dob);
+            $stmt2->bindValue(':weight', $weight);
+            $stmt2->bindValue(':occupation', $occupation);
+            $stmt2->bindValue(':phone_no', $phone_no);
+            $stmt2->bindValue(':email', $email);
+            $stmt2->bindValue(':comments', $comments);   
+            $stmt2->bindValue(':iv', $iv);
+            
+            $result2 = $stmt2->execute();   
+            
+            if (!$result2){
+                throw new Exception($stmt->error);
+            }
+            $this->db->pdo->commit();
+        }
+        catch (PDOException $excptn){
+            $this->db->pdo->rollBack();
+            return $excptn;
+        }
+        
+        $last_edited_by = Session::get('id'); 
+        $result_edit = Util::updateStudy($study_ID, $last_edited_by, $this->db->pdo);
+            
+        if (!$result_edit){
+            throw new Exception($stmt->error);
+        }
+            
+        if ($result2) {
+            return Util::generateSuccessMessage("You registered a participant!");
+        }
+        else {
+            return Util::generateErrorMessage("Something went wrong.");
+        }
+    }
 
   // Add participant to Session table and Demographics table
   public function addNewParticipant($participantInfo){
-  // Note: this function does not work because the function does not take into account the study_ID yet.
     array_walk($participantInfo, function (&$val) {
         $val = trim($val);
     });
     $anonymous_name = $participantInfo['anonymous_name'];
-    $dob = $participantInfo['dob'];
-    $age = $participantInfo['age'];    
+    $dob = $participantInfo['dob'];  
     $weight = $participantInfo['weight'];
     $gender = $participantInfo['gender'];
     $race_ethnicity = $participantInfo['ethnicity'];
@@ -111,6 +219,10 @@ class Studies {
     
     $anonymous_name = Crypto::encrypt($participantInfo['anonymous_name'], $iv);
     $iv = bin2hex($iv);
+    
+    $currentDate = new DateTime();
+    $object_dob = new DateTime($dob);
+    $age = $currentDate->diff($object_dob)->y;
     
         
     $this->db->pdo->beginTransaction();
@@ -168,7 +280,7 @@ class Studies {
     }
         
     if ($result2) {
-        return Util::generateSuccessMessage("You registered a participant!");
+        return Util::generateSuccessMessage("You updated a participant!");
     }
     else {
         return Util::generateErrorMessage("Something went wrong.");
@@ -208,8 +320,8 @@ class Studies {
       
     $sql = "INSERT INTO researchers (researcher_id, study_id, study_role) VALUES (:researcher_id, :study_id, :study_role)";
         $stmt = $this->db->pdo->prepare($sql);
-        $stmt->bindValue(':researcher_id', $researcher_);
-        $stmt->bindValue(':study_id', $study_);
+        $stmt->bindValue(':researcher_id', $researcher_ID);
+        $stmt->bindValue(':study_id', $study_ID);
         $stmt->bindValue(':study_role', $study_role); 
         $result = $stmt->execute(); 
         
@@ -280,7 +392,7 @@ class Studies {
         return Util::generateErrorMessage("An invalid role was selected.");
     }
       
-    $sql = "UPDATE researchers SET study_role = :study_role WHERE study_id = :study_id AND researcher_id = :researcher_ID";
+    $sql = "UPDATE researchers SET study_role = :study_role WHERE study_id = :study_id AND researcher_id = :researcher_id";
     
     
         $stmt = $this->db->pdo->prepare($sql);
@@ -327,7 +439,7 @@ class Studies {
 public function takeSSQ($quiz_type, $ssq_time){
     $quiz_type = trim($quiz_type);
     $ssq_time = trim($ssq_time);
-    if (!$quiz_type || !$ssq_time){
+    if (!strlen($quiz_type) || !strlen($ssq_time)){
         return Util::generateErrorMessage("Please select a quiz type and a quiz time!");
     }
 
@@ -416,49 +528,71 @@ public function takeSSQ($quiz_type, $ssq_time){
     if (count($session_times) !== count(array_unique($session_times))){
         return array(Util::generateErrorMessage("There should be no duplicate Session times!"));
     }
-  
-    $sql = "INSERT INTO Study (full_name, short_name, IRB, description, created_by, last_edited_by)
-            VALUES (:full_name, :short_name, :IRB, :description, :created_by, :last_edited_by)";
-    $stmt = $this->db->pdo->prepare($sql);
-    $stmt->bindValue('full_name', $full_name);
-    $stmt->bindValue('short_name', $short_name);
-    $stmt->bindValue('IRB', $IRB);
-    $stmt->bindValue('description', $description);      
-    $stmt->bindValue('created_by', $created_by, PDO::PARAM_INT);
-    $stmt->bindValue('last_edited_by', $created_by, PDO::PARAM_INT); 
-    $result = $stmt->execute();
-      
-    if (!$result){
-        return Util::generateErrorMessage("Something went wrong. Try again!");
+    
+    $this->db->pdo->beginTransaction();
+    $result = "";
+    try{
+        $sql = "INSERT INTO study (full_name, short_name, IRB, description, created_by, last_edited_by)
+                VALUES (:full_name, :short_name, :IRB, :description, :created_by, :last_edited_by);";
+        $stmt = $this->db->pdo->prepare($sql);
+        $stmt->bindValue(':full_name', $full_name);
+        $stmt->bindValue(':short_name', $short_name);
+        $stmt->bindValue(':IRB', $IRB);
+        $stmt->bindValue(':description', $description);      
+        $stmt->bindValue(':created_by', $created_by, PDO::PARAM_INT);
+        $stmt->bindValue(':last_edited_by', $created_by, PDO::PARAM_INT);
+        $result = $stmt->execute();
+        if (!$result){
+            throw new PDOException($stmt->error);
+        }
+        
+        $study_id = $this->db->pdo->lastInsertId();
+        $sql = "INSERT INTO researchers (researcher_id, study_id, study_role, is_active)
+                VALUES (:researcher_id, :study_id, :study_role, :is_active);";
+        $stmt = $this->db->pdo->prepare($sql);
+        $stmt->bindValue(":researcher_id", $created_by);
+        $stmt->bindValue(":study_id", $study_id);
+        $stmt->bindValue(":study_role", 2);
+        $stmt->bindValue(":is_active", 1);
+        $result = $stmt->execute();
+        if (!$result){
+            throw new PDOException($stmt->error);
+        }
+        
+        $insert = implode(",", array_map(function($time) use($study_id){
+            return "('" . ucwords($time) . "'," . $study_id . ")"; 
+        }, $ssq_times));
+    
+        $sql = "INSERT INTO ssq_times (name, study_id) 
+                VALUES " . $insert;
+        $result = $this->db->pdo->query($sql);
+        if (!$result){
+            throw new PDOException();
+        }
+        
+        $session_insert = implode(",", array_map(function($time) use($study_id){
+            return "('" . ucwords($time) . "'," . $study_id . ")"; 
+        }, $session_times));
+        $sql = "INSERT INTO session_times (name, study_id) 
+                VALUES " . $session_insert;
+        $result = $this->db->pdo->query($sql);
+        if (!$result){
+            throw new PDOException();
+        }
+        
+        $this->db->pdo->commit();
     }
-      
-    $study_ID = $this->db->pdo->lastInsertId();
-    $insert = implode(",", array_map(function($time) use($study_ID){
-        return "('" . ucwords($time) . "'," . $study_ID . ")"; 
-    }, $ssq_times));
-    
-    $sql = "INSERT INTO ssq_times (name, study_id) 
-            VALUES " . $insert;
-    $result = $this->db->pdo->query($sql);
-    if (!$result){
-        return Util::generateErrorMessage("Something went wrong. Try again!");
+    catch (PDOException $pdo_excptn){
+        $this->db->pdo->rollBack();
+        return array(Util::generateErrorMessage("Something went wrong. Try creating a study again!"));
     }
-    $session_insert = implode(",", array_map(function($time) use($study_ID){
-        return "('" . ucwords($time) . "'," . $study_ID . ")"; 
-    }, $session_times));
-    
-    $sql = "INSERT INTO session_times (name, study_id) 
-            VALUES " . $session_insert;
-    $result = $this->db->pdo->query($sql);
-    
-    Session::set('study_ID', $study_ID);
-    
-    if ($result) {
-        return array(Util::generateSuccessMessage("You have created a study!"), $study_ID);
-    } 
-    else {
-        return array(Util::generateErrorMessage("Something went wrong. Try again!"));
+    catch (Exception $excptn){
+        $this->db->pdo->rollBack();
+        return array($excptn->getMessage());
     }
+    
+    Session::set('study_ID', $study_id);
+    return array(Util::generateSuccessMessage("You have created a study!"), $study_id);
 } 
 
     // Edit a user's study
