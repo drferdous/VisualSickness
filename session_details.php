@@ -71,8 +71,8 @@ if (isset($_POST['remove-session-btn']) && Session::CheckPostID($_POST)){
 
             <?php
                 $sql = "SELECT end_time
-                        FROM Session
-                        WHERE session_ID = $session_ID
+                        FROM session
+                        WHERE session_id = $session_ID
                         LIMIT 1;";
                 $result = $pdo->query($sql);
                 $isSessionActive = !isset($result->fetch(PDO::FETCH_ASSOC)["end_time"]);
@@ -95,7 +95,7 @@ if (isset($_POST['remove-session-btn']) && Session::CheckPostID($_POST)){
                 $areQuizTimesAvailable = $totalQuizTimesAvailable - $numQuizTimesTaken > 0;
                 
                 $id_sql = "SELECT created_by FROM session 
-                        WHERE session_ID = $session_id
+                        WHERE session_id = $session_ID
                         AND is_active = 1;";
                 $id_result = $pdo->query($id_sql);
                 $id_row = $id_result->fetch(PDO::FETCH_ASSOC);
@@ -201,7 +201,7 @@ if (isset($_POST['remove-session-btn']) && Session::CheckPostID($_POST)){
                         $ssq_name = $result_times->fetch(PDO::FETCH_ASSOC)["name"];
                         $result_type = $pdo->query($ssq_type);
                         $ssq_type = $result_type->fetch(PDO::FETCH_ASSOC)["type"];
-                        $encrypted_ssq_ID = Crypto::encrypt($row['ssq_ID'], $iv); ?>
+                        $encrypted_ssq_ID = Crypto::encrypt($row['ssq_id'], $iv); ?>
                         <a style="margin-inline: 3px; margin-block: 2px;" class="btn btn-sm btn-success redirectUser" 
                             href="<?= strtolower($ssq_type) ?>_quiz"
                             data-ssq_ID="<?= $encrypted_ssq_ID ?>"

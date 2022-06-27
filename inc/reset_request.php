@@ -25,7 +25,7 @@
         } else {
             $stmt->bindValue(1, $userEmail, PDO::PARAM_STR);
             $result = $stmt->execute();
-            if ($result && !$stmt->fetch(PDO::FETCH_ASSOC)['id']) {
+            if ($result && !$stmt->fetch(PDO::FETCH_ASSOC)['user_id']) {
                 header('Location: ../forgot_password.php?success=bad_email');
                 exit();
             }

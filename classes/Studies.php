@@ -79,8 +79,7 @@ class Studies {
         $val = trim($val);
     });
     $anonymous_name = $participantInfo['anonymous_name'];
-    $dob = $participantInfo['dob'];
-    $age = $participantInfo['age'];    
+    $dob = $participantInfo['dob'];  
     $weight = $participantInfo['weight'];
     $gender = $participantInfo['gender'];
     $race_ethnicity = $participantInfo['ethnicity'];
@@ -111,6 +110,10 @@ class Studies {
     
     $anonymous_name = Crypto::encrypt($participantInfo['anonymous_name'], $iv);
     $iv = bin2hex($iv);
+    
+    $currentDate = new DateTime();
+    $object_dob = new DateTime($dob);
+    $age = $currentDate->diff($object_dob)->y;
     
         
     $this->db->pdo->beginTransaction();
@@ -327,7 +330,7 @@ class Studies {
 public function takeSSQ($quiz_type, $ssq_time){
     $quiz_type = trim($quiz_type);
     $ssq_time = trim($ssq_time);
-    if (!$quiz_type || !$ssq_time){
+    if (!strlen($quiz_type) || !strlen($ssq_time)){
         return Util::generateErrorMessage("Please select a quiz type and a quiz time!");
     }
 

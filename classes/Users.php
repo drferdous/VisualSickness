@@ -37,7 +37,7 @@ class Users{
     if ($roleid < 2 || $roleid > 4){
         return Util::generateErrorMessage("Invalid role was selected!");
     }
-    $affil_sql = "SELECT domain, domain_required from Affiliation WHERE id = $affiliationid;";
+    $affil_sql = "SELECT domain, domain_required from affiliation WHERE affiliation_id = $affiliationid;";
     $affil_result = $this->db->pdo->query($affil_sql);
     $affil_domain = $affil_result->fetch(PDO::FETCH_ASSOC);
     if ($affil_domain['domain_required'] == 1) {

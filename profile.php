@@ -39,7 +39,7 @@ if (Session::get('roleid') == '1') {
 <div class="card">
     <div class="card-header">
         <h3 class="float-left">User Profile</h3>
-        <span class="float-right"><a href="<?php echo $homepage; ?>" class="btn btn-primary">Back</a></span>
+        <span class="float-right"><a href="<?php echo $homepage; ?>" class="backBtn btn btn-primary">Back</a></span>
     </div>
     <div class="card-body">
         <?php
@@ -107,7 +107,7 @@ if (Session::get('roleid') == '1') {
                         </div>
                       </div>
                      <?php } ?>
-                    <?php if (Session::get("roleid") == '1' && $purpose === "edit") { ?>
+                    <?php if ((Session::get("roleid") == '1' && $purpose === "edit") || (Session::get("id") == $getUinfo->user_id && $purpose === "edit")) { ?>
                     <div class="form-group">
                       <button type="submit" name="update" class="btn btn-success">Update</button>
                       <?php if (Session::get("id") == $getUinfo->user_id) { ?>

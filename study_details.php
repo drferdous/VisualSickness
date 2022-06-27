@@ -149,14 +149,14 @@ if($timezone < 0) {
                                 <a href="javascript:void(0)" class="nested-dropdown dropdown-item"><i class="fas fa-caret-left mr-2"></i>Manage</a>
                                 <ul class="dropdown-menu dropdown-submenu">
                                     <?php if ($row_study['is_active'] == 1) { ?>
-                                        <li><a href="edit_study"  class="dropdown-item">Edit Study</a></li>
+                                        <li><a href="edit_study" class="dropdown-item nested-dropdown-item">Edit Study</a></li>
                                     <?php } ?>
                                     <form method="post" class="d-inline" action="">
                                         <input type="hidden" name="randCheck" value="<?php echo $rand; ?>">
                                         <?php if ($row_study["is_active"] === "1"){ ?>
-                                            <li><input class="dropdown-item" type="submit" name="deactivate-btn" value="Deactivate" onclick="return confirm('Are you sure you want to deactivate the study \'<?php echo $row_study['short_name']; ?>\'? You cannot edit the study if it is inactive.');"></li>
+                                            <li><input class="dropdown-item nested-dropdown-item" type="submit" name="deactivate-btn" value="Deactivate" onclick="return confirm('Are you sure you want to deactivate the study \'<?php echo $row_study['short_name']; ?>\'? You cannot edit the study if it is inactive.');"></li>
                                         <?php } else { ?>
-                                            <li><input class="dropdown-item" type="submit" name="activate-btn" value="Activate" onclick="return confirm('Are you sure you want to activate the study \'<?php echo $row_study['short_name']; ?>\'?');"></li>
+                                            <li><input class="dropdown-item nested-dropdown-item" type="submit" name="activate-btn" value="Activate" onclick="return confirm('Are you sure you want to activate the study \'<?php echo $row_study['short_name']; ?>\'?');"></li>
                                         <?php } ?>
                                     </form>
                                 </ul>

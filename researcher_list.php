@@ -11,6 +11,10 @@
                     JOIN study ON users.user_id = study.created_by
                     WHERE study.study_ID = $study_ID LIMIT 1;";
     $affil_result = $pdo->query($affil_sql);
+    $role_sql = "SELECT study_role FROM researchers WHERE study_id = " . Session::get("study_ID") . " AND  researcher_id = " . Session::get("id") . " AND is_active = 1;";
+    $role_result = $pdo->query($role_sql);
+    $role = $role_result->fetch(PDO::FETCH_ASSOC);
+    
     if (!(Session::get('roleid') == 1 && $affil_result->fetch(PDO::FETCH_ASSOC)['affiliation_id'] == Session::get('affiliationid'))) {
         Session::requireResearcherOrUser($study_ID, $pdo);
     }
@@ -20,7 +24,9 @@
     <div class="card-header">
         <h3 class="float-left">Researcher List</h3>
         <span class='float-right'><a href='study_details' class='backBtn btn btn-primary'>Back</a></span>
-        <span class='float-right mr-2'><a href='edit_researchers' class='btn btn-primary'>Edit Researchers</a></span>
+        <?php  if(isset($role['study_role']) && $role['study_role'] == 2){ ?>
+            <span class='float-right mr-2'><a href='edit_researchers' class='btn btn-primary'>Edit Researchers</a></span>
+        <?php } ?>
     </div>
     <?php
     

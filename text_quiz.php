@@ -44,7 +44,7 @@ $role_result = $pdo->query($role_sql);
 $role = $role_result->fetch(PDO::FETCH_ASSOC);
 
 $id_sql = "SELECT created_by FROM session 
-           WHERE session_id = " . Session::get('session_id') . "
+           WHERE session_id = " . Session::get('session_ID') . "
            AND is_active = 1;";
 $id_result = $pdo->query($id_sql);
 $id_row = $id_result->fetch(PDO::FETCH_ASSOC);
@@ -415,14 +415,6 @@ $study_is_active = $study_result->fetch(PDO::FETCH_ASSOC)['is_active'] == 1;
     
     <input type="hidden" id="ssq_type" name="ssq_type" value="0">
     <input type="hidden" id="ssq_time" name="ssq_time" value="<?= $_POST['ssq_time'] ?>">
-    <?php
-    // Ask professor how to deal with the face that the code is stored in the URL.
-    if (isset($_GET['code'])){?>
-        <input type="hidden" id="code" name="code" value=" <?php echo $_GET['code'] ?>">
-    <?php }
-    else{ ?>
-        <input type="hidden" id="code" name="code" value="">
-    <?php } ?>
     <?php if ($ssq_ID == -1){ ?>
         <input type="submit" class="btn btn-success float-right" value="Submit">
         <input type="hidden" name="submitQuiz" value="submitQuiz">
