@@ -156,10 +156,8 @@ if (isset($userAdd)) {
                     newPos = newString.indexOf(lastChar, newPos + 1);
                 }
                 newPos++;
-                console.log(lastChar, count, newPos);
             } else {
                 newPos = $(this)[0].selectionStart - Array.from(newString).reverse().findIndex(e => {
-                    console.log(+e);
                     return Number.isInteger(+e);
                 });
             }

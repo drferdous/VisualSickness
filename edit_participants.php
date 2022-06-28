@@ -119,28 +119,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['editParticipant']) && 
                 return confirm('Are you sure you want to go back? Your data will not be saved.');
             }
         });
-        $('#phone_no').on('keyup', function () {
-            const val_old = $(this).val();
+        $(document).on('keyup', '#phone_no', function () {
+            const val_old = $('#phone_no').val();
             if (val_old === lastInp) return;
             const newString = new libphonenumber.AsYouType('US').input(val_old);
-            const lastChar = val_old.charAt($(this)[0].selectionStart - 1);
+            const lastChar = val_old.charAt($('#phone_no')[0].selectionStart - 1);
             let newPos;
             if ([...'0123456789'].includes(lastChar)) {
-                const count = (val_old.substring(0, $(this)[0].selectionStart).match(new RegExp(lastChar, 'g')) || []).length;
+                const count = (val_old.substring(0, $('#phone_no')[0].selectionStart).match(new RegExp(lastChar, 'g')) || []).length;
                 newPos = -1;
                 for (let i = 0; i < count; i++) {
                     newPos = newString.indexOf(lastChar, newPos + 1);
                 }
                 newPos++;
-                console.log(lastChar, count, newPos);
             } else {
-                newPos = $(this)[0].selectionStart - Array.from(newString).reverse().findIndex(e => {
-                    console.log(+e);
+                newPos = $('#phone_no')[0].selectionStart - Array.from(newString).reverse().findIndex(e => {
                     return Number.isInteger(+e);
                 });
             }
-            $(this).focus().val('').val(newString);
-            $(this).setCursorPosition(newPos);
+            $('#phone_no').focus().val('').val(newString);
+            $('#phone_no').setCursorPosition(newPos);
             lastInp = newString;
         });
     });
