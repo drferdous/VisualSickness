@@ -621,7 +621,7 @@ public function takeSSQ($quiz_type, $ssq_time){
         
         $currentDate = new DateTime();
         
-        if ($full_name == "" || $short_name == ""|| $IRB == "") {
+        if ($full_name == "" || $short_name == "") {
             return Util::generateErrorMessage("You cannot leave required field empty!");
         }
         if ($ssq_times !== array_unique($ssq_times)) {
