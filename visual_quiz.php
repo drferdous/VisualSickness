@@ -42,9 +42,8 @@ $role_sql = "SELECT study_role FROM researchers WHERE study_id = " . Session::ge
 $role_result = $pdo->query($role_sql);
 $role = $role_result->fetch(PDO::FETCH_ASSOC);
 
-$id_sql = "SELECT created_by FROM session 
-           WHERE session_id = " . Session::get('session_ID') . "
-           AND is_active = 1;";
+$id_sql = "SELECT created_by, end_time FROM session 
+           WHERE session_id = " . Session::get('session_ID') . ";";
 $id_result = $pdo->query($id_sql);
 $id_row = $id_result->fetch(PDO::FETCH_ASSOC);
 
@@ -69,7 +68,7 @@ Session::set("post_ID", $rand);
             <h3>
                 <span class="float-right"> <a href="session_details" class="btn btn-primary">Back</a></span>
                 <?php if ($ssq_ID !== -1) { 
-                if(($role['study_role'] == 2 || $id_row['created_by'] == Session::get('id')) && $study_is_active) { ?>
+                if(($role['study_role'] == 2 || $id_row['created_by'] == Session::get('id')) && $study_is_active && $id_row['end_time'] == NULL) { ?>
                     <form class="float-right" onsubmit="return confirm('Are you sure you want to delete this SSQ? This action cannot be undone.');" action="delete_quiz" method="post">
                         <button type="submit" name="deleteQuiz" class="btn btn-danger mr-2">Delete</button>
                     </form>
@@ -573,20 +572,32 @@ Session::set("post_ID", $rand);
         </label>
     </div>
     
-    <input type="hidden" id="ssq_time" name="ssq_time" value="<?php echo $_POST['ssq_time']; ?>">
+    <?php
+        $sql = "SELECT ssq_time, ssq_type FROM ssq
+                WHERE ssq_id = " . Session::get("ssq_ID") . "
+                LIMIT 1;";
+        $result = $pdo->query($sql);
+        $row = $result->fetch(PDO::FETCH_ASSOC);
+    ?>
+    <?php if(Session::get("ssq_ID") != -1) { ?>
+        <input type="hidden" id="ssq_time" name="ssq_time" value="<?php echo $row["ssq_time"]; ?>">
+    <?php } else { ?>
+        <input type="hidden" id="ssq_time" name="ssq_time" value="<?php echo $_POST['ssq_time']; ?>">
+    <?php } ?>
     <input type="hidden" id="ssq_type" name="ssq_type" value="1">
     <input type="hidden" name="randCheck" value="<?php echo $rand; ?>">
 
     <?php if (Session::get('ssq_ID') == -1){?>
-        <input type="submit" class="btn btn-success justify-content-center" value="Submit">
+        <input type="submit" class="btn btn-success float-right" value="Submit">
         <input type="hidden" name="submitQuiz" value="submitQuiz">
     <?php }
           else{ ?>
         <?php
-            if(($role['study_role'] == 2 || $id_row['created_by'] == Session::get('id')) && $study_is_active) {
+        
+        if(($role['study_role'] == 2 || $id_row['created_by'] == Session::get('id')) && $study_is_active && $id_row['end_time'] == NULL) {
         ?>
-        <input type="submit" class="btn btn-success justify-content-center" value="Update">
-        <input type="hidden" name="submitQuiz" value="submitQuiz">
+            <input type="submit" class="btn btn-success float-right" value="Update">
+            <input type="hidden" name="submitQuiz" value="submitQuiz">
     <?php }
         } ?>
 </form>
@@ -617,7 +628,7 @@ Session::set("post_ID", $rand);
                             pictures[j].setAttribute("checked", "checked");
                         }
                         else{
-                        <?php if (Session::get("id") != $id_row["created_by"] && $role["study_role"] != 2){ ?>
+                        <?php if ((Session::get("id") != $id_row["created_by"] && $role["study_role"] != 2) || isset($id_row['end_time'])){ ?>
                             pictures[j].setAttribute("disabled", "disabled");
                         <?php } ?>
                         }
