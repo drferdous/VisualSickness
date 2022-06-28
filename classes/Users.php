@@ -80,7 +80,7 @@ class Users{
   public function selectAllUserData($showPendingUserFlag, $showDeactivatedUserFlag, $affiliationid){
     $args = array();
     if ($showPendingUserFlag) {
-        $args['reg_stat'] = 1;
+        $args['registration_status'] = 1;
     }
     if ($showDeactivatedUserFlag) {
         $args['status'] = 0;
