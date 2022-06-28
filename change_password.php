@@ -101,6 +101,9 @@ if (isset($changePass)) {
     $('#confirm_password').on('keyup', function () {
         validation();
     });
+    $('#old_password').on('keyup', function () {
+        validation();
+    });
     const validation = () => {
         const val = $('#new_password').val();
         $('#submitBtn').attr('disabled', 'true');
