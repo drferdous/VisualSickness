@@ -907,7 +907,7 @@ public function takeSSQ($quiz_type, $ssq_time){
         $pi_sql = "SELECT COUNT(study_role) AS Count FROM researchers WHERE study_id = " . Session::get("study_ID") . " AND study_role = 2 AND is_active = 1;";
         $pi_result = $this->db->pdo->query($pi_sql);
         $pi_count = $pi_result->fetch(PDO::FETCH_ASSOC);
-        if ($pi_count['Count'] > 1){
+        if ($pi_count['Count'] > 1 || Session::get("roleid") != 2){
             $sql = "UPDATE researchers
                     SET is_active = 0
                     WHERE researcher_id = :researcher_ID
