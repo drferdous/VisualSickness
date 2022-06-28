@@ -219,9 +219,6 @@ class Users{
         if ($name == ""){
             return Util::generateErrorMessage("Name field should not be empty!");
         }
-        if (!empty($mobile) && filter_var($mobile,FILTER_SANITIZE_NUMBER_INT) !== $mobile) {
-            return Util::generateErrorMessage("Please enter only numeric characters for phone number!");
-        }
         if (Session::get("roleid") != 1 && isset($data["roleid"])){
             return Util::generateErrorMessage("You do not have permission to change your role!");
         }
