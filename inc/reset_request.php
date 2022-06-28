@@ -2,8 +2,8 @@
     if (isset($_POST["reset-submit"])) {
         $selector = bin2hex(random_bytes(8));
         $token = random_bytes(32);
-        
-        $url = "https://visualsickness.000webhostapp.com/create_new_password.php?selector=" . $selector . "&validator=" . bin2hex($token); 
+        $host_url = $_SERVER['HTTP_REFERER'];
+        $url = parse_url($host_url, PHP_URL_SCHEME) . "://" . parse_url($host_url, PHP_URL_HOST) . "/create_new_password.php?selector=" . $selector . "&validator=" . bin2hex($token);
         
         $expires = mktime(date("G") + 1, date("i"), date("s"), date("m"), date("d"), date("Y")); // G = hours
         
