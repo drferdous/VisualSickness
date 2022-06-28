@@ -464,7 +464,7 @@ $study_is_active = $study_result->fetch(PDO::FETCH_ASSOC)['is_active'] == 1;
                         radioButtons[i].setAttribute("checked", "checked");
                     }
                     else{
-                    <?php if ((Session::get("id") != $id_row["created_by"] && $role["study_role"] != 2) || isset($id_row['end_time'])) {?>
+                    <?php if ($study_is_active && (Session::get("id") != $id_row["created_by"] && $role["study_role"] != 2) || isset($id_row['end_time'])) {?>
                         radioButtons[i].setAttribute("disabled", "");
                     <?php } ?>
                     }
