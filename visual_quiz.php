@@ -628,7 +628,7 @@ Session::set("post_ID", $rand);
                             pictures[j].setAttribute("checked", "checked");
                         }
                         else{
-                        <?php if ($study_is_active && (Session::get("id") != $id_row["created_by"] && $role["study_role"] != 2) || isset($id_row['end_time'])){ ?>
+                        <?php if ((!$study_is_active) && (Session::get("id") != $id_row["created_by"] && $role["study_role"] != 2) || isset($id_row['end_time']) || !$study_is_active){ ?>
                             pictures[j].setAttribute("disabled", "disabled");
                         <?php } ?>
                         }
