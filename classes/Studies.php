@@ -175,7 +175,7 @@ class Studies {
         }
             
         if ($result2) {
-            return Util::generateSuccessMessage("You registered a participant!");
+            return Util::generateSuccessMessage("You updated a participant!");
         }
         else {
             return Util::generateErrorMessage("Something went wrong.");
@@ -280,7 +280,7 @@ class Studies {
     }
         
     if ($result2) {
-        return Util::generateSuccessMessage("You updated a participant!");
+        return Util::generateSuccessMessage("You registered a participant!");
     }
     else {
         return Util::generateErrorMessage("Something went wrong.");
