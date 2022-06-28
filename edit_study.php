@@ -81,8 +81,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['updateStudy']) && Sess
                 <input type="text" name="short_name" value="<?php echo $short_name;?>" class="form-control" id="short_name" required>
             </div>
             <div class="form-group">
-                <label for="IRB" class="required">IRB</label>
-                <input type="text" name="IRB" value="<?php echo $IRB;?>" class="form-control" id="IRB" required>
+                <label for="IRB">IRB</label>
+                <input type="text" name="IRB" value="<?php echo $IRB;?>" class="form-control" id="IRB">
             </div>
             <div class="form-group">
                 <label for="description">Description</label>
