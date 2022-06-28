@@ -28,7 +28,7 @@ Session::requireResearcherOrUser(Session::get('study_ID'), $pdo);
         <span class="float-right"> <a href="study_list" class="backBtn btn btn-primary">Back</a></span>
     </div>
         
-    <div class="card-body pr-2 pl-2">
+    <div class="card-body pr-2 pl-2 overflow-hidden">
     <?php
         $sql = "SELECT DISTINCT session.participant_id FROM session
                 JOIN participants ON session.participant_id = participants.participant_id
@@ -38,20 +38,19 @@ Session::requireResearcherOrUser(Session::get('study_ID'), $pdo);
                 AND session.is_active = 1
                 AND time.is_active = 1";
         $result = $pdo->query($sql);
-      
-        if ($result->rowCount() > 0){
-    ?>
+      ?>
         <br />
             <table class="table table-striped table-bordered" id="example">
+               
                 <thead class="text-center">
                     <tr>
                         <th>Participant Name</th>
                         <th>Session Names</th>
                     </tr>
                 </thead>
-                    
+                 
                 <tbody>
-        
+             <?php if ($result->rowCount() > 0){ ?>
                 <?php
                 while ($row = $result->fetch(PDO::FETCH_ASSOC)) { ?>
                     <tr>
@@ -88,11 +87,13 @@ Session::requireResearcherOrUser(Session::get('study_ID'), $pdo);
                         </td>
                     </tr>
                 <?php } ?>
+                 <?php } else { ?>
+            <td colspan="100%" class="text-center notFound">
+            You have no session!
+            </td>
+            <?php } ?>
                 </tbody>
             </table>
-    <?php } else { ?>
-            <p class="notFound">You have no sessions!</p>
-    <?php } ?>
     </div>
 </div>
 
@@ -100,6 +101,13 @@ Session::requireResearcherOrUser(Session::get('study_ID'), $pdo);
     $(document).ready(function(){
         if (!document.querySelector('.notFound')) $('#example').DataTable();
         $(document).on("click", "a.redirectUser", redirectUser);
+        div = document.createElement('div');
+        div.style.overflowX = 'auto';
+        const table = document.querySelector('table');
+        const parent = table.parentElement
+        const index = [...parent.children].indexOf(table);
+        div.appendChild(table.cloneNode(true));
+        parent.replaceChild(div, table);
         
         function redirectUser(){
             let form = document.createElement("form");

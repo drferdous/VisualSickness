@@ -90,7 +90,7 @@
                 <?php }
                 } else { ?>
                     <tr>
-                        <td colspan='100%' class="text-center notFound">No participants found for this study</td>
+                        <td colspan='100%' class="text-center notFound">No participants found</td>
                     </tr>
                 <?php } ?>
             </tbody>
@@ -101,6 +101,13 @@
     $(document).ready(() => {
         if (!document.querySelector('.notFound')) $('#example').DataTable();
         $(document).on("click", "a.redirectUser", redirectUser);
+        div = document.createElement('div');
+        div.style.overflowX = 'auto';
+        const table = document.querySelector('table');
+        const parent = table.parentElement
+        const index = [...parent.children].indexOf(table);
+        div.appendChild(table.cloneNode(true));
+        parent.replaceChild(div, table);
     });
     
     function redirectUser(){
