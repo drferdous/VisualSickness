@@ -30,7 +30,7 @@ Session::requireResearcherOrUser(Session::get('study_ID'), $pdo);
         
     <div class="card-body pr-2 pl-2">
     <?php
-        $sql = "SELECT UNIQUE(session.participant_id) FROM session
+        $sql = "SELECT DISTINCT session.participant_id FROM session
                 JOIN participants ON session.participant_id = participants.participant_id
                 JOIN session_times AS time ON time.id = session.session_time
                 WHERE session.study_id = " . Session::get('study_ID') . "
