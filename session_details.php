@@ -107,7 +107,7 @@ if (isset($_POST['remove-session-btn']) && Session::CheckPostID($_POST)){
                 $role_result = $pdo->query($role_sql);
                 $role = $role_result->fetch(PDO::FETCH_ASSOC);
         
-                if ($study_is_active && $isSessionActive && $areQuizTimesAvailable && ($id_row['created_by'] == Session::get('id') || $role['study_role'] == 2)){?>
+                if ($study_is_active && $isSessionActive && $areQuizTimesAvailable && $id_row && (($id_row['created_by'] == Session::get('id')) || $role['study_role'] == 2)){?>
                     <a href="choose_quiz" class="float-right btn btn-primary mr-2">New SSQ</a>
           <?php }?>
         </span>

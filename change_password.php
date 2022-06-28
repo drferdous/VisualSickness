@@ -79,7 +79,7 @@ if (isset($changePass)) {
                     <small class="text-danger error-text"></small>
                 </div>
                 <div class="form-group">
-                    <button type="submit" name="changepass" class="btn btn-success">Change password</button>
+                    <button id="submitBtn" type="submit" name="changepass" class="btn btn-success">Change password</button>
                 </div>
             </form>
         </div>
@@ -94,14 +94,19 @@ if (isset($changePass)) {
     const symbolRegex = /^(?=.*[\x21-\x2F\x3A-\x40\x5B-\x60\x7B-\x7E]).*$/;
     const validCharsRegex = /^[a-zA-Z\d\x21-\x2F\x3A-\x40\x5B-\x60\x7B-\x7E]*$/;
     const lengthRegex = /^.{7,20}$/;
+    $('#submitBtn').attr('disabled', 'true');
     $('#new_password').on('keyup', function () {
         validation();
     });
     $('#confirm_password').on('keyup', function () {
         validation();
     });
+    $('#old_password').on('keyup', function () {
+        validation();
+    });
     const validation = () => {
         const val = $('#new_password').val();
+        $('#submitBtn').attr('disabled', 'true');
         if (!val.length) {
             $('#new_password').parent().next('.error-text').text('');
             passwordValid = false;
@@ -153,6 +158,7 @@ if (isset($changePass)) {
         }
         $('#confirm_password').parent().next('.error-text').text('');
         passwordConfirm = true;
+        $('#submitBtn').removeAttr('disabled');
     }
     $('form').submit(() => {
         return passwordValid && passwordConfirm;

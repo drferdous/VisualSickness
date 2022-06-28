@@ -97,6 +97,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["reset-submit"]) && Ses
     const symbolRegex = /^(?=.*[\x21-\x2F\x3A-\x40\x5B-\x60\x7B-\x7E]).*$/;
     const validCharsRegex = /^[a-zA-Z\d\x21-\x2F\x3A-\x40\x5B-\x60\x7B-\x7E]*$/;
     const lengthRegex = /^.{7,20}$/;
+    $('#submitBtn').attr('disabled', true);
     $('#new_password').on('keyup', function () {
         validation();
     });
@@ -105,6 +106,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["reset-submit"]) && Ses
     });
     const validation = () => {
         const val = $('#new_password').val();
+        $('#submitBtn').attr('disabled', true);
         $('#new_password').parent().next('.error-text').text('');
         $('#confirm_password').parent().next('.error-text').text('');
         if (!val.length) {
@@ -158,6 +160,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["reset-submit"]) && Ses
         }
         $('#confirm_password').parent().next('.error-text').text('');
         passwordConfirm = true;
+        $('#submitBtn').removeAttr('disabled');
     }
     $('form').submit(() => {
         return passwordValid && passwordConfirm;

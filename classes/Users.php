@@ -219,9 +219,6 @@ class Users{
         if ($name == ""){
             return Util::generateErrorMessage("Name field should not be empty!");
         }
-        if (!empty($mobile) && filter_var($mobile,FILTER_SANITIZE_NUMBER_INT) !== $mobile) {
-            return Util::generateErrorMessage("Please enter only numeric characters for phone number!");
-        }
         if (Session::get("roleid") != 1 && isset($data["roleid"])){
             return Util::generateErrorMessage("You do not have permission to change your role!");
         }
@@ -248,10 +245,11 @@ class Users{
         $stmt->bindValue(':updated_by', Session::get('id'));
         $result =   $stmt->execute();
 
-        if ($result){ 
-            return Util::generateSuccessMessage("you have updated your information!");
-        } 
-        else{
+        if ($result && (trim($userid) != Session::get('id'))){ 
+            return Util::generateSuccessMessage("You have updated this profile's information!");
+        } else if ($result) {
+            return Util::generateSuccessMessage("You have updated your information!");
+        } else{
             return Util::generateErrorMessage("Your profile could not be updated!");
         }
     }  

@@ -175,7 +175,7 @@ class Studies {
         }
             
         if ($result2) {
-            return Util::generateSuccessMessage("You registered a participant!");
+            return Util::generateSuccessMessage("You updated a participant!");
         }
         else {
             return Util::generateErrorMessage("Something went wrong.");
@@ -280,7 +280,7 @@ class Studies {
     }
         
     if ($result2) {
-        return Util::generateSuccessMessage("You updated a participant!");
+        return Util::generateSuccessMessage("You registered a participant!");
     }
     else {
         return Util::generateErrorMessage("Something went wrong.");
@@ -621,7 +621,7 @@ public function takeSSQ($quiz_type, $ssq_time){
         
         $currentDate = new DateTime();
         
-        if ($full_name == "" || $short_name == ""|| $IRB == "") {
+        if ($full_name == "" || $short_name == "") {
             return Util::generateErrorMessage("You cannot leave required field empty!");
         }
         if ($ssq_times !== array_unique($ssq_times)) {

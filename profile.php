@@ -69,8 +69,8 @@ if (Session::get('roleid') == '1') {
                       <input type="text" name="name" value="<?php echo $getUinfo->name; ?>" <?= $purpose === "edit" ? "" : "disabled"?> class="form-control" required>
                     </div>
                     <div class="form-group">
-                      <label for="mobile">Mobile Number</label>
-                      <input type="text" id="mobile" name="mobile" value="<?php echo $getUinfo->mobile; ?>" <?= $purpose === "edit" ? "" : "disabled"?> class="form-control">
+                      <label for="phone_no">Mobile Number</label>
+                      <input type="text" id="phone_no" name="mobile" value="<?php echo $getUinfo->mobile; ?>" <?= $purpose === "edit" ? "" : "disabled"?> class="form-control">
                     </div>
                     <?php $sql = "SELECT name
                                   FROM affiliation
@@ -158,10 +158,8 @@ if (Session::get('roleid') == '1') {
                     newPos = newString.indexOf(lastChar, newPos + 1);
                 }
                 newPos++;
-                console.log(lastChar, count, newPos);
             } else {
                 newPos = $(this)[0].selectionStart - Array.from(newString).reverse().findIndex(e => {
-                    console.log(+e);
                     return Number.isInteger(+e);
                 });
             }
