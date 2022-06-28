@@ -109,9 +109,9 @@ if (Session::get('roleid') == '1') {
                      <?php } ?>
                     <?php if ((Session::get("roleid") == '1' && $purpose === "edit") || (Session::get("id") == $getUinfo->user_id && $purpose === "edit")) { ?>
                     <div class="form-group">
-                      <button type="submit" name="update" class="btn btn-success">Update</button>
+                      <button type="submit" name="update" class="my-1 btn btn-success">Update</button>
                       <?php if (Session::get("id") == $getUinfo->user_id) { ?>
-                        <a class="btn btn-primary" href="change_password">Password Change</a>
+                        <a class="my-1 btn btn-primary" href="change_password">Password Change</a>
                         <?php } ?>
                     </div>
                     <?php } ?>

@@ -66,17 +66,19 @@ Session::set("post_ID", $rand);
 <div class="card">
     <div class="card-header">
             <h3>
-                <span class="float-right"> <a href="session_details" class="backBtn btn btn-primary">Back</a></span>
-                <?php if ($ssq_ID !== -1) { 
-                if(($role['study_role'] == 2 || $id_row['created_by'] == Session::get('id')) && $study_is_active && $id_row['end_time'] == NULL) { ?>
-                    <form class="float-right" onsubmit="return confirm('Are you sure you want to delete this SSQ? This action cannot be undone.');" action="delete_quiz" method="post">
-                        <button type="submit" name="deleteQuiz" class="btn btn-danger mr-2">Delete</button>
+                <span class="float-right">
+                <?php if ($ssq_ID !== -1) { ?>
+                    <?php if(($role['study_role'] == 2 || $id_row['created_by'] == Session::get('id')) && $study_is_active && $id_row['end_time'] == NULL) { ?>
+                    <form class="d-inline" onsubmit="return confirm('Are you sure you want to delete this SSQ? This action cannot be undone.');" action="delete_quiz" method="post">
+                        <button type="submit" name="deleteQuiz" class="btn btn-danger">Delete</button>
                     </form>
-            <?php } ?>
-                    <form class="float-right" action="" method="post">
-                        <button type="submit" name="viewResults" class="btn btn-success mr-2">Results</button>
+                    <?php } ?>
+                    <form class="d-inline" action="" method="post">
+                        <button type="submit" name="viewResults" class="btn btn-success mx-1">Results</button>
                     </form>
                 <?php } ?>
+                    <a href="session_details" class="backBtn btn btn-primary">Back</a>
+                </span>
             </h3>
     </div>
 <div class="card-body pr-2 pl-2">

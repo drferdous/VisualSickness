@@ -29,10 +29,12 @@
 <div class="card">
     <div class="card-header">
         <h3 class="float-left">Researcher List</h3>
-        <span class='float-right'><a href='study_details' class='backBtn btn btn-primary'>Back</a></span>
-        <?php if(isset($role['study_role']) && $role['study_role'] == 2 && $active['is_active'] == 1){ ?>
-            <span class='float-right mr-2'><a href='edit_researchers' class='btn btn-primary'>Edit Researchers</a></span>
-        <?php } ?>
+        <span class='float-right'>
+            <?php if(isset($role['study_role']) && $role['study_role'] == 2 && $active['is_active'] == 1){ ?>
+                <a href='edit_researchers' class='btn btn-primary mx-2'>Edit Researchers</a>
+            <?php } ?>
+            <a href='study_details' class='backBtn btn btn-primary'>Back</a>
+        </span>
     </div>
     <?php
     
