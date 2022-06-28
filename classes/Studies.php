@@ -910,7 +910,7 @@ public function takeSSQ($quiz_type, $ssq_time){
         if ($pi_count['Count'] > 1 || Session::get("roleid") != 2){
             $sql = "UPDATE researchers
                     SET is_active = 0
-                    WHERE researcher_id = :researcher_ID
+                    WHERE researcher_id = :researcher_id
                     AND study_id = :study_ID
                     AND is_active = 1
                     LIMIT 1;";
