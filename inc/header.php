@@ -152,7 +152,7 @@ if (Session::get('roleid') == '1') {
                         <ul class="dropdown-menu"
                             aria-labelledby="study-dropdown">
                             <li class="dropdown-item"><a href="study_list">Study List</a></li>
-                            <li class="dropdown-item"><a href="create_study">Add Study</a></li>
+                            <li class="dropdown-item"><a href="create_study">Create Study</a></li>
                         </ul>
                     </li>
                 <?php } 
@@ -288,6 +288,10 @@ if (Session::get('roleid') == '1') {
     });
 </script>
 <script src="assets/bootstrap-show-password.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/libphonenumber-js/1.10.7/libphonenumber-js.min.js"
+        integrity="sha384-sevkaNkNZctHbkPkl5ZhwSLRS1BFnxiMcB58CpUwmsl4lX+rXd7VL4UOPrGVRetr"
+        crossorigin="anonymous">
+</script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" 
         integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" 
         crossorigin="anonymous">

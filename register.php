@@ -54,9 +54,9 @@ if (isset($userRegistration)) {
                   <input type="email" name="email" value="<?= Util::getValueFromPost('email', $_POST); ?>" class="form-control" id="email" required>
                 </div>
                 <div class="form-group">
-                  <label for="mobile">Phone Number</label>
-                  <input type="tel" name="mobile" pattern="\d*" title="Only numbers allowed" class="form-control" id="mobile">
-                  <small>Format: 123-456-7890, don't type the hyphens!</small>
+                  <label for="phone_no">Phone Number</label>
+                  <input type="tel" name="mobile" class="form-control" id="phone_no">
+                </div>
                 <div class="form-group">
                   <div class="form-group">
                     <label for="sel1" class="required">Select User Role</label>
@@ -92,8 +92,23 @@ if (isset($userRegistration)) {
           </div>
 
         </div>
-      </div>
-      
+    </div>    
+</div>
+<script>
+    let phoneValid = false;
+    let lastNum = NaN;
+    $(document).ready(() => {
+        $('#phone_no').on('keyup', function () {
+            var val_old = $(this).val();
+            console.log(lastNum, val_old, +(val_old.replace(/^[\(\)-. ]+/g, '')));
+            if (+(val_old.replace(/^[\(\)-. ]+/g, '')) !== lastNum) {
+                const newString = new libphonenumber.AsYouType('US').input(val_old);
+                $(this).focus().val('').val(newString);
+                lastNum = +(newString.replace(/^[\(\)-. ]+/g, ''));
+            }
+        });
+    });
+</script>
 <?php
   include 'inc/footer.php';
 ?>

@@ -70,8 +70,7 @@ if (isset($_POST['participant_ID']) && !empty($_POST['participant_ID']) && isset
         </div>
         <div class="form-group">
             <label for="phone_no">Phone Number</label>
-            <input type="tel" name="phone_no" pattern="\d*" title="Only numbers allowed" class="form-control" id="phone_no" value="<?= $row['phone_no'] ?>">
-            <small>Format: 123-456-7890, don't type the hyphens!</small>
+            <input type="tel" name="phone_no" class="form-control" id="phone_no" value="<?= $row['phone_no'] ?>">
         </div>
         <div class="form-group">
             <label for="email">Participant Email</label>

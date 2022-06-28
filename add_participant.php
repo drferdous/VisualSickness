@@ -29,6 +29,7 @@ if (isset($userAdd)) {
         }
     </script>
 <?php } ?>
+
 <div class="card">
     <div class="card-header">
           <h3 class="text-center float-left">Add New Participant</h3>
@@ -98,8 +99,7 @@ if (isset($userAdd)) {
                 </div>
                 <div class="form-group">
                   <label for="phone_no">Phone Number</label>
-                  <input type="tel" name="phone_no" pattern="\d*" title="Only numbers allowed" class="form-control" id="phone_no" value="<?= Util::getValueFromPost('phone_no', $_POST); ?>">
-                  <small>Format: 123-456-7890, don't type the hyphens!</small>
+                  <input type="tel" name="phone_no" class="form-control" id="phone_no" value="<?= Util::getValueFromPost('phone_no', $_POST); ?>">
                 </div>
                 <div class="form-group">
                   <label for="email">Participant Email</label>
@@ -110,7 +110,7 @@ if (isset($userAdd)) {
                   <input type="text" name="comments" class="form-control" id="comments" value="<?= Util::getValueFromPost('comments', $_POST); ?>">
                 </div>
                 <div class="form-group">
-                  <button type="submit" name="addNewParticipant" class="btn btn-success">Register</button>
+                  <button id="submitBtn" type="submit" name="addNewParticipant" class="btn btn-success">Register</button>
                 </div>
             </form>
         </div>
@@ -118,7 +118,21 @@ if (isset($userAdd)) {
 
     </div>
 </div>
-
+<script>
+    let phoneValid = false;
+    let lastNum = NaN;
+    $(document).ready(() => {
+        $('#phone_no').on('keyup', function () {
+            var val_old = $(this).val();
+            console.log(lastNum, val_old, +(val_old.replace(/^[\(\)-. ]+/g, '')));
+            if (+(val_old.replace(/^[\(\)-. ]+/g, '')) !== lastNum) {
+                const newString = new libphonenumber.AsYouType('US').input(val_old);
+                $(this).focus().val('').val(newString);
+                lastNum = +(newString.replace(/^[\(\)-. ]+/g, ''));
+            }
+        });
+    });
+</script>
 <?php
   include 'inc/footer.php';
 ?>
