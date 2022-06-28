@@ -911,7 +911,7 @@ public function takeSSQ($quiz_type, $ssq_time){
             $sql = "UPDATE researchers
                     SET is_active = 0
                     WHERE researcher_id = :researcher_id
-                    AND study_id = :study_ID
+                    AND study_id = :study_id
                     AND is_active = 1
                     LIMIT 1;";
             $stmt = $this->db->pdo->prepare($sql);
