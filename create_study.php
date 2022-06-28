@@ -49,8 +49,8 @@ if (isset($insert_study)) {
                   <input type="text" value="<?= Util::getValueFromPost('short_name', $_POST); ?>" id="short_name" name="short_name"  class="form-control" required>
                 </div>
                 <div class="form-group">
-                  <label for="IRB" class="required">IRB</label>
-                  <input type="text" value="<?= Util::getValueFromPost('IRB', $_POST); ?>" id="IRB" name="IRB"  class="form-control" required>
+                  <label for="IRB">IRB</label>
+                  <input type="text" value="<?= Util::getValueFromPost('IRB', $_POST); ?>" id="IRB" name="IRB"  class="form-control">
                 </div>
                 <div class="form-group">
                   <label for="description">Description</label>

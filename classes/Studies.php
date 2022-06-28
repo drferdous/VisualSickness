@@ -519,7 +519,7 @@ public function takeSSQ($quiz_type, $ssq_time){
     $session_times = array_filter($session_times, function ($time) { return $time != ''; });
     $created_by = Session::get('id');
 
-    if ($full_name == "" || $short_name == "" || $IRB == "") {
+    if ($full_name == "" || $short_name == "") {
         return array(Util::generateErrorMessage("Study registration fields must not be empty!"));
     }
     if (count($ssq_times) !== count(array_unique($ssq_times))){
