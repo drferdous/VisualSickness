@@ -245,10 +245,11 @@ class Users{
         $stmt->bindValue(':updated_by', Session::get('id'));
         $result =   $stmt->execute();
 
-        if ($result){ 
-            return Util::generateSuccessMessage("you have updated your information!");
-        } 
-        else{
+        if ($result && (trim($userid) != Session::get('id'))){ 
+            return Util::generateSuccessMessage("You have updated this profile's information!");
+        } else if ($result) {
+            return Util::generateSuccessMessage("You have updated your information!");
+        } else{
             return Util::generateErrorMessage("Your profile could not be updated!");
         }
     }  
