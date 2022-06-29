@@ -597,7 +597,9 @@ public function takeSSQ($quiz_type, $ssq_time){
 
     // Edit a user's study
     public function updateStudy($data){
-        array_walk($data, function (&$val) {         $val = trim($val);     });
+        array_walk($data, function (&$val) {         
+            $val = trim($val);
+        });
         $full_name = $data['full_name'];
         $short_name = $data['short_name'];
         $IRB = $data['IRB'];
@@ -611,13 +613,17 @@ public function takeSSQ($quiz_type, $ssq_time){
         array_walk($ssq_times, function (&$time) {
             $time = ucwords(trim($time));
         });
-        $ssq_times = array_filter($ssq_times, function ($time) { return $time !== ''; });
+        $ssq_times = array_filter($ssq_times, function ($time) { 
+            return $time !== '';
+        });
         
         $session_times = explode(',', $session_times_str);
         array_walk($session_times, function (&$time) {
             $time = ucwords(trim($time));
         });
-        $session_times = array_filter($session_times, function ($time) { return $time !== ''; });
+        $session_times = array_filter($session_times, function ($time) { 
+            return $time !== '';
+        });
         
         $currentDate = new DateTime();
         
@@ -637,7 +643,7 @@ public function takeSSQ($quiz_type, $ssq_time){
         $stmt->bindValue(':short_name', $short_name);  
         $stmt->bindValue(':IRB', $IRB);
         $stmt->bindValue(':description', $description);
-        $stmt->bindValue('last_edited_by', $last_edited_by);
+        $stmt->bindValue(':last_edited_by', $last_edited_by);
         $stmt->bindValue(':last_edited_at', $currentDate->format('Y-m-d H:i:s'));
         $stmt->bindValue(':study_ID', $study_ID);
         $result = $stmt->execute();
@@ -660,7 +666,9 @@ public function takeSSQ($quiz_type, $ssq_time){
             array_push($old_session, $row['name']);
         }
 
-        array_walk($old_times, function (&$val) {         $val = trim($val);     });
+        array_walk($old_times, function (&$val) {         
+            $val = trim($val);
+        });
         $added_ssq_times = array_filter($ssq_times, function ($time) use($old_times) {
             return !in_array($time, $old_times);
         });
@@ -668,15 +676,15 @@ public function takeSSQ($quiz_type, $ssq_time){
             return !in_array($time, $ssq_times);
         });
         
-        array_walk($old_session, function (&$val) {         $val = trim($val);     });
+        array_walk($old_session, function (&$val) {         
+            $val = trim($val);
+        });
         $added_session_times = array_filter($session_times, function ($time) use($old_session) {
             return !in_array($time, $old_session);
         });
         $removed_session_times = array_filter($old_session, function ($time) use($session_times) {
             return !in_array($time, $session_times);
         });
-        
-        
         
         if (count($added_ssq_times) > 0) {
             // added 1 or more time names
@@ -752,6 +760,47 @@ public function takeSSQ($quiz_type, $ssq_time){
             }
         }
         
+        if (count($removed_ssq_times) > 0 && count($removed_session_times) > 0){
+            $remove_ssq = implode(', ', array_map(function ($time) { return "'$time'"; }, $removed_ssq_times));
+            $sql_ssq = "SELECT ssq.ssq_id FROM ssq JOIN session ON ssq.session_id = session.session_id WHERE session.is_active = 1 AND ssq.ssq_time IN (SELECT id FROM ssq_times WHERE study_id = $study_ID AND name IN ($remove_ssq) AND is_active = 1)";
+            $result_ssq = $pdo->query($sql_ssq);
+            $row_ssq = $result_ssq->fetch(PDO::FETCH_ASSOC);
+            
+            $remove_session = implode(', ', array_map(function ($time) { return "'$time'"; }, $removed_session_times));
+            $sql_session = "SELECT session_id FROM session WHERE is_active = 1 AND session_time IN (SELECT id FROM session_times WHERE study_id = $study_ID AND name IN ($remove_session) AND is_active = 1)";
+            $result_session = $pdo->query($sql_session);
+            $row_session = $result_session->fetch(PDO::FETCH_ASSOC);
+            
+            return "<script type='text/javascript'>
+                    $(document).ready(() => {
+                        if (confirm('Deleting this SSQ time and Session name will result in loss of previously created SSQs and Sessions.')) {
+                            $.ajax({
+                                url: 'ssq_and_session_time_remove',
+                                type: 'POST',
+                                cache: false,
+                                data:{
+                                    remove_ssq: \"$remove_ssq\",
+                                    remove_session: \"$remove_session\",
+                                },
+                            })
+                            .done(function(data) {
+                                $(document).ready(() => {
+                                    const div = document.createElement('div');
+                                    div.innerHTML = data;
+                                    document.querySelector('.container').insertBefore(div.firstChild, document.querySelector('.card'));
+                                    const divMsg = document.getElementById('flash-msg');
+                                    if (divMsg?.classList.contains('alert-success')){
+                                        setTimeout(function(){
+                                            location.href = 'study_details';
+                                        }, 1000);
+                                    }
+                                });
+                            });
+                        }
+                    });
+                </script>";
+        }
+        
         
         if (count($removed_ssq_times) > 0) {
             // removed 1 or more time names
@@ -775,24 +824,21 @@ public function takeSSQ($quiz_type, $ssq_time){
                                 },
                             })
                             .done(function(data) {
-                                $(document).ready(() => {
-                                    const div = document.createElement('div');
-                                    div.innerHTML = data.slice(1);
-                                    document.querySelector('.container').insertBefore(div.firstChild, document.querySelector('.card'));
-                                    const divMsg = document.getElementById('flash-msg');
-                                    if (divMsg?.classList.contains('alert-success')){
-                                        setTimeout(function(){
-                                            location.href = 'study_details';
-                                        }, 1000);
-                                    }
-                                });
+                                const div = document.createElement('div');
+                                div.innerHTML = data;
+                                document.querySelector('.container').insertBefore(div.firstChild, document.querySelector('.card'));
+                                const divMsg = document.getElementById('flash-msg');
+                                if (divMsg?.classList.contains('alert-success')){
+                                    setTimeout(function(){
+                                        location.href = 'study_details';
+                                    }, 1000);
+                                }
                             });
                         }
                     });
                 </script>";
-                // return "";
-            } else {
-            
+            } 
+            else {
                 $remove_sql = "UPDATE ssq_times SET is_active = 0 WHERE study_id = $study_ID AND name IN ($remove)";
                 $result = $pdo->query($remove_sql);
                     
@@ -839,7 +885,6 @@ public function takeSSQ($quiz_type, $ssq_time){
                         }
                     });
                 </script>";
-                // return "";
             } else {
             
                 $remove_sql = "UPDATE session_times SET is_active = 0 WHERE study_id = $study_ID AND name IN ($remove)";
