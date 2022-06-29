@@ -111,7 +111,7 @@ if (Session::get('roleid') == '1') {
                     <div class="form-group">
                       <button type="submit" name="update" class="my-1 btn btn-success">Update</button>
                       <?php if (Session::get("id") == $getUinfo->user_id) { ?>
-                        <a class="my-1 btn btn-primary" href="change_password">Password Change</a>
+                        <a class="my-1 btn btn-primary" href="change_password">Change Password </a>
                         <?php } ?>
                     </div>
                     <?php } ?>
