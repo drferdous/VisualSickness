@@ -762,7 +762,7 @@ public function takeSSQ($quiz_type, $ssq_time){
         
         if (count($removed_ssq_times) > 0 && count($removed_session_times) > 0){
             $remove_ssq = implode(', ', array_map(function ($time) { return "'$time'"; }, $removed_ssq_times));
-            $sql_ssq = "SELECT ssq.ssq_id FROM ssq JOIN session ON ssq.session_id = session.session_id WHERE session.is_active = 1 AND ssq.ssq_time IN (SELECT id FROM ssq_times WHERE study_id = $study_ID AND name IN ($remove_ssq) AND is_active = 1)";
+            $sql_ssq = "SELECT ssq_id FROM ssq WHERE ssq_time IN (SELECT id FROM ssq_times WHERE study_id = $study_ID AND name IN ($remove_ssq) AND is_active = 1)";
             $result_ssq = $pdo->query($sql_ssq);
             $row_ssq = $result_ssq->fetch(PDO::FETCH_ASSOC);
             
@@ -771,33 +771,50 @@ public function takeSSQ($quiz_type, $ssq_time){
             $result_session = $pdo->query($sql_session);
             $row_session = $result_session->fetch(PDO::FETCH_ASSOC);
             
+            $warningMessage = "";
+            $warningMessageCode = "";
+            
+            if ($row_ssq !== FALSE && $row_session !== FALSE){
+                $warningMessage = "Deleting this SSQ time and Session name will result in loss of previously created SSQs and Sessions.";
+            }
+            else if ($row_ssq !== FALSE){
+                $warningMessage = "Deleting this SSQ time will result in loss of previously created SSQs.";
+            }
+            else if ($row_session !== FALSE){
+                $warningMessage = "Deleting this Session Name will result in loss of previously created Sessions.";
+            }
+            if (!empty($warningMessage)){
+                $warningMessageCode = "if (!confirm(\"" . $warningMessage . "\")){
+                                            return;
+                                       }";
+            }
             return "<script type='text/javascript'>
                     $(document).ready(() => {
-                        if (confirm('Deleting this SSQ time and Session name will result in loss of previously created SSQs and Sessions.')) {
-                            $.ajax({
-                                url: 'ssq_and_session_time_remove',
-                                type: 'POST',
-                                cache: false,
-                                data:{
-                                    remove_ssq: \"$remove_ssq\",
-                                    remove_session: \"$remove_session\",
-                                },
-                            })
-                            .done(function(data) {
-                                $(document).ready(() => {
-                                    const div = document.createElement('div');
-                                    div.innerHTML = data;
-                                    document.querySelector('.container').insertBefore(div.firstChild, document.querySelector('.card'));
-                                    const divMsg = document.getElementById('flash-msg');
-                                    if (divMsg?.classList.contains('alert-success')){
-                                        setTimeout(function(){
-                                            location.href = 'study_details';
-                                        }, 1000);
-                                    }
-                                });
+                        console.log('This script never works.');
+                        " . $warningMessageCode . "
+                        $.ajax({
+                            url: 'ssq_and_session_time_remove',
+                            type: 'POST',
+                            cache: false,
+                            data:{
+                                remove_ssq: \"$remove_ssq\",
+                                remove_session: \"$remove_session\",
+                            },
+                        })
+                        .done(function(data) {
+                            $(document).ready(() => {
+                                const div = document.createElement('div');
+                                div.innerHTML = data;
+                                document.querySelector('.container').insertBefore(div.firstChild, document.querySelector('.card'));
+                                const divMsg = document.getElementById('flash-msg');
+                                if (divMsg?.classList.contains('alert-success')){
+                                    setTimeout(function(){
+                                        location.href = 'study_details';
+                                    }, 1000);
+                                }
                             });
-                        }
-                    });
+                        });
+                });
                 </script>";
         }
         
