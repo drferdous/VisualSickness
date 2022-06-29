@@ -47,16 +47,16 @@ class Util {
                 <div class='modal-dialog' role='document'>
                     <div class='modal-content'>
                         <div class='modal-header'>
-                            <h5 class='modal-title' id='modalLabel'>" . ($new ? "New Record Created" : "SSQ Results") . "</h5>
+                            <h3 class='modal-title' style='font-weight:600' id='modalLabel'>" . ($new ? "New Record Created" : "SSQ Results") . "</h3>
                             <button type='button' class='close modalClose' data-dismiss='modal' aria-label='Close'>
                                 <span aria-hidden='true'>&times;</span>
                             </button>
                         </div>
                         <div class='modal-body'>
-                            <p>Nausea Score: $nausea_score</p>
-                            <p>Oculomotor Score: $oculomotor_score</p>
-                            <p>Disorient Score: $disorient_score</p>
-                            <p>SSQ Score: $ssq_score</p>
+                            <p><strong>Nausea Score:</strong> $nausea_score</p>
+                            <p><strong>Oculomotor Score:</strong> $oculomotor_score</p>
+                            <p><strong>Disorient Score:</strong> $disorient_score</p>
+                            <p><strong>SSQ Score:</strong> $ssq_score</p>
                         </div>
                         <div class='modal-footer'>
                             <button type='button' class='btn btn-secondary modalClose' data-dismiss='modal'>Close</button>
@@ -70,6 +70,9 @@ class Util {
                     $('.modalClose').on('click', () => {
                         $('.modal').modal('toggle');
                     });
+                    $(document).on('keydown', 'body.modal-open', (e) => {
+                        if (e.key === 'Escape') $('.modal').modal('toggle');
+                    });
                 });
             </script>";
         } else {
@@ -78,7 +81,7 @@ class Util {
                 <div class='modal-dialog' role='document'>
                     <div class='modal-content'>
                         <div class='modal-header'>
-                            <h5 class='modal-title' id='modalLabel'>An Error Occurred</h5>
+                            <h3 class='modal-title' style='font-weight:600' id='modalLabel'>An Error Occurred</h3>
                             <button type='button' class='modalClose close' data-dismiss='modal' aria-label='Close'>
                                 <span aria-hidden='true'>&times;</span>
                             </button>
@@ -97,6 +100,9 @@ class Util {
                     $('.modal').modal('toggle');
                     $('.modalClose').on('click', () => {
                         $('.modal').modal('toggle');
+                    });
+                    $(document).on('keydown', 'body.modal-open', (e) => {
+                        if (e.key === 'Escape') $('.modal').modal('toggle');
                     });
                 });
             </script>";

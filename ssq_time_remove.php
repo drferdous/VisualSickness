@@ -1,15 +1,17 @@
 <?php
     include_once 'lib/Database.php';
     include "lib/Session.php";
+    include "classes/Util.php";
     
     Session::init();
-    if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !isset($_POST['studyID'])) {
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !isset($_POST["remove"])) {
+        header("Location: 404");
         exit();
     }
     
     $pdo = Database::getInstance()->pdo;
     
-    $study_ID = $_POST["studyID"];
+    $study_ID = Session::get("study_ID");
     $remove = $_POST["remove"];
     
     $remove_sql = "UPDATE ssq_times SET is_active = 0 WHERE study_id = $study_ID AND name IN ($remove)";
