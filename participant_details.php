@@ -47,10 +47,28 @@
     $study_name = $study_row['short_name'];
     
     $iv = hex2bin($row["iv"]);
-    $name = Crypto::decrypt($row["anonymous_name"], $iv); ?>
+    $name = Crypto::decrypt($row["anonymous_name"], $iv);
+    $role_sql = "SELECT study_role FROM researchers
+                WHERE researcher_id = " . Session::get('id') . "
+                AND study_id = " . $row['study_id'] . "
+                AND is_active = 1
+                LIMIT 1;";
+    $role_result = $pdo->query($role_sql);
+    $role_row = $role_result->fetch(PDO::FETCH_ASSOC);
+    if (!isset($role_row['study_role'])) {
+        header('Location: study_list');
+        exit();
+    } ?>
 <div class="card">
     <div class="card-header">
-        <span class="float-left d-flex align-items-center"><h3><a href="edit_participants" class="mr-2 redirectUser" style="color: #222;"><i class="fas fa-pencil-alt"></i></a><?= $name ?></h3></span>
+        <span class="float-left d-flex align-items-center">
+            <h3>
+                <?php if ($role_row['study_role'] == 2 || $role_row['study_role'] == 3) { ?>
+                    <a href="edit_participants" class="mr-2 redirectUser" style="color: #222;"><i class="fas fa-pencil-alt"></i></a>
+                <?php } ?>
+                <?= $name ?>
+            </h3>
+        </span>
         <?php if (isset($referrer)) { ?><span class="float-right"> <a href='<?= $referrer ?>' class="btn btn-primary backBtn">Back</a></span><?php } ?>
     </div>
     <div class="card-body">
@@ -99,19 +117,7 @@
                     </tr>
                 </tbody>
             </table>
-            <?php
-            $role_sql = "SELECT study_role FROM researchers
-                        WHERE researcher_id = " . Session::get('id') . "
-                        AND study_id = " . $row['study_id'] . "
-                        AND is_active = 1
-                        LIMIT 1;";
-            $role_result = $pdo->query($role_sql);
-            $role_row = $role_result->fetch(PDO::FETCH_ASSOC);
-            if (!isset($role_row['study_role'])) {
-                header('Location: study_list');
-                exit();
-            }
-            if ($role_row['study_role'] == 2 || $role_row['study_role'] == 3) { ?>
+            <?php if ($role_row['study_role'] == 2 || $role_row['study_role'] == 3) { ?>
                 <form class="text-center mt-2" action="" method="POST" onsubmit="return confirm('Are you sure you want to remove <?= $name ?> from the study \'<?= $study_name ?>\'? This action cannot be undone.');">
                     <input type="submit" name="removeParticipant" class="btn btn-danger" value="Remove Participant">
                     <?php if (isset($referrer)) { ?><input type="hidden" name="referrer" value="<?= $referrer ?>"><?php } ?>
@@ -127,7 +133,9 @@
         $(document).on("click", "a.redirectUser", redirectUser);
     });
     
-    function redirectUser(){
+    function redirectUser() {
+        <?php
+        $participant_enc = Crypto::encrypt($participant_ID, $iv); ?>
         let form = document.createElement("form");
         let hiddenInput;
         
@@ -138,13 +146,13 @@
         hiddenInput = document.createElement("input");
         hiddenInput.setAttribute("type", "hidden");
         hiddenInput.setAttribute("name", "participant_ID");
-        hiddenInput.setAttribute("value", '<?= $_POST["participant_ID"] ?>');
+        hiddenInput.setAttribute("value", '<?= $participant_enc ?>');
         form.appendChild(hiddenInput);
         
         hiddenInput = document.createElement("input");
         hiddenInput.setAttribute("type", "hidden");
         hiddenInput.setAttribute("name", "iv");
-        hiddenInput.setAttribute("value", '<?= $_POST["iv"] ?>');
+        hiddenInput.setAttribute("value", '<?= bin2hex($iv) ?>');
         form.appendChild(hiddenInput);
         
         document.body.appendChild(form);
