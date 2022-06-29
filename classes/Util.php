@@ -56,7 +56,7 @@ class Util {
                             <p><strong>Nausea Score:</strong> $nausea_score</p>
                             <p><strong>Oculomotor Score:</strong> $oculomotor_score</p>
                             <p><strong>Disorient Score:</strong> $disorient_score</p>
-                            <p><strong>SSQ Score:</strong> $ssq_score</p>
+                            <p><strong>Total SSQ Score:</strong> $ssq_score</p>
                         </div>
                         <div class='modal-footer'>
                             <button type='button' class='btn btn-secondary modalClose' data-dismiss='modal'>Close</button>

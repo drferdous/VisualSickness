@@ -6,6 +6,7 @@ $db = Database::getInstance();
 $pdo = $db->pdo;
 
 Session::CheckSession();
+unset($_SESSION['participant_ID']);
 if (isset($_POST['study_ID']) && isset($_POST['iv'])) {
     $iv = hex2bin($_POST['iv']);
     $decrypted = Crypto::decrypt($_POST['study_ID'], $iv);
@@ -103,7 +104,7 @@ if($timezone < 0) {
         <div class="navbar-collapse collapse">
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item dropdown mr-2">
-                    <a class="nav-link dropdown-toggle font-weight-bold" href="#" id="navbarDropdownMenuLinkRight" role="button" data-mdb-toggle="dropdown" aria-expanded="false" style="color: black; background-color: rgba(0, 98, 204, 0.32); border-radius: 4px;">
+                    <a class="nav-link dropdown-toggle font-weight-bold" href="javascript:void(0);" id="navbarDropdownMenuLinkRight" role="button" data-mdb-toggle="dropdown" aria-expanded="false" style="color: black; background-color: rgba(0, 98, 204, 0.32); border-radius: 4px;">
                         More Actions
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLinkRight">
