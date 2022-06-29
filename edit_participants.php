@@ -12,6 +12,7 @@ else $referrer = $_POST['referrer'];
 if (isset($_POST["participant_ID"]) && isset($_POST["iv"])){
     $iv = hex2bin($_POST["iv"]);
     $participant_ID = Crypto::decrypt($_POST["participant_ID"], $iv);
+    Session::set('participant_ID', $participant_ID);
 }
 if (isset($_POST['forStudy']) && $_POST['forStudy'] === 'true') {
     $study_ID = Session::get('study_ID');
@@ -42,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['editParticipant']) && 
 <div class="card">
     <div class="card-header">
         <h3 class="float-left">Edit A Participant</h3>
-        <span class="float-right"> <a href='<?= $referrer ?>' class="backButton btn btn-primary">Back</a></span>
+        <span class="float-right"><a href='<?= $referrer ?>' class="backButton btn btn-primary">Back</a></span>
     </div>
     <div class="card-body pr-2 pl-2">
         <form class="" action="" method="post">
@@ -114,10 +115,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['editParticipant']) && 
         $('#participant_ID').change(function () {
             getData($(this));
         });
-        $('.backButton').on('click', () => {
+        $('.backButton').on('click', function () {
             if ($('form')[0] && $('form').serialize().split('&').map(r => r.split('=')).filter(r => !['randCheck', 'referrer'].includes(r[0])).some((r, i) => r[1] != startVals[r[0]])) {
                 return confirm('Are you sure you want to go back? Your data will not be saved.');
             }
+            
         });
         $(document).on('keyup', '#phone_no', function () {
             const val_old = $('#phone_no').val();

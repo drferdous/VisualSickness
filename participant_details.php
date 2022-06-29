@@ -3,9 +3,10 @@
     
     $db = Database::getInstance();
     $pdo = $db->pdo;
-    
-    $iv = hex2bin($_POST["iv"]);
-    $participant_ID = Crypto::decrypt($_POST["participant_ID"], $iv);
+    if (isset($_POST['participant_ID'])) {
+        $iv = hex2bin($_POST["iv"]);
+        $participant_ID = Crypto::decrypt($_POST["participant_ID"], $iv);
+    } else $participant_ID = Session::get('participant_ID');
     
     $sql = "SELECT * FROM participants AS P
             INNER JOIN demographics AS D
@@ -49,7 +50,7 @@
     $name = Crypto::decrypt($row["anonymous_name"], $iv); ?>
 <div class="card">
     <div class="card-header">
-        <span class="float-left d-flex align-items-center"><h3><?= $name ?></h3></span>
+        <span class="float-left d-flex align-items-center"><h3><a href="edit_participants" class="mr-2 redirectUser" style="color: #222;"><i class="fas fa-pencil-alt"></i></a><?= $name ?></h3></span>
         <?php if (isset($referrer)) { ?><span class="float-right"> <a href='<?= $referrer ?>' class="btn btn-primary backBtn">Back</a></span><?php } ?>
     </div>
     <div class="card-body">
@@ -121,6 +122,37 @@
         </div>
     </div>
 </div>
+<script>
+    $(document).ready(() => {
+        $(document).on("click", "a.redirectUser", redirectUser);
+    });
+    
+    function redirectUser(){
+        let form = document.createElement("form");
+        let hiddenInput;
+        
+        form.setAttribute("method", "POST");
+        form.setAttribute("action", $(this).attr("href"));
+        form.setAttribute("style", "display: none");
+        
+        hiddenInput = document.createElement("input");
+        hiddenInput.setAttribute("type", "hidden");
+        hiddenInput.setAttribute("name", "participant_ID");
+        hiddenInput.setAttribute("value", '<?= $_POST["participant_ID"] ?>');
+        form.appendChild(hiddenInput);
+        
+        hiddenInput = document.createElement("input");
+        hiddenInput.setAttribute("type", "hidden");
+        hiddenInput.setAttribute("name", "iv");
+        hiddenInput.setAttribute("value", '<?= $_POST["iv"] ?>');
+        form.appendChild(hiddenInput);
+        
+        document.body.appendChild(form);
+        form.submit();
+        
+        return false;
+    };
+</script>
 
 
 <?php
