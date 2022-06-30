@@ -12,7 +12,7 @@
         <h3 class="float-left">Contact Us</h3>
     </div>
     <div class="card-body">
-        <div class="mt-2 d-flex flex-wrap">
+        <div class="mt-2 d-flex flex-wrap flex-row-reverse">
             <div class="p-2" style="margin-bottom:2rem;flex:1;">
                     <?php
                     if(Session::get('login')) {
