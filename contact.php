@@ -13,7 +13,7 @@
     </div>
     <div class="card-body">
         <div class="mt-2 d-flex flex-wrap flex-row-reverse">
-            <form style="flex:1 1 50%" class="p-4" action="inc/support_email" method="POST">
+            <form style="flex:1 1 50%" class="p-0 p-sm-4" action="inc/support_email" method="POST">
                 <div class="form-group">
                     <label for="nameInput" class="required">Name</label>
                     <input class="form-control" id="nameInput" name="name" placeholder="Enter name" required>
@@ -36,7 +36,7 @@
                      <input type="submit" class="btn btn-success" name="sendSupportEmail" value="Send">
                 </div>
             </form>
-            <div class="p-2" style="margin-bottom:2rem;flex:1;">
+            <div class="p-4" style="margin-bottom:2rem;flex:1;">
                 <?php if(Session::get('login')) {
                     $sql = "SELECT name FROM affiliation WHERE affiliation_id = " . Session::get('affiliationid');
                     $result = Database::getInstance()->pdo->query($sql);
