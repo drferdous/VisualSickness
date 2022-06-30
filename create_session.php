@@ -85,7 +85,7 @@ $role = $role_result->fetch(PDO::FETCH_ASSOC);
                                     
                         $result = $pdo->query($sql); ?>
                     <select class="form-control form-select" name="participant_ID" id="participant_name" required <?= $result->rowCount() === 0 ? 'disabled' : '' ?>>
-                        <option value="" disabled hidden selected><?= $result->rowCount() === 0 ? '"There are no participants in this study!"' : 'Participant Name' ?></option>
+                        <option value="" disabled hidden selected><?= $result->rowCount() === 0 ? 'There are no participants in this study!' : 'Participant Name' ?></option>
                         <?php
                         while ($row = $result->fetch(PDO::FETCH_ASSOC)){
                             $iv = hex2bin($row['iv']);
