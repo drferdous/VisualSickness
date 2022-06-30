@@ -9,6 +9,14 @@ if (Session::get('study_ID') == 0) {
     exit();
 }
 
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['deleteQuiz'])) {
+    $deleteQuiz = $studies->deleteQuiz();
+}
+
+if (isset($deleteQuiz)) {
+    echo $deleteQuiz;
+}
+
 Session::CheckSession();
 if (isset($_POST['session_ID']) && isset($_POST['iv'])) {
     $iv = hex2bin($_POST['iv']);
