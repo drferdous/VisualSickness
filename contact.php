@@ -34,26 +34,24 @@
                 <h3>Support</h3>
                 <a href="mailto:visualsicknessstudy@gmail.com">visualsicknessstudy@gmail.com</a>
             </div>
-            <form style="flex:1 1 50%" class="p-4 text-center">
-                <div class="text-start">
-                    <div class="form-group">
-                        <label for="nameInput">Name</label>
-                        <input class="form-control" id="nameInput" name="name" placeholder="Enter name">
+            <form style="flex:1 1 50%" class="p-4">
+                <div class="form-group">
+                    <label for="nameInput" class="required">Name</label>
+                    <input class="form-control" id="nameInput" name="name" placeholder="Enter name" required>
+                </div>
+                <div class="d-flex flex-wrap">
+                    <div class="form-group" style="flex:1;margin-inline-end:5px;min-width:250px">
+                        <label for="emailInput" class="required">Email</label>
+                        <input type="email" class="form-control" id="emailInput" name="email" placeholder="Enter email" required>
                     </div>
-                    <div class="d-flex flex-wrap">
-                        <div class="form-group" style="flex:1;margin-inline-end:5px;min-width:250px">
-                            <label for="emailInput">Email</label>
-                            <input type="email" class="form-control" id="emailInput" name="email" placeholder="Enter email">
-                        </div>
-                        <div class="form-group" style="flex:1;margin-inline-start:5px;min-width:250px">
-                            <label for="phoneInput">Phone Number</label>
-                            <input type="tel" class="form-control" id="phoneInput" placeholder="Enter phone number">
-                        </div>
+                    <div class="form-group" style="flex:1;margin-inline-start:5px;min-width:250px">
+                        <label for="phoneInput">Phone Number</label>
+                        <input type="tel" class="form-control" id="phoneInput" placeholder="Enter phone number">
                     </div>
-                    <div class="form-group">
-                        <label for="messageInput">Message</label>
-                        <textarea class="form-control" id="messageInput" name="msg" placeholder="Enter message" rows="4"></textarea>
-                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="messageInput" class="required">Message</label>
+                    <textarea class="form-control" id="messageInput" name="msg" placeholder="Enter message" rows="4" required></textarea>
                 </div>
                 <div class="form-group">
                      <input type="submit" class="btn btn-success" name="submit" value="Send">
