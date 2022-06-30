@@ -74,8 +74,12 @@ $timezone = Session::get('time_offset');
             margin: auto;
             margin-top: 10px;
             background: white;
-            width: 53%;
             padding: 10px;
+        }
+        
+        .symptoms > hr {
+            max-width: 350px;
+            margin: 1rem auto;
         }
 
         .pictures {
@@ -84,6 +88,9 @@ $timezone = Session::get('time_offset');
             background: white;
             align-items: center;
             padding: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
         }
 
         .pictures img {
@@ -91,6 +98,10 @@ $timezone = Session::get('time_offset');
             border-radius: 4px;
             width: 100px;
             margin: auto;
+        }
+
+        .pictures label {
+            margin: 0.2rem;
         }
 
         /* IMAGE STYLES */
