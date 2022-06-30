@@ -89,6 +89,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['editParticipant']) && 
     </div>
 </div>
 <script>
+    $(document).ready(() => {
+        $('#participant_ID').change(function () {
+            getData($(this));
+        });
+        $('.backButton').on('click', function () {
+            if ($('form')[0] && $('form').serialize().split('&').map(r => r.split('=')).filter(r => !['randCheck', 'referrer'].includes(r[0])).some((r, i) => r[1] != startVals[r[0]])) {
+                return confirm('Are you sure you want to go back? Your data will not be saved.');
+            }
+
+        });
+    });
     let startVals = [];
     
     const getData = (t) => {

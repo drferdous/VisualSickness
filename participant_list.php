@@ -129,6 +129,14 @@
         hiddenInput.setAttribute("name", "iv");
         hiddenInput.setAttribute("value", $(this).attr("data-iv"));
         form.appendChild(hiddenInput);
+
+        <?php if (isset($study_ID))  { ?>
+            hiddenInput = document.createElement("input");
+            hiddenInput.setAttribute("type", "hidden");
+            hiddenInput.setAttribute("name", "forStudy");
+            hiddenInput.setAttribute("value", "true");
+            form.appendChild(hiddenInput);
+        <?php } ?>
         
         document.body.appendChild(form);
         form.submit();
