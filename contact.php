@@ -1,5 +1,11 @@
 <?php
     include 'inc/header.php';
+    if (isset($_GET['success']) && $_GET['success'] === 'true') {
+        echo Util::generateSuccessMessage('Your message has been sent!');
+    }
+    if (isset($_GET['success']) && $_GET['success'] === 'false') {
+        echo Util::generateErrorMessage('Something went wrong! Make sure all required fields are filled and try again!');
+    }
 ?>
 <div class="card">
     <div class="card-header">
@@ -34,7 +40,7 @@
                 <h3>Support</h3>
                 <a href="mailto:visualsicknessstudy@gmail.com">visualsicknessstudy@gmail.com</a>
             </div>
-            <form style="flex:1 1 50%" class="p-4" action="inc/support_email">
+            <form style="flex:1 1 50%" class="p-4" action="inc/support_email" method="POST">
                 <div class="form-group">
                     <label for="nameInput" class="required">Name</label>
                     <input class="form-control" id="nameInput" name="name" placeholder="Enter name" required>
