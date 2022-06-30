@@ -74,7 +74,7 @@
                                 $role_result = $pdo->query($role_sql);
                                 $role_row = $role_result->fetch(PDO::FETCH_ASSOC);
                                 if ($role_row['study_role'] == 2 || $role_row['study_role'] == 3) { ?>
-                                    <a class="redirectUser text-decoration-none" href="edit_participants" data-participant_ID="<?php echo Crypto::encrypt($row["participant_id"], $iv); ?>" data-iv="<?php echo bin2hex($iv); ?>"><i class="fa fa-edit ml-2" aria-hidden="true"></i>
+                                    <a class="redirectUser text-decoration-none" href="edit_participants" data-participant_ID="<?php echo Crypto::encrypt($row["participant_id"], $iv); ?>" data-iv="<?php echo bin2hex($iv); ?>"><i class="fas fa-pencil-alt ml-2" aria-hidden="true"></i>
                                     </a>
                                 <?php } ?>
                                 <a href="participant_details"

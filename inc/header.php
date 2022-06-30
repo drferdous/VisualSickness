@@ -285,6 +285,9 @@ if (Session::get('roleid') == '1') {
                 return confirm('Are you sure you want to go back? Your data will not be saved.');
             }
         });
+        $(document).on('click', '.alert-dismissible .close', function (e) {
+            $(this).parent().alert('close');
+        });
     });
 </script>
 <script src="assets/bootstrap-show-password.min.js" defer></script>
