@@ -37,13 +37,13 @@
             <form style="flex:1 1 50%" class="p-4 text-center">
                 <div class="text-start">
                     <div class="form-group">
-                        <label for="nameInput">Name</label>
-                        <input class="form-control" id="nameInput" name="name" placeholder="Enter name">
+                        <label for="nameInput" class="required">Name</label>
+                        <input class="form-control" id="nameInput" name="name" placeholder="Enter name" required>
                     </div>
                     <div class="d-flex flex-wrap">
                         <div class="form-group" style="flex:1;margin-inline-end:5px;min-width:250px">
-                            <label for="emailInput">Email</label>
-                            <input type="email" class="form-control" id="emailInput" name="email" placeholder="Enter email">
+                            <label for="emailInput" class="required">Email</label>
+                            <input type="email" class="form-control" id="emailInput" name="email" placeholder="Enter email" required>
                         </div>
                         <div class="form-group" style="flex:1;margin-inline-start:5px;min-width:250px">
                             <label for="phoneInput">Phone Number</label>
@@ -51,8 +51,8 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="messageInput">Message</label>
-                        <textarea class="form-control" id="messageInput" name="msg" placeholder="Enter message" rows="4"></textarea>
+                        <label for="messageInput" class="required">Message</label>
+                        <textarea class="form-control" id="messageInput" name="msg" placeholder="Enter message" rows="4" required></textarea>
                     </div>
                 </div>
                 <div class="form-group">
