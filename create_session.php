@@ -77,16 +77,16 @@ $role = $role_result->fetch(PDO::FETCH_ASSOC);
                 </div>
                 <div class="form-group">
                     <label for="participant_name" class="required">Select a Participant</label>
-                    <select class="form-control form-select" name="participant_ID" id="participant_name" required>
-                        <option value="" selected hidden disabled>Please Choose...</option>
-                        <?php
-                    
-                        $sql = "SELECT participant_id, anonymous_name, dob, iv
+                    <?php 
+                         $sql = "SELECT participant_id, anonymous_name, dob, iv
                                 FROM participants 
                                 WHERE is_active = 1
                                 AND study_id = " . Session::get('study_ID') . ";";
                                     
-                        $result = $pdo->query($sql);
+                        $result = $pdo->query($sql); ?>
+                    <select class="form-control form-select" name="participant_ID" id="participant_name" required <?= $result->rowCount() === 0 ? 'disabled' : '' ?>>
+                        <option value="" disabled hidden selected><?= $result->rowCount() === 0 ? '"There are no participants in this study!"' : 'Participant Name' ?></option>
+                        <?php
                         while ($row = $result->fetch(PDO::FETCH_ASSOC)){
                             $iv = hex2bin($row['iv']);
                             $name = Crypto::decrypt($row['anonymous_name'], $iv); ?>
