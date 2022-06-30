@@ -62,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['removeResearcher']) &&
                                          AND is_active = 1
                                          AND NOT researcher_id = " . Session::get('id') . ");";
                     $result = $pdo->query($sql); ?>
-                    <select class="form-control" name="researcher_ID" id="researcher_ID" required <?= $result->rowCount() === 0 ? 'disabled' : '' ?>>
+                    <select class="form-control form-select" name="researcher_ID" id="researcher_ID" required <?= $result->rowCount() === 0 ? 'disabled' : '' ?>>
                         <option value="" disabled hidden selected><?= $result->rowCount() === 0 ? 'There are no researchers you can remove from this study!' : 'Researcher Name' ?></option>
                         <?php
                         while ($row = $result->fetch(PDO::FETCH_ASSOC)){

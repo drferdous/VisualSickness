@@ -94,7 +94,7 @@
             </div>
             <div class="form-group pt-3">
                 <label for="quiz_type" class="required">Quiz Type</label>
-                <select class="form-control" name="quiz_type" id="quiz_type" required>
+                <select class="form-control form-select" name="quiz_type" id="quiz_type" required>
                     <option value="" disabled selected hidden>Choose Quiz Type...</option>
                     <?php
                         $sql = "SELECT id, type FROM ssq_type;";
@@ -109,7 +109,7 @@
             </div>
             <div class="form-group">
                 <label for="ssq_time" class="required">Quiz Time</label>
-                <select class="form-control" name="ssq_time" id="ssq_time" required>
+                <select class="form-control form-select" name="ssq_time" id="ssq_time" required>
                     <option value="" disabled selected hidden>Select Quiz Time...</option>
                     <?php
                         $session_ID = Session::get('session_ID'); 

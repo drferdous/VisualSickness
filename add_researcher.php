@@ -65,7 +65,7 @@ if (isset($addResearcher)) {
                             AND status = 1
                             AND affiliation_id = " . Session::get("affiliationid") . ";";
                     $result = $pdo->query($sql); ?>
-                    <select class="form-control" name="researcher_ID" id="researcher_ID" required <?= $result->rowCount() === 0 ? 'disabled' : '' ?>>
+                    <select class="form-control form-select" name="researcher_ID" id="researcher_ID" required <?= $result->rowCount() === 0 ? 'disabled' : '' ?>>
                         <option value="" disabled hidden selected><?= $result->rowCount() === 0 ? 'There are no researchers you can add to this study!' : 'Researcher Name' ?></option>
                         <?php
                         while ($row = $result->fetch(PDO::FETCH_ASSOC)){
@@ -75,7 +75,7 @@ if (isset($addResearcher)) {
                     </select>
                     <br>
                     <label for="study_role" class="required">Select Study Role</label>
-                    <select class="form-control" name="study_role" id="study_role" required disabled>
+                    <select class="form-control form-select" name="study_role" id="study_role" required disabled>
                         <option value="" selected hidden disabled>Study Role</option>
                     </select> 
                 </div>

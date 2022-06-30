@@ -77,7 +77,7 @@ $role = $role_result->fetch(PDO::FETCH_ASSOC);
                 </div>
                 <div class="form-group">
                     <label for="participant_name" class="required">Select a Participant</label>
-                    <select class="form-control" name="participant_ID" id="participant_name" required>
+                    <select class="form-control form-select" name="participant_ID" id="participant_name" required>
                         <option value="" selected hidden disabled>Please Choose...</option>
                         <?php
                     
@@ -98,7 +98,7 @@ $role = $role_result->fetch(PDO::FETCH_ASSOC);
                 </div>
                 <div class="form-group">
                     <label for="session_time" class="required">Select a Session Name</label>
-                    <select class="form-control" name="session_time" id="session_time" required disabled>
+                    <select class="form-control form-select" name="session_time" id="session_time" required disabled>
                         <option value="" selected hidden disabled>Please Choose...</option>
                     </select>
                 </div>

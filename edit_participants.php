@@ -9,6 +9,7 @@ if (!isset($_POST['referrer'])) {
     else $referrer = 'study_details';
 }
 else $referrer = $_POST['referrer'];
+if (Session::get('participant_ID')) $participant_ID = Session::get('participant_ID');
 if (isset($_POST["participant_ID"]) && isset($_POST["iv"])){
     $iv = hex2bin($_POST["iv"]);
     $participant_ID = Crypto::decrypt($_POST["participant_ID"], $iv);
@@ -70,7 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['editParticipant']) && 
                         AND researchers.is_active = 1;";
                 $result = $pdo->query($sql);
                 ?>
-                <select class="form-control" name="participant_ID" id="participant_ID" required <?= $result->rowCount() === 0 ? 'disabled' : '' ?>>
+                <select class="form-control form-select" name="participant_ID" id="participant_ID" required <?= $result->rowCount() === 0 ? 'disabled' : '' ?>>
                     <?php if (!isset($participant_ID) || !$result->rowCount()) { ?>
                         <option value="" disabled hidden selected><?= $result->rowCount() === 0 ? (isset($study_ID) ? 'There are no participants in this study!' : 'You do not have editing privileges on any participants.') : 'Participant Name' ?></option>
                     <?php }

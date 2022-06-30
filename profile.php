@@ -90,7 +90,7 @@ if (Session::get('roleid') == '1') {
                       <div class="form-group">
                         <div class="form-group">
                           <label for="roleid">Select user Role</label>
-                          <select class="form-control" name="roleid" id="roleid">
+                          <select class="form-control form-select" name="roleid" id="roleid">
 
                           <?php 
                             $sql = "SELECT id, role FROM user_roles WHERE id > 1 ORDER BY id ASC;";

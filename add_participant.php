@@ -63,7 +63,7 @@ if (isset($userAdd)) {
                 </div>
                 <div class="form-group">
                   <label for="gender" class="required">Gender</label>
-                  <select class=form-control name="gender" id="gender" required size="1">
+                  <select class="form-control form-select" name="gender" id="gender" required size="1">
                       <option <?= Util::getValueFromPost('gender', $_POST) === 'Male' ? 'selected' : '' ?> value="Male">Male</option>
                       <option <?= Util::getValueFromPost('gender', $_POST) === 'Female' ? 'selected' : '' ?> value="Female">Female</option>
                       <option <?= Util::getValueFromPost('gender', $_POST) === 'Other' ? 'selected' : '' ?> value="Other">Other</option>
@@ -72,7 +72,7 @@ if (isset($userAdd)) {
                 </div>
                 <div class="form-group">
                   <label for="ethnicity" class="required">Race/Ethnicity</label>
-                  <select class=form-control name="ethnicity" id="ethnicity" required size="1">
+                  <select class="form-control form-select" name="ethnicity" id="ethnicity" required size="1">
                       <option <?= Util::getValueFromPost('ethnicity', $_POST) === 'American Indian or Alaska Native' ? 'selected' : '' ?> value="American Indian or Alaska Native">American Indian or Alaska Native</option>
                       <option <?= Util::getValueFromPost('ethnicity', $_POST) === 'Asian' ? 'selected' : '' ?> value="Asian">Asian</option>
                       <option <?= Util::getValueFromPost('ethnicity', $_POST) === 'Black or African American' ? 'selected' : '' ?> value="Black or African American">Black or African American</option>
@@ -88,7 +88,7 @@ if (isset($userAdd)) {
                 </div>
                 <div class="form-group">
                   <label for="education" class="required">Highest Level of Education</label>
-                  <select class=form-control name="education" id="education" required size="1"> 
+                  <select class="form-control form-select" name="education" id="education" required size="1"> 
                       <option <?= Util::getValueFromPost('education', $_POST) === 'Elementary School' ? 'selected' : '' ?> value="Elementary School">Elementary School</option>
                       <option <?= Util::getValueFromPost('education', $_POST) === 'Middle School' ? 'selected' : '' ?> value="Middle School">Middle School</option>
                       <option <?= Util::getValueFromPost('education', $_POST) === 'High School' ? 'selected' : '' ?> value="High School">High School</option>
