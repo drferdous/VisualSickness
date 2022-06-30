@@ -429,7 +429,7 @@ $study_is_active = $study_result->fetch(PDO::FETCH_ASSOC)['is_active'] == 1;
         <input type="hidden" id="ssq_time" name="ssq_time" value="<?php echo $_POST['ssq_time']; ?>">
         <?php } ?>
     <?php if ($ssq_ID == -1){ ?>
-        <input type="submit" class="btn btn-success float-right" value="Submit">
+        <input type="submit" class="btn btn-success" value="Submit">
         <input type="hidden" name="submitQuiz" value="submitQuiz">
     <?php }
           else{ ?>
@@ -437,7 +437,7 @@ $study_is_active = $study_result->fetch(PDO::FETCH_ASSOC)['is_active'] == 1;
             if(($role['study_role'] == 2 || $id_row['created_by'] == Session::get('id')) && $study_is_active && $id_row['end_time'] == NULL) {
         ?>
         <br>
-        <input type="submit" class="btn btn-success float-right" value="Update">
+        <input type="submit" class="btn btn-success" value="Update">
         <input type="hidden" name="submitQuiz" value="submitQuiz">
     <?php }
         } ?>
