@@ -67,13 +67,16 @@ if (isset($editResearcher)) {
                         AND affiliation_id = " . Session::get("affiliationid") . ";";
                 $result = $pdo->query($sql); ?>
                 <select class="form-control form-select" name="researcher_ID" id="researcher_ID" required <?= $result->rowCount() === 0 ? 'disabled' : '' ?>>
-                    <option value="" disabled hidden selected><?= $result->rowCount() === 0 ? 'There are no other researchers in this study!' : 'Researcher Name' ?></option>
+                    <option value="" disabled hidden selected><?= $result->rowCount() === 0 ? "No researchers to edit!" : 'Researcher Name' ?></option>
                     <?php
                     while ($row = $result->fetch(PDO::FETCH_ASSOC)){
                             $enc_id = Crypto::encrypt($row['user_id'], $iv); ?>
                             <option value="<?= $enc_id ?>;<?= bin2hex($iv) ?>"><?= $row["name"] . " (" . $row["email"] . ")" ?></option>
                     <?php } ?>
                 </select>
+                <small>
+                    Primary Investigators cannot be edited.
+                </small>
                 <br>
                 <label for="study_role" class="required">Select Study Role</label>
                 <select class="form-control form-select" name="study_role" id="study_role" required disabled>
