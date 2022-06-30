@@ -12,18 +12,18 @@
         <h3 class="float-left">Contact Us</h3>
     </div>
     <div class="card-body">
-        <div class="mt-2 d-flex flex-wrap flex-row-reverse">
-            <form style="flex:1 1 50%" class="p-0 p-sm-4" action="inc/support_email" method="POST">
+        <div class="mt-2 d-flex flex-wrap flex-md-row-reverse flex-column">
+            <form class="p-0 p-sm-4 flex-fill" action="inc/support_email" method="POST">
                 <div class="form-group">
                     <label for="nameInput" class="required">Name</label>
                     <input class="form-control" id="nameInput" name="name" placeholder="Enter name" required>
                 </div>
-                <div class="d-flex flex-wrap">
-                    <div class="form-group" style="flex:1;margin-inline-end:5px;min-width:250px">
+                <div class="d-flex flex-wrap flex-lg-row flex-column">
+                    <div class="form-group mr-0 mr-lg-1 flex-fill">
                         <label for="emailInput" class="required">Email</label>
                         <input type="email" class="form-control" id="emailInput" name="email" placeholder="Enter email" required>
                     </div>
-                    <div class="form-group" style="flex:1;margin-inline-start:5px;min-width:250px">
+                    <div class="form-group ml-0 ml-lg-1 flex-fill">
                         <label for="phone_no">Phone Number</label>
                         <input name="phone_no" type="tel" class="form-control" id="phone_no" placeholder="Enter phone number">
                     </div>
@@ -36,7 +36,7 @@
                      <input type="submit" class="btn btn-success" name="sendSupportEmail" value="Send">
                 </div>
             </form>
-            <div class="p-4" style="margin-bottom:2rem;flex:1;">
+            <div class="p-2 mt-4">
                 <?php if(Session::get('login')) {
                     $sql = "SELECT name FROM affiliation WHERE affiliation_id = " . Session::get('affiliationid');
                     $result = Database::getInstance()->pdo->query($sql);
