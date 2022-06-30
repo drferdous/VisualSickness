@@ -89,7 +89,7 @@ Session::requireResearcherOrUser(Session::get('study_ID'), $pdo);
                 <?php } ?>
                  <?php } else { ?>
             <td colspan="100%" class="text-center notFound">
-            You have no session!
+                This study has no sessions!
             </td>
             <?php } ?>
                 </tbody>
