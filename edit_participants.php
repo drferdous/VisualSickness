@@ -89,62 +89,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['editParticipant']) && 
     </div>
 </div>
 <script>
-    $.fn.setCursorPosition = function(position){
-        if(this.length == 0) return this;
-        return $(this).setSelection(position, position);
-    }
-    
-    $.fn.setSelection = function(selectionStart, selectionEnd) {
-        if(this.length == 0) return this;
-        var input = this[0];
-    
-        if (input.createTextRange) {
-            var range = input.createTextRange();
-            range.collapse(true);
-            range.moveEnd('character', selectionEnd);
-            range.moveStart('character', selectionStart);
-            range.select();
-        } else if (input.setSelectionRange) {
-            input.focus();
-            input.setSelectionRange(selectionStart, selectionEnd);
-        }
-    
-        return this;
-    }
-    let lastInp = '';
-    $(document).ready(() => {
-        $('#participant_ID').change(function () {
-            getData($(this));
-        });
-        $('.backButton').on('click', function () {
-            if ($('form')[0] && $('form').serialize().split('&').map(r => r.split('=')).filter(r => !['randCheck', 'referrer'].includes(r[0])).some((r, i) => r[1] != startVals[r[0]])) {
-                return confirm('Are you sure you want to go back? Your data will not be saved.');
-            }
-            
-        });
-        $(document).on('keyup', '#phone_no', function () {
-            const val_old = $('#phone_no').val();
-            if (val_old === lastInp) return;
-            const newString = new libphonenumber.AsYouType('US').input(val_old);
-            const lastChar = val_old.charAt($('#phone_no')[0].selectionStart - 1);
-            let newPos;
-            if ([...'0123456789'].includes(lastChar)) {
-                const count = (val_old.substring(0, $('#phone_no')[0].selectionStart).match(new RegExp(lastChar, 'g')) || []).length;
-                newPos = -1;
-                for (let i = 0; i < count; i++) {
-                    newPos = newString.indexOf(lastChar, newPos + 1);
-                }
-                newPos++;
-            } else {
-                newPos = $('#phone_no')[0].selectionStart - Array.from(newString).reverse().findIndex(e => {
-                    return Number.isInteger(+e);
-                });
-            }
-            $('#phone_no').focus().val('').val(newString);
-            $('#phone_no').setCursorPosition(newPos);
-            lastInp = newString;
-        });
-    });
     let startVals = [];
     
     const getData = (t) => {
