@@ -69,7 +69,7 @@ $study_is_active = $study_result->fetch(PDO::FETCH_ASSOC)['is_active'] == 1;
                 <span class="float-right">
                 <?php if ($ssq_ID !== -1) { ?>
                     <?php if(($role['study_role'] == 2 || $id_row['created_by'] == Session::get('id')) && $study_is_active && $id_row['end_time'] == NULL) { ?>
-                    <form class="d-inline" onsubmit="return confirm('Are you sure you want to delete this SSQ? This action cannot be undone.');" action="delete_quiz" method="post">
+                    <form class="d-inline" onsubmit="return confirm('Are you sure you want to delete this SSQ? This action cannot be undone.');" action="session_details" method="post">
                         <button type="submit" name="deleteQuiz" class="btn btn-danger">Delete</button>
                     </form>
                     <?php } ?>
