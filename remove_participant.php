@@ -59,7 +59,7 @@ if (isset($removeParticipant)) {
                                 WHERE is_active = 1 AND study_id = $study_ID;";
                         $result = $pdo->query($sql); ?>
                     <select class="form-control form-select" name="participant_ID" id="participant_ID" required <?= $result->rowCount() === 0 ? 'disabled' : '' ?>>
-                        <option value="" disabled hidden selected><?= $result->rowCount() === 0 ? 'There are no participants you can remove from this study!' : 'Participant Name' ?></option>
+                        <option value="" disabled hidden selected><?= $result->rowCount() === 0 ? 'There are no participants in this study!' : 'Participant Name' ?></option>
                         <?php
                         while ($row = $result->fetch(PDO::FETCH_ASSOC)){ 
                             $iv = hex2bin($row['iv']);
