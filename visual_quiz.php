@@ -536,16 +536,14 @@ Session::set("post_ID", $rand);
           <label>
               <input type="radio" id="stomach2" name="stomach_awareness" value="2">
               <img src="images/stomach2.png" alt="Basic">
-      
-                  <p>Moderate</p>
-      
+                <p>Moderate</p>
           </label>
           <label>
               <input type="radio" id="stomach3" name="stomach_awareness" value="3">
               <img src="images/stomach3.png" alt="Basic">
+                <p>Severe</p>
+          </label>
         </div>
-              <p>Severe</p>
-        </label>
     </div>
 
 
