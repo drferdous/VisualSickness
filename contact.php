@@ -34,7 +34,7 @@
                 <h3>Support</h3>
                 <a href="mailto:visualsicknessstudy@gmail.com">visualsicknessstudy@gmail.com</a>
             </div>
-            <form style="flex:1 1 50%" class="p-4">
+            <form style="flex:1 1 50%" class="p-4" action="inc/support_email">
                 <div class="form-group">
                     <label for="nameInput" class="required">Name</label>
                     <input class="form-control" id="nameInput" name="name" placeholder="Enter name" required>
@@ -45,8 +45,8 @@
                         <input type="email" class="form-control" id="emailInput" name="email" placeholder="Enter email" required>
                     </div>
                     <div class="form-group" style="flex:1;margin-inline-start:5px;min-width:250px">
-                        <label for="phoneInput">Phone Number</label>
-                        <input type="tel" class="form-control" id="phoneInput" placeholder="Enter phone number">
+                        <label for="phone_no">Phone Number</label>
+                        <input name="phone_no" type="tel" class="form-control" id="phone_no" placeholder="Enter phone number">
                     </div>
                 </div>
                 <div class="form-group">
@@ -54,7 +54,7 @@
                     <textarea class="form-control" id="messageInput" name="msg" placeholder="Enter message" rows="4" required></textarea>
                 </div>
                 <div class="form-group">
-                     <input type="submit" class="btn btn-success" name="submit" value="Send">
+                     <input type="submit" class="btn btn-success" name="sendSupportEmail" value="Send">
                 </div>
             </form>
         </div>

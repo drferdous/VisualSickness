@@ -266,6 +266,58 @@ if (Session::get('roleid') == '1') {
         </div>
       </nav>
 <script>
+    let lastInp = '';
+    $(document).ready(() => {
+        $.fn.setCursorPosition = function(position){
+            if(this.length == 0) return this;
+            return $(this).setSelection(position, position);
+        }
+    
+        $.fn.setSelection = function(selectionStart, selectionEnd) {
+            if(this.length == 0) return this;
+            var input = this[0];
+    
+            if (input.createTextRange) {
+                var range = input.createTextRange();
+                range.collapse(true);
+                range.moveEnd('character', selectionEnd);
+                range.moveStart('character', selectionStart);
+                range.select();
+            } else if (input.setSelectionRange) {
+                input.focus();
+                input.setSelectionRange(selectionStart, selectionEnd);
+            }
+    
+            return this;
+        }
+        $('#phone_no').on('keyup', function () {
+            const val_old = $(this).val();
+            if (val_old === lastInp) return;
+            const newString = new libphonenumber.AsYouType('US').input(val_old);
+            let lastChar = val_old.charAt($(this)[0].selectionStart - 1);
+            let newPos;
+	    const count = (val_old.substring(0, $(this)[0].selectionStart).match(new RegExp(lastChar, 'g')) || []).length;
+            newPos = -1;
+            for (let i = 0; i < count; i++) {
+
+                newPos = newString.indexOf(lastChar, newPos + 1);
+            }
+
+            while (![...'0123456789'].includes(lastChar)) {
+		newPos--;
+		if (newPos <= 0) {
+		    break;
+		}
+		lastChar = val_old.charAt(newPos);
+
+            }
+            $(this).focus().val('').val(newString);
+            $(this).setCursorPosition(newPos + 1);
+            lastInp = newString;
+        });
+    });
+</script>
+<script>
     $(document).ready(() => {
         $('.navbar-toggler').on('click', function (e) {
             $(`${e.target.dataset.target}`).collapse('toggle');

@@ -120,55 +120,6 @@ if (Session::get('roleid') == '1') {
     <?php } ?>
     </div>
 </div>
-<script>
-    $.fn.setCursorPosition = function(position){
-        if(this.length == 0) return this;
-        return $(this).setSelection(position, position);
-    }
-    
-    $.fn.setSelection = function(selectionStart, selectionEnd) {
-        if(this.length == 0) return this;
-        var input = this[0];
-    
-        if (input.createTextRange) {
-            var range = input.createTextRange();
-            range.collapse(true);
-            range.moveEnd('character', selectionEnd);
-            range.moveStart('character', selectionStart);
-            range.select();
-        } else if (input.setSelectionRange) {
-            input.focus();
-            input.setSelectionRange(selectionStart, selectionEnd);
-        }
-    
-        return this;
-    }
-    let lastInp = '';
-    $(document).ready(() => {
-        $('#phone_no').on('keyup', function () {
-            const val_old = $(this).val();
-            if (val_old === lastInp) return;
-            const newString = new libphonenumber.AsYouType('US').input(val_old);
-            const lastChar = val_old.charAt($(this)[0].selectionStart - 1);
-            let newPos;
-            if ([...'0123456789'].includes(lastChar)) {
-                const count = (val_old.substring(0, $(this)[0].selectionStart).match(new RegExp(lastChar, 'g')) || []).length;
-                newPos = -1;
-                for (let i = 0; i < count; i++) {
-                    newPos = newString.indexOf(lastChar, newPos + 1);
-                }
-                newPos++;
-            } else {
-                newPos = $(this)[0].selectionStart - Array.from(newString).reverse().findIndex(e => {
-                    return Number.isInteger(+e);
-                });
-            }
-            $(this).focus().val('').val(newString);
-            $(this).setCursorPosition(newPos);
-            lastInp = newString;
-        });
-    });
-</script>
     
 
 <?php
