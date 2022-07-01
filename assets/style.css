@@ -83,6 +83,7 @@ a {
   border-color: #27783a;
 }
 
+.btn-primary,
 .page-item.active .page-link {
   background-color: #2075d1 !important;
 }

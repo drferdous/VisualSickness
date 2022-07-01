@@ -19,7 +19,7 @@
 
 <div class="card">
     <div class="card-header">
-        <h1 class="float-left">Participant List</h1>
+        <h1 class="float-left mb-0">Participant List</h1>
         <?php if (isset($study_ID)) { ?>
             <span class='float-right'>
                 <a href='study_details' 
