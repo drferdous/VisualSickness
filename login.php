@@ -16,7 +16,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login']) && Session::C
     else{
         echo Util::generateErrorMessage("No email or password is given.");
     }
-
 }
 
 $logout = Session::get('logout');
