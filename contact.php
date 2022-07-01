@@ -12,6 +12,8 @@
         <h3 class="float-left">Contact Us</h3>
     </div>
     <div class="card-body">
+    <h5 class="font-italic">We will get back to you in 24hrs. You can also reach out to your local adminstrative team
+ for help!</h5>
         <div class="mt-2 d-flex flex-wrap flex-md-row-reverse flex-column">
             <form class="p-0 p-sm-4 flex-fill" action="inc/support_email" method="POST">
                 <div class="form-group">
