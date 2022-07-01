@@ -41,14 +41,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["reset-submit"]) && Ses
 <?php } ?>
 <div class="card">
     <div class="card-header">
-        <h3 class='text-center'><i class="fas fa-sign-in-alt mr-2"></i>New Password</h3>
+        <h1 class='text-center'><i class="fas fa-sign-in-alt mr-2"></i>New Password</h1>
         <p class='text-center'>Enter your new password here. An admin will view your request & approve it. Then, you will gain full access to the site</p>
     </div>
     <div class="card-body">
         <div style="width:450px; margin:0px auto">
             <form class="" action="<?php echo htmlspecialchars($_SERVER["REQUEST_URI"]); ?>" method="post">
                 <div style="margin-block: 6px;">
-                    <small style='color: red'>
+                    <small class='required-msg'>
                         * Required Field
                     </small>
                 </div>

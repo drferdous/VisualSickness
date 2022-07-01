@@ -4,27 +4,37 @@ if ($_SERVER["REQUEST_METHOD"] != "POST" || !isset($_POST["email"])) {
     header("Location: 404");
     exit();
 }
-$email = $_POST["email"];
+if (isset($_POST["email"])){
+    $email = $_POST["email"];
+}
+else{
+    $email = "";
+}
 if (isset($_POST["reset-submit"]) && Session::CheckPostID($_POST)) {
     // Reset password here, then log in user and redirect to homepage
-    $new_password = $_POST["new_password"];
-    $confirm_password = $_POST["confirm_password"];
-    $changePass = $users->resetPass($email, $new_password, $confirm_password);
-    if ($changePass) {
-        echo $changePass;
-    } else {
-        $userLog = $users->userLoginAuthentication($email, $new_password);
-        if (isset($userLog)){
-            echo $userLog;
+    if (isset($_POST["new_password"]) && isset($_POST["confirm_password"])){
+        $new_password = $_POST["new_password"];
+        $confirm_password = $_POST["confirm_password"];
+        $changePass = $users->resetPass($email, $new_password, $confirm_password);
+        if ($changePass) {
+            echo $changePass;
+        } else {
+            $userLog = $users->userLoginAuthentication($email, $new_password);
+            if (isset($userLog)){
+                echo $userLog;
+            }
+            
+            Session::CheckLogin();
         }
-        
-        Session::CheckLogin();
+    }
+    else{
+        echo Util::generateErrorMessage("New password was not set properly.");
     }
 }
 ?>
 <div class="card">
     <div class="card-header">
-        <h3 class='text-center'><i class="fas fa-sign-in-alt mr-2"></i>New Password</h3>
+        <h1 class='text-center'><i class="fas fa-sign-in-alt mr-2"></i>New Password</h1>
         <p class='text-center'>Enter a new password here. Make sure to remember this password for the future.</p>
     </div>
     <div class="card-body">
@@ -36,7 +46,7 @@ if (isset($_POST["reset-submit"]) && Session::CheckPostID($_POST)) {
                 ?>
                 <input type="hidden" name="randCheck" value="<?php echo $rand; ?>">
                 <div style="margin-block: 6px;">
-                    <small style='color: red'>
+                    <small class='required-msg'>
                         * Required Field
                     </small>
                 </div>

@@ -21,7 +21,7 @@ if (isset($logout)) {
 
 <div class="card">
    <div class="card-header">
-          <h3 class="text-center font-weight-bold">Visual Sickness</h3>
+          <h1 class="text-center font-weight-bold">Visual Sickness</h1>
     </div>
     <div class="card-body">
         <div style="max-width:450px; margin:0px auto; border-radius: 25px;" class="shadow">
@@ -33,7 +33,7 @@ if (isset($logout)) {
                 ?>
                 <input type="hidden" name="randCheck" value="<?php echo $rand; ?>">
                 <div style="margin-block: 6px;">
-                    <small style='color: red'>
+                    <small class='required-msg'>
                         * Required Field
                     </small>
                 </div>
