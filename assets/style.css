@@ -73,3 +73,16 @@ label.required::after {
     width: auto !important;
   }
 }
+
+a {
+  color: #2075d1;
+}
+
+.btn-success {
+  background-color: #27783a;
+  border-color: #27783a;
+}
+
+.page-item.active .page-link {
+  background-color: #2075d1 !important;
+}
