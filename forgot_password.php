@@ -26,34 +26,29 @@ if (isset($logout)) {
  ?>
 
 <div class="card">
-  <div class="card-header">
-          <h3 class='text-center'><i class="fas fa-sign-in-alt mr-2"></i>Forgot Your Password?</h3>
-          <p class='text-center'>Enter your email address here. You will receive a email containing details on how to reset it shortly.</p>
-        </div>
-        <div class="card-body">
-
-
-            <div style="max-width:450px; margin:0px auto">
-
+    <div class="card-header">
+        <h1 class='text-center mb-0'><i class="fas fa-sign-in-alt mr-2"></i>Forgot Your Password?</h3>
+        <p class='text-center'>Enter your email address here. You will receive a email containing details on how to reset it shortly.</p>
+    </div>
+    <div class="card-body">
+        <div style="max-width:450px; margin:0px auto">
             <form class="" action="inc/reset_request" method="post">
                 <div style="margin-block: 6px;">
-                    <small style='color: red'>
-                        * Required Field
+                    <small class="required-msg">
+                      * Required Field
                     </small>
                 </div>
                 <div class="form-group">
-                  <label for="email" class="required">Email address</label>
-                  <input type="email" name="email"  class="form-control">
+                    <label for="email" class="required">Email address</label>
+                    <input type="email" id="email"   name="email"  class="form-control">
                 </div>
                 <div class="form-group">
-                  <button type="submit" name="reset-submit" class="btn btn-success">Reset</button>
+                    <button type="submit" name="reset-submit" class="btn btn-success">Reset</button>
                 </div>
             </form>
-          </div>
-
-
         </div>
-      </div>
+    </div>
+</div>
 
 
 
