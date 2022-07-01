@@ -16,21 +16,28 @@ $study_ID = Session::get('study_ID');
 Session::requirePI($study_ID, $pdo);
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['removeResearcher']) && Session::CheckPostID($_POST)) {
-    $info = explode(';', $_POST['researcher_ID']);
-    $researcher_ID = $info[0];
-    $iv = $info[1];
-    $researcher_ID = Crypto::decrypt($researcher_ID, hex2bin($iv));
-    $removeResearcher = $studies->removeResearcher($researcher_ID);
-    echo $removeResearcher;?>
-    <script type="text/javascript">
-        const divMsg = document.getElementById("flash-msg");
-        if (divMsg.classList.contains("alert-success")){
-            setTimeout(function(){
-                location.href = 'study_details';
-            }, 1000);
-        }
-    </script>
-<?php } ?>
+    if (isset($_POST["researcher_ID"])){
+        $info = explode(';', $_POST['researcher_ID']);
+        $researcher_ID = $info[0];
+        $iv = $info[1];
+        $researcher_ID = Crypto::decrypt($researcher_ID, hex2bin($iv));
+        $removeResearcher = $studies->removeResearcher($researcher_ID);
+        echo $removeResearcher;?>
+        <script type="text/javascript">
+            const divMsg = document.getElementById("flash-msg");
+            if (divMsg.classList.contains("alert-success")){
+                setTimeout(function(){
+                    location.href = 'study_details';
+                }, 1000);
+            }
+        </script>
+<?php 
+    }
+    else{
+        echo Util::generateErrorMessage("No researcher was selected.");
+    }
+} ?>
+
  
 <div class="card">
     <div class="card-header">

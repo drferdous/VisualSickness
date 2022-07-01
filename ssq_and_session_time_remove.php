@@ -3,7 +3,7 @@
     include "lib/Session.php";
     include "classes/Util.php";
     
-    if ($_SERVER["REQUEST_METHOD"] !== "POST"){
+    if ($_SERVER["REQUEST_METHOD"] !== "POST" || !isset($_POST["remove_ssq"]) || !isset($_POST["remove_session"])){
         header("Location: 404");
         exit();
     }

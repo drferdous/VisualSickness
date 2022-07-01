@@ -8,9 +8,6 @@
     $db = Database::getInstance();
     $pdo = $db->pdo;
     
-    $iv = hex2bin($_POST["iv"]);
-    $userid = Crypto::decrypt($_POST["user_ID"], $iv);
-    
     Session::init();
     
     if (Session::get("roleid") != "1" || !isset($_POST) && Session::CheckPostID($_POST)){
@@ -18,7 +15,13 @@
         var_dump($_POST);
         exit();
     }
-    
+    if (!isset($_POST["iv"]) || !isset($_POST["user_ID"])){
+        var_dump($_POST);
+        exit();
+    }
+
+    $iv = hex2bin($_POST["iv"]);
+    $userid = Crypto::decrypt($_POST["user_ID"], $iv);
     echo print_r($_POST);
     
     $sql = "UPDATE users
