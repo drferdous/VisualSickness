@@ -18,60 +18,64 @@
         exit();
     }
     
-    if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['take-ssq-btn']) && Session::CheckPostID($_POST)) {
-        $takeSSQMessage = $studies->takeSSQ($_POST["quiz_type"], $_POST["ssq_time"]);
-        if (isset($takeSSQMessage)) {
-            echo $takeSSQMessage;
-            Session::set('ssq_ID', -1); ?>
+        if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['take-ssq-btn']) && Session::CheckPostID($_POST)) {
+        if (isset($_POST["quiz_type"]) && isset($_POST["ssq_time"])){
+            $takeSSQMessage = $studies->takeSSQ($_POST["quiz_type"], $_POST["ssq_time"]);
+            if (isset($takeSSQMessage)) {
+                echo $takeSSQMessage;
+                Session::set('ssq_ID', -1); ?>
             
-            <script type="text/javascript">
-                const divMsg = document.getElementById("flash-msg");
-                if (divMsg.classList.contains("alert-success")){
-                    setTimeout(redirectUser, 1000);
-                }
-            
-                function redirectUser(){
-                    let form = document.createElement("form");
-                    let hiddenInput;
+                <script type="text/javascript">
+                    const divMsg = document.getElementById("flash-msg");
+                    if (divMsg.classList.contains("alert-success")){
+                        setTimeout(redirectUser, 1000);
+                    }
+                    
+                    function redirectUser(){
+                        let form = document.createElement("form");
+                        let hiddenInput;
 
-                    let ssqTime = <?= $_POST['ssq_time']; ?>;
-                    let quizType = <?= $_POST['quiz_type'] ?>;
-                    let targetURL;
+                        let ssqTime = <?= $_POST['ssq_time']; ?>;
+                        let quizType = <?= $_POST['quiz_type'] ?>;
+                        let targetURL;
+
+                        if (quizType === 0){ // 0 represents textual quiz
+                            targetURL = "text_quiz";
+                        }
+                        else if (quizType === 1){ // 1 represents visual quiz
+                            targetURL = "visual_quiz";
+                        }
+                        else{
+                            targetURL = "404";
+                        }
                 
-                    if (quizType === 0){ // 0 represents textual quiz
-                        targetURL = "text_quiz";
-                    }
-                    else if (quizType === 1){ // 1 represents visual quiz
-                        targetURL = "visual_quiz";
-                    }
-                    else{
-                        targetURL = "404";
-                    }
-                
-                    form.setAttribute("method", "POST");
-                    form.setAttribute("action", targetURL);
-                    form.setAttribute("style", "display: none");
+                        form.setAttribute("method", "POST");
+                        form.setAttribute("action", targetURL);
+                        form.setAttribute("style", "display: none");
+                        
+                        hiddenInput = document.createElement("input");
+                        hiddenInput.setAttribute("type", "hidden");
+                        hiddenInput.setAttribute("name", "ssq_time");
+                        hiddenInput.setAttribute("value", ssqTime);
+                        form.appendChild(hiddenInput);
                     
-                    hiddenInput = document.createElement("input");
-                    hiddenInput.setAttribute("type", "hidden");
-                    hiddenInput.setAttribute("name", "ssq_time");
-                    hiddenInput.setAttribute("value", ssqTime);
-                    form.appendChild(hiddenInput);
+                        document.body.appendChild(form);
+                        form.submit();
                     
-                    document.body.appendChild(form);
-                    form.submit();
-                    
-                    return false;
-                };
-            </script>
-<?php   }
+                        return false;
+                    };
+                </script>
+    <?php   }
+        }
+        else{
+            echo Util::generateErrorMessage("No quiz type or ssq time is given.");
+        }
     } ?>
-
 <div class="card">
     <div class="card-header">
-        <h3 class="float-left">
+        <h1 class="float-left">
             Choose Quiz
-        </h3>
+        </h1>
         <span class="float-right">
             <a href="session_details" class="backBtn btn btn-primary">
                Back
@@ -88,7 +92,7 @@
             ?>
             <input type="hidden" name="randCheck" value="<?php echo $rand; ?>">
             <div style="margin-block: 6px;">
-                <small style='color: red'>
+                <small class='required-msg'>
                     * Required Field
                 </small>
             </div>
