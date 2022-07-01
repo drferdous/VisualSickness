@@ -5,12 +5,18 @@ Session::CheckLogin();
 
 <?php 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login']) && Session::CheckPostID($_POST)) {
-    $userLog = $users->userLoginAuthentication($_POST['email'], $_POST['password']);
-    if (isset($userLog)){
-        echo $userLog;
-    }
+    if (isset($_POST["email"]) && isset($_POST["password"])){
+        $userLog = $users->userLoginAuthentication($_POST['email'], $_POST['password']);
+        if (isset($userLog)){
+            echo $userLog;
+        }
     
-    Session::CheckLogin();
+        Session::CheckLogin();
+    }
+    else{
+        echo Util::generateErrorMessage("No email or password is given.");
+    }
+
 }
 
 $logout = Session::get('logout');
