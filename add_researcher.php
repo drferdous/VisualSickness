@@ -12,11 +12,16 @@ if (Session::get("study_ID") == 0){
 Session::requirePI(Session::get('study_ID'), $pdo);
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['addResearcher']) && Session::CheckPostID($_POST)) {
-    $info = explode(';', $_POST['researcher_ID']);
-    $researcher_ID = $info[0];
-    $iv = $info[1];
-    $researcher_ID = Crypto::decrypt($researcher_ID, hex2bin($iv));
-    $addResearcher = $studies->addResearcher($researcher_ID, $_POST['study_role']);
+    if (isset($_POST['researcher_ID']) && isset($_POST['study_role'])){
+        $info = explode(';', $_POST['researcher_ID']);
+        $researcher_ID = $info[0];
+        $iv = $info[1];
+        $researcher_ID = Crypto::decrypt($researcher_ID, hex2bin($iv));
+        $addResearcher = $studies->addResearcher($researcher_ID, $_POST['study_role']);
+    }
+    else{
+        echo Util::generateErrorMessage("No researcher or study role given.");
+    }
 }
 
 if (isset($addResearcher)) {
@@ -34,7 +39,7 @@ if (isset($addResearcher)) {
 
 <div class="card">
     <div class="card-header">
-        <h3 class="float-left">Add A Researcher</h3>
+        <h1 class="float-left">Add A Researcher</h1>
         <a href="study_details"
             class="backBtn btn btn-primary float-right">
             Back
@@ -48,7 +53,7 @@ if (isset($addResearcher)) {
             ?>
             <input type="hidden" name="randCheck" value="<?php echo $rand; ?>">
             <div style="margin-block: 6px;">
-                <small style='color: red'>
+                <small class='required-msg'>
                     * Required Field
                 </small>
             </div>

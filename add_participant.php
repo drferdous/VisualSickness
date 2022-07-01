@@ -32,7 +32,7 @@ if (isset($userAdd)) {
 
 <div class="card">
     <div class="card-header">
-          <h3 class="text-center float-left">Add New Participant</h3>
+          <h1 class="text-center float-left">Add New Participant</h1>
           <span class="float-right"> <a href='<?= $referrer ?>' class="btn btn-primary backBtn">Back</a></span>
     </div>
     <div class="card-body">
@@ -45,7 +45,7 @@ if (isset($userAdd)) {
                 <input type="hidden" name="randCheck" value="<?php echo $rand; ?>">
                 <input type="hidden" name="referrer" value="<?= $referrer ?>">
                 <div style="margin-block: 6px;">
-                    <small style='color: red'>
+                    <small class='required-msg'>
                         * Required Field
                     </small>
                 </div>

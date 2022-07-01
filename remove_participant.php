@@ -35,31 +35,31 @@ if (isset($removeParticipant)) {
  
 <div class="card">
     <div class="card-header">
-        <h3 class="float-left">Remove A Participant</h3>
+        <h1 class="float-left">Remove A Participant</h1>
         <span class="float-right"><a href="study_details" class="backBtn btn btn-primary">Back</a></span>
     </div>
     <div class="card-body pr-2 pl-2">
-        <form class="" action="<?php echo htmlspecialchars($_SERVER["REQUEST_URI"]); ?>" method="post">
+        <form class="" action="" method="post">
             <?php 
                 $rand = bin2hex(openssl_random_pseudo_bytes(16));
                 Session::set("post_ID", $rand);
             ?>
             <input type="hidden" name="randCheck" value="<?php echo $rand; ?>">
             <div style="margin-block: 6px;">
-                <small style='color: red'>
+                <small class='required-msg'>
                     * Required Field
                 </small>
             </div>
             <div class="form-group">
                 <div class="form-group">
-                    <label for="researcher_ID" class="required">Remove a Participant</label>
+                    <label for="participant_ID" class="required">Remove a Participant</label>
                     <?php
                         $sql = "SELECT participant_id, anonymous_name, iv, dob
                                 FROM participants
                                 WHERE is_active = 1 AND study_id = $study_ID;";
                         $result = $pdo->query($sql); ?>
                     <select class="form-control form-select" name="participant_ID" id="participant_ID" required <?= $result->rowCount() === 0 ? 'disabled' : '' ?>>
-                        <option value="" disabled hidden selected><?= $result->rowCount() === 0 ? 'There are no participants in this study!' : 'Participant Name' ?></option>
+                        <option value="" disabled hidden selected><?= $result->rowCount() === 0 ? '"There are no participants in this study!"' : 'Participant Name' ?></option>
                         <?php
                         while ($row = $result->fetch(PDO::FETCH_ASSOC)){ 
                             $iv = hex2bin($row['iv']);
