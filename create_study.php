@@ -26,17 +26,17 @@ if (isset($insert_study)) {
     
  <div class="card">
    <div class="card-header">
-          <h3 class='text-center'>Create a Study</h3>
+          <h1 class='text-center'>Create a Study</h1>
         </div>
         <div class="card-body">
-            <form class="" action="" method="post" id="createStudyForm">
+            <form class="" action="<?php echo htmlspecialchars($_SERVER["REQUEST_URI"]); ?>" method="post" id="createStudyForm">
                 <?php 
                     $rand = bin2hex(openssl_random_pseudo_bytes(16));
                     Session::set("post_ID", $rand);
                 ?>
                 <input type="hidden" name="randCheck" value="<?php echo $rand; ?>">
                 <div style="margin-block: 6px;">
-                    <small style='color: red'>
+                    <small class='required-msg'>
                         * Required Field
                     </small>
                 </div>
