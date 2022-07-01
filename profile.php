@@ -38,7 +38,7 @@ if (Session::get('roleid') == '1') {
 
 <div class="card">
     <div class="card-header">
-        <h3 class="float-left">User Profile</h3>
+        <h1 class="float-left mb-0">User Profile</h1>
         <span class="float-right"><a href="<?php echo $homepage; ?>" class="backBtn btn btn-primary">Back</a></span>
     </div>
     <div class="card-body">
@@ -59,14 +59,14 @@ if (Session::get('roleid') == '1') {
                         <input type="hidden" name="iv" value="<?php echo bin2hex($iv); ?>">
                   <?php if ($purpose === 'edit') { ?>
                       <div style="margin-block: 6px;">
-                          <small style='color: red'>
+                          <small class="required-msg">
                               * Required Field
                           </small>
                       </div>
                   <?php } ?>
                     <div class="form-group">
                       <label for="name" class="<?= $purpose === 'edit' ? 'required' : ''; ?>">Your Name</label>
-                      <input type="text" name="name" value="<?php echo $getUinfo->name; ?>" <?= $purpose === "edit" ? "" : "disabled"?> class="form-control" required>
+                      <input type="text" id="name" name="name" value="<?php echo $getUinfo->name; ?>" <?= $purpose === "edit" ? "" : "disabled"?> class="form-control" required>
                     </div>
                     <div class="form-group">
                       <label for="phone_no">Mobile Number</label>
@@ -84,7 +84,7 @@ if (Session::get('roleid') == '1') {
                             $row = array("Name" => "-");
                           } ?>
                     <div class="form-group">
-                      <label for="affilation">Affilation: <?php echo $row["name"]; ?></label>
+                      <label>Affilation: <?php echo $row["name"]; ?></label>
                     </div>
                     <?php if (Session::get("roleid") == '1' && $purpose === "edit" && Session::get("id") != $getUinfo->user_id) { ?>
                       <div class="form-group">

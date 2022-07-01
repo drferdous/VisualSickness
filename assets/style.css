@@ -65,7 +65,7 @@ h6 {
 
 label.required::after {
   content: " *";
-  color: #b81313;
+  color: #dd1616;
 }
 
 @media (min-width: 576px) {
@@ -99,5 +99,5 @@ a {
 }
 
 .required-msg {
-  color: #b81313;
+  color: #dd1616;
 }

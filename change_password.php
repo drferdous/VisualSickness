@@ -26,7 +26,7 @@ if (isset($changePass)) {
 
 <div class="card">
     <div class="card-header">
-        <h3 class="float-left">Change your password</h3>
+        <h1 class="float-left mb-0">Change your password</h1>
         <a href="profile" class="backBtn btn btn-primary float-right">Back</a> 
     </div>
         <div class="card-body">
@@ -39,7 +39,7 @@ if (isset($changePass)) {
             <form class="" action="<?php echo htmlspecialchars($_SERVER["REQUEST_URI"]); ?>" method="POST">
                 <input type="hidden" name="randCheck" value="<?php echo $rand; ?>">
                 <div style="margin-block: 6px;">
-                    <small style='color: red'>
+                    <small class="required-msg">
                         * Required Field
                     </small>
                 </div>
