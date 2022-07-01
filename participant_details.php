@@ -61,14 +61,14 @@
     } ?>
 <div class="card">
     <div class="card-header">
-        <span class="float-left d-flex align-items-center">
+        <div class="float-left d-flex align-items-center">
             <h1 class="mb-0">
                 <?php if ($role_row['study_role'] == 2 || $role_row['study_role'] == 3) { ?>
                     <a href="edit_participants" class="mr-2 redirectUser" style="color: #222;"><i class="fas fa-pencil-alt"><span class="d-none">Edit <?= $name ?></span></i></a>
                 <?php } ?>
                 <?= $name ?>
             </h1>
-        </span>
+        </div>
         <?php if (isset($referrer)) { ?><span class="float-right"> <a href='<?= $referrer ?>' class="btn btn-primary backBtn">Back</a></span><?php } ?>
     </div>
     <div class="card-body">
