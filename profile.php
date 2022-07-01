@@ -49,7 +49,7 @@ if (Session::get('roleid') == '1') {
             }
             if ($getUinfo){ ?>
                 <div style="max-width:600px; margin:0px auto">
-                  <form class="" action="" method="POST">
+                  <form class="" action="<?php echo htmlspecialchars($_SERVER["REQUEST_URI"]); ?>" method="POST">
                         <?php 
                             $rand = bin2hex(openssl_random_pseudo_bytes(16));
                             Session::set("post_ID", $rand);

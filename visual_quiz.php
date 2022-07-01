@@ -73,7 +73,7 @@ Session::set("post_ID", $rand);
                         <button type="submit" name="deleteQuiz" class="btn btn-danger">Delete</button>
                     </form>
                     <?php } ?>
-                    <form class="d-inline" action="" method="post">
+                    <form class="d-inline" action="<?php echo htmlspecialchars($_SERVER["REQUEST_URI"]); ?>" method="post">
                         <button type="submit" name="viewResults" class="btn btn-success mx-1">Results</button>
                     </form>
                 <?php } ?>
@@ -85,7 +85,7 @@ Session::set("post_ID", $rand);
 
 <!-- <div class="Header"> -->
 
-<form action="" method="post" id="quizForm" class="text-center">    
+<form action="<?php echo htmlspecialchars($_SERVER["REQUEST_URI"]); ?>" method="post" id="quizForm" class="text-center">    
     
   <hr>
   

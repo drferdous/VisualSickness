@@ -64,7 +64,7 @@ $role = $role_result->fetch(PDO::FETCH_ASSOC);
         </span>
     </div>
         <div class="card-body">
-            <form class="" action="" method="post">
+            <form class="" action="<?php echo htmlspecialchars($_SERVER["REQUEST_URI"]); ?>" method="post">
                 <?php 
                     $rand = bin2hex(openssl_random_pseudo_bytes(16));
                     Session::set("post_ID", $rand);

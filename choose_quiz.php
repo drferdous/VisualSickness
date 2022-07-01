@@ -81,7 +81,7 @@
     
     <div class="card-body pr-2 pl-2">
         <h2 class="text-center">Quiz Settings</h2>
-        <form action="" method="post">
+        <form action="<?php echo htmlspecialchars($_SERVER["REQUEST_URI"]); ?>" method="post">
             <?php 
                 $rand = bin2hex(openssl_random_pseudo_bytes(16));
                 Session::set("post_ID", $rand);

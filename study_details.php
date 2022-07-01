@@ -158,7 +158,7 @@ if($timezone < 0) {
                                     <?php if ($row_study['is_active'] == 1) { ?>
                                         <li><a href="edit_study" class="dropdown-item nested-dropdown-item">Edit Study</a></li>
                                     <?php } ?>
-                                    <form method="post" class="d-inline" action="">
+                                    <form method="post" class="d-inline" action="<?php echo htmlspecialchars($_SERVER["REQUEST_URI"]); ?>">
                                         <input type="hidden" name="randCheck" value="<?php echo $rand; ?>">
                                         <?php if ($row_study["is_active"] === "1"){ ?>
                                             <li><input class="dropdown-item nested-dropdown-item" type="submit" name="deactivate-btn" value="Deactivate" onclick="return confirm('Are you sure you want to deactivate the study \'<?php echo $row_study['short_name']; ?>\'? You cannot edit the study if it is inactive.');"></li>
@@ -176,7 +176,7 @@ if($timezone < 0) {
                         $pi_count = $pi_result->fetch(PDO::FETCH_ASSOC);
                         if ($row_study['is_active'] == 1 && isset($role['study_role']) && ($role['study_role'] != 2 || $pi_count['Count'] > 1)) { ?>
                             <div class="dropdown-divider"></div>
-                            <form method="post" class="d-inline" action="">
+                            <form method="post" class="d-inline" action="<?php echo htmlspecialchars($_SERVER["REQUEST_URI"]); ?>">
                                 <input type="hidden" name="randCheck" value="<?php echo $rand; ?>">
                                 <li><input class="dropdown-item" type="submit" name="leave-btn" value="Leave" onclick="return confirm('Are you sure you want to leave the study? You will no longer have access to the study \'<?php echo $row_study['short_name']; ?>\' unless a researcher adds you back.');"></li>
                             </form>
@@ -241,7 +241,7 @@ if($timezone < 0) {
                         <a href="javascript:void(0)" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false" id="manageDropdown">Manage</a>
                         <ul class="dropdown-menu">
                             <li><a href="edit_study"  class="dropdown-item">Edit</a></li>
-                            <form method="post" class="d-inline" action="">
+                            <form method="post" class="d-inline" action="<?php echo htmlspecialchars($_SERVER["REQUEST_URI"]); ?>">
                                 <input type="hidden" name="randCheck" value="<?php echo $rand; ?>">
                                 <?php if ($row_study["is_active"] === "1"){ ?>
                                     <li><input class="dropdown-item" type="submit" name="deactivate-btn" value="Deactivate" onclick="return confirm('Are you sure you want to deactivate the study \'<?php echo $row_study['short_name']; ?>\'? You cannot edit the study if it is inactive.');"></li>
@@ -256,7 +256,7 @@ if($timezone < 0) {
                 $pi_count = $pi_result->fetch(PDO::FETCH_ASSOC);
                 if ($row_study['is_active'] == 1 && isset($role['study_role']) && ($role['study_role'] != 2 || $pi_count['Count'] > 1)) { ?>
                     <li class="nav-item">
-                        <form method="post" class="d-inline" action="">
+                        <form method="post" class="d-inline" action="<?php echo htmlspecialchars($_SERVER["REQUEST_URI"]); ?>">
                             <input type="hidden" name="randCheck" value="<?php echo $rand; ?>">
                             <input style="background:none;width: 100%;border:none;text-align: start;" class="nav-link" type="submit" name="leave-btn" value="Leave" onclick="return confirm('Are you sure you want to leave the study? You will no longer have access to the study \'<?php echo $row_study['short_name']; ?>\' unless a researcher adds you back.');">
                         </form>
