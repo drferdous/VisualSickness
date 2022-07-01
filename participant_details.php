@@ -142,8 +142,7 @@
     });
     
     function redirectUser() {
-        <?php
-        $participant_enc = Crypto::encrypt($participant_ID, $iv); ?>
+        <?php $participant_enc = Crypto::encrypt($participant_ID, $iv); ?>
         let form = document.createElement("form");
         let hiddenInput;
         

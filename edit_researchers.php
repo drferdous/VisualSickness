@@ -92,7 +92,7 @@ if (isset($editResearcher)) {
     </div>
 </div>
       
-<script type="text/javascript">
+<script>
      $(document).ready(function() {
          $('#researcher_ID').change(function() {
             const info = $(this).val();

@@ -407,10 +407,10 @@ $study_is_active = $study_result->fetch(PDO::FETCH_ASSOC)['is_active'] == 1;
       if ($result->rowCount() > 0){ ?>
         <script type="text/javascript">
             $(document).ready(function() {
-            let answerChoices = document.body.getElementsByClassName("answer_choices");
+            let answerChoices = document.body.getElementsByClassName("symptoms");
             let radioButtons;
             <?php for ($colNum = 0; $colNum < count($row); ++$colNum){ ?>
-                radioButtons = answerChoices[<?php echo $colNum; ?>].querySelectorAll("label > input");
+                radioButtons = answerChoices[<?php echo $colNum; ?>].querySelectorAll("input");
                 for (let i = 0; i < radioButtons.length; ++i){
                     if (parseInt(radioButtons[i].getAttribute("value"), 10) === <?php echo $row[$colNum]; ?>){
                         radioButtons[i].setAttribute("checked", "checked");

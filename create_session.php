@@ -115,7 +115,7 @@ $role = $role_result->fetch(PDO::FETCH_ASSOC);
         </div>
 </div>
 
-<script type="text/javascript">
+<script>
      $(document).ready(function() {
          $('#participant_name').change(function() {
             const info = $(this).val();

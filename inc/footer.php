@@ -1,5 +1,5 @@
 <div class="well card-footer"> 
-    <div class = "btn-group">
+    <div class="btn-group">
         <button class="shadow-none btn nav-link" onclick="location.href='about'"><i class="fas fa-info-circle mr-2"></i>About Us</button> 
         <button class="shadow-none btn nav-link" onclick="location.href='contact'"><i class="fas fa-address-card mr-2"></i>Contact Us</button>
     </div>
