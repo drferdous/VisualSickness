@@ -13,12 +13,12 @@ if(isset($_GET['success']) && $_GET['success'] === "false") {
     echo Util::generateErrorMessage("There was an error in resetting your password.");
 }
 if (isset($userLog)) {
-  echo $userLog;
+    echo $userLog;
 }
 
 $logout = Session::get('logout');
 if (isset($logout)) {
-  echo $logout;
+    echo $logout;
 }
 
 
@@ -52,7 +52,7 @@ if (isset($logout)) {
 
 
 
-  <?php
-  include 'inc/footer.php';
+<?php
+include 'inc/footer.php';
 
-  ?>
+?>

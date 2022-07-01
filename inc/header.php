@@ -128,19 +128,13 @@ if (isset($_GET['action']) && $_GET['action'] == 'logout') {
   Session::destroy();
 }
 
-if (Session::get('roleid') == '1') {
-    $homepage = "user_list";
-} else {
-    $homepage = "study_list";
-}
-
  ?>
 
 
     <div class="container">
 
       <nav class="navbar navbar-expand-md navbar-dark bg-dark card-header">
-        <a class="navbar-brand" href= <?php echo $homepage; ?>><i class="fas fa-home mr-2"></i>Home</a>
+        <a class="navbar-brand" href="/index"><i class="fas fa-home mr-2"></i>Home</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
