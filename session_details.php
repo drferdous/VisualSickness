@@ -65,7 +65,7 @@ if (isset($_POST['remove-session-btn']) && Session::CheckPostID($_POST)){
 
 <div class="card">
     <div class="card-header">
-        <h3 class="float-left">Session Details</h3>
+        <h1 class="float-left mb-0">Session Details</h1>
         <span class="float-right"> 
             <?php
                 $sql = "SELECT study_id

@@ -53,9 +53,9 @@ $role = $role_result->fetch(PDO::FETCH_ASSOC);
     
  <div class="card">
     <div class="card-header">
-        <h3 class="text-center float-left">
+        <h1 class="text-center float-left mb-0">
             Create a Session
-        </h3>
+        </h1>
         <span class="float-right">
             <?php if(isset($role['study_role']) && $role['study_role'] != 4){ ?>
                 <a class="btn btn-primary mx-2" href="add_participant">Add Participant</a>
@@ -71,7 +71,7 @@ $role = $role_result->fetch(PDO::FETCH_ASSOC);
                 ?>
                 <input type="hidden" name="randCheck" value="<?php echo $rand; ?>">
                 <div style="margin-block: 6px;">
-                    <small style='color: red'>
+                    <small class="required-msg">
                         * Required Field
                     </small>
                 </div>
