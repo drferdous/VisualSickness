@@ -27,7 +27,7 @@ if (isset($logout)) {
 
 <div class="card">
     <div class="card-header">
-        <h1 class='text-center mb-0'><i class="fas fa-sign-in-alt mr-2"></i>Forgot Your Password?</h3>
+        <h1 class='text-center mb-0'><i class="fas fa-sign-in-alt mr-2"></i>Forgot Your Password?</h1>
         <p class='text-center'>Enter your email address here. You will receive a email containing details on how to reset it shortly.</p>
     </div>
     <div class="card-body">

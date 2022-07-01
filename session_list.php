@@ -97,7 +97,7 @@ Session::requireResearcherOrUser(Session::get('study_ID'), $pdo);
     </div>
 </div>
 
-<script type="text/javascript">
+<script>
     $(document).ready(function(){
         if (!document.querySelector('.notFound')) $('#example').DataTable();
         $(document).on("click", "a.redirectUser", redirectUser);

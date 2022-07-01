@@ -25,7 +25,7 @@ Session::CheckSession();
     </div>
 </div>
 
-<script type="text/javascript">
+<script>
     let activeStatus = 'active';
     $(document).ready(function(){
         $(document).on("click", "#show-studies", function() {
