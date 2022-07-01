@@ -9,11 +9,11 @@
 ?>
 <div class="card">
     <div class="card-header">
-        <h3 class="float-left">Contact Us</h3>
+        <h1 class="float-left mb-0">Contact Us</h1>
     </div>
     <div class="card-body">
-    <h5 class="font-italic">We will get back to you in 24hrs. You can also reach out to your local adminstrative team
- for help!</h5>
+    <p class="font-italic">We will get back to you in 24hrs. You can also reach out to your local adminstrative team
+ for help!</p>
         <div class="mt-2 d-flex flex-wrap flex-md-row-reverse flex-column">
             <form class="p-0 p-sm-4 flex-fill" action="inc/support_email" method="POST">
                 <div class="form-group">
@@ -46,8 +46,8 @@
                         $admins = Util::getAdminsFromAffiliation(Database::getInstance()->pdo,Session::get('affiliationid'));
                         if($admins) { ?>
                             <div style="max-height: 50vh;overflow-y:auto;min-width:max-content">
-                                <h3>Admins</h3>
-                                <h5>Affiliation: <?= $result->fetch(PDO::FETCH_ASSOC)['name'] ?></h5>
+                                <h2 class='h3'>Admins</h2>
+                                <p>Affiliation: <?= $result->fetch(PDO::FETCH_ASSOC)['name'] ?></p>
                                 <ul class="list-unstyled">
                                     <?php
                                         $admins = explode(',',$admins);
@@ -61,7 +61,7 @@
                         <?php } 
                     }
                 } ?>
-                <h3>Support</h3>
+                <h2 class='h3'>Support</h2>
                 <a href="mailto:visualsicknessstudy@gmail.com">visualsicknessstudy@gmail.com</a>
             </div>
         </div>

@@ -33,31 +33,37 @@ h6 {
   margin-top: 0;
 }
 
+.h1,
 h1 {
   font-size: 36px;
   line-height: 42px;
 }
 
+.h2,
 h2 {
   font-size: 32px;
   line-height: 36px;
 }
 
+.h3,
 h3 {
   font-size: 24px;
   line-height: 30px;
 }
 
+.h4,
 h4 {
   font-size: 18px;
   line-height: 24px;
 }
 
+.h5,
 h5 {
   font-size: 14px;
   line-height: 18px;
 }
 
+.h6,
 h6 {
   font-size: 12px;
   line-height: 24px;
