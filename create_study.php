@@ -29,7 +29,7 @@ if (isset($insert_study)) {
           <h3 class='text-center'>Create a Study</h3>
         </div>
         <div class="card-body">
-            <form class="" action="" method="post" id="createStudyForm">
+            <form class="" action="<?php echo htmlspecialchars($_SERVER["REQUEST_URI"]); ?>" method="post" id="createStudyForm">
                 <?php 
                     $rand = bin2hex(openssl_random_pseudo_bytes(16));
                     Session::set("post_ID", $rand);

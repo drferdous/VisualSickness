@@ -46,7 +46,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["reset-submit"]) && Ses
     </div>
     <div class="card-body">
         <div style="width:450px; margin:0px auto">
-            <form class="" action="" method="post">
+            <form class="" action="<?php echo htmlspecialchars($_SERVER["REQUEST_URI"]); ?>" method="post">
                 <div style="margin-block: 6px;">
                     <small style='color: red'>
                         * Required Field
