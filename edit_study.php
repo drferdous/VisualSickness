@@ -31,9 +31,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['updateStudy']) && Sess
 
 <div class="card ">
     <div class="card-header">
-        <h3 class="text-center">Edit a Study
+        <h1 class="text-center mb-0">Edit a Study
             <a href="study_details" class="backBtn btn btn-primary float-right">Back</a>
-        </h3>
+        </h1>
     </div>
     
     <?php
@@ -68,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['updateStudy']) && Sess
             ?>
             <input type="hidden" name="randCheck" value="<?php echo $rand; ?>">
             <div style="margin-block: 6px;">
-                <small style='color: red'>
+                <small class="required-msg">
                     * Required Field
                 </small>
             </div>

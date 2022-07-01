@@ -28,7 +28,7 @@
 
 <div class="card">
     <div class="card-header">
-        <h3 class="float-left">Researcher List</h3>
+        <h1 class="float-left mb-0">Researcher List</h1>
         <span class='float-right'>
             <?php if(isset($role['study_role']) && $role['study_role'] == 2 && $active['is_active'] == 1){ ?>
                 <a href='edit_researchers' class='btn btn-primary mx-2'>Edit Researchers</a>
@@ -65,8 +65,8 @@
                             <td><?= $row["name"] ?></td>
                             <td><?= $row["role"] ?></td>
                             <td>
-                                <a href="mailto:<?= $row["email"] ?>"<i class="fa fa-envelope mr-2 text-decoration-none"></i></a>
-                                <a href="tel:<?= $row["mobile"] ?>"<i class="fa fa-phone mr-2 text-decoration-none"></i></a>
+                                <a href="mailto:<?= $row["email"] ?>"<i class="fa fa-envelope mr-2 text-decoration-none"><span class="d-none">Email <?= $row["name"] ?></span></i></a>
+                                <a href="tel:<?= $row["mobile"] ?>"<i class="fa fa-phone mr-2 text-decoration-none"><span class="d-none">Call <?= $row["name"] ?></span></i></a>
                             </td>
                         </tr>
                 <?php }
