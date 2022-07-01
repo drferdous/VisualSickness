@@ -22,7 +22,9 @@
                 SET status = 2,
                     updated_by = $localId,
                     updated_at = CURRENT_TIMESTAMP
-                WHERE user_id = " . $user_ID . ";";
+                WHERE user_id = $user_ID
+                AND role_id != 1
+                LIMIT 1;";
         $result = $pdo->query($sql);
         if (!$result){
             echo $pdo->errorInfo();
@@ -35,7 +37,8 @@
                 SET status = 0,
                     updated_by = $localId,
                     updated_at = CURRENT_TIMESTAMP
-                WHERE user_id = " . $user_ID . "
+                WHERE user_id = $user_ID
+                AND role_id != 1
                 LIMIT 1;";
         $result = $pdo->query($sql);
         if (!$result){
@@ -49,7 +52,8 @@
                 SET status = 1,
                     updated_by = $localId,
                     updated_at = CURRENT_TIMESTAMP
-                WHERE user_id = " . $user_ID . "
+                WHERE user_id = $user_ID
+                AND role_id != 1
                 LIMIT 1;";
         $result = $pdo->query($sql);
         if (!$result){
@@ -187,7 +191,7 @@ Session::set("post_ID", $rand);
                 }
                 overrideDT = false;
                 if ($("#example td.notFound").length === 0) {
-                    $('#example').DataTable();
+                    $('#example').DataTable({order: []});
                     $('#example').parent().css('overflow-x', 'auto');
                 }
                 else overrideDT = true;
