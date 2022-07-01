@@ -14,7 +14,12 @@
     $pdo = $db->pdo;
     
     $idToSearch = Session::get('id');
-    $activeStatus = $_POST["activeStatus"];
+    if (isset($_POST["activeStatus"])){
+        $activeStatus = $_POST["activeStatus"];
+    }
+    else{
+        $activeStatus = "";
+    }
     $sqlActiveStatus = "";
     $sql;
     
