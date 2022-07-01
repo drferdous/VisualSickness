@@ -15,11 +15,16 @@ $study_ID = Session::get('study_ID');
 Session::requirePIorRA($study_ID, $pdo);
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['removeParticipant']) && Session::CheckPostID($_POST)) {
-    $info = explode(';', $_POST['participant_ID']);
-    $participant_ID = $info[0];
-    $iv = $info[1];
-    $participant_ID = Crypto::decrypt($participant_ID, hex2bin($iv));
-    $removeParticipant = $studies->removeParticipant($participant_ID);
+    if (isset($_POST["participant_ID"])){
+        $info = explode(';', $_POST['participant_ID']);
+        $participant_ID = $info[0];
+        $iv = $info[1];
+        $participant_ID = Crypto::decrypt($participant_ID, hex2bin($iv));
+        $removeParticipant = $studies->removeParticipant($participant_ID);
+    }
+    else{
+        echo Util::generateErrorMessage("Participant was not given.");
+    }
 }
 if (isset($removeParticipant)) {
   echo $removeParticipant;?>
