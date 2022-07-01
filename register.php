@@ -26,7 +26,7 @@ if (isset($userRegistration)) {
 
  <div class="card">
    <div class="card-header">
-          <h3 class='text-center'>User Registration (All Fields Required)</h3>
+          <h1 class='text-center'>User Registration (All Fields Required)</h1>
           <p class='text-center'>After registering, check your email for a link to create a password.</p>
         </div>
         <div class="card-body">
@@ -41,7 +41,7 @@ if (isset($userRegistration)) {
                 <input type="hidden" name="randCheck" value="<?php echo $rand; ?>">
                 <br>
                 <div style="margin-block: 6px;">
-                    <small style='color: red'>
+                    <small class='required-msg'>
                         * Required Field
                     </small>
                 </div>
@@ -93,7 +93,6 @@ if (isset($userRegistration)) {
 
         </div>
     </div>    
-</div>
 <?php
   include 'inc/footer.php';
 ?>

@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['removeResearcher']) &&
  
 <div class="card">
     <div class="card-header">
-        <h3 class="float-left">Remove A Researcher</h3>
+        <h1 class="float-left">Remove A Researcher</h1>
         <span class="float-right"><a href="study_details" class="backBtn btn btn-primary">Back</a></span>
     </div>
     <div class="card-body pr-2 pl-2">
@@ -45,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['removeResearcher']) &&
             ?>
             <input type="hidden" name="randCheck" value="<?php echo $rand; ?>">
             <div style="margin-block: 6px;">
-                <small style='color: red'>
+                <small class='required-msg'>
                     * Required Field
                 </small>
             </div>
