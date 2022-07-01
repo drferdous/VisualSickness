@@ -7,6 +7,10 @@
         $iv = hex2bin($_POST["iv"]);
         $participant_ID = Crypto::decrypt($_POST["participant_ID"], $iv);
     } else $participant_ID = Session::get('participant_ID');
+    if ($participant_ID == 0) {
+        header('Location: participant_list');
+        exit();
+    }
     
     $sql = "SELECT * FROM participants AS P
             INNER JOIN demographics AS D
