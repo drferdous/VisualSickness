@@ -65,8 +65,12 @@
                             <td><?= $row["name"] ?></td>
                             <td><?= $row["role"] ?></td>
                             <td>
-                                <a href="mailto:<?= $row["email"] ?>"<i class="fa fa-envelope mr-2 text-decoration-none"><span class="d-none">Email <?= $row["name"] ?></span></i></a>
-                                <a href="tel:<?= $row["mobile"] ?>"<i class="fa fa-phone mr-2 text-decoration-none"><span class="d-none">Call <?= $row["name"] ?></span></i></a>
+                                <?php if ($row['email']) { ?>
+                                <a href="mailto:<?= $row["email"] ?>"><i class="fa fa-envelope mr-2 text-decoration-none"><span class="d-none">Email <?= $row["name"] ?></span></i></a>
+                                <?php }
+                                if ($row['mobile']) { ?>
+                                    <a href="tel:<?= preg_replace('/\\D/', '', $row["mobile"]) ?>"><i class="fa fa-phone mr-2 text-decoration-none"><span class="d-none">Call <?= $row["name"] ?></span></i></a>
+                                <?php } ?>
                             </td>
                         </tr>
                 <?php }
