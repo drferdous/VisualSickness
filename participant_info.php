@@ -34,7 +34,7 @@ if (isset($_POST['participant_ID']) && !empty($_POST['participant_ID']) && isset
         </div>
         <div class="form-group">
             <label for="gender" class="required">Gender</label>
-            <select class="form-control form-select" name="gender" id="gender" required size="1">
+            <select class="form-control form-select" name="gender" id="gender" size="1">
                 <option <?= $row['gender'] === 'Male' ? 'selected' : '' ?> value="Male">Male</option>
                 <option <?= $row['gender'] === 'Female' ? 'selected' : '' ?> value="Female">Female</option>
                 <option <?= $row['gender'] === 'Other' ? 'selected' : '' ?> value="Other">Other</option>
@@ -43,7 +43,7 @@ if (isset($_POST['participant_ID']) && !empty($_POST['participant_ID']) && isset
         </div>
         <div class="form-group">
             <label for="race_ethnicity" class="required">Race/Ethnicity</label>
-            <select class="form-control form-select" name="race_ethnicity" id="race_ethnicity" required size="1">
+            <select class="form-control form-select" name="race_ethnicity" id="race_ethnicity" size="1">
                 <option <?= $row['race_ethnicity'] === 'American Indian or Alaska Native' ? 'selected' : '' ?> value="American Indian or Alaska Native">American Indian or Alaska Native</option>
                 <option <?= $row['race_ethnicity'] === 'Asian' ? 'selected' : '' ?> value="Asian">Asian</option>
                 <option <?= $row['race_ethnicity'] === 'Black or African American' ? 'selected' : '' ?> value="Black or African American">Black or African American</option>
@@ -59,7 +59,7 @@ if (isset($_POST['participant_ID']) && !empty($_POST['participant_ID']) && isset
         </div>
         <div class="form-group">
             <label for="education" class="required">Highest Level of Education</label>
-            <select class="form-control form-select" name="education" id="education" required size="1">
+            <select class="form-control form-select" name="education" id="education" size="1">
                 <option <?= $row['education'] === 'Elementary School' ? 'selected' : '' ?> value="Elementary School">Elementary School</option>
                 <option <?= $row['education'] === 'Middle School' ? 'selected' : '' ?> value="Middle School">Middle School</option>
                 <option <?= $row['education'] === 'High School' ? 'selected' : '' ?> value="High School">High School</option>
