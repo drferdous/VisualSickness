@@ -21,24 +21,28 @@ if (isset($_POST['forStudy']) && $_POST['forStudy'] === 'true') {
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['editParticipant']) && Session::CheckPostID($_POST)) {
-    $info = explode(';', $_POST['participant_ID']);
-    $participant_ID = $info[0];
-    $iv = $info[1];
-    $participant_ID = Crypto::decrypt($participant_ID, hex2bin($iv));
-    $updateStudy = $studies->editParticipant($participant_ID, $_POST);
-    if (isset($updateStudy)) {
-        echo $updateStudy; ?>
-        <script type="text/javascript">
-            const divMsg = document.getElementById("flash-msg");
-            if (divMsg?.classList.contains("alert-success")){
-                setTimeout(function(){
-                    location.href = 'participant_list';
-                }, 1000);
-            }
-        </script>
-<?php }
+    if (isset($_POST["participant_ID"])){
+        $info = explode(';', $_POST['participant_ID']);
+        $participant_ID = $info[0];
+        $iv = $info[1];
+        $participant_ID = Crypto::decrypt($participant_ID, hex2bin($iv));
+        $updateStudy = $studies->editParticipant($participant_ID, $_POST);
+        if (isset($updateStudy)) {
+            echo $updateStudy; ?>
+            <script type="text/javascript">
+                const divMsg = document.getElementById("flash-msg");
+                if (divMsg?.classList.contains("alert-success")){
+                    setTimeout(function(){
+                        location.href = 'participant_list';
+                    }, 1000);
+                }
+            </script>
+    <?php }
+    }
+    else{
+        echo Util::generateErrorMessage("No participant was selected.");
+    }
 }
-
 ?>
 
 <div class="card">
