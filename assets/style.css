@@ -1,4 +1,3 @@
-
 /*
   Theme Name: Codeceil App
   Author: Nababur Rahaman
@@ -9,54 +8,96 @@
   Version: 1.0
 */
 
-
 /*Import Google Fonts*/
-@import url('https://fonts.googleapis.com/css?family=Nunito:300,400,600,700&display=swap');
-
-
+@import url("https://fonts.googleapis.com/css?family=Nunito:300,400,600,700&display=swap");
 
 body {
-
   line-height: 24px;
   font-size: 14px;
   font-style: normal;
   font-weight: normal;
   visibility: visible;
-font-family: 'Nunito', sans-serif;
+  font-family: "Nunito", sans-serif;
   color: #222;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   color: #222;
-font-family: 'Nunito', sans-serif;
+  font-family: "Nunito", sans-serif;
   font-weight: 400;
-  margin-top: 0; }
+  margin-top: 0;
+}
 
 h1 {
   font-size: 36px;
-  line-height: 42px; }
+  line-height: 42px;
+}
 
 h2 {
   font-size: 32px;
-  line-height: 36px; }
+  line-height: 36px;
+}
 
 h3 {
   font-size: 24px;
-  line-height: 30px; }
+  line-height: 30px;
+}
 
 h4 {
   font-size: 18px;
-  line-height: 24px; }
+  line-height: 24px;
+}
 
 h5 {
   font-size: 14px;
-  line-height: 18px; }
+  line-height: 18px;
+}
 
 h6 {
   font-size: 12px;
-  line-height: 24px; }
+  line-height: 24px;
+}
 
 label.required::after {
-    content: ' *';
-    color: red;
+  content: " *";
+  color: #b81313;
+}
+
+@media (min-width: 576px) {
+  .w-sm-auto {
+    width: auto !important;
+  }
+}
+
+a {
+  color: #2075d1;
+}
+
+.btn-success {
+  background-color: #27783a;
+  border-color: #27783a;
+}
+
+.btn-primary,
+.page-item.active .page-link {
+  background-color: #2075d1 !important;
+}
+
+.btn-info,
+.badge-info {
+  background-color: #167b8b !important;
+  border-color: #167b8b !important;
+}
+
+.badge {
+  font-size: 11px !important;
+}
+
+.required-msg {
+  color: #b81313;
 }

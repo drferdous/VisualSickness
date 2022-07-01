@@ -37,7 +37,7 @@ if (isset($userAdd)) {
     </div>
     <div class="card-body">
             <div style="max-width:600px; margin:0px auto">
-            <form class="" action="" method="post">
+            <form class="" action="<?php echo htmlspecialchars($_SERVER["REQUEST_URI"]); ?>" method="post">
                 <?php 
                     $rand = bin2hex(openssl_random_pseudo_bytes(16));
                     Session::set("post_ID", $rand);

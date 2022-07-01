@@ -38,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['removeResearcher']) &&
         <span class="float-right"><a href="study_details" class="backBtn btn btn-primary">Back</a></span>
     </div>
     <div class="card-body pr-2 pl-2">
-        <form class="" action="" method="post">
+        <form class="" action="<?php echo htmlspecialchars($_SERVER["REQUEST_URI"]); ?>" method="post">
             <?php 
                 $rand = bin2hex(openssl_random_pseudo_bytes(16));
                 Session::set("post_ID", $rand);

@@ -11,7 +11,7 @@ Session::CheckSession();
 
 <div class="card overflow-hidden">
     <div class="card-header">
-        <h3>Study List</h3>         
+        <h1 class="mb-0">Study List</h1>         
     </div>
     <div class="card-body pr-2 pl-2">
         <br />

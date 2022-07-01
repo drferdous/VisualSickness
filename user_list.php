@@ -64,7 +64,7 @@ Session::set("post_ID", $rand);
 
 <div class="card" style="overflow-x: hidden">
     <div class="card-header">
-        <h1 class="d-inline"><i class="fas fa-users mr-2"></i>User list</h1>
+        <h1 class="d-inline mb-0"><i class="fas fa-users mr-2"></i>User list</h1>
         <h2 class="float-right d-flex align-item-center"><span>Welcome! <strong>
             <span class="badge badge-lg badge-secondary text-white">
             <?php

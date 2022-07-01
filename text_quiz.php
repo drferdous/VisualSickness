@@ -73,7 +73,7 @@ $study_is_active = $study_result->fetch(PDO::FETCH_ASSOC)['is_active'] == 1;
                         <button type="submit" name="deleteQuiz" class="btn btn-danger">Delete</button>
                     </form>
                     <?php } ?>
-                    <form class="d-inline" action="" method="post">
+                    <form class="d-inline" action="<?php echo htmlspecialchars($_SERVER["REQUEST_URI"]); ?>" method="post">
                         <button type="submit" name="viewResults" class="btn btn-success mx-1">Results</button>
                     </form>
                 <?php } ?>
@@ -82,7 +82,7 @@ $study_is_active = $study_result->fetch(PDO::FETCH_ASSOC)['is_active'] == 1;
             </h3>
     </div>
     <div class="card-body pr-2 pl-2">
-<form action="" method="post" id="quizForm" class="text-center">
+<form action="<?php echo htmlspecialchars($_SERVER["REQUEST_URI"]); ?>" method="post" id="quizForm" class="text-center">
     <?php 
         $rand = bin2hex(openssl_random_pseudo_bytes(16));
         Session::set("post_ID", $rand);

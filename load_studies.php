@@ -102,11 +102,11 @@
                     <div class="redirectUserBtns" data-study_ID="<?= $encrypted ?>" data-IV="<?= bin2hex($iv) ?>">
                             
                     <?php if(isset($study['study_role']) && $study['is_active'] == 1){ ?>
-                            <a class="btn btn-success btn-sm my-1" href="create_session">Create Session</a>
+                            <a class="btn btn-success btn-sm my-1 w-100 w-sm-auto" href="create_session">Create Session</a>
                     <?php } 
                            if(isset($study['study_role']) && $study['study_role'] != 1) {?>
                     
-                            <a class="btn btn-success btn-sm my-1" href="session_list">Session List</a>  
+                            <a class="btn btn-success btn-sm my-1 w-100 w-sm-auto" href="session_list">Session List</a>  
                             <?php } ?>
                     </div>
                 </td>

@@ -19,7 +19,7 @@
 
 <div class="card">
     <div class="card-header">
-        <h3 class="float-left">Participant List</h3>
+        <h1 class="float-left mb-0">Participant List</h1>
         <?php if (isset($study_ID)) { ?>
             <span class='float-right'>
                 <a href='study_details' 
@@ -74,18 +74,21 @@
                                 $role_result = $pdo->query($role_sql);
                                 $role_row = $role_result->fetch(PDO::FETCH_ASSOC);
                                 if ($role_row['study_role'] == 2 || $role_row['study_role'] == 3) { ?>
-                                    <a class="redirectUser text-decoration-none" href="edit_participants" data-participant_ID="<?php echo Crypto::encrypt($row["participant_id"], $iv); ?>" data-iv="<?php echo bin2hex($iv); ?>"><i class="fas fa-pencil-alt ml-2" aria-hidden="true"></i>
+                                    <a class="redirectUser text-decoration-none" href="edit_participants" data-participant_ID="<?= Crypto::encrypt($row["participant_id"], $iv); ?>" data-iv="<?= bin2hex($iv); ?>">
+                                        <i class="fas fa-pencil-alt ml-2" aria-hidden="true">
+                                            <span class="d-none">Edit <?= $name ?></span>
+                                        </i>
                                     </a>
                                 <?php } ?>
                                 <a href="participant_details"
                                    class="redirectUser link"
-                                   data-participant_ID="<?php echo Crypto::encrypt($row["participant_id"], $iv); ?>"
-                                   data-iv="<?php echo bin2hex($iv); ?>">
-                                   <?php echo $name; ?>
+                                   data-participant_ID="<?= Crypto::encrypt($row["participant_id"], $iv); ?>"
+                                   data-iv="<?= bin2hex($iv); ?>">
+                                   <?= $name; ?>
                                 </a>
                             </td>
-                            <td><?php echo $row["dob"]; ?></td>
-                            <td><?php echo $row["full_name"]; ?></td>
+                            <td><?= $row["dob"]; ?></td>
+                            <td><?= $row["full_name"]; ?></td>
                         </tr>
                 <?php }
                 } else { ?>
