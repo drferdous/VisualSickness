@@ -68,7 +68,10 @@
                                 <span class='badge badge-lg badge-dark text-white'>User Only</span>
                         <?php } ?>
                         </td>
-                        <td><a href="mailto:<?= $value->email ?>"><?= $value->email ?></a></td>
+                        <td><a href="mailto:<?= $value->email ?>"
+                            <?php if (Session::get("id") == $value->user_id) { ?>
+                                style="color:#0a547e"
+                            <?php } ?>><?= $value->email ?></a></td>
                         <td><span class="badge badge-lg badge-secondary text-white"><?php echo $value->mobile; ?></span></td>
                         <td>
                         <?php if ($value->status == 0) { ?>
