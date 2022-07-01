@@ -9,12 +9,15 @@ function sendEmail($to, $subject, $body) {
 }
 
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["submit"])) {
+    if (!isset($_POST["email"]) || !isset($_POST["subject"]) || !isset($_POST["message"])){
+        exit();
+    }
+    
     $to = $_POST["email"];
     $subject = $_POST["subject"];
     $message =  $_POST['message'];
     
     sendEmail($to, $subject, $message);
-    
 }
 
 ?>

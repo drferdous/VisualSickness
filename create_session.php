@@ -25,24 +25,28 @@ if ($res->fetch(PDO::FETCH_ASSOC)['is_active'] == 0) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['insert_session']) && Session::CheckPostID($_POST)){
-    $info = explode(';', $_POST['participant_ID']);
-    $participant_ID = $info[0];
-    $iv = $info[1];
-    $_POST["participant_ID"] = Crypto::decrypt($participant_ID, hex2bin($iv));
+    if (isset($_POST["participant_ID"])){
+        $info = explode(';', $_POST['participant_ID']);
+        $participant_ID = $info[0];
+        $iv = $info[1];
+        $_POST["participant_ID"] = Crypto::decrypt($participant_ID, hex2bin($iv));
     
-    $insertSessionMessage = $studies->insertSession($_POST); 
-    if (isset($insertSessionMessage)){
-        echo $insertSessionMessage; ?>
+        $insertSessionMessage = $studies->insertSession($_POST); 
+        if (isset($insertSessionMessage)){
+            echo $insertSessionMessage; ?>
         
-        <script type="text/javascript">
-            const divMsg = document.getElementById("flash-msg");
-            if (divMsg.classList.contains("alert-success")){
-                setTimeout(() => {
-                    location.href = "session_details";
-                }, 1000);
-            }
-        </script>
-<?php
+            <script type="text/javascript">
+                const divMsg = document.getElementById("flash-msg");
+                if (divMsg.classList.contains("alert-success")){
+                    setTimeout(() => {
+                        location.href = "session_details";
+                    }, 1000);
+                }
+            </script>
+<?php   }
+    }
+    else{
+        echo Util::generateErrorMessage("No participant was given.");
     }
 } 
 $role_sql = "SELECT study_role FROM researchers WHERE study_id = " . Session::get("study_ID") . " AND  researcher_id = " . Session::get("id") . " AND is_active = 1;";
