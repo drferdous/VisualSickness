@@ -50,7 +50,7 @@
                                 <p>Affiliation: <?= $result->fetch(PDO::FETCH_ASSOC)['name'] ?></p>
                                 <ul class="list-unstyled">
                                     <?php
-                                        $admins = explode(',',$admins);
+                                        $admins = explode(', ',$admins);
                                         foreach($admins as $admin) { ?>
                                             <li><a href= "mailto:<?php echo $admin; ?>"><?php echo $admin; ?></a></li>
                                     <?php }

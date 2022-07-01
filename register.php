@@ -60,7 +60,7 @@ if (isset($userRegistration)) {
                 <div class="form-group">
                   <div class="form-group">
                     <label for="sel1" class="required">Select User Role</label>
-                    <select class="form-control form-select" name="roleid" id="sel1" required>
+                    <select class="form-control form-select" name="roleid" id="sel1">
                       <?php 
                           $sql = "SELECT id, role FROM user_roles WHERE id > 1;";
                           $result = $pdo->query($sql);
@@ -74,7 +74,7 @@ if (isset($userRegistration)) {
                 <div class="form-group">
                   <div class="form-group">
                     <label for="selAffil" class="required">Select Affiliation</label>
-                    <select class="form-control form-select" name="affiliationid" id="selAffil" required>
+                    <select class="form-control form-select" name="affiliationid" id="selAffil">
                       <?php 
                           $sql = "SELECT affiliation_id, name FROM affiliation;";
                           $result = $pdo->query($sql);
