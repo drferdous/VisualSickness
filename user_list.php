@@ -81,18 +81,18 @@ Session::set("post_ID", $rand);
             
         </table>
     <div class="form-check form-switch float-right" style="margin-left: 2rem">
-        <input class="form-check-input" type="checkbox" id="show-deactivated-users" unchecked>
+        <input class="form-check-input" type="checkbox" id="show-deactivated-users">
         <label class="form-check-label" for="show-deactivated-users">Show Deactivated Users Only</label>
     </div>
     <div class="form-check form-switch float-right">
-        <input class="form-check-input" type="checkbox" id="show-pending-users" unchecked>
+        <input class="form-check-input" type="checkbox" id="show-pending-users">
         <label class="form-check-label" for="show-pending-users">Show Users Pending Admin Approval Only</label>
     </div>
 </div>
 </div>
 
 
-<script type="text/javascript">
+<script>
     $(document).ready(function() {
         $("#example").on("click", "a.profilePage", goToProfilePage);
         $("#example").on("click", "a.userAction", doUserAction);

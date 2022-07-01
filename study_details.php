@@ -145,7 +145,7 @@ if($timezone < 0) {
                                         <li>
                                             <form method="post" class="d-inline" action="edit_participants">
                                                 <input type="hidden" name="forStudy" value="true">
-                                                <input href="edit_participants" class="dropdown-item nested-dropdown-item" value="Edit A Participant" type="submit">
+                                                <input class="dropdown-item nested-dropdown-item" value="Edit A Participant" type="submit">
                                             </form>
                                         </li>
                                     <?php } ?>
@@ -158,14 +158,14 @@ if($timezone < 0) {
                                     <?php if ($row_study['is_active'] == 1) { ?>
                                         <li><a href="edit_study" class="dropdown-item nested-dropdown-item">Edit Study</a></li>
                                     <?php } ?>
-                                    <form method="post" class="d-inline" action="<?php echo htmlspecialchars($_SERVER["REQUEST_URI"]); ?>">
+                                    <li><form method="post" class="d-inline" action="<?php echo htmlspecialchars($_SERVER["REQUEST_URI"]); ?>">
                                         <input type="hidden" name="randCheck" value="<?php echo $rand; ?>">
                                         <?php if ($row_study["is_active"] === "1"){ ?>
-                                            <li><input class="dropdown-item nested-dropdown-item" type="submit" name="deactivate-btn" value="Deactivate" onclick="return confirm('Are you sure you want to deactivate the study \'<?php echo $row_study['short_name']; ?>\'? You cannot edit the study if it is inactive.');"></li>
+                                            <input class="dropdown-item nested-dropdown-item" type="submit" name="deactivate-btn" value="Deactivate" onclick="return confirm('Are you sure you want to deactivate the study \'<?php echo $row_study['short_name']; ?>\'? You cannot edit the study if it is inactive.');">
                                         <?php } else { ?>
-                                            <li><input class="dropdown-item nested-dropdown-item" type="submit" name="activate-btn" value="Activate" onclick="return confirm('Are you sure you want to activate the study \'<?php echo $row_study['short_name']; ?>\'?');"></li>
+                                            <input class="dropdown-item nested-dropdown-item" type="submit" name="activate-btn" value="Activate" onclick="return confirm('Are you sure you want to activate the study \'<?php echo $row_study['short_name']; ?>\'?');">
                                         <?php } ?>
-                                    </form>
+                                    </form></li>
                                 </ul>
                             </li>
                         <?php } ?>
@@ -175,15 +175,15 @@ if($timezone < 0) {
                         $pi_result = $pdo->query($pi_sql);
                         $pi_count = $pi_result->fetch(PDO::FETCH_ASSOC);
                         if ($row_study['is_active'] == 1 && isset($role['study_role']) && ($role['study_role'] != 2 || $pi_count['Count'] > 1)) { ?>
-                            <div class="dropdown-divider"></div>
-                            <form method="post" class="d-inline" action="<?php echo htmlspecialchars($_SERVER["REQUEST_URI"]); ?>">
+                            <li><div class="dropdown-divider"></div></li>
+                            <li><form method="post" class="d-inline" action="<?php echo htmlspecialchars($_SERVER["REQUEST_URI"]); ?>">
                                 <input type="hidden" name="randCheck" value="<?php echo $rand; ?>">
-                                <li><input class="dropdown-item" type="submit" name="leave-btn" value="Leave" onclick="return confirm('Are you sure you want to leave the study? You will no longer have access to the study \'<?php echo $row_study['short_name']; ?>\' unless a researcher adds you back.');"></li>
-                            </form>
+                                <input class="dropdown-item" type="submit" name="leave-btn" value="Leave" onclick="return confirm('Are you sure you want to leave the study? You will no longer have access to the study \'<?php echo $row_study['short_name']; ?>\' unless a researcher adds you back.');">
+                            </form></li>
                         <?php } ?>
                     </ul>
                 </li>
-                <a href="study_list" class="backBtn btn btn-primary">Back</a>
+                <li><a href="study_list" class="backBtn btn btn-primary">Back</a></li>
             </ul>
         </div>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#studyNavbar" aria-controls="studyNavbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -229,7 +229,7 @@ if($timezone < 0) {
                                 <li>
                                     <form method="post" class="d-inline" action="edit_participants">
                                         <input type="hidden" name="forStudy" value="true">
-                                        <input href="edit_participants" class="dropdown-item" value="Edit A Participant" type="submit">
+                                        <input class="dropdown-item" value="Edit A Participant" type="submit">
                                     </form>
                                 </li>
                             <?php } ?>
@@ -241,14 +241,14 @@ if($timezone < 0) {
                         <a href="javascript:void(0)" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false" id="manageDropdown">Manage</a>
                         <ul class="dropdown-menu">
                             <li><a href="edit_study"  class="dropdown-item">Edit</a></li>
-                            <form method="post" class="d-inline" action="<?php echo htmlspecialchars($_SERVER["REQUEST_URI"]); ?>">
+                            <li><form method="post" class="d-inline" action="<?php echo htmlspecialchars($_SERVER["REQUEST_URI"]); ?>">
                                 <input type="hidden" name="randCheck" value="<?php echo $rand; ?>">
                                 <?php if ($row_study["is_active"] === "1"){ ?>
-                                    <li><input class="dropdown-item" type="submit" name="deactivate-btn" value="Deactivate" onclick="return confirm('Are you sure you want to deactivate the study \'<?php echo $row_study['short_name']; ?>\'? You cannot edit the study if it is inactive.');"></li>
+                                    <input class="dropdown-item" type="submit" name="deactivate-btn" value="Deactivate" onclick="return confirm('Are you sure you want to deactivate the study \'<?php echo $row_study['short_name']; ?>\'? You cannot edit the study if it is inactive.');">
                                 <?php } else { ?>
-                                    <li><input class="dropdown-item" type="submit" name="activate-btn" value="Activate" onclick="return confirm('Are you sure you want to activate the study \'<?php echo $row_study['short_name']; ?>\'?');"></li>
+                                    <input class="dropdown-item" type="submit" name="activate-btn" value="Activate" onclick="return confirm('Are you sure you want to activate the study \'<?php echo $row_study['short_name']; ?>\'?');">
                                 <?php } ?>
-                            </form>
+                            </form></li>
                         </ul>
                 <?php  }
                 $pi_sql = "SELECT COUNT(study_role) AS Count FROM researchers WHERE study_id = " . Session::get("study_ID") . " AND study_role = 2 AND is_active = 1;";
@@ -362,70 +362,53 @@ if($timezone < 0) {
             </thead>
         </table>
     </div>
-<style>
-    
-.dropdown-submenu {
-  position: relative;
-}
-
-.dropdown-submenu .dropdown-menu {
-  top: 0;
-  transform: translateX(-100%);
-  margin-top: -1px;
-}
-
-@media (min-width: 768px) {
-    #studyNavbar {
-        display: none!important;
-    }
-}
-</style>
-<script>
-    let dropped = false;
-    $(document).ready(() => {
-        $(document).on('click', function (e) {
-            if (e.target.id != 'navbarDropdownMenuLinkRight' && !e.target.classList.contains('nested-dropdown') && dropped) {
+    <script>
+        let dropped = false;
+        $(document).ready(() => {
+            $(document).on('click', function (e) {
+                if (e.target.id != 'navbarDropdownMenuLinkRight' && !e.target.classList.contains('nested-dropdown') && dropped) {
+                    $('#navbarDropdownMenuLinkRight').dropdown('toggle');
+                    $('.dropdown-submenu a.nested-dropdown').next('ul').toggle(false);
+                    dropped = false;
+                }
+            });
+            // $('a.editParticipant').on('click', function () {
+            //     let form = document.createElement("form");
+                    
+            //     form.setAttribute("method", "POST");
+            //     form.setAttribute("action", "edit_participants");
+            //     form.setAttribute("style", "display: none");
+                
+            //     hiddenInput = document.createElement("input");
+            //     hiddenInput.setAttribute("type", "hidden");
+            //     hiddenInput.setAttribute("name", "forStudy");
+            //     hiddenInput.setAttribute("value", "true");
+            //     form.appendChild(hiddenInput);
+                
+            //     document.body.appendChild(form);
+            //     form.submit();
+                    
+            //     return false;
+            // });
+            $('#navbarDropdownMenuLinkRight').on('click', () => {
                 $('#navbarDropdownMenuLinkRight').dropdown('toggle');
+                dropped = !dropped;
+            });
+            $('.dropdown-submenu a.nested-dropdown').on("mouseover", function(e) {
                 $('.dropdown-submenu a.nested-dropdown').next('ul').toggle(false);
-                dropped = false;
-            }
+                $(this).next('ul').toggle(true);
+                e.stopPropagation();
+                e.preventDefault();
+            });
+            $('.dropdown-submenu a.nested-dropdown').on("mouseout", function(e) {
+                if (e.relatedTarget.classList.contains('dropdown-submenu') || e.relatedTarget.classList.contains('nested-dropdown-item')) return;
+                $(this).next('ul').toggle(false);
+                e.stopPropagation();
+                e.preventDefault();
+            });
         });
-        // $('a.editParticipant').on('click', function () {
-        //     let form = document.createElement("form");
-                
-        //     form.setAttribute("method", "POST");
-        //     form.setAttribute("action", "edit_participants");
-        //     form.setAttribute("style", "display: none");
-            
-        //     hiddenInput = document.createElement("input");
-        //     hiddenInput.setAttribute("type", "hidden");
-        //     hiddenInput.setAttribute("name", "forStudy");
-        //     hiddenInput.setAttribute("value", "true");
-        //     form.appendChild(hiddenInput);
-            
-        //     document.body.appendChild(form);
-        //     form.submit();
-                
-        //     return false;
-        // });
-        $('#navbarDropdownMenuLinkRight').on('click', () => {
-            $('#navbarDropdownMenuLinkRight').dropdown('toggle');
-            dropped = !dropped;
-        });
-        $('.dropdown-submenu a.nested-dropdown').on("mouseover", function(e) {
-            $('.dropdown-submenu a.nested-dropdown').next('ul').toggle(false);
-            $(this).next('ul').toggle(true);
-            e.stopPropagation();
-            e.preventDefault();
-        });
-        $('.dropdown-submenu a.nested-dropdown').on("mouseout", function(e) {
-            if (e.relatedTarget.classList.contains('dropdown-submenu') || e.relatedTarget.classList.contains('nested-dropdown-item')) return;
-            $(this).next('ul').toggle(false);
-            e.stopPropagation();
-            e.preventDefault();
-        });
-    });
-</script>
+    </script>
+</div>
 <?php
   include 'inc/footer.php';
 ?>

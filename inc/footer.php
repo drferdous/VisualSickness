@@ -4,6 +4,7 @@
         <button class="shadow-none btn nav-link" onclick="location.href='contact'"><i class="fas fa-address-card mr-2"></i>Contact Us</button>
     </div>
 </div>
+</div>
 
 
 

@@ -117,6 +117,23 @@ $timezone = Session::get('time_offset');
         .pictures [type=radio]:checked {
             border-color: #f00;
         }
+        
+        /* study details styles */
+        .dropdown-submenu {
+        position: relative;
+        }
+
+        .dropdown-submenu .dropdown-menu {
+        top: 0;
+        transform: translateX(-100%);
+        margin-top: -1px;
+        }
+
+        @media (min-width: 768px) {
+            #studyNavbar {
+                display: none!important;
+            }
+        }
     </style>
   </head>
   <body>
