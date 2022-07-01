@@ -62,12 +62,12 @@
 <div class="card">
     <div class="card-header">
         <span class="float-left d-flex align-items-center">
-            <h3>
+            <h1 class="mb-0">
                 <?php if ($role_row['study_role'] == 2 || $role_row['study_role'] == 3) { ?>
-                    <a href="edit_participants" class="mr-2 redirectUser" style="color: #222;"><i class="fas fa-pencil-alt"></i></a>
+                    <a href="edit_participants" class="mr-2 redirectUser" style="color: #222;"><i class="fas fa-pencil-alt"><span class="d-none">Edit <?= $name ?></span></i></a>
                 <?php } ?>
                 <?= $name ?>
-            </h3>
+            </h1>
         </span>
         <?php if (isset($referrer)) { ?><span class="float-right"> <a href='<?= $referrer ?>' class="btn btn-primary backBtn">Back</a></span><?php } ?>
     </div>
@@ -105,11 +105,19 @@
                     </tr>
                     <tr>
                         <th>Phone Number</th>
-                        <td><a href="tel:<?= $row['phone_no'] ?>"><?= $row["phone_no"] ?></a></td>
+                        <td>
+                            <?php if ($row['phone_no']) { ?>
+                                <a href="tel:<?= $row['phone_no'] ?>"><?= $row["phone_no"] ?></a>
+                            <?php } ?>
+                        </td>
                     </tr>
                     <tr>
                         <th>Email</th>
-                        <td><a href="mailto:<?= $row['email'] ?>"><?= $row["email"] ?></a></td>
+                        <td>
+                            <?php if ($row['email']) { ?>
+                                <a href="mailto:<?= $row['email'] ?>"><?= $row["email"] ?></a>
+                            <?php } ?>
+                        </td>
                     </tr>
                     <tr>
                         <th>Comments</th>
