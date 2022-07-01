@@ -10,35 +10,41 @@ Session::CheckSession();
 
 $email = Session::get("email");
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["reset-submit"]) && Session::CheckPostID($_POST)) {
-    $changePass = $users->resetPass($email, $_POST["new_password"], $_POST["confirm_password"]);
-    if ($changePass) {
-        echo $changePass;
-    } else if (Session::get('reg_stat') == 0) {
-        // Get comma-separated list of admin email addresses for the user's affiliation
-        $adminString = Util::getAdminsFromAffiliation($pdo, Session::get('affiliationid'));
-        $body = '<p>A new user has signed up for Visual Sickness Study under your affiliation: ' . Util::getAffiliationNameById($pdo, Session::get('affiliationid'));
-        if (!$adminString) {
-            $adminString = "visualsicknessstudy@gmail.com";
-            $body = '<p>A new user has signed up for Visual Sickness Study under an affiliation with no administrator: ' . Util::getAffiliationNameById($pdo, Session::get('affiliationid'));
+    if (isset($_POST["new_password"]) && isset($_POST["confirm_password"])){
+        $changePass = $users->resetPass($email, $_POST["new_password"], $_POST["confirm_password"]);
+        if ($changePass) {
+            echo $changePass;
+        } else if (Session::get('reg_stat') == 0) {
+            // Get comma-separated list of admin email addresses for the user's affiliation
+            $adminString = Util::getAdminsFromAffiliation($pdo, Session::get('affiliationid'));
+            $body = '<p>A new user has signed up for Visual Sickness Study under your affiliation: ' . Util::getAffiliationNameById($pdo, Session::get('affiliationid'));
+            if (!$adminString) {
+                $adminString = "visualsicknessstudy@gmail.com";
+                $body = '<p>A new user has signed up for Visual Sickness Study under an affiliation with no administrator: ' . Util::getAffiliationNameById($pdo, Session::get('affiliationid'));
+            }
+            
+            $body .= "<br><br>The user has signed up with the name <strong>" . Session::get("name") . "</strong> and email <strong>" . Session::get('email') . '</strong>.<br>';
+            // send email here
+            sendEmail($adminString, 'Visual Sickness | New User Registration', $body);
+            $sql = 'UPDATE users SET registration_status = 1 where user_id = ' . Session::get('id') . ';';
+            $result = Database::getInstance()->pdo->query($sql);
+            Session::set("reg_stat", 1);
+            if (!$result) {
+                echo 'An error occurred. Please try again.';
+                exit();
+            }
+            echo Util::generateSuccessMessage("You will receive an email when your account is verfied by an administrator.");
         }
-        
-        $body .= "<br><br>The user has signed up with the name <strong>" . Session::get("name") . "</strong> and email <strong>" . Session::get('email') . '</strong>.<br>';
-        // send email here
-        sendEmail($adminString, 'Visual Sickness | New User Registration', $body);
-        $sql = 'UPDATE users SET registration_status = 1 where user_id = ' . Session::get('id') . ';';
-        $result = Database::getInstance()->pdo->query($sql);
-        Session::set("reg_stat", 1);
-        if (!$result) {
-            echo 'An error occurred. Please try again.';
-            exit();
-        }
-        echo Util::generateSuccessMessage("You will receive an email when your account is verfied by an administrator.");
+        ?>
+        <script>
+            setTimeout(() => location.href='pending_verify', 2000);
+        </script>
+<?php 
     }
-    ?>
-    <script>
-        setTimeout(() => location.href='pending_verify', 2000);
-    </script>
-<?php } ?>
+    else{
+        echo Util::generateErrorMessage("No password was given.");
+    }
+} ?>
 <div class="card">
     <div class="card-header">
         <h1 class='text-center'><i class="fas fa-sign-in-alt mr-2"></i>New Password</h1>
