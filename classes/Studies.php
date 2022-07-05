@@ -33,6 +33,11 @@ class Studies {
             $ssq_time = $ssq['ssq_time'];
             $ssq_type = $ssq['ssq_type'];
             $session_ID = Session::get('session_ID');
+            $role_check_sql = "SELECT study_role FROM researchers WHERE researcher_id = " . Session::get('id') . " AND study_id = " . Session::get('study_ID') . " AND is_active = 1";
+            $role = $this->db->pdo->query($role_check_sql);
+            if (!$role) {
+                return Util::generateErrorMessage("You do not have proper access in this study!");
+            }
             
             if ($ssq_ID > 0){
                 $sql = "UPDATE ssq
@@ -104,6 +109,11 @@ class Studies {
         }
         if (empty($weight)){
             $weight = NULL;
+        }
+        $role_check_sql = "SELECT study_role FROM researchers WHERE researcher_id = " . Session::get('id') . " AND study_id = " . Session::get('study_ID') . " AND is_active = 1";
+        $role = $this->db->pdo->query($role_check_sql);
+        if (!$role || $role->fetch(PDO::FETCH_ASSOC)['study_role'] == 4) {
+            return Util::generateErrorMessage("You do not have proper access in this study!");
         }
         
         $anonymous_name = Crypto::encrypt($anonymous_name, $iv);
@@ -216,6 +226,11 @@ class Studies {
     if (empty($weight)){
         $weight = NULL;
     }
+    $role_check_sql = "SELECT study_role FROM researchers WHERE researcher_id = " . Session::get('id') . " AND study_id = " . Session::get('study_ID') . " AND is_active = 1";
+    $role = $this->db->pdo->query($role_check_sql);
+    if (!$role || $role->fetch(PDO::FETCH_ASSOC)['study_role'] == 4) {
+        return Util::generateErrorMessage("You do not have proper access in this study!");
+    }
     
     $anonymous_name = Crypto::encrypt($participantInfo['anonymous_name'], $iv);
     $iv = bin2hex($iv);
@@ -300,6 +315,11 @@ class Studies {
     if (empty($study_role)){
         return Util::generateErrorMessage("Please select a role!");
     }
+    $role_check_sql = "SELECT study_role FROM researchers WHERE researcher_id = " . Session::get('id') . " AND study_id = " . Session::get('study_ID') . " AND is_active = 1";
+    $role = $this->db->pdo->query($role_check_sql);
+    if (!$role || $role->fetch(PDO::FETCH_ASSOC)['study_role'] != 2) {
+        return Util::generateErrorMessage("You do not have proper access in this study!");
+    }
     
     $study_ID = Session::get("study_ID");
     $last_edited_by = Session::get('id'); 
@@ -341,6 +361,11 @@ class Studies {
     if (empty($researcher_ID)){
         return Util::generateErrorMessage("Please select a researcher to remove!");
     }
+    $role_check_sql = "SELECT study_role FROM researchers WHERE researcher_id = " . Session::get('id') . " AND study_id = " . Session::get('study_ID') . " AND is_active = 1";
+    $role = $this->db->pdo->query($role_check_sql);
+    if (!$role || $role->fetch(PDO::FETCH_ASSOC)['study_role'] != 2) {
+        return Util::generateErrorMessage("You do not have proper access in this study!");
+    }
            
     $study_ID = Session::get('study_ID');  
     $last_edited_by = Session::get('id'); 
@@ -373,6 +398,11 @@ class Studies {
     }
     if (empty($study_role)){
         return Util::generateErrorMessage("Please select a role!");
+    }
+    $role_check_sql = "SELECT study_role FROM researchers WHERE researcher_id = " . Session::get('id') . " AND study_id = " . Session::get('study_ID') . " AND is_active = 1";
+    $role = $this->db->pdo->query($role_check_sql);
+    if (!$role || $role->fetch(PDO::FETCH_ASSOC)['study_role'] != 2) {
+        return Util::generateErrorMessage("You do not have proper access in this study!");
     }
     
     $study_ID = Session::get("study_ID");
@@ -418,6 +448,11 @@ class Studies {
         return Util::generateErrorMessage("Please select a participant to remove!");
     }
     
+    $role_check_sql = "SELECT study_role FROM researchers WHERE researcher_id = " . Session::get('id') . " AND study_id = " . Session::get('study_ID') . " AND is_active = 1";
+    $role = $this->db->pdo->query($role_check_sql);
+    if (!$role || $role->fetch(PDO::FETCH_ASSOC)['study_role'] != 2) {
+        return Util::generateErrorMessage("You do not have proper access in this study!");
+    }
       
     $sql = "UPDATE participants SET is_active = 0 WHERE participant_id = :participant_id";
     $stmt = $this->db->pdo->prepare($sql);
@@ -441,6 +476,11 @@ public function takeSSQ($quiz_type, $ssq_time){
     $ssq_time = trim($ssq_time);
     if (!strlen($quiz_type) || !strlen($ssq_time)){
         return Util::generateErrorMessage("Please select a quiz type and a quiz time!");
+    }
+    $role_check_sql = "SELECT study_role FROM researchers WHERE researcher_id = " . Session::get('id') . " AND study_id = " . Session::get('study_ID') . " AND is_active = 1";
+    $role = $this->db->pdo->query($role_check_sql);
+    if (!$role) {
+        return Util::generateErrorMessage("You do not have proper access in this study!");
     }
 
     $session_ID = Session::get('session_ID');
@@ -473,7 +513,14 @@ public function takeSSQ($quiz_type, $ssq_time){
   
   // remove SSQ quiz from Session
   public function deleteQuiz(){
-    $ssq_ID = Session::get('ssq_ID');          
+    $ssq_ID = Session::get('ssq_ID');  
+    $creator_check_sql = "SELECT created_by FROM session WHERE session_id = " . Session::get('session_ID') . " AND is_active = 1";
+    $creator = $this->db->pdo->query($creator_check_sql);
+    $role_check_sql = "SELECT study_role FROM researchers WHERE researcher_id = " . Session::get('id') . " AND study_id = " . Session::get('study_ID') . " AND is_active = 1";
+    $role = $this->db->pdo->query($role_check_sql);
+    if ($creator->fetch(PDO::FETCH_ASSOC)['created_by'] != Session::get('id') && (!$role || $role->fetch(PDO::FETCH_ASSOC)['study_role'] != 2)) {
+        return Util::generateErrorMessage("You do not have proper access in this session!");
+    }
       
     $sql = "UPDATE ssq
             SET is_active = 0
@@ -527,6 +574,9 @@ public function takeSSQ($quiz_type, $ssq_time){
     }
     if (count($session_times) !== count(array_unique($session_times))){
         return array(Util::generateErrorMessage("There should be no duplicate Session times!"));
+    }
+    if (Session::get('roleid') > 2) {
+        return Util::generateErrorMessage("You do not have proper access in this study!");
     }
     
     $this->db->pdo->beginTransaction();
@@ -608,6 +658,11 @@ public function takeSSQ($quiz_type, $ssq_time){
         $session_times_str = $data['session_times'];
         $last_edited_by = Session::get('id');
         $study_ID = Session::get('study_ID');
+        $role_check_sql = "SELECT study_role FROM researchers WHERE researcher_id = " . Session::get('id') . " AND study_id = " . Session::get('study_ID') . " AND is_active = 1";
+        $role = $this->db->pdo->query($role_check_sql);
+        if (!$role || $role->fetch(PDO::FETCH_ASSOC)['study_role'] != 2) {
+            return Util::generateErrorMessage("You do not have proper access in this study!");
+        }
         
         $ssq_times = explode(',', $ssq_times_str);
         array_walk($ssq_times, function (&$time) {
@@ -937,6 +992,11 @@ public function takeSSQ($quiz_type, $ssq_time){
     public function activateStudy($study_ID){
         $last_edited_by = Session::get('id'); 
         $currentDate = new DateTime();
+        $role_check_sql = "SELECT study_role FROM researchers WHERE researcher_id = " . Session::get('id') . " AND study_id = " . Session::get('study_ID') . " AND is_active = 1";
+        $role = $this->db->pdo->query($role_check_sql);
+        if (!$role || $role->fetch(PDO::FETCH_ASSOC)['study_role'] != 2) {
+            return Util::generateErrorMessage("You do not have proper access in this study!");
+        }
         
         $sql = "UPDATE study
                 SET is_active = 1, last_edited_by = :last_edited_by, last_edited_at = :last_edited_at
@@ -961,6 +1021,11 @@ public function takeSSQ($quiz_type, $ssq_time){
     public function deactivateStudy($study_ID){
         $last_edited_by = Session::get('id'); 
         $currentDate = new DateTime();
+        $role_check_sql = "SELECT study_role FROM researchers WHERE researcher_id = " . Session::get('id') . " AND study_id = " . Session::get('study_ID') . " AND is_active = 1";
+        $role = $this->db->pdo->query($role_check_sql);
+        if (!$role || $role->fetch(PDO::FETCH_ASSOC)['study_role'] != 2) {
+            return Util::generateErrorMessage("You do not have proper access in this study!");
+        }
         $sql = "UPDATE study
                 SET is_active = 0, last_edited_by = :last_edited_by, last_edited_at = :last_edited_at 
                 WHERE study_id = :study_ID
@@ -1011,6 +1076,11 @@ public function takeSSQ($quiz_type, $ssq_time){
     public function insertSession($session_data){
         array_walk($session_data, function (&$val) {         $val = trim($val);     });
         $created_by = Session::get('id');
+        $role_check_sql = "SELECT study_role FROM researchers WHERE researcher_id = " . Session::get('id') . " AND study_id = " . Session::get('study_ID') . " AND is_active = 1";
+        $role = $this->db->pdo->query($role_check_sql);
+        if (!$role) {
+            return Util::generateErrorMessage("You do not have proper access in this study!");
+        }
         
         if (empty($session_data["participant_ID"])){
             return Util::generateErrorMessage("Please select a participant!");
@@ -1071,6 +1141,13 @@ public function takeSSQ($quiz_type, $ssq_time){
                     last_edited_by = :last_edited_by
                 WHERE session_id = :session_ID
                 LIMIT 1;";
+        $creator_check_sql = "SELECT created_by FROM session WHERE session_id = " . Session::get('session_ID') . " AND is_active = 1";
+        $creator = $this->db->pdo->query($creator_check_sql);
+        $role_check_sql = "SELECT study_role FROM researchers WHERE researcher_id = " . Session::get('id') . " AND study_id = " . Session::get('study_ID') . " AND is_active = 1";
+        $role = $this->db->pdo->query($role_check_sql);
+        if ($creator->fetch(PDO::FETCH_ASSOC)['created_by'] != Session::get('id') && (!$role || $role->fetch(PDO::FETCH_ASSOC)['study_role'] != 2)) {
+            return Util::generateErrorMessage("You do not have proper access in this session!");
+        }
                 
         $stmt = $this->db->pdo->prepare($sql);
         $stmt->bindValue(':session_ID', $session_ID);
@@ -1093,6 +1170,13 @@ public function takeSSQ($quiz_type, $ssq_time){
                 SET end_time = :end_time
                 WHERE session_id = :session_ID
                 LIMIT 1;";
+        $creator_check_sql = "SELECT created_by FROM session WHERE session_id = " . Session::get('session_ID') . " AND is_active = 1";
+        $creator = $this->db->pdo->query($creator_check_sql);
+        $role_check_sql = "SELECT study_role FROM researchers WHERE researcher_id = " . Session::get('id') . " AND study_id = " . Session::get('study_ID') . " AND is_active = 1";
+        $role = $this->db->pdo->query($role_check_sql);
+        if ($creator->fetch(PDO::FETCH_ASSOC)['created_by'] != Session::get('id') && (!$role || $role->fetch(PDO::FETCH_ASSOC)['study_role'] != 2)) {
+            return Util::generateErrorMessage("You do not have proper access in this session!");
+        }
         
         $stmt = $this->db->pdo->prepare($sql);
         $stmt->bindValue(':end_time', $currentDate->format('Y-m-d H:i:s'));
@@ -1114,6 +1198,13 @@ public function takeSSQ($quiz_type, $ssq_time){
                 SET is_active = 0, last_edited_by = :last_edited_by  
                 WHERE session_id = :session_ID
                 LIMIT 1;";
+        $creator_check_sql = "SELECT created_by FROM session WHERE session_id = " . Session::get('session_ID') . " AND is_active = 1";
+        $creator = $this->db->pdo->query($creator_check_sql);
+        $role_check_sql = "SELECT study_role FROM researchers WHERE researcher_id = " . Session::get('id') . " AND study_id = " . Session::get('study_ID') . " AND is_active = 1";
+        $role = $this->db->pdo->query($role_check_sql);
+        if ($creator->fetch(PDO::FETCH_ASSOC)['created_by'] != Session::get('id') && (!$role || $role->fetch(PDO::FETCH_ASSOC)['study_role'] != 2)) {
+            return Util::generateErrorMessage("You do not have proper access in this session!");
+        }
         
         $stmt = $this->db->pdo->prepare($sql);
         $stmt->bindValue(':session_ID', $session_ID);

@@ -80,8 +80,7 @@ label.required::after {
   }
 }
 
-a,
-.page-item:not(.active) .page-link {
+a, .page-item:not(.active):not(.disabled) .page-link {
   color: #2075d1;
 }
 
@@ -90,8 +89,7 @@ a,
   border-color: #27783a;
 }
 
-.btn-primary,
-.page-item.active .page-link {
+.btn-primary, .page-item.active .page-link {
   background-color: #2075d1 !important;
 }
 
