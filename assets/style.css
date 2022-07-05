@@ -80,7 +80,8 @@ label.required::after {
   }
 }
 
-a {
+a,
+.page-item:not(.active) .page-link {
   color: #2075d1;
 }
 
@@ -101,7 +102,7 @@ a {
 }
 
 .badge {
-  font-size: 11px !important;
+  font-size: max(75%, 11px);
 }
 
 .required-msg {

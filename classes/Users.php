@@ -215,7 +215,13 @@ class Users{
         $name = $data['name'];
         $mobile = $data['mobile'];
         $userid = Crypto::decrypt($encryptedUserID, $iv);
-        
+        if ($userid != Session::get('id')) {
+            $role_check_sql = "SELECT role_id FROM users WHERE user_id = $userid";
+            $role = $this->db->pdo->query($role_check_sql);
+            if (!$role || $role->fetch(PDO::FETCH_ASSOC)['role_id'] == 1) {
+                return Util::generateErrorMessage("You do not have access to edit this user!");
+            }
+        }
         if ($name == ""){
             return Util::generateErrorMessage("Name field should not be empty!");
         }
