@@ -39,7 +39,7 @@
             <?php 
                 $sql = "SELECT anonymous_name, iv, dob, participant_id 
                         FROM participants 
-                        WHERE is_active = 1 AND study_id = 97";
+                        WHERE is_active = 1 AND study_id = $id";
                 $result = $pdo->query($sql); ?>
             <select class="form-control form-select" name="participant_id" id="participant_id">
 
