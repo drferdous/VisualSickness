@@ -196,7 +196,25 @@ if (isset($_GET['action']) && $_GET['action'] == 'logout') {
                                <i class="fas fa-sticky-note mr-2"></i>Study List
                             </a>
                         </li>
+                <?php } 
+                if(intval(Session::get("roleid")) != 4) { ?>
+                <li class="nav-item
+                    <?php 
+                        $path = $_SERVER['SCRIPT_FILENAME'];
+                        $current = basename($path, '.php');
+                        if ($current == 'create_report') {
+                            echo "active ";
+                        }
+                    ?>
+                ">
+                    <a class="nav-link"
+                    href="create_report">
+                    <i class="fas fa-download mr-2"></i>Report
+                    </a>
+                </li>
                 <?php } ?>
+
+
                 <li class="nav-item
                 <?php
     
