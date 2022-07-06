@@ -51,7 +51,7 @@
         <br>
         <?php if ($result->rowCount()) { ?>
             <div class="form-group">
-                <button type="submit" name="create_report" class="btn btn-success" onclick="return downloadReport()">Submit</button>
+                <button type="submit" name="create_report" class="btn btn-success" onclick="return downloadReport()">Download</button>
             </div>
         <?php } ?>
     </div>
