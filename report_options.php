@@ -20,16 +20,15 @@
                 $sql = "SELECT name, id
                         FROM session_times WHERE study_id = " . $id . " AND is_active = 1";
                 $result = $pdo->query($sql); ?>
-            <select class="form-control form-select" name="session_id" id="session_id">
+            <select class="form-control form-select" name="session_id" id="session_id" <?= !$result->rowCount() ? "disabled" : "" ?>>
 
             <?php if($result->rowCount() === 0) { ?>
-                    <option value="" disabled hidden selected>There are no sessions available!</option>
+                    <option value="" hidden selected>There are no sessions available!</option>
             <?php } else {?>
                 <option value="" selected>All Sessions</option>
             <?php } 
-                while ($row = $result->fetch(PDO::FETCH_ASSOC)) { 
-                    $enc_id = Crypto::encrypt($row['id'], $iv); ?>
-                    <option value="<?= $enc_id ?>;<?= bin2hex($iv) ?>"><?php echo $row['name'];?></option>
+                while ($row = $result->fetch(PDO::FETCH_ASSOC)) { ?>
+                    <option value="<?= $row['id'] ?>"><?php echo $row['name'];?></option>
                 <?php } ?>
             </select> 
         </div>
@@ -41,10 +40,10 @@
                         FROM participants 
                         WHERE is_active = 1 AND study_id = $id";
                 $result = $pdo->query($sql); ?>
-            <select class="form-control form-select" name="participant_id" id="participant_id">
+            <select class="form-control form-select" name="participant_id" id="participant_id" <?= !$result->rowCount() ? "disabled" : "" ?>>
 
             <?php if($result->rowCount() === 0) { ?>
-                    <option value="" disabled hidden selected>There are no participants available!</option>
+                    <option value="" hidden selected>There are no participants available!</option>
             <?php } else {?>
                 <option value="" selected>All Participants</option>
             <?php } 
@@ -64,15 +63,14 @@
                         FROM ssq_times 
                         WHERE study_id = " . $id . " AND is_active = 1";
                 $result = $pdo->query($sql); ?>
-            <select class="form-control form-select" name="SSQ_id" id="SSQ_id">
+            <select class="form-control form-select" name="SSQ_id" id="SSQ_id" <?= !$result->rowCount() ? "disabled" : "" ?>>
             <?php if($result->rowCount() === 0) { ?>
-                    <option value="" disabled hidden selected>There are no SSQ Times available!</option>
+                    <option value="" hidden selected>There are no SSQ Times available!</option>
             <?php } else {?>
                 <option value="" selected>All SSQ Times</option>
             <?php } 
-                while ($row = $result->fetch(PDO::FETCH_ASSOC)) {  
-                    $enc_id = Crypto::encrypt($row['id'], $iv);?>
-                    <option value="<?= $enc_id ?>;<?= bin2hex($iv) ?>"><?php echo $row['name'];?></option>
+                while ($row = $result->fetch(PDO::FETCH_ASSOC)) { ?>
+                    <option value="<?= $row['id'] ?>"><?php echo $row['name'];?></option>
                 <?php } ?>
             </select>
         </div>
