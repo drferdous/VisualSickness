@@ -25,50 +25,49 @@
             ?>
 
             <input type="hidden" name="randCheck" value="<?php echo $rand; ?>">
-            <div style="margin-block: 6px;">
-                <small class='required-msg'>
-                    * Required Field
-                </small>
-            </div>
 
             <div class="form-group">
-                <div class="form-group">
-                    <label for="study_id" class="required">Studies</label>
-                    <?php 
-                        $sql = "SELECT S.full_name, S.study_id
-                               FROM study AS S JOIN researchers as R ON(S.study_id = R.study_id) 
-                               WHERE S.is_active = 1 AND R.is_active = 1 AND researcher_id = " . $idToSearch . " AND R.study_role < 4;";
+                <label for="study_id">Studies</label>
+                <?php 
+                    $sql = "SELECT S.full_name, S.study_id
+                            FROM study AS S JOIN researchers as R ON(S.study_id = R.study_id) 
+                            WHERE S.is_active = 1 AND R.is_active = 1 AND researcher_id = " . $idToSearch . " AND R.study_role < 4;";
 
-                        $result = $pdo->query($sql);
-                    ?>
-                    <select class="form-control form-select" name="study_id" id="study_id" <?= $result->rowCount() === 0 ? 'disabled' : '' ?>>
-                        <?php if($result->rowCount() === 0) { ?>
-                            <option value="" disabled hidden selected>There are no studies available!</option>
-                        <?php } else {?>
-                            <option value="" selected>All Studies</option>
-                        <?php }
-                            while ($row = $result->fetch(PDO::FETCH_ASSOC)){ 
-                                $enc_id = Crypto::encrypt($row['study_id'], $iv); ?>
-                                <option value="<?= $enc_id ?>;<?= bin2hex($iv) ?>"><?php echo $row['full_name'];?></option>
-                        <?php } ?>
+                    $result = $pdo->query($sql);
+                ?>
+                <select class="form-control form-select" name="study_id" id="study_id" <?= $result->rowCount() === 0 ? 'disabled' : '' ?>>
+                    <?php if($result->rowCount() === 0) { ?>
+                        <option value="" disabled hidden selected>There are no studies available!</option>
+                    <?php } else {?>
+                        <option value="" selected>All Studies</option>
+                    <?php }
+                        while ($row = $result->fetch(PDO::FETCH_ASSOC)){ 
+                            $enc_id = Crypto::encrypt($row['study_id'], $iv); ?>
+                            <option value="<?= $enc_id ?>;<?= bin2hex($iv) ?>"><?php echo $row['full_name'];?></option>
+                    <?php } ?>
+                </select>
+            </div>
+            <br>
+            <div id="report_info">
+                <div class="form-group">
+                    <label for="session_id">Sessions</label>
+                    <select class="form-control form-select" name="session_id" id="session_id" disabled>
+                        <option value="" selected hidden disabled>Session</option>
                     </select>
-                    <br>
-                    <div id="report_info">
-                        <label for="session_id">Sessions</label>
-                        <select class="form-control form-select" name="session_id" id="session_id" disabled>
-                            <option value="" selected hidden disabled>Session</option>
-                        </select> 
-                        <br>
-                        <label for="participant_id">Participants</label>
-                        <select class="form-control form-select" name="participant_id" id="participant_id" disabled>
-                            <option value="" selected hidden disabled>Participant</option>
-                        </select> 
-                        <br>
-                        <label for="SSQ_id">SSQ Times</label>
-                        <select class="form-control form-select" name="SSQ_id" id="SSQ_id" disabled>
-                            <option value="" selected hidden disabled>SSQ Time</option>
-                        </select> 
-                    </div>
+                </div> 
+                <br>
+                <div class="form-group">
+                    <label for="participant_id">Participants</label>
+                    <select class="form-control form-select" name="participant_id" id="participant_id" disabled>
+                        <option value="" selected hidden disabled>Participant</option>
+                    </select> 
+                </div>
+                <br>
+                <div class="form-group">
+                    <label for="SSQ_id">SSQ Times</label>
+                    <select class="form-control form-select" name="SSQ_id" id="SSQ_id" disabled>
+                        <option value="" selected hidden disabled>SSQ Time</option>
+                    </select> 
                 </div>
             </div>
             <br>
