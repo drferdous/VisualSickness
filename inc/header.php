@@ -383,6 +383,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'logout') {
     });
 </script>
 <script src="assets/bootstrap-show-password.min.js" defer></script>
+<script src="assets/jszip.min.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/libphonenumber-js/1.10.7/libphonenumber-js.min.js"
         integrity="sha384-sevkaNkNZctHbkPkl5ZhwSLRS1BFnxiMcB58CpUwmsl4lX+rXd7VL4UOPrGVRetr"
         crossorigin="anonymous">

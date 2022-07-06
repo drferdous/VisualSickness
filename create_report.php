@@ -18,86 +18,69 @@
         <h1 class="float-left mb-0">Create Report</h1>
     </div>
     <div class="card-body">
-        <form>
+        <?php 
+            $rand = bin2hex(openssl_random_pseudo_bytes(16));
+            Session::set("post_ID", $rand);
+        ?>
+
+        <input type="hidden" name="randCheck" value="<?php echo $rand; ?>">
+
+        <div class="form-group">
+            <label for="study_id">Studies</label>
             <?php 
-                $rand = bin2hex(openssl_random_pseudo_bytes(16));
-                Session::set("post_ID", $rand);
+                $sql = "SELECT S.full_name, S.study_id
+                        FROM study AS S JOIN researchers as R ON(S.study_id = R.study_id) 
+                        WHERE R.is_active = 1 AND researcher_id = " . $idToSearch . " AND R.study_role < 4;";
+
+                $result = $pdo->query($sql);
             ?>
-
-            <input type="hidden" name="randCheck" value="<?php echo $rand; ?>">
-
+            <select class="form-control form-select" name="study_id" id="study_id" <?= $result->rowCount() === 0 ? 'disabled' : '' ?>>
+                <?php if($result->rowCount() === 0) { ?>
+                    <option value="" disabled hidden selected>There are no studies available!</option>
+                <?php } else {?>
+                    <option value="" selected>All Studies</option>
+                <?php }
+                    while ($row = $result->fetch(PDO::FETCH_ASSOC)){ 
+                        $enc_id = Crypto::encrypt($row['study_id'], $iv); ?>
+                        <option value="<?= $enc_id ?>;<?= bin2hex($iv) ?>"><?php echo $row['full_name'];?></option>
+                <?php } ?>
+            </select>
+        </div>
+        <div id="report_info"></div>
+        <br>
+        <?php if ($result->rowCount()) { ?>
             <div class="form-group">
-                <label for="study_id">Studies</label>
-                <?php 
-                    $sql = "SELECT S.full_name, S.study_id
-                            FROM study AS S JOIN researchers as R ON(S.study_id = R.study_id) 
-                            WHERE R.is_active = 1 AND researcher_id = " . $idToSearch . " AND R.study_role < 4;";
-
-                    $result = $pdo->query($sql);
-                ?>
-                <select class="form-control form-select" name="study_id" id="study_id" <?= $result->rowCount() === 0 ? 'disabled' : '' ?>>
-                    <?php if($result->rowCount() === 0) { ?>
-                        <option value="" disabled hidden selected>There are no studies available!</option>
-                    <?php } else {?>
-                        <option value="" selected>All Studies</option>
-                    <?php }
-                        while ($row = $result->fetch(PDO::FETCH_ASSOC)){ 
-                            $enc_id = Crypto::encrypt($row['study_id'], $iv); ?>
-                            <option value="<?= $enc_id ?>;<?= bin2hex($iv) ?>"><?php echo $row['full_name'];?></option>
-                    <?php } ?>
-                </select>
+                <button type="submit" name="create_report" class="btn btn-success" onclick="return downloadReport()">Submit</button>
             </div>
-            <div id="report_info">
-                <div class="form-group">
-                    <label for="session_id">Sessions</label>
-                    <select class="form-control form-select" name="session_id" id="session_id" disabled>
-                        <option value="" selected hidden disabled>Session</option>
-                    </select>
-                </div> 
-                <div class="form-group">
-                    <label for="participant_id">Participants</label>
-                    <select class="form-control form-select" name="participant_id" id="participant_id" disabled>
-                        <option value="" selected hidden disabled>Participant</option>
-                    </select> 
-                </div>
-                <div class="form-group">
-                    <label for="SSQ_id">SSQ Times</label>
-                    <select class="form-control form-select" name="SSQ_id" id="SSQ_id" disabled>
-                        <option value="" selected hidden disabled>SSQ Time</option>
-                    </select> 
-                </div>
-            </div>
-            <br>
-            <?php if ($result->rowCount()) { ?>
-                <div class="form-group" onclick="return downloadReport()">
-                    <button type="submit" name="create_report" class="btn btn-success">Submit</button>
-                </div>
-            <?php } ?>
-        </form>
+        <?php } ?>
     </div>
 </div>
 
 <script>
-     $(document).ready(function() {
-         $('#study_id').change(function() {
-            const info = $(this).val();
-            const study_id = info.split(';')[0];
-            const iv = info.split(';')[1];
-            $.ajax({
-                url: "report_options",
-                type: "POST",
-                cache: false,
-                data: {
-                    study_id,
-                    iv
-                },
-                success:function(data){
-                    let reportSelector = document.getElementById("report_info");
-                    $(reportSelector).html(data);
-                }
-            });	
-         });
-     });
+    $(document).ready(function() {
+        $('#study_id').change(function() {
+            getOptions();
+        });
+        getOptions();
+    });
+    function getOptions() {
+        const info = $('#study_id').val();
+        const study_id = info.split(';')[0];
+        const iv = info.split(';')[1];
+        $.ajax({
+            url: "report_options",
+            type: "POST",
+            cache: false,
+            data: {
+                study_id,
+                iv
+            },
+            success:function(data){
+                let reportSelector = document.getElementById("report_info");
+                $(reportSelector).html(data);
+            }
+        });
+    }
     function downloadReport() {
         const study_ID = $("#study_id").val()?.split(';')[0];
         const study_iv = $("#study_id").val()?.split(';')[1];
@@ -119,7 +102,39 @@
                 downloadResults: true
             },
             success:function(data){
-                console.log(data);
+                const folderRegex = /([^]*?);FOLDERBREAK - name: ([^\s;]+);/g;
+                let folders = false;
+                const zip = new JSZip();
+                while (match = folderRegex.exec(data)) {
+                    const folder = match[1];
+                    const folderName = match[2];
+                    folders = true;
+                    const f = zip.folder(folderName);
+                    const fileRegex = /([^]*?);FILEBREAK - name: ([^\s;]+);/g;
+                    while (match = fileRegex.exec(folder)) {
+                        const file = match[1];
+                        const fileName = match[2];
+                        f.file(`${fileName}.csv`, file);
+                    }
+                }
+                if (!folders) {
+                    const fileRegex = /([^]*?);FILEBREAK - name: ([^\s;]+);/g;
+                    while (match = fileRegex.exec(data)) {
+                        const file = match[1];
+                        const fileName = match[2];
+                        zip.file(`${fileName}.csv`, file);
+                    }
+                }
+                zip.generateAsync({type:"blob"})
+                .then(function(content) {
+                    const a = document.createElement('a');
+                    a.download = 'VSreport.zip';
+                    a.href = window.URL.createObjectURL(content);
+                    a.dataset.downloadurl = ['text/csv', a.download, a.href].join(':');
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                });
             }
         });
     return false;

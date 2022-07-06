@@ -84,7 +84,7 @@ if (!empty($_POST['study_ID'])) {
             }
             $study_str .= "\n";
         }
-        $retStr = "$study_str;FILEBREAK - name: " . preg_replace('/\s/', '_', strtolower($participant_name)) . ";";
+        $retStr = "$study_str;FILEBREAK - name: " . preg_replace('/[\s;]/', '_', strtolower($participant_name)) . ";";
         echo $retStr;
     } else {
         echo getFilesForSessions($study_ID, $pdo, !empty($_POST['session_name']) ? $_POST['session_name'] : false, !empty($_POST['ssq_time']) ? $_POST['ssq_time'] : false);
@@ -107,7 +107,7 @@ if (!empty($_POST['study_ID'])) {
                            WHERE study_id = $study_ID;";
         $study_name_result = $pdo->query($study_name_sql);
         $study_name = $study_name_result->fetch(PDO::FETCH_ASSOC)['short_name'];
-        $retStr .= ";FOLDERBREAK - name: " . preg_replace('/\s/', '_', strtolower($study_name)) . ";";
+        $retStr .= ";FOLDERBREAK - name: " . preg_replace('/[\s;]/', '_', strtolower($study_name)) . ";";
     }
     echo $retStr;
 }
@@ -188,7 +188,7 @@ function getFilesForSessions($study_ID, $pdo, $session_name = false, $ssq_time_c
             }
             $session_str .= "\n";
         }
-        $retStr .= "$session_str;FILEBREAK - name: " . preg_replace('/\s/', '_', strtolower($session_name['name'])) . ";";
+        $retStr .= "$session_str;FILEBREAK - name: " . preg_replace('/[\s;]/', '_', strtolower($session_name['name'])) . ";";
     }
     return $retStr;
 }
