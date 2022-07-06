@@ -53,7 +53,7 @@
                     <select class="form-control form-select" name="session_id" id="session_id" disabled>
                         <option value="" selected hidden disabled>Session</option>
                     </select>
-                </div>
+                </div> 
                 <div class="form-group">
                     <label for="participant_id">Participants</label>
                     <select class="form-control form-select" name="participant_id" id="participant_id" disabled>
