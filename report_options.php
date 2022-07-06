@@ -27,9 +27,8 @@
             <?php } else {?>
                 <option value="" selected>All Sessions</option>
             <?php } 
-                while ($row = $result->fetch(PDO::FETCH_ASSOC)) { 
-                    $enc_id = Crypto::encrypt($row['id'], $iv); ?>
-                    <option value="<?= $enc_id ?>;<?= bin2hex($iv) ?>"><?php echo $row['name'];?></option>
+                while ($row = $result->fetch(PDO::FETCH_ASSOC)) { ?>
+                    <option value="<?= $row['id'] ?>"><?php echo $row['name'];?></option>
                 <?php } ?>
             </select> 
         </div>
@@ -70,9 +69,8 @@
             <?php } else {?>
                 <option value="" selected>All SSQ Times</option>
             <?php } 
-                while ($row = $result->fetch(PDO::FETCH_ASSOC)) {  
-                    $enc_id = Crypto::encrypt($row['id'], $iv);?>
-                    <option value="<?= $enc_id ?>;<?= bin2hex($iv) ?>"><?php echo $row['name'];?></option>
+                while ($row = $result->fetch(PDO::FETCH_ASSOC)) { ?>
+                    <option value="<?= $row['id'] ?>"><?php echo $row['name'];?></option>
                 <?php } ?>
             </select>
         </div>

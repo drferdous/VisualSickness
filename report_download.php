@@ -39,7 +39,11 @@ if (!empty($_POST['study_ID'])) {
             $name_str = preg_replace('/[\s,]/', '_', strtolower($time['name']));
             return "{$name_str}_type,{$name_str}_nausea,{$name_str}_oculomotor,{$name_str}_disorient,{$name_str}_total";
         }, $times));
-        $participant_name = false;
+        $name_sql = "SELECT anonymous_name, iv FROM participants
+                     WHERE participant_id = $participant_ID;";
+        $name_result = $pdo->query($name_sql);
+        $row = $name_result->fetch(PDO::FETCH_ASSOC);
+        $participant_name = Crypto::decrypt($row['anonymous_name'], hex2bin($row['iv']));
         foreach ($names as $session_name) {
             $study_str .= "\n{$session_name['name']}";
             foreach ($times as $ssq_time) {
@@ -74,7 +78,6 @@ if (!empty($_POST['study_ID'])) {
                     $SSQ_Sum = $nausea_sum + $oculomotor_sum + $disorient_sum;
                     $total_score = $SSQ_Sum * 3.74;
                     $study_str .= ",{$row['ssq_type']},$nausea_score,$oculomotor_score,$disorient_score,$total_score";
-                    if (!$participant_name) $participant_name = Crypto::decrypt($row['anonymous_name'], hex2bin($row['iv']));
                 } else {
                     $study_str .= ',,,,,,';
                 }
@@ -211,15 +214,12 @@ function getSSQs($study_ID, $participant_ID, $session_name, $ssq_time, $pdo) {
             ssq.burping,
             ssq_times.name AS ssq_time,
             ssq_type.type AS ssq_type,
-            session_times.name AS session_name,
-            participants.anonymous_name,
-            participants.iv
+            session_times.name AS session_name
         FROM ssq
             JOIN ssq_times ON ssq.ssq_time = ssq_times.id
             JOIN ssq_type ON ssq.ssq_type = ssq_type.id
             JOIN session ON session.session_id = ssq.session_id
             JOIN session_times ON session_times.id = session.session_time
-            JOIN participants ON participants.participant_id = session.participant_id
         WHERE ssq.is_active = 1
         AND ssq_times.is_active = 1
         AND session_times.is_active = 1
