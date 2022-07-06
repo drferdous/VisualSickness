@@ -47,22 +47,19 @@
                     <?php } ?>
                 </select>
             </div>
-            <br>
             <div id="report_info">
                 <div class="form-group">
                     <label for="session_id">Sessions</label>
                     <select class="form-control form-select" name="session_id" id="session_id" disabled>
                         <option value="" selected hidden disabled>Session</option>
                     </select>
-                </div> 
-                <br>
+                </div>
                 <div class="form-group">
                     <label for="participant_id">Participants</label>
                     <select class="form-control form-select" name="participant_id" id="participant_id" disabled>
                         <option value="" selected hidden disabled>Participant</option>
                     </select> 
                 </div>
-                <br>
                 <div class="form-group">
                     <label for="SSQ_id">SSQ Times</label>
                     <select class="form-control form-select" name="SSQ_id" id="SSQ_id" disabled>
@@ -111,24 +108,25 @@
         const ssq_times_ID = $("#SSQ_id").val().split(';')[0];
         const ssq_iv = $("#SSQ_id").val()?.split(';')[1];
         $.ajax({
-                url: "report_download",
-                type: "POST",
-                cache: false,
-                data: {
-                    study_ID,
-                    study_iv,
-                    session_ID,
-                    session_iv,
-                    participant_ID,
-                    participant_iv,
-                    ssq_times_ID,
-                    ssq_iv,
-                    downloadResults: true
-                },
-                success:function(data){
-                    console.log(data);
-                }
-            });	
+            url: "report_download",
+            type: "POST",
+            cache: false,
+            data: {
+                study_ID,
+                study_iv,
+                session_ID,
+                session_iv,
+                participant_ID,
+                participant_iv,
+                ssq_times_ID,
+                ssq_iv,
+                downloadResults: true
+            },
+            success:function(data){
+                console.log(data);
+            }
+        });
+        return false;
      }
  </script>
 

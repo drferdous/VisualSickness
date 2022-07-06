@@ -31,8 +31,7 @@
                 $enc_id = Crypto::encrypt($row['id'], $iv); ?>
                 <option value="<?= $enc_id ?>;<?= bin2hex($iv) ?>"><?php echo $row['name'];?></option>
             <?php } ?>
-        </select> 
-        <br>
+        </select>
         
         <label for="participant_id">Participants</label>
         <?php 
@@ -53,8 +52,7 @@
                 $name = Crypto::decrypt($row['anonymous_name'], $iv); ?>
                 <option value="<?= $enc_id ?>;<?= bin2hex($iv_participant) ?>"><?php echo $name . " - " . $row['dob']; ?></option>
             <?php } ?>
-        </select> 
-        <br>
+        </select>
 
         <label for="SSQ_id">SSQ Times</label>
         <?php 
@@ -74,4 +72,25 @@
             <?php } ?>
         </select>
 
+<?php }  else { ?>
+    <div class="form-group">
+        <label for="session_id">Sessions</label>
+        <select class="form-control form-select" name="session_id" id="session_id" disabled>
+            <option value="" selected hidden disabled>Session</option>
+        </select>
+    </div> 
+    <br>
+    <div class="form-group">
+        <label for="participant_id">Participants</label>
+        <select class="form-control form-select" name="participant_id" id="participant_id" disabled>
+            <option value="" selected hidden disabled>Participant</option>
+        </select> 
+    </div>
+    <br>
+    <div class="form-group">
+        <label for="SSQ_id">SSQ Times</label>
+        <select class="form-control form-select" name="SSQ_id" id="SSQ_id" disabled>
+            <option value="" selected hidden disabled>SSQ Time</option>
+        </select> 
+    </div>
 <?php } ?>
