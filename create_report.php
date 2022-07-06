@@ -18,7 +18,7 @@
         <h1 class="float-left mb-0">Create Report</h1>
     </div>
     <div class="card-body">
-        <form onsubmit="downloadReport">
+        <form>
             <?php 
                 $rand = bin2hex(openssl_random_pseudo_bytes(16));
                 Session::set("post_ID", $rand);
@@ -31,7 +31,7 @@
                 <?php 
                     $sql = "SELECT S.full_name, S.study_id
                             FROM study AS S JOIN researchers as R ON(S.study_id = R.study_id) 
-                            WHERE S.is_active = 1 AND R.is_active = 1 AND researcher_id = " . $idToSearch . " AND R.study_role < 4;";
+                            WHERE R.is_active = 1 AND researcher_id = " . $idToSearch . " AND R.study_role < 4;";
 
                     $result = $pdo->query($sql);
                 ?>
@@ -69,7 +69,7 @@
             </div>
             <br>
             <?php if ($result->rowCount()) { ?>
-                <div class="form-group">
+                <div class="form-group" onclick="return downloadReport()">
                     <button type="submit" name="create_report" class="btn btn-success">Submit</button>
                 </div>
             <?php } ?>
@@ -99,15 +99,16 @@
          });
      });
      function downloadReport() {
-        const study_ID = $("#study_id").val().split(';')[0];
-        const study_iv = $("#study_id").val()?.split(';')[1];
-        const session_ID = $("#session_id").val().split(';')[0];
-        const session_iv = $("#session_id").val()?.split(';')[1];
-        const participant_ID = $("#participant_id").val().split(';')[0];
-        const participant_iv = $("#participant_id").val()?.split(';')[1];
-        const ssq_times_ID = $("#SSQ_id").val().split(';')[0];
-        const ssq_iv = $("#SSQ_id").val()?.split(';')[1];
-        $.ajax({
+        try {
+            const study_ID = $("#study_id").val()?.split(';')[0];
+            const study_iv = $("#study_id").val()?.split(';')[1];
+            const session_ID = $("#session_id").val()?.split(';')[0];
+            const session_iv = $("#session_id").val()?.split(';')[1];
+            const participant_ID = $("#participant_id").val()?.split(';')[0];
+            const participant_iv = $("#participant_id").val()?.split(';')[1];
+            const ssq_times_ID = $("#SSQ_id").val()?.split(';')[0];
+            const ssq_iv = $("#SSQ_id").val()?.split(';')[1];
+            $.ajax({
                 url: "report_download",
                 type: "POST",
                 cache: false,
@@ -125,7 +126,11 @@
                 success:function(data){
                     console.log(data);
                 }
-            });	
+            });
+        } catch (e) {
+            console.error(e);
+        }
+        return false;
      }
  </script>
 
