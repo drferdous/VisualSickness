@@ -47,7 +47,6 @@
                     <?php } ?>
                 </select>
             </div>
-            <br>
             <div id="report_info">
                 <div class="form-group">
                     <label for="session_id">Sessions</label>
@@ -55,14 +54,12 @@
                         <option value="" selected hidden disabled>Session</option>
                     </select>
                 </div> 
-                <br>
                 <div class="form-group">
                     <label for="participant_id">Participants</label>
                     <select class="form-control form-select" name="participant_id" id="participant_id" disabled>
                         <option value="" selected hidden disabled>Participant</option>
                     </select> 
                 </div>
-                <br>
                 <div class="form-group">
                     <label for="SSQ_id">SSQ Times</label>
                     <select class="form-control form-select" name="SSQ_id" id="SSQ_id" disabled>
