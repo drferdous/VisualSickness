@@ -18,12 +18,7 @@
         <h1 class="float-left mb-0">Create Report</h1>
     </div>
     <div class="card-body">
-        <?php 
-            $rand = bin2hex(openssl_random_pseudo_bytes(16));
-            Session::set("post_ID", $rand);
-        ?>
-
-        <input type="hidden" name="randCheck" value="<?php echo $rand; ?>">
+        <p class="float-right" id="selectedSSQs"></p>
 
         <div class="form-group">
             <label for="study_id">Studies</label>
@@ -62,6 +57,15 @@
         $('#study_id').change(function() {
             getOptions();
         });
+        $(document).on('change', '#session_id', function () {
+            getReportRows();
+        });
+        $(document).on('change', '#participant_id', function () {
+            getReportRows();
+        });
+        $(document).on('change', '#SSQ_id', function () {
+            getReportRows();
+        });
         getOptions();
     });
     function getOptions() {
@@ -79,8 +83,33 @@
             success:function(data){
                 let reportSelector = document.getElementById("report_info");
                 $(reportSelector).html(data);
+                getReportRows();
             }
         });
+    }
+    function getReportRows() {
+        const study_ID = $("#study_id").val()?.split(';')[0];
+        const study_iv = $("#study_id").val()?.split(';')[1];
+        const session_name = $("#session_id").val()?.split(';')[0];
+        const participant_ID = $("#participant_id").val()?.split(';')[0];
+        const participant_iv = $("#participant_id").val()?.split(';')[1];
+        const ssq_time = $("#SSQ_id").val()?.split(';')[0];
+        $.ajax({
+            url: 'count_report_rows',
+            type: 'POST',
+            cache: false,
+            data: {
+                study_ID,
+                study_iv,
+                participant_ID,
+                participant_iv,
+                session_name,
+                ssq_time
+            },
+            success: (data) => {
+                $('#selectedSSQs').text('SSQs selected: ' + data);
+            }
+        })
     }
     function downloadReport() {
         const study_ID = $("#study_id").val()?.split(';')[0];
