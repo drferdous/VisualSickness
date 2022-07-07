@@ -37,7 +37,7 @@ Session::requireResearcherOrUser(Session::get('study_ID'), $pdo);
         $result = $pdo->query($sql);
       ?>
         <br />
-            <table class="table table-striped table-bordered" id="example">
+            <table class="table table-striped table-bordered" style="width:100%" id="example">
                
                 <thead class="text-center">
                     <tr>
@@ -96,15 +96,8 @@ Session::requireResearcherOrUser(Session::get('study_ID'), $pdo);
 
 <script>
     $(document).ready(function(){
-        if (!document.querySelector('.notFound')) $('#example').DataTable();
+        if (!document.querySelector('.notFound')) $('#example').DataTable({scrollX: true});
         $(document).on("click", "a.redirectUser", redirectUser);
-        div = document.createElement('div');
-        div.style.overflowX = 'auto';
-        const table = document.querySelector('table');
-        const parent = table.parentElement
-        const index = [...parent.children].indexOf(table);
-        div.appendChild(table.cloneNode(true));
-        parent.replaceChild(div, table);
         
         function redirectUser(){
             let form = document.createElement("form");

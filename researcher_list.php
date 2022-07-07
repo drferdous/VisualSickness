@@ -48,7 +48,7 @@
     ?>
     
     <div class="card-body pr-2 pl-2">
-        <table class="table table-striped table-bordered table-responsive" style="display: table" id="example">
+        <table class="table table-striped table-bordered" style="width:100%" id="example">
             <thead class="text-center">
                 <tr>
                     <th>Name</th>
@@ -84,14 +84,7 @@
 </div>
 <script>
     $(document).ready(() => {
-        if (!document.querySelector('.notFound')) $('#example').DataTable();
-        div = document.createElement('div');
-        div.style.overflowX = 'auto';
-        const table = document.querySelector('table');
-        const parent = table.parentElement
-        const index = [...parent.children].indexOf(table);
-        div.appendChild(table.cloneNode(true));
-        parent.replaceChild(div, table);
+        if (!document.querySelector('.notFound')) $('#example').DataTable({scrollX: true});
     });
 </script>
 <?php
