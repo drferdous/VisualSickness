@@ -15,10 +15,7 @@ if (isset($_POST["study_ID"]) && isset($_POST["iv"])){
     header('Location: session_list');
     exit();
 }
-if (Session::get("study_ID") == 0){
-    header("Location: study_list");
-    exit();
-}
+Session::requireStudyID();
 Session::requireResearcherOrUser(Session::get('study_ID'), $pdo);
 ?>
 
