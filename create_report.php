@@ -25,7 +25,8 @@
             <?php 
                 $sql = "SELECT S.full_name, S.study_id
                         FROM study AS S JOIN researchers as R ON(S.study_id = R.study_id) 
-                        WHERE R.is_active = 1 AND researcher_id = " . $idToSearch . " AND R.study_role < 4;";
+                        WHERE R.is_active = 1 AND researcher_id = " . $idToSearch . " AND R.study_role < 4
+                        ORDER BY S.last_edited_at DESC;";
 
                 $result = $pdo->query($sql);
             ?>
