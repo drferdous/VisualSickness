@@ -78,6 +78,14 @@ class Studies {
     }
     
     public function editParticipant($participant_ID, $participantInfo) {
+        $role_check_sql = "SELECT study_role FROM researchers 
+                           WHERE researcher_id = " . Session::get('id') . " 
+                           AND study_id = " . Session::get('study_ID') . " 
+                           AND is_active = 1;";
+        $role = $this->db->pdo->query($role_check_sql);
+        if ($role->rowCount() === 0 || $role->fetch(PDO::FETCH_ASSOC)['study_role'] == 4) {
+            return Util::generateErrorMessage("You do not have proper access in this study!");
+        }
         array_walk($participantInfo, function (&$val) {
             $val = trim($val);
         });
@@ -109,11 +117,6 @@ class Studies {
         }
         if (empty($weight)){
             $weight = NULL;
-        }
-        $role_check_sql = "SELECT study_role FROM researchers WHERE researcher_id = " . Session::get('id') . " AND study_id = " . Session::get('study_ID') . " AND is_active = 1";
-        $role = $this->db->pdo->query($role_check_sql);
-        if (!$role || $role->fetch(PDO::FETCH_ASSOC)['study_role'] == 4) {
-            return Util::generateErrorMessage("You do not have proper access in this study!");
         }
         
         $anonymous_name = Crypto::encrypt($anonymous_name, $iv);
