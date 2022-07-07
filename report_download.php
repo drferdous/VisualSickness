@@ -45,7 +45,7 @@ if (!empty($_POST['study_ID'])) {
         $row = $name_result->fetch(PDO::FETCH_ASSOC);
         $participant_name = Crypto::decrypt($row['anonymous_name'], hex2bin($row['iv']));
         foreach ($names as $session_name) {
-            $study_str .= "\n{$session_name['name']}";
+            $study_str .= "\n\"" . $session_name['name'] . "\"";
             foreach ($times as $ssq_time) {
                 $row = getSSQs($study_ID, $participant_ID, $session_name['id'], $ssq_time['id'], $pdo);
                 if ($row) {
@@ -79,7 +79,7 @@ if (!empty($_POST['study_ID'])) {
                     $total_score = $SSQ_Sum * 3.74;
                     $study_str .= ",{$row['ssq_type']},$nausea_score,$oculomotor_score,$disorient_score,$total_score";
                 } else {
-                    $study_str .= ',,,,,,';
+                    $study_str .= ',,,,,';
                 }
             }
             $study_str .= "\n";
@@ -149,7 +149,7 @@ function getFilesForSessions($study_ID, $pdo, $session_name = false, $ssq_time_c
         foreach ($participants as $participant) {
             $participant_name = Crypto::decrypt($participant['anonymous_name'], hex2bin($participant['iv']));
             $participant_ID = $participant['participant_id'];
-            $session_str .= "\n" . preg_replace('/[\s,]/', '_', strtolower($participant_name));
+            $session_str .= "\n\"" . $participant_name . "\"";
             foreach ($times as $ssq_time) {
                 $row = getSSQs($study_ID, $participant_ID, $session_name['id'], $ssq_time['id'], $pdo);
                 if ($row) {
@@ -183,7 +183,7 @@ function getFilesForSessions($study_ID, $pdo, $session_name = false, $ssq_time_c
                     $total_score = $SSQ_Sum * 3.74;
                     $session_str .= ",{$row['ssq_type']},$nausea_score,$oculomotor_score,$disorient_score,$total_score";
                 } else {
-                    $session_str .= ',,,,,,';
+                    $session_str .= ',,,,,';
                 }
             }
             $session_str .= "\n";
