@@ -5,10 +5,7 @@ Session::CheckSession();
 $db = Database::getInstance();
 $pdo = $db->pdo;
 
-if (Session::get("study_ID") == 0){
-    header("Location: study_list");
-    exit();
-}
+Session::requireStudyID();
 Session::requirePI(Session::get('study_ID'), $pdo);
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['addResearcher']) && Session::CheckPostID($_POST)) {
