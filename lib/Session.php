@@ -45,6 +45,7 @@ class Session{
     public static function CheckSession(){
         if (self::get('login') == FALSE) {
             header('Location:login');
+            exit();
         }
     }
 
