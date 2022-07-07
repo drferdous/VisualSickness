@@ -1,5 +1,9 @@
 <?php
 include "inc/header.php";
+if (Session::get("reg_stat") != 1){
+    header("Location: 404");
+    exit();
+}
 ?>
 
 <div class="card">
