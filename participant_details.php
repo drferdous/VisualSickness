@@ -1,5 +1,6 @@
 <?php
     include "inc/header.php";
+    Session::CheckSession();
     
     $db = Database::getInstance();
     $pdo = $db->pdo;

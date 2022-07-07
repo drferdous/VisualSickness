@@ -3,6 +3,8 @@
     include_once "lib/Database.php";
     $db = Database::getInstance();
     $pdo = $db->pdo;
+
+    Session::CheckSession();
     if (isset($_GET['forStudy']) && $_GET['forStudy'] && Session::get('study_ID') != 0) $study_ID = Session::get('study_ID');
     
     if (isset($study_ID)) {
