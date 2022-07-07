@@ -196,7 +196,7 @@ if (isset($_POST['remove-session-btn']) && Session::CheckPostID($_POST)){
                             WHERE ssq.session_id = $session_ID
                             AND ssq_times.is_active = 1
                             AND ssq.is_active = 1
-                            ORDER BY ssq.ssq_time ASC;";
+                            ORDER BY ssq.created_at ASC;";
                     $result = $pdo->query($sql);
                     
                     while ($row = $result->fetch(PDO::FETCH_ASSOC)){
