@@ -4,11 +4,8 @@ include_once 'lib/Database.php';
 
 $db = Database::getInstance();
 $pdo = $db->pdo;
-if (Session::get('study_ID') == 0) {
-    header('Location: study_list');
-    exit();
-}
 
+Session::requireStudyID();
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['deleteQuiz'])) {
     $deleteQuiz = $studies->deleteQuiz();
 }

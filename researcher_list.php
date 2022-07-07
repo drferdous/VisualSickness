@@ -3,9 +3,8 @@
     include_once "lib/Database.php";
     $db = Database::getInstance();
     $pdo = $db->pdo;
-    if (Session::get('study_ID') == 0) {
-        header('Location: study_list');
-    }
+    
+    Session::requireStudyID();
     $study_ID = Session::get('study_ID');
     $affil_sql = "SELECT users.affiliation_id FROM users
                     JOIN study ON users.user_id = study.created_by

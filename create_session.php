@@ -11,11 +11,7 @@ if (isset($_POST['study_ID']) && isset($_POST['iv'])) {
     Session::setStudyId(intval($decrypted), $pdo);
 }
 
-if (Session::get('study_ID') == 0) {
-    header('Location: study_list');
-    exit();
-}
-    
+Session::requireStudyID();
 Session::requireResearcherOrUser(Session::get('study_ID'), $pdo);
 $active_sql = "SELECT is_active FROM study WHERE study_id = " . Session::get('study_ID') . " LIMIT 1;";
 $res = $pdo->query($active_sql);

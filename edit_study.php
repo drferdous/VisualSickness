@@ -6,10 +6,7 @@ $pdo = $db->pdo;
 
 Session::CheckSession();
 
-if (Session::get('study_ID') == 0) {
-    header('Location: study_list');
-    exit();
-}
+Session::requireStudyID();
 $study_ID = Session::get('study_ID');
 Session::requirePI($study_ID, $pdo);
 
