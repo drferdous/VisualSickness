@@ -145,7 +145,7 @@ class Session{
                 AND researcher.is_active = 1
                 AND s.is_active = 1
                 AND researcher.study_id = $study_ID
-                AND researcher.study_role = 2 OR study_role = 3;";
+                AND (researcher.study_role = 2 OR researcher.study_role = 3);";
         $result = $pdo->query($sql);
         if (!$result->rowCount()) {
             header('Location: study_details');
