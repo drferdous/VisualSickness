@@ -363,7 +363,7 @@ class Studies {
     }
     $role_check_sql = "SELECT study_role FROM researchers WHERE researcher_id = " . Session::get('id') . " AND study_id = " . Session::get('study_ID') . " AND is_active = 1";
     $role = $this->db->pdo->query($role_check_sql);
-    if (!$role || $role->fetch(PDO::FETCH_ASSOC)['study_role'] != 2) {
+    if (!$role || $role->fetch(PDO::FETCH_ASSOC)['study_role'] == 4) {
         return Util::generateErrorMessage("You do not have proper access in this study!");
     }
            
