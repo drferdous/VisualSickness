@@ -2,10 +2,7 @@
 include 'inc/header.php';
 Session::CheckSession();
 
-if (Session::get('study_ID') == 0) {
-    header('Location: study_list');
-    exit();
-}
+Session::requireStudyID();
 Session::requirePIorRA(Session::get('study_ID'), Database::getInstance()->pdo);
 
 if (!isset($_POST['referrer'])) {

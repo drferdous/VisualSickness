@@ -5,10 +5,7 @@ include_once 'lib/Database.php';
 $db = Database::getInstance();
 $pdo = $db->pdo;
 
-if (Session::get('study_ID') == 0) {
-    header('Location: study_list');
-    exit();
-}
+Session::requireStudyID();
 Session::requireResearcherOrUser(Session::get('study_ID'), $pdo);
 if (isset($_POST['submitQuiz']) && Session::CheckPostID($_POST)) {
     $submitted = $studies->insertQuiz($_POST);

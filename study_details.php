@@ -14,10 +14,8 @@ if (isset($_POST['study_ID']) && isset($_POST['iv'])) {
     header('Location: study_details');
     exit();
 }
-if (Session::get('study_ID') == 0) {
-    header('Location: study_list');
-    exit();
-}
+
+Session::requireStudyID();
 $study_ID = Session::get('study_ID');
 if (Session::get('roleid') == 1) {
     $affil_sql = "SELECT users.affiliation_id FROM study

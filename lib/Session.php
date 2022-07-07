@@ -95,6 +95,13 @@ class Session{
             self::set('study_ID', 0);
         }
     }
+
+    public static function requireStudyID(){
+        if (self::get("study_ID") == 0){
+            header("Location: study_list");
+            exit();
+        }
+    }
     
     public static function requireAdmin() {
         if (self::get("roleid") != 1) {
