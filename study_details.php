@@ -29,6 +29,8 @@ if (Session::get('roleid') == 1) {
 } else {
     Session::requireResearcherOrUser($study_ID, $pdo);
 }
+
+unset($_SESSION['participant_ID']);
     
 if (isset($_POST['deactivate-btn']) && Session::CheckPostID($_POST)){
     $message = "This function is called.";
