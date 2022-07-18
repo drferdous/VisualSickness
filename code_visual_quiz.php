@@ -932,7 +932,7 @@ include 'inc/header.php';
 
     <input type="hidden" id="ssq_type" name="ssq_type" value="1">
     <input type="hidden" id="code" name="code" value="<?= $_POST["code"] ?>">
-    <input type="submit" name="Submit" value="Submit">
+    <input type="submit"  class="btn btn-success" name="Submit" value="Submit">
 </div>
 
 </div>

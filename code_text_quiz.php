@@ -537,7 +537,7 @@ include 'inc/header.php';
 
     <input type="hidden" name="code" value="<?php echo $_POST['code']; ?>">
 
-    <input type="submit" name="Submit" value="Submit">
+    <input type="submit" class="btn btn-success" name="Submit" value="Submit">
 </div>
 </form>
 </center>
