@@ -108,30 +108,42 @@ if (isset($logout)) {
             data: { userCode: code },
             success: function(data) {
                 if(data=='exist') {
-                  alert("Code has already been used! Contact visualsicknessstudy@gmail.com for more information.")
+                  alert("Code has already been used! Contact visualsicknessstudy@gmail.com if this is an error.")
                   return false;
                 }
+                // $.ajax({
+                //     url: 'check_code_SS.php',
+                //     type: 'POST',
+                //     cahe: false,
+                //     data: { code },
+                //     success: function(data) {
+                //         if(data=='exist') {
+                //             alert("Code has not been assigned! Contact visualsicknessstudy@gmail.com if this is an error.")
+                //             return false;
+                //         }
 
-                const regexCheck = /^[a-zA-Z][B-DF-HJ-NP-TV-Z]\d[aeiou][235689]\d{3}$/;
-            
-                if (!regexCheck.test(code)) {
-                    alert("Please enter a valid code");
-                    return;
-                }
-                
-                const codeForm = $("#codeForm");
-                const codeInp = document.createElement('input');
-                codeInp.setAttribute('name', 'code');
-                codeInp.setAttribute('type', 'hidden');
-                codeInp.setAttribute('value', code);
-                codeForm.append(codeInp);
-                
-                if (/[A-Z]/.test(code.charAt(0))) {
-                    codeForm.attr("action","adult_consent_form");
-                } else {
-                    codeForm.attr("action","parental_permission_form");
-                }
-                codeForm.submit();
+                        const regexCheck = /^[a-zA-Z][B-DF-HJ-NP-TV-Z]\d[aeiou][235689]\d{3}$/;
+                    
+                        if (!regexCheck.test(code)) {
+                            alert("Please enter a valid code");
+                            return;
+                        }
+                        
+                        const codeForm = $("#codeForm");
+                        const codeInp = document.createElement('input');
+                        codeInp.setAttribute('name', 'code');
+                        codeInp.setAttribute('type', 'hidden');
+                        codeInp.setAttribute('value', code);
+                        codeForm.append(codeInp);
+                        
+                        if (/[A-Z]/.test(code.charAt(0))) {
+                            codeForm.attr("action","adult_consent_form");
+                        } else {
+                            codeForm.attr("action","parental_permission_form");
+                        }
+                        codeForm.submit();
+                //     }
+                // });
             }
         });
         return false;
