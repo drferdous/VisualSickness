@@ -65,7 +65,7 @@ include 'inc/header.php';
 
 
 <!-- <div class="Header"> -->
-
+<center>
 <form action="code_insert_quiz" method="post">
     <div class="symptoms">
         
@@ -129,6 +129,7 @@ include 'inc/header.php';
         <div class="symptoms">
         <h2>General Discomfort</h2>
         <hr>
+        <center>
             <label>
                 <input type="radio" id="discomfort5" name="general_discomfort" value="-2" checked>
                 <img src="https://media.istockphoto.com/vectors/vector-red-prohibition-sign-no-symbol-isolated-on-white-background-vector-id1151657492?k=20&m=1151657492&s=612x612&w=0&h=yhNry-1tK2moNTGNTu5HBCZ2hRt2LUQt7RMB5cgU1UY=" alt="Basic">

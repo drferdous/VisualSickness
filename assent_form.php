@@ -39,9 +39,9 @@
 <script>
     const redirect = () => {
         if (+$('#code').val().charAt(4) % 3 === 0) {
-            $('#form').attr('action', 'code_text_quiz');
-        } else if (+$('#code').val().charAt(4) % 3 === 2) {
             $('#form').attr('action', 'code_visual_quiz');
+        } else if (+$('#code').val().charAt(4) % 3 === 2) {
+            $('#form').attr('action', 'code_text_quiz');
         }
     }
 </script>
