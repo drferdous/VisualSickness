@@ -104,13 +104,15 @@ if (isset($logout)) {
         $.ajax({
             url: 'check_code.php',
             type: 'POST',
-            cahe: false,
-            data: { userCode: code },
+            cache: false,
+            data: {'userCode': code},
             success: function(data) {
                 if(data=='exist') {
                   alert("Code has already been used! Contact visualsicknessstudy@gmail.com if this is an error.")
                   return false;
                 }
+                
+                console.log("success");
                 // $.ajax({
                 //     url: 'check_code_SS.php',
                 //     type: 'POST',
@@ -151,4 +153,3 @@ if (isset($logout)) {
 </script>
 <?php
   include 'inc/footer.php';
-?>
