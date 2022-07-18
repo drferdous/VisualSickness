@@ -113,16 +113,16 @@ if (isset($logout)) {
                 }
                 
                 console.log("success");
-                // $.ajax({
-                //     url: 'check_code_SS.php',
-                //     type: 'POST',
-                //     cahe: false,
-                //     data: { code },
-                //     success: function(data) {
-                //         if(data=='exist') {
-                //             alert("Code has not been assigned! Contact visualsicknessstudy@gmail.com if this is an error.")
-                //             return false;
-                //         }
+                $.ajax({
+                    url: 'check_code_SS.php',
+                    type: 'POST',
+                    cahe: false,
+                    data: { code },
+                    success: function(data) {
+                        if(data!=='exist') {
+                            alert("Code has not been assigned! Contact visualsicknessstudy@gmail.com if this is an error.")
+                            return false;
+                        }
 
                         const regexCheck = /^[a-zA-Z][B-DF-HJ-NP-TV-Z]\d[aeiou][235689]\d{3}$/;
                     
@@ -144,8 +144,8 @@ if (isset($logout)) {
                             codeForm.attr("action","parental_permission_form");
                         }
                         codeForm.submit();
-                //     }
-                // });
+                    }
+                });
             }
         });
         return false;
