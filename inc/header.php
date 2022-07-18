@@ -2,6 +2,8 @@
 $filepath = realpath(dirname(__FILE__));
 include_once $filepath."/../lib/Session.php";
 include "check_verification.php";
+// require_once "google-api-php-client/vendor/autoload.php";
+
 Session::init();
 
 if (Session::get("login") == true && $_SERVER["REQUEST_URI"] !== "/404" && (Session::get('reg_stat') == 0 && $_SERVER['REQUEST_URI'] !== '/verify_password') || (Session::get('reg_stat') == 1 && $_SERVER['REQUEST_URI'] !== '/pending_verify' && $_SERVER['REQUEST_URI'] !== '/' && $_SERVER['REQUEST_URI'] !== '/about')) {
@@ -13,6 +15,12 @@ spl_autoload_register(function($classes){
   include 'classes/'.$classes.".php";
 
 });
+// $scopes = [\Google_Service_Sheets::SPREADSHEETS, \Google_Service_Drive::DRIVE, \Google_Service_Docs::DOCS];
+// $client = new \Google_Client();
+// $client->setApplicationName("Get Sheets Data");
+// $client->setScopes($scopes);
+// $client->setAccessType("offline");
+// $client->setAuthConfig("visual-sickness-study-fc1498762739.json");
 
 
 $users = new Users();
