@@ -12,13 +12,11 @@ if (empty($values)){
 }
 else{
     foreach($values as $key=>$value) {
-        if (in_array('DX4i5100', $value)) {
+        if (in_array($_POST['code'], $value)) {
             $location = $key + 3;
-        } 
-        /*if (in_array($_POST['code'], $value)) {
-            $location = $key + 3;
-        }*/
+        }
     }
+    if (!isset($location)) exit();
     $range = "Form Responses 1!E" . $location;
     $response = $sheetAPI->spreadsheets_values->get($spreadsheetID, $range);
     $value = $response->getValues();
