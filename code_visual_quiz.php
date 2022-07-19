@@ -84,8 +84,8 @@ include 'inc/header.php';
             <label for="female">Female</label><br>
             <input type="radio" id="othergender" name="gender" value="Other">
             <label for="othergender">Other</label><br>
-            <input type="radio" id="nogender" name="gender" value="No Answer">
-            <label for="nogender">Prefer Not to Answer</label>
+            <input type="radio" id="nogender" name="gender" value="Prefer Not To Answer" checked>
+            <label for="nogender">Prefer Not To Answer</label>
 
             <br/>
             
@@ -100,8 +100,8 @@ include 'inc/header.php';
             <label for="twoYear">2 Year College</label><br>
             <input type="radio" id="fourYear" name="education" value="4 Year College">
             <label for="fourYear">4 Year College</label><br>
-            <input type="radio" id="noeducation" name="education" value="No Answer">
-            <label for="noeducation">Prefer Not to Answer</label>
+            <input type="radio" id="noeducation" name="education" value="Prefer Not To Answer" checked>
+            <label for="noeducation">Prefer Not To Answer</label>
 
             <br/>
 
@@ -118,8 +118,8 @@ include 'inc/header.php';
             <label for="white">White</label><br>
             <input type="radio" id="otherrace" name="race" value="Other">
             <label for="otherrace">Other</label><br>
-            <input type="radio" id="norace" name="race" value="No Answer">
-            <label for="norace">Prefer Not to Answer</label>
+            <input type="radio" id="norace" name="race" value="Prefer Not To Answer" checked>
+            <label for="norace">Prefer Not To Answer</label>
             <br/>
     </div>
   <hr>
@@ -134,7 +134,7 @@ include 'inc/header.php';
                 <input type="radio" id="discomfort5" name="general_discomfort" value="-2" checked>
                 <img src="https://media.istockphoto.com/vectors/vector-red-prohibition-sign-no-symbol-isolated-on-white-background-vector-id1151657492?k=20&m=1151657492&s=612x612&w=0&h=yhNry-1tK2moNTGNTu5HBCZ2hRt2LUQt7RMB5cgU1UY=" alt="Basic">
                 <center>
-                  <p>Prefer Not to Answer</p>
+                  <p>Prefer Not To Answer</p>
                 </center>
             </label>
             <label>
@@ -183,7 +183,7 @@ include 'inc/header.php';
             <input type="radio" id="fatigue5" name="fatigue" value="-2" checked>
             <img src="https://media.istockphoto.com/vectors/vector-red-prohibition-sign-no-symbol-isolated-on-white-background-vector-id1151657492?k=20&m=1151657492&s=612x612&w=0&h=yhNry-1tK2moNTGNTu5HBCZ2hRt2LUQt7RMB5cgU1UY=" alt="Basic">
             <center>
-              <p>Prefer Not to Answer</p>
+              <p>Prefer Not To Answer</p>
             </center>
         </label>
       <label>
@@ -233,7 +233,7 @@ include 'inc/header.php';
             <input type="radio" id="headache5" name="headache" value="-2" checked>
             <img src="https://media.istockphoto.com/vectors/vector-red-prohibition-sign-no-symbol-isolated-on-white-background-vector-id1151657492?k=20&m=1151657492&s=612x612&w=0&h=yhNry-1tK2moNTGNTu5HBCZ2hRt2LUQt7RMB5cgU1UY=" alt="Basic">
             <center>
-              <p>Prefer Not to Answer</p>
+              <p>Prefer Not To Answer</p>
             </center>
         </label>
       <label>
@@ -283,7 +283,7 @@ include 'inc/header.php';
             <input type="radio" id="eyestrain5" name="eye_strain" value="-2" checked>
             <img src="https://media.istockphoto.com/vectors/vector-red-prohibition-sign-no-symbol-isolated-on-white-background-vector-id1151657492?k=20&m=1151657492&s=612x612&w=0&h=yhNry-1tK2moNTGNTu5HBCZ2hRt2LUQt7RMB5cgU1UY=" alt="Basic">
             <center>
-              <p>Prefer Not to Answer</p>
+              <p>Prefer Not To Answer</p>
             </center>
         </label>
       <label>
@@ -333,7 +333,7 @@ include 'inc/header.php';
             <input type="radio" id="difficulty_focusing5" name="difficulty_focusing" value="-2" checked>
             <img src="https://media.istockphoto.com/vectors/vector-red-prohibition-sign-no-symbol-isolated-on-white-background-vector-id1151657492?k=20&m=1151657492&s=612x612&w=0&h=yhNry-1tK2moNTGNTu5HBCZ2hRt2LUQt7RMB5cgU1UY=" alt="Basic">
             <center>
-              <p>Prefer Not to Answer</p>
+              <p>Prefer Not To Answer</p>
             </center>
         </label>
       <label>
@@ -383,7 +383,7 @@ include 'inc/header.php';
             <input type="radio" id="saliva5" name="increased_salivation" value="-2" checked>
             <img src="https://media.istockphoto.com/vectors/vector-red-prohibition-sign-no-symbol-isolated-on-white-background-vector-id1151657492?k=20&m=1151657492&s=612x612&w=0&h=yhNry-1tK2moNTGNTu5HBCZ2hRt2LUQt7RMB5cgU1UY=" alt="Basic">
             <center>
-              <p>Prefer Not to Answer</p>
+              <p>Prefer Not To Answer</p>
             </center>
         </label>
       <label>
@@ -433,7 +433,7 @@ include 'inc/header.php';
             <input type="radio" id="sweating5" name="sweating" value="-2" checked>
             <img src="https://media.istockphoto.com/vectors/vector-red-prohibition-sign-no-symbol-isolated-on-white-background-vector-id1151657492?k=20&m=1151657492&s=612x612&w=0&h=yhNry-1tK2moNTGNTu5HBCZ2hRt2LUQt7RMB5cgU1UY=" alt="Basic">
             <center>
-              <p>Prefer Not to Answer</p>
+              <p>Prefer Not To Answer</p>
             </center>
         </label>
       <label>
@@ -483,7 +483,7 @@ include 'inc/header.php';
             <input type="radio" id="nausea5" name="nausea" value="-2" checked>
             <img src="https://media.istockphoto.com/vectors/vector-red-prohibition-sign-no-symbol-isolated-on-white-background-vector-id1151657492?k=20&m=1151657492&s=612x612&w=0&h=yhNry-1tK2moNTGNTu5HBCZ2hRt2LUQt7RMB5cgU1UY=" alt="Basic">
             <center>
-              <p>Prefer Not to Answer</p>
+              <p>Prefer Not To Answer</p>
             </center>
         </label>
       <label>
@@ -533,7 +533,7 @@ include 'inc/header.php';
             <input type="radio" id="difficulty_concentrating5" name="difficulty_concentrating" value="-2" checked>
             <img src="https://media.istockphoto.com/vectors/vector-red-prohibition-sign-no-symbol-isolated-on-white-background-vector-id1151657492?k=20&m=1151657492&s=612x612&w=0&h=yhNry-1tK2moNTGNTu5HBCZ2hRt2LUQt7RMB5cgU1UY=" alt="Basic">
             <center>
-              <p>Prefer Not to Answer</p>
+              <p>Prefer Not To Answer</p>
             </center>
         </label>
       <label>
@@ -585,7 +585,7 @@ include 'inc/header.php';
             <input type="radio" id="fullness_of_head5" name="fullness_of_head" value="-2" checked>
             <img src="https://media.istockphoto.com/vectors/vector-red-prohibition-sign-no-symbol-isolated-on-white-background-vector-id1151657492?k=20&m=1151657492&s=612x612&w=0&h=yhNry-1tK2moNTGNTu5HBCZ2hRt2LUQt7RMB5cgU1UY=" alt="Basic">
             <center>
-              <p>Prefer Not to Answer</p>
+              <p>Prefer Not To Answer</p>
             </center>
         </label>
       <label>
@@ -635,7 +635,7 @@ include 'inc/header.php';
             <input type="radio" id="blurred_vision5" name="blurred_vision" value="-2" checked>
             <img src="https://media.istockphoto.com/vectors/vector-red-prohibition-sign-no-symbol-isolated-on-white-background-vector-id1151657492?k=20&m=1151657492&s=612x612&w=0&h=yhNry-1tK2moNTGNTu5HBCZ2hRt2LUQt7RMB5cgU1UY=" alt="Basic">
             <center>
-              <p>Prefer Not to Answer</p>
+              <p>Prefer Not To Answer</p>
             </center>
         </label>
       <label>
@@ -685,7 +685,7 @@ include 'inc/header.php';
             <input type="radio" id="dizzinessEyes5" name="dizziness_with_eyes_open" value="-2" checked>
             <img src="https://media.istockphoto.com/vectors/vector-red-prohibition-sign-no-symbol-isolated-on-white-background-vector-id1151657492?k=20&m=1151657492&s=612x612&w=0&h=yhNry-1tK2moNTGNTu5HBCZ2hRt2LUQt7RMB5cgU1UY=" alt="Basic">
             <center>
-              <p>Prefer Not to Answer</p>
+              <p>Prefer Not To Answer</p>
             </center>
         </label>
       <label>
@@ -736,7 +736,7 @@ include 'inc/header.php';
             <input type="radio" id="dizziness_with_eyes_closed5" name="dizziness_with_eyes_closed" value="-2" checked>
             <img src="https://media.istockphoto.com/vectors/vector-red-prohibition-sign-no-symbol-isolated-on-white-background-vector-id1151657492?k=20&m=1151657492&s=612x612&w=0&h=yhNry-1tK2moNTGNTu5HBCZ2hRt2LUQt7RMB5cgU1UY=" alt="Basic">
             <center>
-              <p>Prefer Not to Answer</p>
+              <p>Prefer Not To Answer</p>
             </center>
         </label>
       <label>
@@ -788,7 +788,7 @@ include 'inc/header.php';
             <input type="radio" id="vertigo5" name="vertigo" value="-2" checked>
             <img src="https://media.istockphoto.com/vectors/vector-red-prohibition-sign-no-symbol-isolated-on-white-background-vector-id1151657492?k=20&m=1151657492&s=612x612&w=0&h=yhNry-1tK2moNTGNTu5HBCZ2hRt2LUQt7RMB5cgU1UY=" alt="Basic">
             <center>
-              <p>Prefer Not to Answer</p>
+              <p>Prefer Not To Answer</p>
             </center>
         </label>
       <label>
@@ -840,7 +840,7 @@ include 'inc/header.php';
             <input type="radio" id="stomach5" name="stomach_awareness" value="-2" checked>
             <img src="https://media.istockphoto.com/vectors/vector-red-prohibition-sign-no-symbol-isolated-on-white-background-vector-id1151657492?k=20&m=1151657492&s=612x612&w=0&h=yhNry-1tK2moNTGNTu5HBCZ2hRt2LUQt7RMB5cgU1UY=" alt="Basic">
             <center>
-              <p>Prefer Not to Answer</p>
+              <p>Prefer Not To Answer</p>
             </center>
         </label>
       <label>
@@ -891,7 +891,7 @@ include 'inc/header.php';
             <input type="radio" id="burp5" name="burp" value="-2" checked>
             <img src="https://media.istockphoto.com/vectors/vector-red-prohibition-sign-no-symbol-isolated-on-white-background-vector-id1151657492?k=20&m=1151657492&s=612x612&w=0&h=yhNry-1tK2moNTGNTu5HBCZ2hRt2LUQt7RMB5cgU1UY=" alt="Basic">
             <center>
-              <p>Prefer Not to Answer</p>
+              <p>Prefer Not To Answer</p>
             </center>
         </label>
       <label>
