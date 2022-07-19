@@ -15,7 +15,7 @@
         <br>
         * Dr. Sandy Gibson, (Phone: 609-771-2136 or Email: <a href="mailto:irbchair@tcnj.edu">irbchair@tcnj.edu</a>)
         <hr>
-        <form action="" method="POST" id="form" onsubmit="return redirect()">
+        <form method="POST" id="form" onsubmit="return redirect()">
             <div style="margin-block: 6px;">
                 <small class='required-msg'>
                     * Required Field
