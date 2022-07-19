@@ -105,7 +105,7 @@
                     $message = "--$mime_boundary$eol" .
                     "Content-Type: text/html; charset=\"iso-8859-1\"$eol" .
                     "Content-Transfer-Encoding: 7bit$eol$eol" .
-                    $body . $eol;
+                    $body . $eol . "--$mime_boundary--";
                     
                     // Send the email
                     mail($to, $subject, $message, $headers);
