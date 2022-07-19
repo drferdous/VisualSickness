@@ -48,10 +48,30 @@
             
                 $SSQ_Sum = $nausea_sum + $oculomotor_sum + $disorient_sum;
                 $SSQ_Score = $SSQ_Sum * 3.74; 
+
+                $sheetAPI = new Google_Service_Sheets($client);
+                $spreadsheetID = "19X2usqE12rsZGdbNWJ84Xwh7oCrsRhH2xTsOPLn7Dx0";
+                $range = "Form Responses 1!S3:X";
+                $response = $sheetAPI->spreadsheets_values->get($spreadsheetID, $range);
+                $values = $response->getValues();
+                if (empty($values)){
+                    echo "No data!";
+                }
+                else{
+                    foreach($values as $key=>$value) {
+                        if (in_array($code, $value)) {
+                            $location = $key + 3;
+                        } 
+                    }
+                    $range = "Form Responses 1!S" . $location;
+                    $response = $sheetAPI->spreadsheets_values->get($spreadsheetID, $range);
+                    $value = $response->getValues();
+                    $parentCode = $value[0][0];
+                }
             
             
-                $sql = "INSERT INTO code_ssq (general_discomfort, fatigue, headache, difficulty_focusing, eye_strain, increased_salivation, sweating, nausea, difficulty_concentrating, fullness_of_head, blurred_vision, dizziness_with_eyes_open, dizziness_with_eyes_closed, vertigo, stomach_awareness, burping, ssq_type, code)
-                      VALUES ('$general_discomfort', '$fatigue', '$headache', '$difficulty_focusing', '$eye_strain', '$increased_salivation', '$sweating', '$nausea', '$difficulty_concentrating', '$fullness_of_head', '$blurred_vision', '$dizziness_with_eyes_open', '$dizziness_with_eyes_closed', '$vertigo', '$stomach_awareness', '$burping', '$ssq_type', '$code')";
+                $sql = "INSERT INTO code_ssq (general_discomfort, fatigue, headache, difficulty_focusing, eye_strain, increased_salivation, sweating, nausea, difficulty_concentrating, fullness_of_head, blurred_vision, dizziness_with_eyes_open, dizziness_with_eyes_closed, vertigo, stomach_awareness, burping, ssq_type, code, parent_code)
+                      VALUES ('$general_discomfort', '$fatigue', '$headache', '$difficulty_focusing', '$eye_strain', '$increased_salivation', '$sweating', '$nausea', '$difficulty_concentrating', '$fullness_of_head', '$blurred_vision', '$dizziness_with_eyes_open', '$dizziness_with_eyes_closed', '$vertigo', '$stomach_awareness', '$burping', '$ssq_type', '$code','$parentCode')";
                       
                 $result = $pdo->query($sql);
                 
