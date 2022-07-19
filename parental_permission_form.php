@@ -93,8 +93,8 @@ questionnaire about their general discomfort (nausea, eye strain, dizziness, etc
             url: 'send_PDF.php',
             type: 'POST',
             cache: false,
-            data: {name,
-                   date,
+            data: {Name,
+                   Date,
                    email,
                    childName,
                    documentName : 'parent_guardianPermission'

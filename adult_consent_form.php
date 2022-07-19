@@ -86,8 +86,8 @@
             url: 'send_PDF.php',
             type: 'POST',
             cache: false,
-            data: {name,
-                   date,
+            data: {Name,
+                   Date,
                    email,
                    documentName : 'adultConsent'
                   },
