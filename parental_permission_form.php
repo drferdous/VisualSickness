@@ -99,7 +99,7 @@ questionnaire about their general discomfort (nausea, eye strain, dizziness, etc
                 $('#form').attr('action', 'assent_form');
                 $('#form').submit();
             }
-        )};
+        });
         return false;
     }
 

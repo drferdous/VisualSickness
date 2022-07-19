@@ -99,7 +99,7 @@
                 }
                 $('#form').submit();
             }
-        )};
+        });
         return false;
     }
 </script>
