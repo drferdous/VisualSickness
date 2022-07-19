@@ -70,6 +70,46 @@
                 if (!$result3) {
                     echo $pdo->errorInfo();
                 }
+                
+                $sheetAPI = new Google_Service_Sheets($client);
+                $spreadsheetID = "19X2usqE12rsZGdbNWJ84Xwh7oCrsRhH2xTsOPLn7Dx0";
+                $range = "Form Responses 1!S3:X";
+                $response = $sheetAPI->spreadsheets_values->get($spreadsheetID, $range);
+                $values = $response->getValues();
+                if (!empty(data)) {
+                    foreach($values as $key=>$value) {
+                        if (in_array($_POST['code'], $value)) {
+                            $location = $key + 3;
+                        }
+                    }
+                    if (!isset($location)) exit();
+
+                    $range = "Form Responses 1!E" . $location;
+                    $response = $sheetAPI->spreadsheets_values->get($spreadsheetID, $range);
+                    $value = $response->getValues();
+                    $email = $value[0][0];
+                    $to          = $email;
+                    $from        = "visualsicknessstudy@gmail.com";
+                    $subject     = 'Thank You for Your Participation'; // email subject
+                    $body        = 'Hello,<br><br>
+                                    Thank you for your participation in the Visual Sickness study. Please be on the lookout for communication regarding compensation.';
+                    
+                    $eol = PHP_EOL;
+                    $semi_rand     = md5(time());
+                    $mime_boundary = "==Multipart_Boundary_x{$semi_rand}x";
+                    $headers       = "From: $from$eol" .
+                      "MIME-Version: 1.0$eol" .
+                      "Content-Type: multipart/mixed;$eol" .
+                      " boundary=\"$mime_boundary\"";
+                    
+                    $message = "--$mime_boundary$eol" .
+                    "Content-Type: text/html; charset=\"iso-8859-1\"$eol" .
+                    "Content-Transfer-Encoding: 7bit$eol$eol" .
+                    $body . $eol;
+                    
+                    // Send the email
+                    mail($to, $subject, $message, $headers);
+                }
             }
         ?>
 
