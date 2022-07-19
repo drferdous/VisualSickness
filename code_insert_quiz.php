@@ -113,12 +113,18 @@
                     $subject     = 'Thank You for Your Participation'; // email subject
                     $body        = 'Hello,<br><br>
                                     Thank you for your participation in the Visual Sickness study. Please be on the lookout for communication regarding compensation.';
+
+                    if(preg_match('/^[A-Z].*$/', $code)) {
+                        $body.= 'After all your children have completed the study, please forward this email to visualsickness@gmail.com to receive your compensation.';
+                    }
                     
                     $eol = PHP_EOL;
                     $semi_rand     = md5(time());
                     $mime_boundary = "==Multipart_Boundary_x{$semi_rand}x";
                     $headers       = "From: $from$eol" .
                       "MIME-Version: 1.0$eol" .
+                      "Reply-To: $from$eol" .
+                      "CC: visualsicknessstudy@gmail.com$eol" .
                       "Content-Type: multipart/mixed;$eol" .
                       " boundary=\"$mime_boundary\"";
                     
