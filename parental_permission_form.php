@@ -102,6 +102,7 @@ questionnaire about their general discomfort (nausea, eye strain, dizziness, etc
         });
         return false;
     }
+</script>
 
 <?php
   include 'inc/footer.php';
