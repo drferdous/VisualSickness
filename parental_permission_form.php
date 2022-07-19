@@ -63,6 +63,10 @@ questionnaire about their general discomfort (nausea, eye strain, dizziness, etc
                 <input class="form-control" id="nameInput" name="name" placeholder="Enter name" required>
             </div>
             <div class="form-group">
+                <label for="dateInput" class="required" style="font-weight: bold">Print today's date.</label>
+                <input class="form-control" type="date" id="dateInput" name="date" value="<?= Util::getValueFromPost('dob', $_POST); ?>" required>
+            </div>
+            <div class="form-group">
                 <label for="emailInput" class="required" style="font-weight: bold">Enter your email to receive a copy of the completed form.</label>
                 <input class="form-control" id="emailInput" name="email" placeholder="Enter email" required>
             </div>
@@ -75,13 +79,13 @@ questionnaire about their general discomfort (nausea, eye strain, dizziness, etc
 
 <script>
     const redirect = () => {
-        const attr = $('#codeForm').attr('action');
+        const attr = $('#form').attr('action');
         if (typeof attr !== 'undefined' && attr !== false) {
             return true;
         }
 
-        const name = $('#nameInput').val();
-        const date = $('#dateInput').val();
+        const Name = $('#nameInput').val();
+        const Date = $('#dateInput').val();
         const email = $('#emailInput').val();
         const childName = $('#childNameInput').val();
 

@@ -42,21 +42,21 @@
 </div>
 <script>
     const redirect = () => {
-        const attr = $('#codeForm').attr('action');
+        const attr = $('#form').attr('action');
         if (typeof attr !== 'undefined' && attr !== false) {
             return true;
         }
 
-        const name = $('#nameInput').val();
-        const date = $('#dateInput').val();
+        const Name = $('#nameInput').val();
+        const Date = $('#dateInput').val();
         const email = $('#emailInput').val();
 
         $.ajax({
             url: 'send_PDF.php',
             type: 'POST',
             cache: false,
-            data: {name,
-                   date,
+            data: {Name,
+                   Date,
                    email,
                    documentName : 'assent'
                   },
