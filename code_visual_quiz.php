@@ -34,7 +34,7 @@ include 'inc/header.php';
   margin: auto;
   margin-top: 10px;
   background: white;
-  align-items:  : center;
+  align-items: center;
   padding: 10px;
 }
 
