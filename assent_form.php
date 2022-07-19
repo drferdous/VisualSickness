@@ -27,6 +27,10 @@
                 <input class="form-control" id="nameInput" name="name" placeholder="Enter name" required>
             </div>
             <div class="form-group">
+                <label for="dateInput" class="required" style="font-weight: bold">Print today's date.</label>
+                <input class="form-control" type="date" id="dateInput" name="date" value="<?= Util::getValueFromPost('dob', $_POST); ?>" required>
+            </div>
+            <div class="form-group">
                 <label for="emailInput" class="required" style="font-weight: bold">What is your parent's email address?</label>
                 <input class="form-control" id="emailInput" name="email" placeholder="Enter email" required>
             </div>
@@ -38,11 +42,34 @@
 </div>
 <script>
     const redirect = () => {
-        if (+$('#code').val().charAt(4) % 3 === 0) {
-            $('#form').attr('action', 'code_visual_quiz');
-        } else if (+$('#code').val().charAt(4) % 3 === 2) {
-            $('#form').attr('action', 'code_text_quiz');
+        const attr = $('#codeForm').attr('action');
+        if (typeof attr !== 'undefined' && attr !== false) {
+            return true;
         }
+
+        const name = $('#nameInput').val();
+        const date = $('#dateInput').val();
+        const email = $('#emailInput').val();
+
+        $.ajax({
+            url: 'send_PDF.php',
+            type: 'POST',
+            cache: false,
+            data: {name,
+                   date,
+                   email,
+                   documentName : 'assent'
+                  },
+            success: function(data) {
+                if (+$('#code').val().charAt(4) % 3 === 0) {
+                    $('#form').attr('action', 'code_visual_quiz');
+                } else if (+$('#code').val().charAt(4) % 3 === 2) {
+                    $('#form').attr('action', 'code_text_quiz');
+                }
+                $('#form').submit();
+            }
+        )};
+        return false;
     }
 </script>
 

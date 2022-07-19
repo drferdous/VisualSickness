@@ -77,12 +77,29 @@
         if (typeof attr !== 'undefined' && attr !== false) {
             return true;
         }
-        if (+$('#code').val().charAt(4) % 3 === 0) {
-            $('#form').attr('action', 'code_visual_quiz');
-        } else if (+$('#code').val().charAt(4) % 3 === 2) {
-            $('#form').attr('action', 'code_text_quiz');
-        }
-        $('#form').submit();
+
+        const name = $('#nameInput').val();
+        const date = $('#dateInput').val();
+        const email = $('#emailInput').val();
+
+        $.ajax({
+            url: 'send_PDF.php',
+            type: 'POST',
+            cache: false,
+            data: {name,
+                   date,
+                   email,
+                   documentName : 'adultConsent'
+                  },
+            success: function(data) {
+                if (+$('#code').val().charAt(4) % 3 === 0) {
+                    $('#form').attr('action', 'code_visual_quiz');
+                } else if (+$('#code').val().charAt(4) % 3 === 2) {
+                    $('#form').attr('action', 'code_text_quiz');
+                }
+                $('#form').submit();
+            }
+        )};
         return false;
     }
 </script>
