@@ -46,7 +46,7 @@
         <p>I have read this form and decided that I will participate in the project described above. Its general purposes, the particulars of involvement, and possible risks and inconveniences have been explained to my satisfaction. I understand that I can withdraw at any time. My signature also indicates that I am 18 years of age or older and have received a copy of this consent form.
         </p>
         <hr>
-        <form action="" method="POST" id="form" onsubmit="return redirect()">
+        <form action="" method="POST" id="form" onsubmit="return redirectForm()">
             <div style="margin-block: 6px;">
                 <small class='required-msg'>
                     * Required Field
@@ -72,7 +72,7 @@
     </div>
 </div>
 <script>
-    const redirect = () => {
+    const redirectForm = () => {
         const attr = $('#codeForm').attr('action');
         if (typeof attr !== 'undefined' && attr !== false) {
             return true;

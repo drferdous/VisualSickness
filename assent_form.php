@@ -15,7 +15,7 @@
         <br>
         * Dr. Sandy Gibson, (Phone: 609-771-2136 or Email: <a href="mailto:irbchair@tcnj.edu">irbchair@tcnj.edu</a>)
         <hr>
-        <form action="" method="POST" id="form" onsubmit="return redirect()">
+        <form action="" method="POST" id="form" onsubmit="return redirectForm()">
             <div style="margin-block: 6px;">
                 <small class='required-msg'>
                     * Required Field
@@ -41,7 +41,7 @@
     </div>
 </div>
 <script>
-    const redirect = () => {
+    const redirectForm = () => {
         const attr = $('#codeForm').attr('action');
         if (typeof attr !== 'undefined' && attr !== false) {
             return true;
