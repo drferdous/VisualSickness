@@ -25,6 +25,11 @@ include 'inc/header.php';
 
 <center>
 <form action="code_insert_quiz" method="post">
+    <?php 
+        $rand = bin2hex(openssl_random_pseudo_bytes(16));
+        Session::set("post_ID", $rand);
+    ?>
+    <input type="hidden" name="randCheck" value="<?php echo $rand; ?>">
     
     <div class="symptoms">
         
