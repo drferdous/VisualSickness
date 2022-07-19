@@ -82,10 +82,10 @@ include 'inc/header.php';
             <label for="male">Male</label><br>
             <input type="radio" id="female" name="gender" value="Female">
             <label for="female">Female</label><br>
-            <input type="radio" id="other" name="gender" value="Other">
-            <label for="other">Other</label><br>
-            <input type="radio" id="no" name="gender" value="No Answer">
-            <label for="other">No Answer</label>
+            <input type="radio" id="othergender" name="gender" value="Other">
+            <label for="othergender">Other</label><br>
+            <input type="radio" id="nogender" name="gender" value="No Answer">
+            <label for="nogender">No Answer</label>
 
             <br/>
             
@@ -100,8 +100,8 @@ include 'inc/header.php';
             <label for="twoYear">2 Year College</label><br>
             <input type="radio" id="fourYear" name="education" value="4 Year College">
             <label for="fourYear">4 Year College</label><br>
-            <input type="radio" id="no" name="education" value="No Answer">
-            <label for="other">No Answer</label>
+            <input type="radio" id="noeducation" name="education" value="No Answer">
+            <label for="noeducation">No Answer</label>
 
             <br/>
 
@@ -116,10 +116,10 @@ include 'inc/header.php';
             <label for="nhopi">Native Hawaiian or Other Pacific Islander</label><br>
             <input type="radio" id="white" name="race" value="White">
             <label for="white">White</label><br>
-            <input type="radio" id="other" name="race" value="Other">
-            <label for="other">Other</label><br>
-            <input type="radio" id="no" name="race" value="No Answer">
-            <label for="other">No Answer</label>
+            <input type="radio" id="otherrace" name="race" value="Other">
+            <label for="otherrace">Other</label><br>
+            <input type="radio" id="norace" name="race" value="No Answer">
+            <label for="otherrace">}</label>
             <br/>
     </div>
   <hr>
