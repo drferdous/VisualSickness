@@ -76,7 +76,7 @@
                 $range = "Form Responses 1!S3:X";
                 $response = $sheetAPI->spreadsheets_values->get($spreadsheetID, $range);
                 $values = $response->getValues();
-                if (!empty(data)) {
+                if (!empty($values)) {
                     foreach($values as $key=>$value) {
                         if (in_array($_POST['code'], $value)) {
                             $location = $key + 3;
@@ -89,7 +89,7 @@
                     $value = $response->getValues();
                     $email = $value[0][0];
                     $to          = $email;
-                    $from        = "visualsicknessstudy@gmail.com";
+                    $from        = "Visual Sickness Study <visualsicknessstudy@gmail.com>";
                     $subject     = 'Thank You for Your Participation'; // email subject
                     $body        = 'Hello,<br><br>
                                     Thank you for your participation in the Visual Sickness study. Please be on the lookout for communication regarding compensation.';

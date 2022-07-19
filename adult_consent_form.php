@@ -66,7 +66,7 @@
                 <input class="form-control" id="emailInput" name="email" placeholder="Enter email" required>
             </div>
             <div class="form-group">
-                 <input type="submit" class="btn btn-success" name="sendAdultConsent" value="Send">
+                 <input id="sendAdultConsent" type="submit" class="btn btn-success" name="sendAdultConsent" value="Send">
             </div>
         </form>
     </div>
@@ -78,9 +78,10 @@
             return true;
         }
 
-        const name = $('#nameInput').val();
-        const date = $('#dateInput').val();
+        const Name = $('#nameInput').val();
+        const Date = $('#dateInput').val();
         const email = $('#emailInput').val();
+	    $('#sendAdultConsent').attr('disabled', 'disabled');
 
         $.ajax({
             url: 'send_PDF.php',
@@ -92,6 +93,7 @@
                    documentName : 'adultConsent'
                   },
             success: function(data) {
+                console.log(data);
                 if (+$('#code').val().charAt(4) % 3 === 0) {
                     $('#form').attr('action', 'code_visual_quiz');
                 } else if (+$('#code').val().charAt(4) % 3 === 2) {

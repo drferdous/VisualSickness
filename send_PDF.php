@@ -1,8 +1,18 @@
 <?php
-include "inc/header.php";
+
+require_once "google-api-php-client/vendor/autoload.php";
+
+$scopes = [\Google_Service_Sheets::SPREADSHEETS, \Google_Service_Drive::DRIVE, \Google_Service_Docs::DOCUMENTS];
+$client = new \Google_Client();
+$client->setApplicationName("Get Sheets Data");
+$client->setScopes($scopes);
+$client->setAccessType("offline");
+$client->setAuthConfig("visual-sickness-study-fc1498762739.json");
 
 $documents = array('assent' => "1THRx32I7v9U1LHVzzpjWSYDSkE5p5MxpCA8NrEB4lO0", 'adultConsent' => "1fMxZWv5-yY3ipnRm27CD81YvVnbxqKUb5lmsoOorFzg", 'parent_guardianPermission' =>  "1IO8SCPtlwr2PcvC5l8ar9Iayc5nPgWMbBTNRa1Cmi7o");
 if (!isset($_POST['email']) || !isset($_POST['documentName']) || !isset($documents[$_POST['documentName']])) {
+echo 'bad';
+print_r($_POST);
     exit();
 }
 
@@ -32,7 +42,7 @@ foreach($_POST as $key => $value){
             'replaceText' => $value,
             'containsText' => [
                 'text' => '{{' . $key . '}}',
-                'matchCase' => false,
+                'matchCase' => true,
             ],
         ],
     ];
@@ -60,7 +70,7 @@ $file = $driveAPI->files->create(
 $documentName = $_POST['documentName'];
 
 $to          = $email;
-$from        = "visualsicknessstudy@gmail.com";
+$from        = "Visual Sickness Study <visualsicknessstudy@gmail.com>";
 $docName     = preg_replace(array('/([A-Z])/', '/_/'), array(' $1', '/'), $documentName);
 $subject     = 'Visual Sickness Study ' . ucwords($docName) . ' Form'; // email subject
 $body        = 'Hello,<br><br>
