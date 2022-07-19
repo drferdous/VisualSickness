@@ -91,7 +91,7 @@ questionnaire about their general discomfort (nausea, eye strain, dizziness, etc
 	    $('#sendPermission').attr('disabled', 'disabled');
 
         $.ajax({
-            url: 'send_PDF.php',
+            url: 'send_PDF',
             type: 'POST',
             cache: false,
             data: {Name,
