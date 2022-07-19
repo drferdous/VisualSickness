@@ -71,7 +71,7 @@ questionnaire about their general discomfort (nausea, eye strain, dizziness, etc
                 <input class="form-control" id="emailInput" name="email" placeholder="Enter email" required>
             </div>
             <div class="form-group">
-                 <input id="sendPermission" type="submit" class="btn btn-success" name="sendAdultConsent" value="Send">
+                 <button id="sendPermission" type="submit" class="btn btn-success" name="sendAdultConsent">Send</button>
             </div>
         </form>
     </div>
@@ -89,6 +89,10 @@ questionnaire about their general discomfort (nausea, eye strain, dizziness, etc
         const email = $('#emailInput').val();
         const childName = $('#childNameInput').val();
 	    $('#sendPermission').attr('disabled', 'disabled');
+        $('#sendPermission').html(`
+        <div class="spinner-border text-dark" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>`);
 
         $.ajax({
             url: 'send_PDF',

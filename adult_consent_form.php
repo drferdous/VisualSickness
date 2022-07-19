@@ -66,7 +66,7 @@
                 <input class="form-control" id="emailInput" name="email" placeholder="Enter email" required>
             </div>
             <div class="form-group">
-                 <input id="sendAdultConsent" type="submit" class="btn btn-success" name="sendAdultConsent" value="Send">
+                 <button id="sendAdultConsent" type="submit" class="btn btn-success" name="sendAdultConsent">Send</button>
             </div>
         </form>
     </div>
@@ -82,6 +82,10 @@
         const Date = $('#dateInput').val();
         const email = $('#emailInput').val();
 	    $('#sendAdultConsent').attr('disabled', 'disabled');
+        $('#sendAdultConsent').html(`
+        <div class="spinner-border text-dark" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>`);
 
         $.ajax({
             url: 'send_PDF',
