@@ -67,6 +67,11 @@ include 'inc/header.php';
 <!-- <div class="Header"> -->
 <center>
 <form action="code_insert_quiz" method="post">
+<?php 
+    $rand = bin2hex(openssl_random_pseudo_bytes(16));
+    Session::set("post_ID", $rand);
+?>
+    <input type="hidden" name="randCheck" value="<?php echo $rand; ?>">
     <div class="symptoms">
         
         <h1>Please Enter Your Demographic Data</h1>
@@ -888,7 +893,7 @@ include 'inc/header.php';
   <hr>
     <div class = "pictures">
                         <label>
-            <input type="radio" id="burp5" name="burp" value="-2" checked>
+            <input type="radio" id="burp5" name="burping" value="-2" checked>
             <img src="https://media.istockphoto.com/vectors/vector-red-prohibition-sign-no-symbol-isolated-on-white-background-vector-id1151657492?k=20&m=1151657492&s=612x612&w=0&h=yhNry-1tK2moNTGNTu5HBCZ2hRt2LUQt7RMB5cgU1UY=" alt="Basic">
             <center>
               <p>Prefer Not To Answer</p>
