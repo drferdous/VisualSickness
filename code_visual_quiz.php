@@ -119,7 +119,7 @@ include 'inc/header.php';
             <input type="radio" id="otherrace" name="race" value="Other">
             <label for="otherrace">Other</label><br>
             <input type="radio" id="norace" name="race" value="No Answer">
-            <label for="otherrace">Prefer Not to Answer</label>
+            <label for="norace">Prefer Not to Answer</label>
             <br/>
     </div>
   <hr>
