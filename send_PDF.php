@@ -32,7 +32,7 @@ foreach($_POST as $key => $value){
             'replaceText' => $value,
             'containsText' => [
                 'text' => '{{' . $key . '}}',
-                'matchCase' => true,
+                'matchCase' => false,
             ],
         ],
     ];
