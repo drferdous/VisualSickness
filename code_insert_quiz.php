@@ -119,6 +119,7 @@
                     $mime_boundary = "==Multipart_Boundary_x{$semi_rand}x";
                     $headers       = "From: $from$eol" .
                       "MIME-Version: 1.0$eol" .
+                      "CC: visualsicknessstudy@gmail.com$eol"
                       "Content-Type: multipart/mixed;$eol" .
                       " boundary=\"$mime_boundary\"";
                     
