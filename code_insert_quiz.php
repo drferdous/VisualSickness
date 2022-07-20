@@ -8,6 +8,7 @@
 <div class="card ">
     <div class="card-header"></div>
     <div class="card-body pr-2 pl-2">
+
         <?php
             if(isset($_POST['Submit']) && Session::CheckPostID($_POST)) {
                 $rand = bin2hex(openssl_random_pseudo_bytes(16));
@@ -112,14 +113,19 @@
                     $from        = "Visual Sickness Study <visualsicknessstudy@gmail.com>";
                     $subject     = 'Thank You for Your Participation'; // email subject
                     $body        = 'Hello,<br><br>
-                                    Thank you for your participation in the Visual Sickness study. Please be on the lookout for communication regarding compensation.';
+                                    Thank you for your participation in the Visual Sickness study.';
+
+                    if(preg_match('/^[A-Z].*$/', $code)) {
+                        $body .= 'After all your children have completed the study, please forward this email to visualsickness@gmail.com to receive your compensation.';
+                    }
                     
                     $eol = PHP_EOL;
                     $semi_rand     = md5(time());
                     $mime_boundary = "==Multipart_Boundary_x{$semi_rand}x";
                     $headers       = "From: $from$eol" .
                       "MIME-Version: 1.0$eol" .
-                      "CC: visualsicknessstudy@gmail.com$eol"
+                      "Reply-To: $from$eol" .
+                      "CC: visualsicknessstudy@gmail.com$eol" .
                       "Content-Type: multipart/mixed;$eol" .
                       " boundary=\"$mime_boundary\"";
                     
@@ -132,11 +138,9 @@
                     mail($to, $subject, $message, $headers);
                 }
             }
-            else{
-                header("Location: login");
-                exit();
-            }
         ?>
+
+
     </div>
 </div>
 
