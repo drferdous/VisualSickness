@@ -20,15 +20,15 @@ So let’s start implementing the user management system with PHP and MySQL. Bef
 
 <div class='install-script'>
   <h2>How to Access Website</h2>
-  <p>You can visit our website at [www.visualsickness.tcnj.edu](https://visualsickness.tcnj.edu/login)</p>
+  You can visit our website at <a href="https://visualsickness.tcnj.edu/login"www.visualsickness.tcnj.edu</a>
  
   <h3>Support</h3>
-  <p>For a more indepth introduction to the function provided by our website, check out our [User Manual](https://docs.google.com/document/d/1XSZlcbz_8iEzdgiPZ2g8Iyp6gSbLJcntcA8DzL2TqSc/edit?usp=sharing)</p>
+  For a more indepth introduction to the function provided by our website, check out our <a href="https://docs.google.com/document/d/1XSZlcbz_8iEzdgiPZ2g8Iyp6gSbLJcntcA8DzL2TqSc/edit?usp=sharing"User Manual</a>
   If you have addtional questions, feel free to contact us at <a href="mailto:visualsicknessstudy@gmail.com">visualsicknessstudy@gmail.com</a>
 
   <h2>Authors and Acknowledgments</h2>
-  <span>This project is supported by the National Science Foundation (Award No. 2104819)</span>
-  <span>Nababur Rahaman</span>
+  <p>This project is supported by the National Science Foundation (Award No. 2104819)</p>
+  <p>Nababur Rahaman</p>
   <ul>
     <li><a href='https://github.com/nababur'>Author profile</a></li>
      <li><a href='https://codeceil.com/'>Website: codeceil.com</a></li>
