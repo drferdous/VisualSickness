@@ -9,10 +9,7 @@
      <li> To provide the VR research community with a system to organize all the cybersickness data they collect. This collection of anonymized data can be used to detect trends or train machine learning models.</li>
   </ol>
 </div>
-
-![Login](https://user-images.githubusercontent.com/59913782/76703690-7f7ed900-66fd-11ea-894b-3e6fc4423817.png)
-![Register](https://user-images.githubusercontent.com/59913782/76703763-2b282900-66fe-11ea-8a3f-d2f88dbc7640.png)
-![Profile](https://user-images.githubusercontent.com/59913782/76703770-3c713580-66fe-11ea-92a7-7ce2e426ab62.png)
+<img width="1113" alt="Screen Shot 2022-09-22 at 9 49 33 PM" src="https://user-images.githubusercontent.com/98768343/191879323-17a6fdc3-559b-4dc8-99f8-88f42ed62bb3.png">
 ![2020-03-15_203003](https://user-images.githubusercontent.com/59913782/76703775-5ad73100-66fe-11ea-856a-80bf259c281b.png)
 
 
