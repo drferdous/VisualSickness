@@ -2,10 +2,8 @@
 # Visual Sickness
 
 <div class="script-details">
-  <h2><strong>Description</strong></h2>
-  <p> Our web application, built using PHP, Javascript, HTML, and CSS, is made for researchers to use around the world as an aid in data collection for cybersickness studies. It allows researchers to easily create studies and sessions in a collaborative environment with other researchers. In these sessions, users can administer text and visual SSQs and all quiz results are stored in the database using MySQL. Additionally, the site can export quiz data for further analysis </p>
   <h2>Purpose</h2>
-  <p> This project was developed by the VR lab at The College of New Jersey. The goal of this project is twofold: </p>
+  <p> This project was developed by the VR lab at The College of New Jersey using PHP, JavaScript, HTML, CSS, and MySQL. The goal of this project is twofold: </p>
   <ol>
     <li> To compare the effectiveness of a visual cybersickness questionnaire with a standard text-based cybersickness questionnaire.</li>
      <li> To provide the VR research community with a system to organize all the cybersickness data they collect. This collection of anonymized data can be used to detect trends or train machine learning models.</li>
@@ -23,9 +21,9 @@
   You can visit our website at
   <a href="https://visualsickness.tcnj.edu/login" target="_blank">www.visualsickness.tcnj.edu</a>
   <h2>Support</h2>
-  For a more indepth introduction to the function provided by our website, check out our 
+  For a more indepth introduction to the functions provided by our website, check out our 
   <a href="https://docs.google.com/document/d/1XSZlcbz_8iEzdgiPZ2g8Iyp6gSbLJcntcA8DzL2TqSc" target="_blank">User Manual.</a>
-  If you have addtional questions, feel free to contact us at <a href="mailto:visualsicknessstudy@gmail.com">visualsicknessstudy@gmail.com</a>
+  If you have any addtional questions, feel free to contact us at <a href="mailto:visualsicknessstudy@gmail.com">visualsicknessstudy@gmail.com</a>
 
   <h2>Authors and Acknowledgments</h2>
   <p>This project is supported by the National Science Foundation (Award No. 2104819)</p>
