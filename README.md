@@ -4,10 +4,11 @@ So let’s start implementing the user management system with PHP and MySQL. Bef
 
 <div class="script-details">
   <h3><strong>Description</strong></h3>
-  <p> This project was developed by the VR lab at The College of New Jersey. The goal of this project is twofold:
-
-1) To compare the effectiveness of a visual cybersickness questionnaire with a standard text-based cybersickness questionnaire.
-    2) To provide the VR research community with a system to organize all the cybersickness data they collect. This collection of anonymized data can be used to detect trends or train machine learning models. </p>
+  <p> This project was developed by the VR lab at The College of New Jersey. The goal of this project is twofold: </p>
+  <ul>
+    <li>1) To compare the effectiveness of a visual cybersickness questionnaire with a standard text-based cybersickness questionnaire.</li>
+     <li>2) To provide the VR research community with a system to organize all the cybersickness data they collect. This collection of anonymized data can be used to detect trends or train machine learning models.</li>
+  </ul>
 </div>
 
 ![Login](https://user-images.githubusercontent.com/59913782/76703690-7f7ed900-66fd-11ea-894b-3e6fc4423817.png)
