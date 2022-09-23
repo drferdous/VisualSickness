@@ -9,8 +9,11 @@
      <li> To provide the VR research community with a system to organize all the cybersickness data they collect. This collection of anonymized data can be used to detect trends or train machine learning models.</li>
   </ol>
 </div>
-<img width="1113" alt="Screen Shot 2022-09-22 at 9 49 33 PM" src="https://user-images.githubusercontent.com/98768343/191879323-17a6fdc3-559b-4dc8-99f8-88f42ed62bb3.png">
-![2020-03-15_203003](https://user-images.githubusercontent.com/59913782/76703775-5ad73100-66fe-11ea-856a-80bf259c281b.png)
+<img width="1113" alt="Screen Shot 2022-09-22 at 9 49 33 PM" src="https://user-images.githubusercontent.com/98768343/191879965-7cd1e47d-4918-4046-b385-f418c209df3f.png">
+<img width="574" alt="Screen Shot 2022-09-22 at 10 00 24 PM" src="https://user-images.githubusercontent.com/98768343/191879979-47e92114-486f-459d-a1bd-aec7710f6ed3.png">
+<img width="1111" alt="Screen Shot 2022-09-22 at 10 03 39 PM" src="https://user-images.githubusercontent.com/98768343/191879987-122260e1-0cd1-4b27-98d6-63482599326e.png">
+<img width="1110" alt="Screen Shot 2022-09-22 at 10 03 52 PM" src="https://user-images.githubusercontent.com/98768343/191879990-ed013f68-269e-49a1-9ab8-a94ffd152a4f.png">
+
 
 
 <div class='install-script'>
