@@ -1,9 +1,9 @@
 
 # Visual Sickness
-So let’s start implementing the user management system with PHP and MySQL. Before we begin, take a look at files structure for this example.
 
 <div class="script-details">
   <h2><strong>Description</strong></h2>
+  <p> Our web application, built using PHP, Javascript, HTML, and CSS, is made for researchers to use around the world as an aid in data collection for cybersickness studies. It allows researchers to easily create studies and sessions in a collaborative environment with other researchers. In these sessions, users can administer text and visual SSQs and all quiz results are stored in the database using MySQL. Additionally, the site can export quiz data for further analysis </p>
   <h2>Purpose</h2>
   <p> This project was developed by the VR lab at The College of New Jersey. The goal of this project is twofold: </p>
   <ol>
@@ -22,9 +22,9 @@ So let’s start implementing the user management system with PHP and MySQL. Bef
   <h2>How to Access Website</h2>
   You can visit our website at
   <a href="https://visualsickness.tcnj.edu/login" target="_blank">www.visualsickness.tcnj.edu</a>
-  <h3>Support</h3>
+  <h2>Support</h2>
   For a more indepth introduction to the function provided by our website, check out our 
-  <a href="https://docs.google.com/document/d/1XSZlcbz_8iEzdgiPZ2g8Iyp6gSbLJcntcA8DzL2TqSc" target="_blank">User Manual</a>
+  <a href="https://docs.google.com/document/d/1XSZlcbz_8iEzdgiPZ2g8Iyp6gSbLJcntcA8DzL2TqSc" target="_blank">User Manual.</a>
   If you have addtional questions, feel free to contact us at <a href="mailto:visualsicknessstudy@gmail.com">visualsicknessstudy@gmail.com</a>
 
   <h2>Authors and Acknowledgments</h2>
