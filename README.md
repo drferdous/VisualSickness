@@ -9,11 +9,10 @@
      <li> To provide the VR research community with a system to organize all the cybersickness data they collect. This collection of anonymized data can be used to detect trends or train machine learning models.</li>
   </ol>
 </div>
-<img width="1113" alt="Screen Shot 2022-09-22 at 9 49 33 PM" src="https://user-images.githubusercontent.com/98768343/191879965-7cd1e47d-4918-4046-b385-f418c209df3f.png">
-<img width="574" alt="Screen Shot 2022-09-22 at 10 00 24 PM" src="https://user-images.githubusercontent.com/98768343/191879979-47e92114-486f-459d-a1bd-aec7710f6ed3.png">
-<img width="1111" alt="Screen Shot 2022-09-22 at 10 03 39 PM" src="https://user-images.githubusercontent.com/98768343/191879987-122260e1-0cd1-4b27-98d6-63482599326e.png">
-<img width="1110" alt="Screen Shot 2022-09-22 at 10 03 52 PM" src="https://user-images.githubusercontent.com/98768343/191879990-ed013f68-269e-49a1-9ab8-a94ffd152a4f.png">
-
+<img width="1108" alt="Screen Shot 2022-09-22 at 10 07 54 PM" src="https://user-images.githubusercontent.com/98768343/191880347-a0406273-de23-4614-ba19-c1d1210c8f6b.png">
+<img width="1104" alt="Screen Shot 2022-09-22 at 10 08 16 PM" src="https://user-images.githubusercontent.com/98768343/191880351-64f114b6-08e8-4858-a6cd-710a399708b9.png">
+<img width="1104" alt="Screen Shot 2022-09-22 at 10 08 29 PM" src="https://user-images.githubusercontent.com/98768343/191880354-84d14b49-f570-4955-9b2d-9ad345c8f310.png">
+<img width="1103" alt="Screen Shot 2022-09-22 at 10 08 42 PM" src="https://user-images.githubusercontent.com/98768343/191880357-92feff0e-5d37-494c-b0cd-ac08013a63bd.png">
 
 
 <div class='install-script'>
