@@ -20,7 +20,7 @@
   You can visit our website at
   <a href="https://visualsickness.tcnj.edu/login" target="_blank">www.visualsickness.tcnj.edu</a>
   <h2>Support</h2>
-  For a more indepth introduction to the functions provided by our website, check out our 
+  For a more in depth introduction to the functions provided by our website, check out our 
   <a href="https://docs.google.com/document/d/1XSZlcbz_8iEzdgiPZ2g8Iyp6gSbLJcntcA8DzL2TqSc" target="_blank">User Manual.</a>
   If you have any addtional questions, feel free to contact us at <a href="mailto:visualsicknessstudy@gmail.com">visualsicknessstudy@gmail.com</a>
 
