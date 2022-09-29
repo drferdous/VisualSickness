@@ -24,13 +24,8 @@
   <a href="https://docs.google.com/document/d/1XSZlcbz_8iEzdgiPZ2g8Iyp6gSbLJcntcA8DzL2TqSc" target="_blank">User Manual.</a>
   If you have any addtional questions, feel free to contact us at <a href="mailto:visualsicknessstudy@gmail.com">visualsicknessstudy@gmail.com</a>
 
-  <h2>Authors and Acknowledgments</h2>
+  <h2>Acknowledgments</h2>
   <p>This project is supported by the National Science Foundation (Award No. 2104819)</p>
-  <p>Nababur Rahaman</p>
-  <ul>
-    <li><a href='https://github.com/nababur'>Author profile</a></li>
-     <li><a href='https://codeceil.com/'>Website: codeceil.com</a></li>
-  </ul>
 </div>
 
 
