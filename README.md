@@ -25,7 +25,7 @@
   If you have any addtional questions, feel free to contact us at <a href="mailto:visualsicknessstudy@gmail.com">visualsicknessstudy@gmail.com</a>
 
   <h2>Acknowledgments</h2>
-  <p>This project is supported by the National Science Foundation (Award No. 2104819)</p>
+  <p>This project is supported by the National Science Foundation Awards IIS-2104819, OAC-1826915 and OAC-1828163</p>
 </div>
 
 
