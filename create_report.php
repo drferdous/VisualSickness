@@ -25,8 +25,7 @@
             <?php 
                 $sql = "SELECT S.full_name, S.study_id
                         FROM study AS S JOIN researchers as R ON(S.study_id = R.study_id) 
-                        WHERE R.is_active = 1 AND researcher_id = " . $idToSearch . " AND R.study_role < 4
-                        ORDER BY S.last_edited_at DESC;";
+                        WHERE R.is_active = 1 AND researcher_id = " . $idToSearch . " AND R.study_role < 4;";
 
                 $result = $pdo->query($sql);
             ?>
@@ -46,7 +45,7 @@
         <br>
         <?php if ($result->rowCount()) { ?>
             <div class="form-group">
-                <button type="submit" name="create_report" class="btn btn-success" onclick="return downloadReport()">Download</button>
+                <button type="submit" name="create_report" class="btn btn-success" onclick="return downloadReport()">Download Report</button>
             </div>
         <?php } ?>
     </div>
@@ -67,6 +66,7 @@
             getReportRows();
         });
         getOptions();
+	let labels, data, chart;
     });
     function getOptions() {
         const info = $('#study_id').val();

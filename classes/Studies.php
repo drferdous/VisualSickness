@@ -78,7 +78,7 @@ class Studies {
     }
     
     public function editParticipant($participant_ID, $participantInfo) {
-        $role_check_sql = "SELECT study_role FROM researchers 
+	$role_check_sql = "SELECT study_role FROM researchers 
                            WHERE researcher_id = " . Session::get('id') . " 
                            AND study_id = " . Session::get('study_ID') . " 
                            AND is_active = 1;";

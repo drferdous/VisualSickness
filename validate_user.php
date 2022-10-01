@@ -18,7 +18,7 @@
         header("Location: 404");
         exit();
     }
-
+    
     $iv = hex2bin($_POST["iv"]);
     $userid = Crypto::decrypt($_POST["user_ID"], $iv);
     echo print_r($_POST);

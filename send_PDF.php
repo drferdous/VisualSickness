@@ -84,8 +84,6 @@ $semi_rand     = md5(time());
 $mime_boundary = "==Multipart_Boundary_x{$semi_rand}x";
 $headers       = "From: $from$eol" .
   "MIME-Version: 1.0$eol" .
-  "Reply-To: $from$eol" .
-  "CC: visualsicknessstudy@gmail.com$eol" .
   "Content-Type: multipart/mixed;$eol" .
   " boundary=\"$mime_boundary\"";
 
@@ -112,7 +110,7 @@ if(mail($to, $subject, $message, $headers)) {
   echo "The email was sent.";
 }
 else {
-  echo "There was an error sending the mail.";
+  echo "There was an error sending the email.";
 }
 
 $driveAPI->files->delete($copyDocID);

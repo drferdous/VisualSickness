@@ -129,7 +129,7 @@ include 'inc/header.php';
     </div>
   <hr>
   <h1>Cybersickness Online Questionnaire</h1>
-  <p>Please pick your current discomfort level on the categories mentioned below. If you do not understand the meaning of the symptom, pick "Do not Understand".</p>
+  <p><span class="text-danger h3">Please pick your current discomfort level on the categories mentioned below. If you do not understand the meaning of the symptom, pick <strong>Do Not Understand</strong>.</span></p>
     <div class = "pictures">
         <div class="symptoms">
         <h2>General Discomfort</h2>
@@ -146,7 +146,7 @@ include 'inc/header.php';
                 <input type="radio" id="discomfort4" name="general_discomfort" value="-1">
                 <img src="images/question.png" alt="Basic">
                 <center>
-                  <p>Don't Understand</p>
+                  <p>Do Not Understand</p>
                 </center>
             </label>
             <label>
@@ -195,7 +195,7 @@ include 'inc/header.php';
             <input type="radio" id="fatigue4" name="fatigue" value="-1">
             <img src="images/question.png" alt="Basic">
             <center>
-              <p>Don't Understand</p>
+              <p>Do Not Understand</p>
             </center>
         </label>
         <label>
@@ -245,7 +245,7 @@ include 'inc/header.php';
             <input type="radio" id="headache4" name="headache" value="-1">
             <img src="images/question.png" alt="Basic">
             <center>
-              <p>Don't Understand</p>
+              <p>Do Not Understand</p>
             </center>
         </label>
         <label>
@@ -295,7 +295,7 @@ include 'inc/header.php';
             <input type="radio" id="eyestrain4" name="eye_strain" value="-1">
             <img src="images/question.png" alt="Basic">
             <center>
-              <p>Don't Understand</p>
+              <p>Do Not Understand</p>
             </center>
         </label>
         <label>
@@ -345,7 +345,7 @@ include 'inc/header.php';
             <input type="radio" id="difficulty_focusing4" name="difficulty_focusing" value="-1">
             <img src="images/question.png" alt="Basic">
             <center>
-              <p>Don't Understand</p>
+              <p>Do Not Understand</p>
             </center>
         </label>
         <label>
@@ -395,7 +395,7 @@ include 'inc/header.php';
             <input type="radio" id="saliva4" name="increased_salivation" value="-1">
             <img src="images/question.png" alt="Basic">
             <center>
-              <p>Don't Understand</p>
+              <p>Do Not Understand</p>
             </center>
         </label>
         <label>
@@ -445,7 +445,7 @@ include 'inc/header.php';
             <input type="radio" id="sweating4" name="sweating" value="-1">
             <img src="images/question.png" alt="Basic">
             <center>
-              <p>Don't Understand</p>
+              <p>Do Not Understand</p>
             </center>
         </label>
         <label>
@@ -495,7 +495,7 @@ include 'inc/header.php';
             <input type="radio" id="nausea4" name="nausea" value="-1">
             <img src="images/question.png" alt="Basic">
             <center>
-              <p>Don't Understand</p>
+              <p>Do Not Understand</p>
             </center>
         </label>
         <label>
@@ -545,7 +545,7 @@ include 'inc/header.php';
             <input type="radio" id="difficulty_concentrating4" name="difficulty_concentrating" value="-1">
             <img src="images/question.png" alt="Basic">
             <center>
-              <p>Don't Understand</p>
+              <p>Do Not Understand</p>
             </center>
         </label>
         <label>
@@ -597,7 +597,7 @@ include 'inc/header.php';
             <input type="radio" id="fullness_of_head4" name="fullness_of_head" value="-1">
             <img src="images/question.png" alt="Basic">
             <center>
-              <p>Don't Understand</p>
+              <p>Do Not Understand</p>
             </center>
         </label>
         <label>
@@ -647,7 +647,7 @@ include 'inc/header.php';
             <input type="radio" id="blurred_vision4" name="blurred_vision" value="-1">
             <img src="images/question.png" alt="Basic">
             <center>
-              <p>Don't Understand</p>
+              <p>Do Not Understand</p>
             </center>
         </label>
         <label>
@@ -697,7 +697,7 @@ include 'inc/header.php';
             <input type="radio" id="dizzinessEyes4" name="dizziness_with_eyes_open" value="-1">
             <img src="images/question.png" alt="Basic">
             <center>
-              <p>Don't Understand</p>
+              <p>Do Not Understand</p>
             </center>
         </label>
         <label>
@@ -748,7 +748,7 @@ include 'inc/header.php';
             <input type="radio" id="dizzyclose4" name="dizziness_with_eyes_closed" value="-1">
             <img src="images/question.png" alt="Basic">
             <center>
-              <p>Don't Understand</p>
+              <p>Do Not Understand</p>
             </center>
         </label>
         <label>
@@ -800,7 +800,7 @@ include 'inc/header.php';
             <input type="radio" id="vertigo4" name="vertigo" value="-1">
             <img src="images/question.png" alt="Basic">
             <center>
-              <p>Don't Understand</p>
+              <p>Do Not Understand</p>
             </center>
         </label>
         <label>
@@ -852,7 +852,7 @@ include 'inc/header.php';
             <input type="radio" id="stomach4" name="stomach_awareness" value="-1">
             <img src="images/question.png" alt="Basic">
             <center>
-              <p>Don't Understand</p>
+              <p>Do Not Understand</p>
             </center>
         </label>
         <label>
@@ -903,7 +903,7 @@ include 'inc/header.php';
             <input type="radio" id="burp4" name="burping" value="-1">
             <img src="images/question.png" alt="Basic">
             <center>
-              <p>Don't Understand</p>
+              <p>Do Not Understand</p>
             </center>
         </label>
         <label>

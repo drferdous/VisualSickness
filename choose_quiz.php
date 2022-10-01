@@ -4,7 +4,7 @@
     $db = Database::getInstance();
     $pdo = $db->pdo;
     
-    Session::requireStudyID();
+    Session::requireStudyID();    
     Session::CheckSession();
     Session::requireResearcherOrUser(Session::get('study_ID'), $pdo);
     $active_sql = "SELECT is_active FROM study WHERE study_id = " . Session::get('study_ID') . " LIMIT 1;";

@@ -2,7 +2,7 @@
 $filepath = realpath(dirname(__FILE__));
 include_once $filepath."/../lib/Session.php";
 include "check_verification.php";
-// require_once "google-api-php-client/vendor/autoload.php";
+require_once "google-api-php-client/vendor/autoload.php";
 
 Session::init();
 
@@ -15,12 +15,12 @@ spl_autoload_register(function($classes){
   include 'classes/'.$classes.".php";
 
 });
-// $scopes = [\Google_Service_Sheets::SPREADSHEETS, \Google_Service_Drive::DRIVE, \Google_Service_Docs::DOCS];
-// $client = new \Google_Client();
-// $client->setApplicationName("Get Sheets Data");
-// $client->setScopes($scopes);
-// $client->setAccessType("offline");
-// $client->setAuthConfig("visual-sickness-study-fc1498762739.json");
+$scopes = [\Google_Service_Sheets::SPREADSHEETS, \Google_Service_Drive::DRIVE, \Google_Service_Docs::DOCUMENTS];
+$client = new \Google_Client();
+$client->setApplicationName("Get Sheets Data");
+$client->setScopes($scopes);
+$client->setAccessType("offline");
+$client->setAuthConfig("visual-sickness-study-fc1498762739.json");
 
 
 $users = new Users();
@@ -404,5 +404,8 @@ if (isset($_GET['action']) && $_GET['action'] == 'logout') {
   crossorigin="anonymous"></script>
 <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js" integrity="sha384-ZuLbSl+Zt/ry1/xGxjZPkp9P5MEDotJcsuoHT0cM8oWr+e1Ide//SZLebdVrzb2X" crossorigin="anonymous"></script>
 <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js" integrity="sha384-jIAE3P7Re8BgMkT0XOtfQ6lzZgbDw/02WeRMJvXK3WMHBNynEx5xofqia1OHuGh0" crossorigin="anonymous"></script>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"
+        integrity="sha512-ElRFoEQdI5Ht6kZvyzXhYG9NqjtkmlkfYk0wr6wHxU9JEHakS7UJZNeml5ALk+8IKlU6jDgMabC3vkumRokgJA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer">
+</script>
 <?php echo Session::get("POST_ID"); ?>

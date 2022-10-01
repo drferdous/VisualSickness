@@ -100,9 +100,10 @@ if (isset($logout)) {
             return true;
         }
         const code = $('#txtName').val();
+
         
         $.ajax({
-            url: 'check_code.php',
+            url: 'check_code',
             type: 'POST',
             cache: false,
             data: {'userCode': code},
@@ -113,12 +114,13 @@ if (isset($logout)) {
                 }
                 
                 console.log("success");
+		console.log("Code: " + code);
                 $.ajax({
-                    url: 'check_code_SS.php',
+                    url: 'check_code_ss',
                     type: 'POST',
-                    cahe: false,
-                    data: { code },
+                    data: {'code': code},
                     success: function(data) {
+			console.log("Data: " + data);
                         if(data!=='exist') {
                             alert("Code has not been assigned! Contact visualsicknessstudy@gmail.com if this is an error.")
                             return false;

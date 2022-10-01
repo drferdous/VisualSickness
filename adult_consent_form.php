@@ -24,7 +24,7 @@
         <h4 style="font-weight: bold">What will happen while you are in the study?</h4>
         <p>You will be asked to provide demographic information. You will also be asked to fill up a questionnaire about your general discomfort (nausea, eye strain, dizziness, etc.).</p>
         <h4 style="font-weight: bold">What is the duration of the study?</h4>
-        <p>This study will take about 5 minutes.</p>
+        <p>This study will take about 10 minutes.</p>
         <h4 style="font-weight: bold">What are the possible discomforts and risks?</h4>
         <p>None.</p>
         <h4 style="font-weight: bold">What are the possible direct benefits to the participant for taking part in this research?</h4>
@@ -32,14 +32,14 @@
         <h4 style="font-weight: bold">What are the possible benefits to society from this research?</h4>
         <p>The knowledge gained from this study may help us validate the use of a Simulator Sickness Questionnaire.</p>
         <h4 style="font-weight: bold">Will there be any compensation for participation?</h4>
-        <p>There will be no compensation for completing this survey.</p>
+        <p>To compensate for the time spent on this study, every participant will receive a $5 gift card (Maximum of $30 per family) after finishing the study.</p>
         <h4 style="font-weight: bold">How will your privacy and the confidentially of your records be protected?</h4>
         <p>All collected data will be anonymized. The survey and other data will be labeled with a code rather than your name. The data resulting from your participation will be analyzed and used in publications and presentations,but your identity will not be disclosed. Your identifying information (name, email) will always be kept separatefrom your study data and not be shared with anyone.
         </p>
         <h4 style="font-weight: bold">Do you have to be in the study?</h4>
         <p>You do not have to be in this study. You are a volunteer! It is okay if you want to stop at any time and not be included in the study. You do not have to answer any questions you do not want to answer.</p>
         <h4 style="font-weight: bold">Do you have any questions about this study?</h4>
-        <p>Phone or email the Principal investigator – Sharif Mohammad Shahnewaz Ferdous. (email: <a href="mailto:sharif.shahnewaz@tcnj.edu">sharif.shahnewaz@tcnj.edu</a>, Phone: 609-771-2789)</p>
+        <p>Phone or email the Principal Investigator – Sharif Mohammad Shahnewaz Ferdous. (email: <a href="mailto:sharif.shahnewaz@tcnj.edu">sharif.shahnewaz@tcnj.edu</a>, Phone: 609-771-2789)</p>
         <h4 style="font-weight: bold">Do you have any questions about your rights as a research participant?</h4>
         <p>Phone or email the IRB Chair, Dr. Sandy Gibson, at 609-771-2136 or <a href="mailto:irbchair@tcnj.edu">irbchair@tcnj.edu</a></p>
         <h4 style="font-weight: bold">Statement of Consent</h4>

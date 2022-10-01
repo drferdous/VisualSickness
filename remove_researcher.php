@@ -6,6 +6,7 @@ Session::CheckSession();
 $db = Database::getInstance();
 $pdo = $db->pdo;
 
+
 Session::requireStudyID();
 $study_ID = Session::get('study_ID');
 
@@ -33,7 +34,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['removeResearcher']) &&
         echo Util::generateErrorMessage("No researcher was selected.");
     }
 } ?>
-
  
 <div class="card">
     <div class="card-header">

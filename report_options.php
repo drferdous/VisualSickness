@@ -27,7 +27,9 @@
             <?php } else {?>
                 <option value="" selected>All Sessions</option>
             <?php } 
-                while ($row = $result->fetch(PDO::FETCH_ASSOC)) { ?>
+		$session_names = array();
+                while ($row = $result->fetch(PDO::FETCH_ASSOC)) { 
+		    array_push($session_names, $row['name']); ?>
                     <option value="<?= $row['id'] ?>"><?php echo $row['name'];?></option>
                 <?php } ?>
             </select> 
@@ -68,12 +70,113 @@
                     <option value="" hidden selected>There are no SSQ Times available!</option>
             <?php } else {?>
                 <option value="" selected>All SSQ Times</option>
-            <?php } 
-                while ($row = $result->fetch(PDO::FETCH_ASSOC)) { ?>
+            <?php }
+		$time_names = array();
+                while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+		    array_push($time_names, $row['name']); ?>
                     <option value="<?= $row['id'] ?>"><?php echo $row['name'];?></option>
                 <?php } ?>
             </select>
         </div>
+
+        <div><canvas id="study_graph"></canvas></div>
+        <script>
+            labels = [
+                <?php foreach ($session_names as $key => $name) { ?>
+                    '<?= $name ?>',
+                <?php } ?>
+            ];
+	    data = {
+		labels,
+		datasets: [
+		    <?php foreach ($time_names as $key => $time_name) { ?>
+                	{
+			    label: '<?= $time_name ?>',
+			    backgroundColor: 'hsl(<?= $key * 30 ?>, 100%, 50%)',
+			    borderColor: 'hsl(<?= $key * 30 ?>, 100%, 50%)',
+			    data: [
+				<?php foreach ($session_names as $key => $session_name) {
+				    $sql = "SELECT ssq.*
+					    FROM `ssq` as ssq
+					    JOIN session ON session.session_id = ssq.session_id
+					    JOIN session_times ON session_times.id = session.session_time
+					    JOIN ssq_times ON ssq_times.id = ssq.ssq_time
+					    WHERE session_times.name = '$session_name'
+						AND session.study_id = $id
+						AND ssq_times.name = '$time_name'";
+                		    $result = $pdo->query($sql);
+				    $total = 0;
+				    $numRows = $result->rowCount();
+				    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+					$general_discomfort = $row['general_discomfort'];
+            				$fatigue = $row['fatigue'];
+            				$headache = $row['headache'];
+            				$eye_strain = $row['eye_strain'];
+           				$difficulty_focusing = $row['difficulty_focusing'];
+            				$increased_salivation = $row['increased_salivation'];
+           				$sweating = $row['sweating'];
+            				$nausea = $row['nausea'];
+            				$difficulty_concentrating = $row['difficulty_concentrating'];
+            				$fullness_of_head = $row['fullness_of_head'];
+            				$blurred_vision = $row['blurred_vision'];
+            				$dizziness_with_eyes_open = $row['dizziness_with_eyes_open'];
+            				$dizziness_with_eyes_closed = $row['dizziness_with_eyes_closed'];
+            				$vertigo = $row['vertigo'];
+            				$stomach_awareness = $row['stomach_awareness'];
+            				$burping = $row['burping'];
+            				
+            				$nausea_sum = $general_discomfort + $increased_salivation + $sweating + $nausea + $difficulty_concentrating + $stomach_awareness + $burping;
+            				$nausea_score = $nausea_sum * 9.54;
+        				
+            				$oculomotor_sum = $general_discomfort + $fatigue + $headache + $eye_strain + $difficulty_focusing + $difficulty_concentrating + $blurred_vision;
+            				$oculomotor_score = $oculomotor_sum * 7.58;
+        				
+            				$disorient_sum = $difficulty_focusing + $nausea + $fullness_of_head + $blurred_vision + $dizziness_with_eyes_open + $dizziness_with_eyes_closed + $vertigo;
+            				$disorient_score = $disorient_sum * 13.92;
+        				
+            				$SSQ_Sum = $nausea_sum + $oculomotor_sum + $disorient_sum;
+            				$ssq_score = $SSQ_Sum * 3.74;
+					$total += $ssq_score;
+				    }
+				    $avg = $numRows === 0 ? 0 : $total / $numRows;
+				    echo $avg; ?>,
+                		<?php } ?>
+			    ],
+			},
+                    <?php } ?>
+		],
+	    };
+	    chart = new Chart(document.querySelector('#study_graph'), {
+		type: 'line',
+		data,
+		options: {
+		    plugins: {
+			title: {
+			    display: true,
+			    text: '<?php $sql = "SELECT full_name FROM study WHERE study_id = $id";
+					$res = $pdo->query($sql);
+					echo preg_replace("/'/", "\\'", $res->fetch(PDO::FETCH_ASSOC)['full_name']); ?>',
+			},
+		    },
+		    scales: {
+			y: {
+			    title: {
+				display: true,
+				color: 'black',
+				text: 'Average SSQ score',
+			    },
+			},
+			x: {
+			    title: {
+				display: true,
+				color: 'black',
+				text: 'Session Time',
+			    },
+			},
+		    },
+		},
+	    });
+        </script>
 
 <?php }  else { ?>
     <div class="form-group">

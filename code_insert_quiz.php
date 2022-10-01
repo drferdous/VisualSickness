@@ -50,9 +50,13 @@
                 $SSQ_Sum = $nausea_sum + $oculomotor_sum + $disorient_sum;
                 $SSQ_Score = $SSQ_Sum * 3.74; 
 
+		if ($code == 'AB4e3090' || $code == 'aB4e3090' || $code == 'AB4e8090' || $code == 'aB4e8090') {
+			exit();
+		}
+
                 $sheetAPI = new Google_Service_Sheets($client);
                 $spreadsheetID = "19X2usqE12rsZGdbNWJ84Xwh7oCrsRhH2xTsOPLn7Dx0";
-                $range = "Form Responses 1!S3:X";
+                $range = "Form Responses 1!T3:Y";
                 $response = $sheetAPI->spreadsheets_values->get($spreadsheetID, $range);
                 $values = $response->getValues();
                 if (empty($values)){
@@ -64,7 +68,7 @@
                             $location = $key + 3;
                         } 
                     }
-                    $range = "Form Responses 1!S" . $location;
+                    $range = "Form Responses 1!T" . $location;
                     $response = $sheetAPI->spreadsheets_values->get($spreadsheetID, $range);
                     $value = $response->getValues();
                     $parentCode = $value[0][0];
@@ -94,7 +98,7 @@
                 
                 $sheetAPI = new Google_Service_Sheets($client);
                 $spreadsheetID = "19X2usqE12rsZGdbNWJ84Xwh7oCrsRhH2xTsOPLn7Dx0";
-                $range = "Form Responses 1!S3:X";
+                $range = "Form Responses 1!T3:Y";
                 $response = $sheetAPI->spreadsheets_values->get($spreadsheetID, $range);
                 $values = $response->getValues();
                 if (!empty($values)) {
@@ -112,8 +116,13 @@
                     $to          = $email;
                     $from        = "Visual Sickness Study <visualsicknessstudy@gmail.com>";
                     $subject     = "Thank You for Your Participation [$code]"; // email subject
-                    $body        = "Hello,<br><br>
-                                    You have successfully completed the study with code $code. Please be on the lookout for communication regarding compensation.";
+                    if(ctype_upper($code[0])) {
+                        $body        = "Hello,<br><br>
+                                    You have successfully completed the study with code $code. Once all willing participants in your family have finished participating in the study please reply to this email with the email you would like your gift card sent to.";
+                    } else {
+                        $body        = "Hello,<br><br>
+                                    You have successfully completed the study with code $code.";
+                    }
 
                     $eol = PHP_EOL;
                     $semi_rand     = md5(time());

@@ -25,7 +25,7 @@
         <p>Your child will be asked to provide demographic information. Your child will also be asked to fill up a
 questionnaire about their general discomfort (nausea, eye strain, dizziness, etc.).</p>
         <h4 style="font-weight: bold">What is the duration of the study?</h4>
-        <p>This study will take about 5 minutes.</p>
+        <p>This study will take about 10 minutes.</p>
         <h4 style="font-weight: bold">What are the possible discomforts and risks?</h4>
         <p>None.</p>
         <h4 style="font-weight: bold">What are the possible direct benefits to the participant for taking part in this research?</h4>
@@ -33,7 +33,7 @@ questionnaire about their general discomfort (nausea, eye strain, dizziness, etc
         <h4 style="font-weight: bold">What are the possible benefits to society from this research?</h4>
         <p>The knowledge gained from this study may help us validate the use of a Simulator Sickness Questionnaire.</p>
         <h4 style="font-weight: bold">Will there be any compensation for participation?</h4>
-        <p>There will be no compensation for completing this survey.</p>
+        <p>To compensate for the time spent on this study, every participant will receive a $5 gift card (Maximum of $30 per family) after finishing the study.</p>
         <h4 style="font-weight: bold">How will your child’s privacy and the confidentiality of your records be protected?</h4>
         <p>All collected data will be anonymized. The survey and other data will be labeled with a code rather than participant’s name. The data resulting from your child’s participation will be analyzed and used in publications and presentations, but your identity will not be disclosed. Your identifying information (name, email) will always be kept separate from your study data and not be shared with anyone.
         </p>

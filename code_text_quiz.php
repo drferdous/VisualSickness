@@ -90,7 +90,7 @@ include 'inc/header.php';
     </div>
   <hr>
   <h1>Cybersickness Online Questionnaire</h1>
-  <p>Please pick your current discomfort level on the categories mentioned below. If you do not understand the meaning of the symptom, pick "Do not Understand".</p>
+  <p><span class="text-danger h3">Please pick your current discomfort level on the categories mentioned below. If you do not understand the meaning of the symptom, pick <strong>Do Not Understand</strong>.</span></p>
 <div class="symptoms">
   <h2>General Discomfort</h2>
   <hr>
