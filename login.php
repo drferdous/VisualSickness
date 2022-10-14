@@ -75,7 +75,7 @@ if (isset($logout)) {
                 </h2>
                 <div style="max-width:450px; margin:0px auto; border-radius: 25px;" class="shadow px-4 pb-2 pt-4">
                     <form class="" method="post" id="codeForm" onsubmit="return Validate()">
-                        <h4>Enter Your Confirmation Code</h4>
+                        <h4>Enter Your Registration Code</h4>
                         <div class="form-group">
                             <input type="text" class="form-control" pattern="^[a-zA-Z][B-DF-HJ-NP-TV-Z]\d[aeiou][235689]\d{3}$" placeholder="Registration Code" id="txtName"/>
                         </div>

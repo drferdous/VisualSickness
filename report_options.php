@@ -20,14 +20,8 @@
                 $sql = "SELECT name, id
                         FROM session_times WHERE study_id = " . $id . " AND is_active = 1";
                 $result = $pdo->query($sql); ?>
-            <select class="form-control form-select" name="session_id" id="session_id" <?= !$result->rowCount() ? "disabled" : "" ?>>
-
-            <?php if($result->rowCount() === 0) { ?>
-                    <option value="" hidden selected>There are no sessions available!</option>
-            <?php } else {?>
-                <option value="" selected>All Sessions</option>
-            <?php } 
-		$session_names = array();
+            <select title="<?= $result->rowCount() ? "All Sessions" : "There are no sessions available!"?>" multiple data-live-search="true" class="form-control form-select selectpicker" name="session_id" id="session_id" <?= !$result->rowCount() ? "disabled" : "" ?>>
+		<?php $session_names = array();
                 while ($row = $result->fetch(PDO::FETCH_ASSOC)) { 
 		    array_push($session_names, $row['name']); ?>
                     <option value="<?= $row['id'] ?>"><?php echo $row['name'];?></option>
@@ -42,14 +36,8 @@
                         FROM participants 
                         WHERE is_active = 1 AND study_id = $id";
                 $result = $pdo->query($sql); ?>
-            <select class="form-control form-select" name="participant_id" id="participant_id" <?= !$result->rowCount() ? "disabled" : "" ?>>
-
-            <?php if($result->rowCount() === 0) { ?>
-                    <option value="" hidden selected>There are no participants available!</option>
-            <?php } else {?>
-                <option value="" selected>All Participants</option>
-            <?php } 
-                while ($row = $result->fetch(PDO::FETCH_ASSOC)) {  
+            <select title="<?= $result->rowCount() ? "All Participants" : "There are no participants available!"?>" multiple data-live-search="true" class="form-control form-select selectpicker" name="participant_id" id="participant_id" <?= !$result->rowCount() ? "disabled" : "" ?>>
+                <?php while ($row = $result->fetch(PDO::FETCH_ASSOC)) {  
                     $enc_id = Crypto::encrypt($row['participant_id'], $iv_participant);
                     $iv = hex2bin($row['iv']);
                     $name = Crypto::decrypt($row['anonymous_name'], $iv); ?>
@@ -65,13 +53,8 @@
                         FROM ssq_times 
                         WHERE study_id = " . $id . " AND is_active = 1";
                 $result = $pdo->query($sql); ?>
-            <select class="form-control form-select" name="SSQ_id" id="SSQ_id" <?= !$result->rowCount() ? "disabled" : "" ?>>
-            <?php if($result->rowCount() === 0) { ?>
-                    <option value="" hidden selected>There are no SSQ Times available!</option>
-            <?php } else {?>
-                <option value="" selected>All SSQ Times</option>
-            <?php }
-		$time_names = array();
+            <select title="<?= $result->rowCount() ? "All SSQ Times" : "There are no SSQ Times available!"?>" multiple data-live-search="true" class="form-control form-select selectpicker" name="SSQ_id" id="SSQ_id" <?= !$result->rowCount() ? "disabled" : "" ?>>
+		<?php $time_names = array();
                 while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
 		    array_push($time_names, $row['name']); ?>
                     <option value="<?= $row['id'] ?>"><?php echo $row['name'];?></option>
@@ -81,6 +64,46 @@
 
         <div><canvas id="study_graph"></canvas></div>
         <script>
+	    $('.selectpicker').selectpicker();
+
+	    if (selectFuncs.length) selectFuncs.forEach((f) => $(document).off('click', f));
+            selectFuncs = [
+                function (e) {
+                    if ($(e.target).is('#session_id.selectpicker ~ *, #session_id.selectpicker ~ * *')) {
+                        session_selected = !session_selected;
+                    } else session_selected = false;
+                    const menu = $('#session_id.selectpicker').siblings('.dropdown-menu');
+                    menu.toggleClass('show', session_selected);
+                    menu.find('.inner').toggleClass('show', session_selected);
+                    menu.find('.check-mark').attr('class', 'check-mark bs-ok-default');
+                }, function (e) {
+                    if (
+                        $(e.target).is(
+                            '#participant_id.selectpicker ~ *, #participant_id.selectpicker ~ * *'
+                        )
+                    ) {
+                        part_selected = !part_selected;
+                    } else part_selected = false;
+                    const menu = $('#participant_id.selectpicker').siblings('.dropdown-menu');
+                    menu.toggleClass('show', part_selected);
+                    menu.find('.inner').toggleClass('show', part_selected);
+                    menu.find('.check-mark').attr('class', 'check-mark bs-ok-default');
+                }, function (e) {
+                    if (
+                        $(e.target).is(
+                            '#SSQ_id.selectpicker ~ *, #SSQ_id.selectpicker ~ * *'
+                        )
+                    ) {
+                        ssq_selected = !ssq_selected;
+                    } else ssq_selected = false;
+                    const menu = $('#SSQ_id.selectpicker').siblings('.dropdown-menu');
+                    menu.toggleClass('show', ssq_selected);
+                    menu.find('.inner').toggleClass('show', ssq_selected);
+                    menu.find('.check-mark').attr('class', 'check-mark bs-ok-default');
+                }
+            ];
+	    selectFuncs.forEach((f) => $(document).on('click', f));
+
             labels = [
                 <?php foreach ($session_names as $key => $name) { ?>
                     '<?= $name ?>',

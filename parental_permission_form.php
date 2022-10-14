@@ -7,7 +7,7 @@
         <h1 class="float-left mb-0">Parental/Guardian Permission Form</h1>
     </div>
     <div class="card-body">
-        <p class="font-italic">Your child are invited to participate in a research study. This form provides you with information about the study. You will also receive a copy of this form to keep for your reference. The Principal investigator or his representative will provide you with any additional information that may be needed and answer any questions you may have. Read the information below and ask questions about anything you do not understand before deciding whether to allow your child to participate. Your child’s participation is entirely voluntary, and you or your child can refuse to participate or withdraw at any time without penalty or loss of benefits to which you or your child are otherwise entitled.
+        <p class="font-italic">Your child is invited to participate in a research study. This form provides you with information about the study. You will also receive a copy of this form to keep for your reference. The Principal investigator or his representative will provide you with any additional information that may be needed and answer any questions you may have. Read the information below and ask questions about anything you do not understand before deciding whether to allow your child to participate. Your child’s participation is entirely voluntary, and you or your child can refuse to participate or withdraw at any time without penalty or loss of benefits to which you or your child are otherwise entitled.
         </p>
         <hr>
         <h4 style="font-weight: bold">Principal Investigator</h4>
@@ -20,7 +20,7 @@
         <p>We ask you to answer a survey that will help us investigate people's understanding of the Simulator Sickness Questionnaire. The survey is consists of 16 questions about how you are feeling right now.
         </p>
         <h4 style="font-weight: bold">Who else is eligible to participate in the study?</h4>
-        <p>Anyone who is at least 7 years old and can read a simple question and answer a survey question is eligible to participate in the study.</p>
+        <p>Anyone who is at least 7 years old, can read a simple question, and answer a survey question is eligible to participate in the study.</p>
         <h4 style="font-weight: bold">What will happen while your child is in the study?</h4>
         <p>Your child will be asked to provide demographic information. Your child will also be asked to fill up a
 questionnaire about their general discomfort (nausea, eye strain, dizziness, etc.).</p>
@@ -43,9 +43,6 @@ questionnaire about their general discomfort (nausea, eye strain, dizziness, etc
         <p>Phone or email the Principal investigator – Sharif Mohammad Shahnewaz Ferdous. (email: <a href="mailto:sharif.shahnewaz@tcnj.edu">sharif.shahnewaz@tcnj.edu</a>, Phone: 609-771-2789)</p>
         <h4 style="font-weight: bold">Do you have any questions about your rights as a research participant?</h4>
         <p>Phone or email the IRB Chair, Dr. Sandy Gibson, at 609-771-2136 or <a href="mailto:irbchair@tcnj.edu">irbchair@tcnj.edu</a></p>
-        <h4 style="font-weight: bold">Statement of Consent</h4>
-        <p>I have read this form and decided that I will participate in the project described above. Its general purposes, the particulars of involvement, and possible risks and inconveniences have been explained to my satisfaction. I understand that I can withdraw at any time. My signature also indicates that I am 18 years of age or older and have received a copy of this consent form.
-        </p>
         <hr>
         <form method="POST" id="form" onsubmit="return redirectForm()">
             <div style="margin-block: 6px;">

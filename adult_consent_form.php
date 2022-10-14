@@ -20,7 +20,7 @@
         <p>We ask you to answer a survey that will help us investigate people's understanding of the Simulator Sickness Questionnaire. The survey is consists of 16 questions about how you are feeling right now.
         </p>
         <h4 style="font-weight: bold">Who else is eligible to participate in the study?</h4>
-        <p>Anyone who is at least 7 years old and can read a simple question and answer a survey question is eligible to participate in the study.</p>
+        <p>Anyone who is at least 7 years old, can read a simple question, and answer a survey question is eligible to participate in the study.</p>
         <h4 style="font-weight: bold">What will happen while you are in the study?</h4>
         <p>You will be asked to provide demographic information. You will also be asked to fill up a questionnaire about your general discomfort (nausea, eye strain, dizziness, etc.).</p>
         <h4 style="font-weight: bold">What is the duration of the study?</h4>
@@ -34,7 +34,7 @@
         <h4 style="font-weight: bold">Will there be any compensation for participation?</h4>
         <p>To compensate for the time spent on this study, every participant will receive a $5 gift card (Maximum of $30 per family) after finishing the study.</p>
         <h4 style="font-weight: bold">How will your privacy and the confidentially of your records be protected?</h4>
-        <p>All collected data will be anonymized. The survey and other data will be labeled with a code rather than your name. The data resulting from your participation will be analyzed and used in publications and presentations,but your identity will not be disclosed. Your identifying information (name, email) will always be kept separatefrom your study data and not be shared with anyone.
+        <p>All collected data will be anonymized. The survey and other data will be labeled with a code rather than your name. The data resulting from your participation will be analyzed and used in publications and presentations, but your identity will not be disclosed. Your identifying information (name, email) will always be kept separate from your study data and not be shared with anyone.
         </p>
         <h4 style="font-weight: bold">Do you have to be in the study?</h4>
         <p>You do not have to be in this study. You are a volunteer! It is okay if you want to stop at any time and not be included in the study. You do not have to answer any questions you do not want to answer.</p>
@@ -43,7 +43,7 @@
         <h4 style="font-weight: bold">Do you have any questions about your rights as a research participant?</h4>
         <p>Phone or email the IRB Chair, Dr. Sandy Gibson, at 609-771-2136 or <a href="mailto:irbchair@tcnj.edu">irbchair@tcnj.edu</a></p>
         <h4 style="font-weight: bold">Statement of Consent</h4>
-        <p>I have read this form and decided that I will participate in the project described above. Its general purposes, the particulars of involvement, and possible risks and inconveniences have been explained to my satisfaction. I understand that I can withdraw at any time. My signature also indicates that I am 18 years of age or older and have received a copy of this consent form.
+        <p>I have read this form and decided that I will participate in the project described above. Its general purposes, the particulars of involvement, and possible risks and inconveniences have been explained to my satisfaction. I understand that I can withdraw at any time. My signature also indicates that I am 18 years of age or older and will receive a copy of this consent form.
         </p>
         <hr>
         <form method="POST" id="form" onsubmit="return redirectForm()">

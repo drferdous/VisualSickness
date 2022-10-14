@@ -67,6 +67,8 @@
         });
         getOptions();
 	let labels, data, chart;
+	ssq_selected = part_selected = session_selected = false;
+	selectFuncs = [];
     });
     function getOptions() {
         const info = $('#study_id').val();
@@ -88,12 +90,12 @@
         });
     }
     function getReportRows() {
+	<?php Session::CheckSession(); ?>
         const study_ID = $("#study_id").val()?.split(';')[0];
         const study_iv = $("#study_id").val()?.split(';')[1];
-        const session_name = $("#session_id").val()?.split(';')[0];
-        const participant_ID = $("#participant_id").val()?.split(';')[0];
-        const participant_iv = $("#participant_id").val()?.split(';')[1];
-        const ssq_time = $("#SSQ_id").val()?.split(';')[0];
+        const sessions = $("#session_id").val();
+        const participants = $("#participant_id").val()?.map(p => ({id: p.split(';')[0], iv: p.split(';')[1]}));
+        const ssq_times = $("#SSQ_id").val();
         $.ajax({
             url: 'count_report_rows',
             type: 'POST',
@@ -101,10 +103,9 @@
             data: {
                 study_ID,
                 study_iv,
-                participant_ID,
-                participant_iv,
-                session_name,
-                ssq_time
+                participants,
+                sessions,
+                ssq_times
             },
             success: (data) => {
                 $('#selectedSSQs').text('SSQs selected: ' + data);

@@ -9,16 +9,16 @@
 */
 
 /*Import Google Fonts*/
-@import url("https://fonts.googleapis.com/css?family=Nunito:300,400,600,700&display=swap");
+@import url('https://fonts.googleapis.com/css?family=Nunito:300,400,600,700&display=swap');
 
 body {
-  line-height: 24px;
-  font-size: 14px;
-  font-style: normal;
-  font-weight: normal;
-  visibility: visible;
-  font-family: "Nunito", sans-serif;
-  color: #222;
+    line-height: 24px;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: normal;
+    visibility: visible;
+    font-family: 'Nunito', sans-serif;
+    color: #222;
 }
 
 h1,
@@ -27,82 +27,118 @@ h3,
 h4,
 h5,
 h6 {
-  color: #222;
-  font-family: "Nunito", sans-serif;
-  font-weight: 400;
-  margin-top: 0;
+    color: #222;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 400;
+    margin-top: 0;
 }
 
 .h1,
 h1 {
-  font-size: 36px;
-  line-height: 42px;
+    font-size: 36px;
+    line-height: 42px;
 }
 
 .h2,
 h2 {
-  font-size: 32px;
-  line-height: 36px;
+    font-size: 32px;
+    line-height: 36px;
 }
 
 .h3,
 h3 {
-  font-size: 24px;
-  line-height: 30px;
+    font-size: 24px;
+    line-height: 30px;
 }
 
 .h4,
 h4 {
-  font-size: 18px;
-  line-height: 24px;
+    font-size: 18px;
+    line-height: 24px;
 }
 
 .h5,
 h5 {
-  font-size: 14px;
-  line-height: 18px;
+    font-size: 14px;
+    line-height: 18px;
 }
 
 .h6,
 h6 {
-  font-size: 12px;
-  line-height: 24px;
+    font-size: 12px;
+    line-height: 24px;
 }
 
 label.required::after {
-  content: " *";
-  color: #dd1616;
+    content: ' *';
+    color: #dd1616;
 }
 
 @media (min-width: 576px) {
-  .w-sm-auto {
-    width: auto !important;
-  }
+    .w-sm-auto {
+        width: auto !important;
+    }
 }
 
-a, .page-item:not(.active):not(.disabled) .page-link {
-  color: #2075d1;
+a,
+.page-item:not(.active):not(.disabled) .page-link {
+    color: #2075d1;
 }
 
 .btn-success {
-  background-color: #27783a;
-  border-color: #27783a;
+    background-color: #27783a;
+    border-color: #27783a;
 }
 
-.btn-primary, .page-item.active .page-link {
-  background-color: #2075d1 !important;
+.btn-primary,
+.page-item.active .page-link {
+    background-color: #2075d1 !important;
 }
 
 .btn-info,
 .badge-info {
-  background-color: #167b8b !important;
-  border-color: #167b8b !important;
+    background-color: #167b8b !important;
+    border-color: #167b8b !important;
 }
 
 .badge {
-  font-size: max(75%, 11px);
+    font-size: max(75%, 11px);
 }
 
 .required-msg {
-  color: #dd1616;
+    color: #dd1616;
 }
+
+/* Multiselect styles */
+
+.dropdown-menu span.text,
+.check-mark {
+    color: black;
+}
+
+.dropdown-menu > .inner {
+    padding: 0.5em;
+}
+
+.bootstrap-select.form-control {
+    border: 1px solid #ced4da !important;
+}
+
+.dropdown-toggle::after {
+    content: none;
+}
+
+.dropdown-menu li a {
+    width: 100%;
+    display: block;
+}
+
+.dropdown-menu .check-mark {
+    left: 15px;
+}
+
+.dropdown-menu .text {
+    margin-left: 35px;
+    margin-top: 3px;
+}
+

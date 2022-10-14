@@ -425,14 +425,17 @@ $study_is_active = $study_result->fetch(PDO::FETCH_ASSOC)['is_active'] == 1;
          $(form).submit(function (event){
              event.preventDefault();
              let questions = document.body.getElementsByClassName("symptoms");
+             let descriptions = document.body.getElementsByClassName("h2");
              let errorMessage;
              let checkedAnswers;
              for (let i = 0; i < questions.length; ++i){
+                descriptions[i].style.color="";
                 checkedAnswers = questions[i].querySelector("input:checked");
                 if (checkedAnswers === null){
                     errorMessage = document.getElementById("flash-msg");
+                    descriptions[i].style.color="red";
                     errorMessage.removeAttribute("style");
-                    window.scrollTo(0, 0);
+                    descriptions[i].scrollIntoView(true);
                     return;
                 }
              }

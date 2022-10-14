@@ -674,14 +674,17 @@ Session::set("post_ID", $rand);
         $(form).submit(function(event){
             event.preventDefault();
             let questions = document.getElementsByClassName("pictures");
+            let descriptions = document.getElementsByClassName("h2");
             let errorMessage;
             let checkedAnswers;
             for (let i = 0; i < questions.length; ++i){
                 checkedAnswers = questions[i].querySelector("input:checked");
+                descriptions[i].style.color="";
                 if (checkedAnswers === null){
                     errorMessage = document.getElementById("flash-msg");
                     errorMessage.removeAttribute("style");
-                    window.scrollTo(0, 0);
+                    descriptions[i].scrollIntoView(true);
+                    descriptions[i].style.color="red";
                     return;
                 }
             }
