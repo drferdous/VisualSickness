@@ -61,6 +61,18 @@
                 <?php } ?>
             </select>
         </div>
+        <?php if($_POST['button_id'] == 'session_time') { ?>
+            <span class="float-left">
+                <button type="button" id="session_time" class="btn btn-outline-primary active">Session Time</button>
+                <button type="button" id="ssq_time" class="btn btn-outline-primary">SSQ Time</button>
+            </span>
+        <?php } else {?>
+            <span class="float-left">
+                <button type="button" id="session_time" class="btn btn-outline-primary">Session Time</button>
+                <button type="button" id="ssq_time" class="btn btn-outline-primary active">SSQ Time</button>
+            </span>
+        <?php } ?>
+
 
         <div><canvas id="study_graph"></canvas></div>
         <script>
@@ -169,16 +181,16 @@
                     <?php } ?>
 		],
 	    };
-	    chart = new Chart(document.querySelector('#study_graph'), {
+	    /*chart = new Chart(document.querySelector('#study_graph'), {
 		type: 'line',
 		data,
 		options: {
 		    plugins: {
 			title: {
 			    display: true,
-			    text: '<?php $sql = "SELECT full_name FROM study WHERE study_id = $id";
+			    text: '<?php /*$sql = "SELECT full_name FROM study WHERE study_id = $id";
 					$res = $pdo->query($sql);
-					echo preg_replace("/'/", "\\'", $res->fetch(PDO::FETCH_ASSOC)['full_name']); ?>',
+					echo preg_replace("/'/", "\\'", $res->fetch(PDO::FETCH_ASSOC)['full_name']); */?>',
 			},
 		    },
 		    scales: {
@@ -198,7 +210,7 @@
 			},
 		    },
 		},
-	    });
+	    });*/
         </script>
 
 <?php }  else { ?>
